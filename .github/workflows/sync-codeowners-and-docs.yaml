@@ -28,5 +28,15 @@ jobs:
           if ! git diff --exit-code; then
             git config user.name "$GITHUB_ACTOR"
             git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-            git add . && git commit -am "chore: Update 'README.md's and 'CODEOWNERS'" && git push
+
+            if ! git diff --exit-code --quiet .github/CODEOWNERS; then
+              git commit -am "chore: Update 'CODEOWNERS'" .github/CODEOWNERS
+            fi
+
+            if ! git diff --exit-code --quiet charts/*/README.md; then
+              git add . charts/*/README.md
+              git commit -am "chore: Update 'README.md's"
+            fi
+
+            git push
           fi
