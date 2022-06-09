@@ -1927,37 +1927,6 @@ entries:
     - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-10.1.0.tgz
     version: 10.1.0
   - apiVersion: v2
-    appVersion: 3.9.3
-    created: "2021-04-27T18:15:30Z"
-    dependencies:
-    - name: common
-      repository: https://charts.bitnami.com/bitnami
-      version: 1.4.3
-    - condition: mysql.enabled
-      name: mysql
-      repository: https://charts.4allportal.net
-      version: 1.6.7
-    - alias: mariadb
-      condition: mariadb.enabled
-      name: mariadb-galera
-      repository: https://charts.bitnami.com/bitnami
-      version: 5.6.8
-    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
-    digest: 12c4b6db743a7d6d74a6b71e78263051716244a51bf5233fae5b6e4ab5a12c0b
-    home: https://4allportal.com
-    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
-    keywords:
-    - 4ALLPORTAL
-    - DAM
-    - MAM
-    maintainers:
-    - email: c.rau@4allportal.com
-      name: Chris Werner Rau
-    name: 4allportal
-    urls:
-    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-10.0.0.tgz
-    version: 10.0.0
-  - apiVersion: v2
     appVersion: 3.5.0
     created: "2021-04-16T12:49:05Z"
     dependencies:
