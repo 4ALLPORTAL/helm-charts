@@ -1,0 +1,10 @@
+{
+  "extends": [
+    "config:base",
+    "group:all",
+    "schedule:monthly"
+  ],
+  "assigneesFromCodeOwners": true,
+  "assigneesSampleSize": 1
+}
+
