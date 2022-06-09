@@ -322,7 +322,15 @@
                           "type": "object",
                           "properties": {
                             "email": {
-                              "$ref": "#/definitions/email"
+                              "oneOf": [
+                                {
+                                  "type": "string",
+                                  "maxLength": 0
+                                },
+                                {
+                                  "$ref": "#/definitions/email"
+                                }
+                              ]
                             }
                           },
                           "additionalProperties": false
