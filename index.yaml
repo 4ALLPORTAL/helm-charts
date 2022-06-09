@@ -27,4 +27,4274 @@ entries:
     urls:
     - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-18.1.3/4allportal-18.1.3.tgz
     version: 18.1.3
+  - apiVersion: v2
+    appVersion: 3.10.8
+    created: "2022-06-07T09:57:18.362278027Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.16.0
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 3.1.1
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: bb610255c46699c51abe9c5ae025d2608fdc1c38e31c9622c5ce819adb1c3564
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-18.1.2.tgz
+    version: 18.1.2
+  - apiVersion: v2
+    appVersion: 3.10.8
+    created: "2022-05-04T13:10:16.200051232Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.13.1
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 3.1.1
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 913ccb951ad56d7f2a4d5cd51c970fe37bc53dabd2193f4005f8ec02819d9240
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-18.1.1.tgz
+    version: 18.1.1
+  - apiVersion: v2
+    appVersion: 3.10.8
+    created: "2022-04-29T13:59:03.560324265Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.13.1
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 3.1.1
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: e1f606705ba87b41ca05f729549a34a4feae2a500261465ac6333044f98c6be3
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-18.1.0.tgz
+    version: 18.1.0
+  - apiVersion: v2
+    appVersion: 3.10.8
+    created: "2022-04-27T14:18:08.565101042Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.13.1
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 3.1.1
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 06a2fc1aaa127f39223c4a3f8b472f6fb10141ee4965798a40a803d7184ec46f
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-18.0.1.tgz
+    version: 18.0.1
+  - apiVersion: v2
+    appVersion: 3.10.8
+    created: "2022-04-01T12:26:08.597054357Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.11.3
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 3.0.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: cfb865cac184fce9285f59c74224cfcb5446c93510dff15102871afccf41ecbf
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-18.0.0.tgz
+    version: 18.0.0
+  - apiVersion: v2
+    appVersion: 3.10.8
+    created: "2022-04-01T12:26:07.637475607Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.11.3
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 2.0.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 01e87254beef56b604f811b3cd42080a77fbd9afded0e9db10a78362cab2a521
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-17.0.0.tgz
+    version: 17.0.0
+  - apiVersion: v2
+    appVersion: 3.10.8
+    created: "2022-04-01T09:31:12.984584683Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.11.3
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 2.0.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 6378e9dba24ec150ce18fbd562c71e0c6edf9466f96ca74d7fa305b15e5fb191
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-17.0.0.tgz
+    version: 17.0.0
+  - apiVersion: v2
+    appVersion: 3.10.8
+    created: "2022-04-01T09:16:07.794440466Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.11.3
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.21.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 179c7011ac8aa2b640b7f0d52a3fa0e0ae9773b1dd2813897cca1df0e29a8a39
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-16.7.0.tgz
+    version: 16.7.0
+  - apiVersion: v2
+    appVersion: 3.10.8
+    created: "2022-03-10T16:00:41Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.11.3
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.20.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 019ca80d20360af523a79f96aed0abf48db55132ebe28fb8fdba3548d5765b7c
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-16.6.0.tgz
+    version: 16.6.0
+  - apiVersion: v2
+    appVersion: 3.10.8
+    created: "2022-03-09T16:29:45Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.11.3
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.18.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 286e53c3d70cef2d67a69859f5483faee2dfb1e27b0dabaa29c95cb1db32601e
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-16.5.0.tgz
+    version: 16.5.0
+  - apiVersion: v2
+    appVersion: 3.10.8
+    created: "2022-03-09T12:10:26Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.11.3
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.18.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 26cd18c4693d1e3dea3c1a6a95abe9173dcb951f5cf66d510a0ccb45c81a2d68
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-16.4.0.tgz
+    version: 16.4.0
+  - apiVersion: v2
+    appVersion: 3.10.8
+    created: "2022-02-28T14:25:08Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.11.1
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.17.1
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 0781707ebf1d7a35299d093f97f064984ffeaca8a788d1ed756d38bd723a477c
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-16.3.3.tgz
+    version: 16.3.3
+  - apiVersion: v2
+    appVersion: 3.10.8
+    created: "2022-02-24T13:53:04Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.11.1
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.17.1
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: a3972e826da53100e0c2d2b959f6eaf369c5705d026ea68a9d21c0935c758d63
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-16.3.2.tgz
+    version: 16.3.2
+  - apiVersion: v2
+    appVersion: 3.10.8
+    created: "2022-02-24T12:45:53Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.11.1
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.17.1
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: ce7eb2307ec9e6ec96880ddf0b94c3d66c5c6c4c8134b99a5dcc61f064502a1f
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-16.3.1.tgz
+    version: 16.3.1
+  - apiVersion: v2
+    appVersion: 3.10.8
+    created: "2022-02-24T12:28:18Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.11.1
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.17.1
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 942576c72fb2a1a6ba1dc12c30a935ddcd7c9164522006b68ef18da67acc1ae5
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-16.3.0.tgz
+    version: 16.3.0
+  - apiVersion: v2
+    appVersion: 3.10.8
+    created: "2022-02-18T11:44:37Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.3
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.17.1
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 32b6166d099a411db4a1842f455b88c4f6bbd10cfc5d57d2698eda0732a15286
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-16.2.0.tgz
+    version: 16.2.0
+  - apiVersion: v2
+    appVersion: 3.10.8
+    created: "2022-02-09T10:53:56Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.3
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.17.1
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 6af5cf0699b6893b8212d1630b99958d1f4217b4339943e57818cf10fadf866e
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-16.1.0.tgz
+    version: 16.1.0
+  - apiVersion: v2
+    appVersion: 3.10.8
+    created: "2022-02-07T18:19:08Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.3
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.17.1
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: af1266c854af9e50045b6fa6801d275b5500d11b10733f7a5aab743a626f499a
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-16.0.1.tgz
+    version: 16.0.1
+  - apiVersion: v2
+    appVersion: 3.10.8
+    created: "2022-02-07T16:46:28Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.3
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.17.1
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 3c13fd8e1030917baa2524b4272a701b2b101a329cd94521d1e8e7a6c9f54043
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-16.0.0.tgz
+    version: 16.0.0
+  - apiVersion: v2
+    appVersion: 3.10.8
+    created: "2022-01-26T11:25:22Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.3
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.17.1
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 92ac06cab3ebcc4dac6d4b29c5c2a08e67984dd65f74e6f963773f4f38fd6396
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-15.5.0.tgz
+    version: 15.5.0
+  - apiVersion: v2
+    appVersion: 3.10.8
+    created: "2022-01-21T12:32:10Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.3
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.17.1
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: fbd7058d01ea322537e4b439cf33f88d43f1f312d620804c13fc5687aec883c3
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-15.4.1.tgz
+    version: 15.4.1
+  - apiVersion: v2
+    appVersion: 3.10.8
+    created: "2022-01-04T10:41:32Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.3
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.15.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 7682b2a9ad374f062d5ee84bc7e68b43bc0eab8753d9a8f8335b94ab5302b78d
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-15.4.0.tgz
+    version: 15.4.0
+  - apiVersion: v2
+    appVersion: 3.10.8
+    created: "2021-12-14T12:53:36Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.3
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.14.2
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: c67780c67c342a82a89c5e857d8e115c4f2364f16eab6e87ca4cf1682dab170e
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-15.3.2.tgz
+    version: 15.3.2
+  - apiVersion: v2
+    appVersion: 3.10.8
+    created: "2021-12-14T12:33:36Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.3
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.14.1
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: c7d709b5260372eba57c17b8cf1e9eb42dc4efabe89cb992441d4c9ffc96d7de
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-15.3.1.tgz
+    version: 15.3.1
+  - apiVersion: v2
+    appVersion: 3.10.8
+    created: "2021-12-14T11:25:36Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.3
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.14.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 1e0434c787a5105916c7d9933f31c0a06ac6d75aeb4e5e3ebae92b8362490b24
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-15.3.0.tgz
+    version: 15.3.0
+  - apiVersion: v2
+    appVersion: 3.10.3
+    created: "2021-12-10T13:59:16Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.1
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.13.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: e053b71c3fef0403ee07cdb40b890d804be6d298fa6df35c56798688850e20b1
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-15.2.1.tgz
+    version: 15.2.1
+  - apiVersion: v2
+    appVersion: 3.10.3
+    created: "2021-12-09T11:14:57Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.1
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.13.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 4ea6ed01e6a077f2650456d2c4f85ad143df4fdb54dc6804f7003f26979cf73d
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-15.2.0.tgz
+    version: 15.2.0
+  - apiVersion: v2
+    appVersion: 3.10.3
+    created: "2021-12-07T11:45:34Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.1
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.12.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 7a5ac5135bf88a05d3e5598b5b0fd5509efbc08721af9ad42d14c2169a113c26
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-15.1.1.tgz
+    version: 15.1.1
+  - apiVersion: v2
+    appVersion: 3.10.3
+    created: "2021-11-30T11:57:35Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.1
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.12.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: ae9fd4ed26ac28d9c0c3de8455dfffe614f4e0db8858d74ce110aaa333af177d
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-15.1.0.tgz
+    version: 15.1.0
+  - apiVersion: v2
+    appVersion: 3.10.3
+    created: "2021-11-18T15:37:54Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.1
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.11.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: a1cbf8dc56bc065bcb83a810c72b949475a05134258bf94a2a7f542488eb1695
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-15.0.0.tgz
+    version: 15.0.0
+  - apiVersion: v2
+    appVersion: 3.10.3
+    created: "2021-11-08T16:50:56Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.1
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.10.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: e752282f2175980bdab6e88467a6477bb3dd141914879e50ac6ab5f2e54d21cb
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-14.9.0.tgz
+    version: 14.9.0
+  - apiVersion: v2
+    appVersion: 3.10.3
+    created: "2021-11-08T14:11:15Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.1
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.9.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 7c800223fed300f93ee14866a6e748ea0bcb652fc659f4b985e1e48db1d74fd4
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-14.8.1.tgz
+    version: 14.8.1
+  - apiVersion: v2
+    appVersion: 3.10.3
+    created: "2021-11-04T15:34:23Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.1
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.9.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 93bdd873ed16bccc742c5dd411b45563982f6b49e3201497ca684f41e06f432e
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-14.8.0.tgz
+    version: 14.8.0
+  - apiVersion: v2
+    appVersion: 3.10.3
+    created: "2021-10-28T09:50:09Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.1
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.8.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: e91b6d7dccb2e21d9566337f354f119d54d6e7f19554d87e111fda2df08e34ed
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-14.7.0.tgz
+    version: 14.7.0
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-10-25T21:14:06Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.0
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.7.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 6a751c814a0fcb31a384996f03edbbef2e755942b64c91032d0ffa684f9dc8b5
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-14.6.1.tgz
+    version: 14.6.1
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-10-25T13:23:09Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.0
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.7.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: d8e17c3ba717bf543a1929a99da736c29efda08524d3ae0b73fd017c81cde59a
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-14.6.0.tgz
+    version: 14.6.0
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-10-25T13:16:19Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.0
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.6.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: ad8bb0dd8a4b68212715b51f915ff2878984d627c3da0164b7cd8c4be46ad8ab
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-14.5.0.tgz
+    version: 14.5.0
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-10-25T12:51:49Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.0
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.5.1
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 0d0080da686c1acbfacba4fef4d6aa94f3166bb6cab437ea85040b64b551a9a2
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-14.4.1.tgz
+    version: 14.4.1
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-10-25T12:31:21Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.0
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.5.1
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: c0ce775280192e20af914852cb91767fbf853bec95ecc6ea102ee31b532dddd2
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-14.4.0.tgz
+    version: 14.4.0
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-10-21T14:45:35Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.0
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.5.1
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 2d4586f020b51c2bc48f210cdd5f623c03d1a68727cbe9071acad3ae6f784243
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-14.3.0.tgz
+    version: 14.3.0
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-10-07T12:37:21Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.0
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 5e20b39de00c047b91b6bd8310d628deee0e9a1f6e425f86a924451b9d72fa3a
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-14.2.0.tgz
+    version: 14.2.0
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-10-07T12:37:23Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.10.0
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.3.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 1fe3c679707a4f2c645059e7f8f8f5b421e20beee375967e741c8a8652ebe49d
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-14.1.0.tgz
+    version: 14.1.0
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-10-04T19:50:03Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.9.1
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 1.2.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 6823116f98647f5d38e49fe187d7f41eeb2feb62df0c37a7f4f9d15f684caa3f
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-14.0.1.tgz
+    version: 14.0.1
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-10-04T14:02:25Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.9.1
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.13.4
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 0a7166974bc6e0ed784596325edcb159303da9416cfb37da03448522bc581e48
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-13.3.0.tgz
+    version: 13.3.0
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-09-22T14:34:28Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.8.0
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.13.4
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 05a1028a121d4ce24e900f69c0d4114f887cd0510dfff70c38f22da0f777f8fd
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-13.2.0.tgz
+    version: 13.2.0
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-09-21T12:38:11Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.8.0
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.13.4
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 906423006ca646da77d77bce203113c459d33080c9655e5400401256c65f5bb2
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-13.1.3.tgz
+    version: 13.1.3
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-09-21T11:36:34Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.8.0
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.13.4
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 9abc1991c36964bb0119ec9227fc79e16fa3006b3bc8c24ee816a31f9994d485
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-13.1.2.tgz
+    version: 13.1.2
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-09-13T11:02:43Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.8.0
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.13.4
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 29970f00a8f29492a48df9f8ddc20f8a50ade910b29852ca7b68afbb73bd0a9e
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-13.1.1.tgz
+    version: 13.1.1
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-09-01T10:00:14Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.8.0
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.13.4
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: d3af5e1c60fe172ee84edfc066a6d1abb4ef1cb62e33aef1944150346f5f6b09
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-12.0.1.tgz
+    version: 12.0.1
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-08-24T12:41:43Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.8.0
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.13.2
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: ccfb1703883b01bb85b68eff5060ffa463840af582c518de68802204c95f25ff
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-12.0.0.tgz
+    version: 12.0.0
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-08-24T12:32:41Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.8.0
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.13.2
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 00134fbb1bd3c233efab795acc722f5f7c8251db32fd4ebb9fa7a9ba95f2d31b
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-11.8.0.tgz
+    version: 11.8.0
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-08-10T12:36:19Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.7.0
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.11.1
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 29cbfc7e631b7ed499fbdb9c12a9d4ecfa664c65871e4637ab28bd917d9295b3
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-11.7.1.tgz
+    version: 11.7.1
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-08-09T15:46:40Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.7.0
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.11.1
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: d5d7646ce9a800f97493f391698d5d6585bd2e2434a7c8a39e64f49d95efe54c
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-11.7.0.tgz
+    version: 11.7.0
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-07-14T14:07:21Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.7.0
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.10.3
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 269209b5a1550a68a72ac42b72af212ecb087ede893233814603bf3ece9193ff
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-11.6.0.tgz
+    version: 11.6.0
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-07-12T10:08:43Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.7.0
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.10.3
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 71140af8547432bf6021258a2cf48057534045344b1be67948d078dd8d7be31f
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-11.5.2.tgz
+    version: 11.5.2
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-06-16T09:18:19Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.6.0
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.10.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 90b52573b1d8cbcd6620df71dc245cbd8c64bddbf5aaffa5512e0a91d800d47e
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-11.5.1.tgz
+    version: 11.5.1
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-06-16T09:17:49Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.5.2
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.9.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 82f7b4ffad06ba77ca887352dcfae01448f5b3b6313c83f389da51afea683920
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-11.5.0.tgz
+    version: 11.5.0
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-06-08T09:41:47Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.5.2
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.9.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 6501ec72691b741efa5ffecb5e90ec24b70f1ba18d3f4803d04f29c0aaaef5ca
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-11.4.0.tgz
+    version: 11.4.0
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-05-27T10:19:26Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.5.2
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.8.1
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: eb51f51e711383a80a01319434931cbf6b53af2d7800aac79839b30f768a3811
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-11.3.0.tgz
+    version: 11.3.0
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-05-25T08:51:04Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.5.2
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.8.1
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 066b1fdee91812e1bee39f734f76042b700fc5e2cda2c99f8037e5ddfde8bfe6
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-11.2.0.tgz
+    version: 11.2.0
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-05-17T14:51:28Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.5.1
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.8.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 986af10cb7c651b0f49af7c31420dd03bc3c46ff5a80cc0d2d3167740adaaa89
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-11.1.2.tgz
+    version: 11.1.2
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-05-17T14:31:18Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.5.1
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.8.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 2f0c65f558b31e249406050455ee9d6e708df382de1a2c73737844e6f49f21e2
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-11.1.1.tgz
+    version: 11.1.1
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-05-12T09:54:55Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.4.3
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.8.0
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 4a1b446e38dcb690526e676425067f2bf77b58aae128a88ea205c3f694bc8991
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-11.1.0.tgz
+    version: 11.1.0
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-05-10T09:00:56Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.4.3
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.6.8
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 88d2f18494c97cef8ab20c7acca1e193221b6fb85155ff7edaca8f3999e744b3
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-11.0.1.tgz
+    version: 11.0.1
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-05-06T08:28:43Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.4.3
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.6.8
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 081bfbc56a97aa35390eeffc046bdd30c081c7ddbe5ee4a4e3cc4f6b7f4d602b
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-11.0.0.tgz
+    version: 11.0.0
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-05-05T12:38:01Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.4.3
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.6.8
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 25b1ae3c80585e7cfe4d187131db7904ffd0c6d95930ce9809111db51bb157c2
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-10.2.0.tgz
+    version: 10.2.0
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-04-29T10:27:56Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.4.3
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.6.8
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: c71852babe6ea861408730abbff0c0314794f3f0c4eda0168d0881ed7be89464
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-10.1.1.tgz
+    version: 10.1.1
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-04-28T10:42:02Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.4.3
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.6.8
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 22695f6fd6b185ee746fa371ad1c6047636d18e3ce6410c2071caff22cd92a6e
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-10.1.0.tgz
+    version: 10.1.0
+  - apiVersion: v2
+    appVersion: 3.9.3
+    created: "2021-04-27T18:15:30Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.4.3
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.6.8
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 12c4b6db743a7d6d74a6b71e78263051716244a51bf5233fae5b6e4ab5a12c0b
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-10.0.0.tgz
+    version: 10.0.0
+  - apiVersion: v2
+    appVersion: 3.5.0
+    created: "2021-04-16T12:49:05Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.4.2
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://charts.4allportal.net
+      version: 0.4.0
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.6.7
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: c51e06649b9415fb5f0cfe70c5bd9ac4f82957f770431b0eb45d0a0dbee2bb27
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-9.10.2.tgz
+    version: 9.10.2
+  - apiVersion: v2
+    appVersion: 3.5.0
+    created: "2021-04-15T13:14:01Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.4.2
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://charts.4allportal.net
+      version: 0.4.0
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.6.7
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 58a1a204f5189e21c70c0da6105778dcd70fc798321f6e17e7c6b4dd86a7477e
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-9.10.1.tgz
+    version: 9.10.1
+  - apiVersion: v2
+    appVersion: 3.5.0
+    created: "2021-04-15T13:07:11Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.4.2
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://charts.4allportal.net
+      version: 0.4.0
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.6.7
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 3ef9bef60a2479daf4bdfa11a7268b1323dbd1e91c142bcac3c705b7aa695f4e
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-9.10.0.tgz
+    version: 9.10.0
+  - apiVersion: v2
+    appVersion: 3.5.0
+    created: "2021-03-26T12:50:38Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.4.2
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://charts.4allportal.net
+      version: 0.4.0
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.6.7
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: da838b780db77a67e0fe23f4aad580d8f538706e5a2a9f8e875593a4e99ffead
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-9.9.0.tgz
+    version: 9.9.0
+  - apiVersion: v2
+    appVersion: 3.5.0
+    created: "2021-03-26T12:28:19Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.4.2
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://charts.4allportal.net
+      version: 0.4.0
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.6.7
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 5525a3fda960a2ecc6140ff5c33899113c80252f120d0e2bec2a70b523cdbae0
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-9.8.0.tgz
+    version: 9.8.0
+  - apiVersion: v2
+    appVersion: 3.5.0
+    created: "2021-03-15T12:53:43Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.2.3
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://charts.4allportal.net
+      version: 0.4.0
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.6.5
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: bb27c2516e638ffd3bd7daba2e64537c99751d97dceae9316448b68f172a2156
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-9.7.0.tgz
+    version: 9.7.0
+  - apiVersion: v2
+    appVersion: 3.5.0
+    created: "2021-03-03T10:59:07Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.2.3
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://charts.4allportal.net
+      version: 0.4.0
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 6931ecdb58a1a44a15c1544eefc2fbedbc0b241f78b0459536c7b01afe6b35fd
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-9.6.0.tgz
+    version: 9.6.0
+  - apiVersion: v2
+    appVersion: 3.5.0
+    created: "2021-02-25T16:13:28Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.2.3
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://charts.4allportal.net
+      version: 0.4.0
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 34acfd10fc2c0a9e4674bb5a6fc17cd611a4a841720489644c4c7aed6b11e71b
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-9.5.0.tgz
+    version: 9.5.0
+  - apiVersion: v2
+    appVersion: 3.5.0
+    created: "2021-02-19T12:15:43Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.2.3
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://charts.4allportal.net
+      version: 0.4.0
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 31e8616068afa04fed44ea5e3adc6ed6340cbad68faaa201c3c9831245bc110f
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-9.4.1.tgz
+    version: 9.4.1
+  - apiVersion: v2
+    appVersion: 3.5.0
+    created: "2021-02-18T13:30:47Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.2.3
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://charts.4allportal.net
+      version: 0.4.0
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 6b562679645c34e6374fa14de98183d3e662761e28628a8fec3407c2ad861438
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-9.4.0.tgz
+    version: 9.4.0
+  - apiVersion: v2
+    appVersion: 3.5.0
+    created: "2021-02-17T16:48:16Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.2.3
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://charts.4allportal.net
+      version: 0.4.0
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: c9238de218fc38b48f9c19b28bce817225b357b03a87c7f68b7978ee4e073144
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-9.3.1.tgz
+    version: 9.3.1
+  - apiVersion: v2
+    appVersion: 3.5.0
+    created: "2021-02-16T14:49:40Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.2.3
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://charts.4allportal.net
+      version: 0.4.0
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: fcaecc9a8872fe2e5691ad8685fb2084de9de69e3c057a540f587dd831029d43
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-9.3.0.tgz
+    version: 9.3.0
+  - apiVersion: v2
+    appVersion: 3.5.0
+    created: "2021-02-08T16:28:46Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.2.3
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://charts.4allportal.net
+      version: 0.4.0
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 799aab8b99a22bb7691be063872a2cb34048011a29cd6cb163a763c5a6f8b145
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-9.2.1.tgz
+    version: 9.2.1
+  - apiVersion: v2
+    appVersion: 3.5.0
+    created: "2021-02-08T16:22:33Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.2.3
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://charts.4allportal.net
+      version: 0.4.0
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 00593fd7b167f2ccaa236668d3a59b54b546e3ba0128e37a94c5efbc8d8fd9b1
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-9.2.0.tgz
+    version: 9.2.0
+  - apiVersion: v2
+    appVersion: 3.5.0
+    created: "2021-01-15T12:17:43Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.2.3
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://charts.4allportal.net
+      version: 0.4.0
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 0ca7e78f04aefbe7445fa98051dc6cca6b6bfa0f28cfb446f9558f5dc98e2cd0
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-9.1.0.tgz
+    version: 9.1.0
+  - apiVersion: v2
+    appVersion: 3.5.0
+    created: "2021-01-13T16:30:48Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.2.3
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://charts.4allportal.net
+      version: 0.4.0
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.3.4
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: f66848448230bc60f057c7f04e272f2c65f72f6a2760127aee6c0f056cf838b5
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-9.0.0.tgz
+    version: 9.0.0
+  - apiVersion: v2
+    appVersion: 3.5.0
+    created: "2021-01-13T11:43:36Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://charts.4allportal.net
+      version: 0.4.0
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.3.4
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 5bb416760608c6a0befd2ab0ca04fb95d4d36cc2d53267df0c849b536bebdeb5
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-8.1.1.tgz
+    version: 8.1.1
+  - apiVersion: v2
+    appVersion: 3.5.0
+    created: "2021-01-12T10:56:32Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://charts.4allportal.net
+      version: 0.4.0
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.3.4
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 52c69972b66a6ac972a39b6262c2dfaa82766f4c7e01501f68e14abc9e5f2f7a
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-8.1.0.tgz
+    version: 8.1.0
+  - apiVersion: v2
+    appVersion: 3.5.0
+    created: "2021-01-11T16:03:09Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.4allportal.net
+      version: 1.6.7
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://charts.4allportal.net
+      version: 0.4.0
+    - alias: mariadb
+      condition: mariadb.enabled
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.3.4
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 1a8af5b2c262061e606fe0ae2ee5c6e768e0254c37e320808a3b5f0ff5a32aed
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-8.0.1.tgz
+    version: 8.0.1
+  - apiVersion: v2
+    appVersion: 3.5.0
+    created: "2020-11-30T16:45:47Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.7
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: f5a5e3243c4c2766cd9a98a700945d1d0848914f2a0f5843ae558f8057f60608
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.15.0.tgz
+    version: 7.15.0
+  - apiVersion: v2
+    appVersion: 3.5.0
+    created: "2020-11-02T17:16:05Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.7
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 0fd722b3240f3b71655e08dced45e6a768a019f350eec1fbf9e466fe900b8fa5
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.14.3.tgz
+    version: 7.14.3
+  - apiVersion: v2
+    appVersion: 3.5.0
+    created: "2020-11-02T17:09:41Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.7
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 3f3d4d33b955b1f08f00a9159e23248813993a94b516a3dfc40c1cecbbb47ae5
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.14.2.tgz
+    version: 7.14.2
+  - apiVersion: v2
+    appVersion: 3.5.0
+    created: "2020-11-02T14:09:10Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.7
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: b45c36f4f3c643960cb682b30ae979da719998531dccff05d568f36c74c655cb
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.14.1.tgz
+    version: 7.14.1
+  - apiVersion: v2
+    appVersion: 3.5.0
+    created: "2020-11-02T14:00:35Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.7
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 4fc3e8dad8d33ba636051fc096650c70804cbe5e9b0a8511f230de6edf865ba0
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.14.0.tgz
+    version: 7.14.0
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-10-22T10:55:25Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.6
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 394fae805349b910b1f31b374b1eb17d7e47b692ebe14103ab1b5f4937e96b36
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.13.0.tgz
+    version: 7.13.0
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-10-07T14:20:01Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.6
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: c0cf57bfd4c39b62c3c06e728f37e53ac8ecc7ec31f8983343c27ef5543e5d01
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.12.3.tgz
+    version: 7.12.3
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-10-07T13:49:21Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.6
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 7879a641b3cbeb5602d4cb9bdcd428f817bebb108665bfd13826f9ed0ef87c3c
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.12.2.tgz
+    version: 7.12.2
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-10-07T13:36:00Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.6
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 0347e47dc55b1cba08b87a28630c72de46cf2bb86eaed2aada2b678198a9108e
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.12.1.tgz
+    version: 7.12.1
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-10-07T13:18:50Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.6
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 117d2568fc1c4fee1915ba149f152ecd2f796e448a3fe9b1e78d491cfed06f77
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.12.0.tgz
+    version: 7.12.0
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-09-21T14:28:48Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.6
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: bd4a58d72198410f0e5d63b7e4f8c44cf7d023689489e3b600d3190a80b7e801
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.11.1.tgz
+    version: 7.11.1
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-09-14T16:55:59Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.6
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 953dfd2ba1f3a180dde8ae9521e23849485ad9c7d55ba6b2ecc50c4f8d7a3efd
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.10.0.tgz
+    version: 7.10.0
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-09-10T16:43:25Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.6
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 439bdcd46611ff39506a4223a2626ed59fc11a527b87c8c9d0477133c389f8c8
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.9.0.tgz
+    version: 7.9.0
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-09-09T13:33:09Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.6
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 47ab5ea8cb77574afa136c487aa7e28a1190df8b0238d3c7417a20fca14ec36a
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.8.0.tgz
+    version: 7.8.0
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-09-09T09:59:03Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.6
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: ab0505b48bebf3adaea646c3bfbb5a30dc43f730e1ccfba19316a8e6267cbda6
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.7.0.tgz
+    version: 7.7.0
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-09-08T13:42:10Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.6
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: f9e624389cf394e5ed010c96b2c1fb41d142007b84518c18c8fc4912003437a4
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.6.0.tgz
+    version: 7.6.0
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-08-20T11:21:35Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.6
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 052061d5bb60e8a87aa099ce5690c5802d89c2aa4d7b06e96913b72f64314909
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.5.0.tgz
+    version: 7.5.0
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-07-16T12:56:52Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.6
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.1.1
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 8e0ce966a01164ad1c450210286ee0d77159871296c196ac648931aab049e6a9
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.4.0.tgz
+    version: 7.4.0
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-07-16T13:50:02Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.6
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.1.1
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 15fb216bdb682476e94059737bb0e7c340072144814c59ca26a31ec7680c70df
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.3.4.tgz
+    version: 7.3.4
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-07-16T13:23:43Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.6
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.1.1
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 1aa50d58ba710af120841be5d21d5164b1d9aaf10b14268512e1923a13d1d41d
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.3.3.tgz
+    version: 7.3.3
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-07-16T13:09:42Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.6
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.1.1
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: eb40da5e17bdfbf0e307054a2a995791fa010cfb114fa39da4ebf49539c129ec
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.3.2.tgz
+    version: 7.3.2
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-07-16T12:57:02Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.6
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.1.1
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 68e5634449d5fced75925687e7203abed528da188c46846971fa6eab03a1e5a2
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.3.1.tgz
+    version: 7.3.1
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-07-16T08:55:39Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.6
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.1.1
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: b22a68cb57eb80a2b1ca90f3d8c79af492545ae74e73506badfec5dcd317b463
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.3.0.tgz
+    version: 7.3.0
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-07-06T11:24:29Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.2
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 44c3d3e6b4306f50ad2648e15479dbc92e5051474443aebfc430368155c8aee4
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.2.0.tgz
+    version: 7.2.0
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-06-23T12:38:55Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.2
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: ce7dfc38e8a625297487b29e100349b8ac15d10e0eee1c2f94206f36e148f2a9
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.1.1.tgz
+    version: 7.1.1
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-05-14T10:57:35Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.2
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 952125674a14e28c6e41c15b0ae255ae93789a48a415d1f778b88091370f0206
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.1.0.tgz
+    version: 7.1.0
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-04-20T09:34:55Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.2
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 8fc43d08a9227e046c58af08aa448266f3a36ae04e263d88810ebd1617773fb3
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.0.12.tgz
+    version: 7.0.12
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-04-20T09:22:25Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.2
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: ddc256b78b10beab32976dea85ef426d531cee8feaed71170a8ee2dd4a92b6eb
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.0.11.tgz
+    version: 7.0.11
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-04-16T09:07:57Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.2
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 5f0075c741789d4db610b1168ad01c37daead1c3b6f0b3b1213ffe25b2a8a5d5
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.0.10.tgz
+    version: 7.0.10
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-04-02T09:42:17Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.2
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 5ee5f80a2dc207fb82bc8ad9bc3bf80fd1b70886b30a98bc79f2111ace89141e
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.0.9.tgz
+    version: 7.0.9
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-03-31T17:21:58Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.2
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 1943fc69049b1b3b7b55bad9eddfd61787e0d8041a300c240fe109e99af8d4ab
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.0.8.tgz
+    version: 7.0.8
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-03-27T14:53:08Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.2
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: b17ebaad8f8923bbe94350a31f83589658262ecdb3701e2fecbf5ce84295e8b3
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.0.7.tgz
+    version: 7.0.7
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-03-26T15:57:37Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.2
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 28d188605bf23ffaaf5d512a20cb3dafe86a002e6e1aa66d6f8881c532ff0de9
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.0.6.tgz
+    version: 7.0.6
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-03-23T16:09:42Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.2
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 50afdcee29c54025bd83fc91437741644faef9623873451c7b8ef14eda360573
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.0.5.tgz
+    version: 7.0.5
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-03-13T09:37:58Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.2
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 8c0b1668c05b88945a3f6c877b56d906dceb467b7afd2a5e8a1680cfb2786c61
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.0.4.tgz
+    version: 7.0.4
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-03-13T08:16:16Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.2
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 59da9f8ad2556919ab8aed4d0a109c3bfa923c1955377df3358b6b730a3ed409
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.0.3.tgz
+    version: 7.0.3
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-02-21T20:03:47Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.2
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: fd66c1ad906e2cf8c325a99bf253e51725f2e87127354e7d65ef0668e583cb6d
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.0.2.tgz
+    version: 7.0.2
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-02-07T16:47:57Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.2
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 359189e299e878738f8584581f6fbc0d602050bbc58a0c5307398c916a2601d0
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.0.1.tgz
+    version: 7.0.1
+  - apiVersion: v1
+    appVersion: 3.5.0
+    created: "2020-02-07T14:43:40Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.2
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.5.0 and up
+    digest: 85c66fa5c2422178d7fe6e8d32133998e83ad79fd5d068ae5bfc0ec5a177feeb
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-7.0.0.tgz
+    version: 7.0.0
+  - apiVersion: v1
+    appVersion: 3.2.0
+    created: "2020-02-04T10:56:11Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.2
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.2.0 and up
+    digest: a2d551c9eac0e774db3ba7c9fb2dd2879d889374f366f4dbfd113b76d2c6fc05
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.net
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-6.0.4.tgz
+    version: 6.0.4
+  - apiVersion: v1
+    appVersion: 3.2.0
+    created: "2020-02-04T10:52:24Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.2
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.2.0 and up
+    digest: 6847189eb0a038495c88f3144dab2aab18aa0a65092e1eeba13682a02df06592
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.net
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-6.0.3.tgz
+    version: 6.0.3
+  - apiVersion: v1
+    appVersion: 3.2.0
+    created: "2020-02-04T08:56:59Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.2
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.2.0 and up
+    digest: b50a359f1a5af1505ac77241f1886091f4ad35509db84445cddb44b15a57b755
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.net
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-6.0.2.tgz
+    version: 6.0.2
+  - apiVersion: v1
+    appVersion: 3.2.0
+    created: "2020-02-03T13:02:16Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.2
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.4.0
+    description: A Helm chart for 4ALLPORTAL version 3.2.0 and up
+    digest: e1f245c8e18d8057a95a9fe28152bce1956a30648ee4b510de1414bed144351b
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.net
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-6.0.1.tgz
+    version: 6.0.1
+  - apiVersion: v1
+    appVersion: 3.2.0
+    created: "2020-02-03T10:53:54Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.2
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.5.0
+    description: A Helm chart for 4ALLPORTAL version 3.2.0 and up
+    digest: 5e689458c93b73e685fc184b56285bfb4e08c61618e9db57fc43f46d4467f50c
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.net
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-6.0.0.tgz
+    version: 6.0.0
+  - apiVersion: v1
+    appVersion: 3.2.0
+    created: "2020-01-31T18:04:09Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.2
+    - alias: smb
+      condition: smb.enabled
+      name: samba-operator
+      repository: https://charts.4allportal.net/
+      version: 0.1.0
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.3.2
+    description: A Helm chart for 4ALLPORTAL version 3.2.0 and up
+    digest: 64eee5a5731c5d22afc07ae19c9f70cc5456e173e89f5d5d52363d0753de7972
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.net
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-5.0.2.tgz
+    version: 5.0.2
+  - apiVersion: v1
+    appVersion: 3.2.0
+    created: "2020-01-28T18:55:07Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.6.2
+    - alias: smb
+      condition: smb.enabled
+      name: samba-operator
+      repository: https://charts.4allportal.net/
+      version: 0.1.0
+    description: A Helm chart for 4ALLPORTAL version 3.2.0 and up
+    digest: 75885786b6888ea705e3314a9870ff39b364b7c8c490165bed35dd677e0f3677
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.net
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-5.0.1.tgz
+    version: 5.0.1
+  - apiVersion: v1
+    appVersion: 3.2.0
+    created: "2020-01-28T17:43:37Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.3.1
+    - alias: smb
+      condition: smb.enabled
+      name: samba-operator
+      repository: https://charts.4allportal.net/
+      version: 0.1.0
+    description: A Helm chart for 4ALLPORTAL version 3.2.0 and up
+    digest: 24dec07798e0eb011db7c73c515fcffadbd664e8f3ff0620c2c6b4d895d78320
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.net
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-5.0.0.tgz
+    version: 5.0.0
+  - apiVersion: v1
+    appVersion: 3.2.0
+    created: "2020-01-27T18:34:07Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.3.1
+    - alias: smb
+      condition: smb.enabled
+      name: samba-operator
+      repository: https://charts.4allportal.net/
+      version: 0.1.0
+    description: A Helm chart for 4ALLPORTAL version 3.2.0 and up
+    digest: 63d45379aab02a0f20a57057883eed7ee0870e34bf3eeefd6051e01a80ba134c
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.net
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-4.0.2.tgz
+    version: 4.0.2
+  - apiVersion: v1
+    appVersion: 3.2.0
+    created: "2020-01-27T18:07:14Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.3.1
+    - alias: smb
+      condition: smb.enabled
+      name: samba-operator
+      repository: https://charts.4allportal.net/
+      version: 0.1.0
+    description: A Helm chart for 4ALLPORTAL version 3.2.0 and up
+    digest: 7b3d111d98e0d6d9a9091b390baf6d3b488745ba72ca3a4adbf4ee8560c3d56c
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.net
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-4.0.1.tgz
+    version: 4.0.1
+  - apiVersion: v1
+    appVersion: 3.2.0
+    created: "2020-01-27T10:42:49Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.3.1
+    - alias: smb
+      condition: smb.enabled
+      name: samba-operator
+      repository: https://charts.4allportal.net/
+      version: 0.1.0
+    description: A Helm chart for 4ALLPORTAL version 3.2.0 and up
+    digest: bd15c637e2eb8cc59a19dba75806f162801f9790237d24dc718b09b943ff923a
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.net
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-4.0.0.tgz
+    version: 4.0.0
+  - apiVersion: v1
+    appVersion: 3.2.0
+    created: "2020-01-20T13:00:04Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.3.1
+    - alias: smb
+      condition: smb.enabled
+      name: samba-operator
+      repository: https://charts.4allportal.net/
+      version: 0.1.0
+    description: A Helm chart for 4ALLPORTAL version 3.2.0 and up
+    digest: 7aefa7c284d714ad4ea88867fd9d39c1d241c753a8d892157a520a80217a682b
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.net
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-3.0.0.tgz
+    version: 3.0.0
+  - apiVersion: v1
+    appVersion: 3.2.0
+    created: "2020-01-09T14:50:34Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.3.1
+    - alias: nfs
+      condition: nfs.enabled
+      name: nfs-server-provisioner
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 0.3.2
+    description: A Helm chart for 4ALLPORTAL version 3.2.0 and up
+    digest: 61cd770e97dd6de260a257e9587998520b499cf62d05f4295e0b29098e334767
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.net
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-2.0.0.tgz
+    version: 2.0.0
+  - apiVersion: v1
+    appVersion: 3.2.0
+    created: "2020-01-07T13:08:16Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.3.1
+    description: A Helm chart for 4ALLPORTAL version 3.2.0 and up
+    digest: df9b99aa6e8fe5f7afd78443e6beea2d88f76022252889f6db118516f77906eb
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.net
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-1.1.4.tgz
+    version: 1.1.4
+  - apiVersion: v1
+    appVersion: 3.2.0
+    created: "2019-12-12T15:59:03Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.3.1
+    description: A Helm chart for 4ALLPORTAL version 3.2.0 and up
+    digest: fab0381384e9c3c6c86bff5e11f627a050aef2253b37c53f030d3c6f827a5a85
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.net
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-1.1.3.tgz
+    version: 1.1.3
+  - apiVersion: v1
+    appVersion: 3.2.0
+    created: "2019-12-11T11:00:34Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.3.1
+    description: A Helm chart for 4ALLPORTAL version 3.2.0 and up
+    digest: 7ed174e297b07972aaac4f5f642b393d7f2f0c55a8a0c5bb5faee438379dcc14
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.net
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-1.1.2.tgz
+    version: 1.1.2
+  - apiVersion: v1
+    appVersion: 3.2.0
+    created: "2019-12-11T10:15:32Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.3.1
+    description: A Helm chart for 4ALLPORTAL version 3.2.0 and up
+    digest: 6a4ed1a3274b38b186917d32e99da0ee7f5c4ca5c611f5f56fd4ba02f515f9e6
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.net
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-1.1.1.tgz
+    version: 1.1.1
+  - apiVersion: v1
+    appVersion: 3.2.0
+    created: "2019-12-11T10:13:00Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.3.1
+    description: A Helm chart for 4ALLPORTAL version 3.2.0 and up
+    digest: d94c7038d1f21f9905173634ef934f5d3b4c6408a57267c9a310cfde79ad28f9
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.net
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v1
+    appVersion: 3.2.0
+    created: "2019-11-28T15:11:38Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.3.1
+    description: A Helm chart for 4ALLPORTAL version 3.2.0 and up
+    digest: 9676825d9bccfd5689a329c1fc81905a83bde71793356d8492e1e46f2ffaef98
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.net
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-1.0.9.tgz
+    version: 1.0.9
+  - apiVersion: v1
+    appVersion: 3.2.0
+    created: "2019-11-18T14:03:11Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.3.1
+    description: A Helm chart for 4ALLPORTAL version 3.2.0 and up
+    digest: a6f62e638bf3c65b15742b13807ad28e7a1b03e6fcad38e29759b843fda15323
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.net
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-1.0.8.tgz
+    version: 1.0.8
+  - apiVersion: v1
+    appVersion: 3.2.0
+    created: "2019-10-24T13:45:18Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.3.1
+    description: A Helm chart for 4ALLPORTAL version 3.2.0 and up
+    digest: e7b531e4304228f6f3a08b56384f121f2921e2eb3c14396eca95adb010a0fe5e
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.net
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-1.0.7.tgz
+    version: 1.0.7
+  - apiVersion: v1
+    appVersion: 3.2.0
+    created: "2019-10-16T14:25:16Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.3.1
+    description: A Helm chart for 4ALLPORTAL version 3.2.0 and up
+    digest: 014eabf486098eec77b76765d1069323baa8e6f59c1b6872c9d4abcd1ad37c9b
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.net
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-1.0.6.tgz
+    version: 1.0.6
+  - apiVersion: v1
+    appVersion: 3.2.0
+    created: "2019-10-16T13:58:45Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com
+      version: 1.3.1
+    description: A Helm chart for 4ALLPORTAL version 3.2.0 and up
+    digest: 41f63c9b33fc2483e52447eb7f55bd54d19563b73a02467d38f1f5cfa6c2d68b
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.net
+      name: Chris Werner Rau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-1.0.5.tgz
+    version: 1.0.5
 generated: "2022-06-09T12:32:46.992387041Z"
