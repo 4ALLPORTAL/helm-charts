@@ -20,7 +20,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
-      - name: Check Docs
+      - name: Commit updated Docs
         run: |
           docker run --rm --volume "$(pwd):/helm-docs" -u "$(id -u)" jnorwood/helm-docs:v1.8.1
           if ! git diff --exit-code; then
