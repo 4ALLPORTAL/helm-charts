@@ -7,12 +7,18 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{github.event.pull_request.head.ref}}
+          repository: ${{github.event.pull_request.head.repo.full_name}}
+
       - name: install yq
         run: |
           sudo snap install yq
+
       - name: generate CODEOWNERS
         run: |
           ./.github/scripts/sync-codeowners.sh > .github/CODEOWNERS
+
       - name: commit CODEOWNERS modifications
         run: |
           if ! git diff --exit-code; then
