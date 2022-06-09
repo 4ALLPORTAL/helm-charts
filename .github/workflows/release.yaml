@@ -26,7 +26,7 @@ jobs:
       - name: Add dependency chart repos
         run: |
           helm repo add bitnami https://charts.bitnami.com
-          helm repo add bitnami https://charts.4allportal.net
+          helm repo add 4allportal https://charts.4allportal.net
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.2.0
         with:
