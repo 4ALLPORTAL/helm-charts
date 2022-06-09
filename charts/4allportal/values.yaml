@@ -35,19 +35,19 @@ fourAllPortal:
 
   debug: false
 
-  fourApps: { }
+  fourApps: {}
 
   persistence:
     config:
       enabled: false
       accessMode: ReadWriteMany
       size: 100Gi
-      annotations: { }
+      annotations: {}
     assets:
       enabled: false
       accessMode: ReadWriteMany
       size: 5Gi
-      annotations: { }
+      annotations: {}
 
   hpa:
     enabled: false
@@ -140,23 +140,23 @@ fourAllPortal:
     maxPoolSize: 90
     numHelperThreads: 5
     acquireIncrement: 5
-    existing: { }
+    existing: {}
 
-  env: { }
+  env: {}
 
   ingress:
     enabled: false
-    existingCertificate: { }
+    existingCertificate: {}
     endpointMonitor:
       enabled: false
-    additionalHosts: { }
+    additionalHosts: {}
     host: ""
-    annotations: { }
+    annotations: {}
 
-  nodeSelector: { }
-  hostAliases: [ ]
-  affinity: { }
-  tolerations: [ ]
+  nodeSelector: {}
+  hostAliases: []
+  affinity: {}
+  tolerations: []
 
   tracing:
     enabled: false
@@ -168,7 +168,7 @@ fourAllPortal:
         type: const
         param: 1
 
-  initContainers: [ ]
+  initContainers: []
 
   podDisruptionBudget: true
 
@@ -219,9 +219,9 @@ dreiDRenderer:
   securityOptions: *securityOptions
   containerSecurityContext: *containerSecurityContext
 
-  nodeSelector: { }
-  affinity: { }
-  tolerations: [ ]
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
 
   podDisruptionBudget: true
 
@@ -266,21 +266,21 @@ webdav:
       cpu: 4
       memory: 1Gi
 
-  users: { }
-  groups: { }
-  mounts: { }
+  users: {}
+  groups: {}
+  mounts: {}
 
   securityContext: *securityContext
   securityOptions: *securityOptions
   containerSecurityContext: *containerSecurityContext
 
-  affinity: { }
-  nodeSelector: { }
-  tolerations: [ ]
+  affinity: {}
+  nodeSelector: {}
+  tolerations: []
 
   podDisruptionBudget: true
 
-users: [ ]
+users: []
 
 backups:
   target:
@@ -292,8 +292,8 @@ backups:
   s3:
     image:
       registry: docker.io
-      repository: jess/s3cmd@sha256
-      tag: ed9c4389bedf382edf1c243ac9c95b042725a564773c7ffc2ea01ed17152bded
+      repository: jess/s3cmd
+      tag: latest@sha256:ed9c4389bedf382edf1c243ac9c95b042725a564773c7ffc2ea01ed17152bded
     resources:
       requests:
         cpu: 100m
@@ -305,7 +305,7 @@ backups:
     enabled: false
     retention:
       prune: true
-      policy: { }
+      policy: {}
     password: ""
     schedule: ""
   mysql:
@@ -317,15 +317,15 @@ backups:
       limits:
         cpu: 2
         memory: 1Gi
-    persistence: { }
+    persistence: {}
     daysToKeep: 7
     weeksToKeep: 4
     monthsToKeep: 6
     securityContext: *securityContext
     securityOptions: *securityOptions
     containerSecurityContext: *containerSecurityContext
-    nodeSelector: { }
-    tolerations: [ ]
+    nodeSelector: {}
+    tolerations: []
 
 maxscale:
   enabled: true
@@ -337,4 +337,4 @@ maxscale:
     db:
       name: 4allportal
       user: 4allportal
-    podDisruptionBudget: { }
+    podDisruptionBudget: {}
