@@ -1,0 +1,17 @@
+{{ if .Values.dreiDRenderer.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ include "common.names.fullname" . }}-3d-renderer"
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: 3d-renderer
+spec:
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector: {{- include "common.labels.matchLabels" $ | nindent 4 }}
+    app.kubernetes.io/component: 3d-renderer
+  {{ end }}

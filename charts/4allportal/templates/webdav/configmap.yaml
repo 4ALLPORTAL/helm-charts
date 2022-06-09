@@ -1,0 +1,126 @@
+{{- if $.Values.webdav.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ include "common.names.fullname" $ }}-webdav"
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.stable" $ | nindent 4 }}
+data:
+  groups: |
+    {{- range $group, $users := $.Values.webdav.groups }}
+      {{ $group -}}: {{ $users | join " " }}
+    {{- end }}
+  httpd.conf: |
+    ServerRoot "/usr/local/apache2"
+    ServerName {{ .Values.fourAllPortal.ingress.host }}
+    Listen 8080
+    LoadModule auth_digest_module modules/mod_auth_digest.so
+    LoadModule authn_core_module modules/mod_authn_core.so
+    LoadModule authn_file_module modules/mod_authn_file.so
+    LoadModule authz_core_module modules/mod_authz_core.so
+    LoadModule authz_groupfile_module modules/mod_authz_groupfile.so
+    LoadModule authz_user_module modules/mod_authz_user.so
+    LoadModule autoindex_module modules/mod_autoindex.so
+    LoadModule dav_module modules/mod_dav.so
+    LoadModule dav_fs_module modules/mod_dav_fs.so
+    LoadModule dir_module modules/mod_dir.so
+    LoadModule headers_module modules/mod_headers.so
+    LoadModule log_config_module modules/mod_log_config.so
+    LoadModule logio_module modules/mod_logio.so
+    LoadModule mime_module modules/mod_mime.so
+    LoadModule mpm_event_module modules/mod_mpm_event.so
+    LoadModule remoteip_module modules/mod_remoteip.so
+    LoadModule setenvif_module modules/mod_setenvif.so
+    LoadModule unixd_module modules/mod_unixd.so
+
+    PidFile /dav/httpd.pid
+
+    <IfModule remoteip_module>
+      RemoteIPHeader X-Forwarded-For
+    </IfModule>
+
+    <Directory />
+      AllowOverride none
+      Require all denied
+    </Directory>
+
+    <Files ".DS_Store">
+      Require all denied
+    </Files>
+
+    <FilesMatch "^\._.*">
+      Require all denied
+    </FilesMatch>
+
+    ErrorLog /proc/self/fd/2
+    ErrorLogFormat "{\"ts\": \"%{cu}t\", \"module\": \"%-m\", \"level\": \"%l\", \"message\": \"%M\", \"clientIP\": \"%-a\"}"
+    LogLevel {{ if .Values.fourAllPortal.debug -}}debug{{- else -}}info{{- end }}
+
+    <IfModule log_config_module>
+      CustomLog /proc/self/fd/1 "{\"ts\": \"%{%FT%T}t.%{msec_frac}t%{%z}t\", \"requestID\": \"%L\", \"connectionID\": \"%{c}L\", \"user\": \"%u\", \"level\": \"%l\", \"status\": \"%s\", \"method\": \"%m\", \"path\": \"%U\", \"query\": \"%q\", \"clientIP\": \"%a\", \"userAgent\": \"%{User-Agent}i\", \"bytesSent\": \"%O\", \"bytesReceived\": \"%I\"}"
+    </IfModule>
+
+    <IfModule mime_module>
+      TypesConfig conf/mime.types
+
+      AddType application/x-compress .Z
+      AddType application/x-gzip .gz .tgz
+    </IfModule>
+
+    Include conf/conf-enabled/dav.conf
+    Include conf/sites-enabled/site.conf
+    EnableMMAP off
+  site.conf: |
+    <VirtualHost *:8080>
+      DocumentRoot "/dav/data"
+      TimeOut 600
+      <Directory "/dav/data">
+        Require all denied
+      </Directory>
+      # This lets certain DAV methods work behind an SSL reverse proxy.
+      RequestHeader edit Destination ^https http early
+    </VirtualHost>
+  dav.conf: |
+    DavLockDB "/dav/DavLockDB"
+    {{ range $path, $permissions := $.Values.webdav.mounts }}
+    <Directory "/dav/data/webdav{{- $path -}}">
+      DAV On
+      DavDepthInfinity On
+      DavMinTimeout 600
+      DirectorySlash Off
+
+      Options Indexes FollowSymLinks MultiViews
+
+      LimitXMLRequestBody 0
+
+      AuthType Digest
+      AuthName "WebDAV"
+      AuthUserFile "/dav/user.passwd"
+      AuthGroupFile "/dav/groups"
+
+      <RequireAny>
+        {{- with $users := $permissions.users }}
+        Require user {{ $users | join " " }}
+        {{- end }}
+        {{- with $groups := $permissions.groups }}
+        Require group {{ $groups | join " " }}
+        {{- end }}
+        {{- if and (not $permissions.users) (not $permissions.groups) }}
+        Require all denied
+        {{- end }}
+      </RequireAny>
+    </Directory>
+    {{ end }}
+    # These disable redirects on non-GET requests for directories that
+    # don't include the trailing slash (for misbehaving clients).
+    BrowserMatch "Microsoft Data Access Internet Publishing Provider" redirect-carefully
+    BrowserMatch "MS FrontPage" redirect-carefully
+    BrowserMatch "^WebDrive" redirect-carefully
+    BrowserMatch "^WebDAVFS/1.[01234]" redirect-carefully
+    BrowserMatch "^gnome-vfs/1.0" redirect-carefully
+    BrowserMatch "^XML Spy" redirect-carefully
+    BrowserMatch "^Dreamweaver-WebDAV-SCM1" redirect-carefully
+    BrowserMatch " Konqueror/4" redirect-carefully
+    BrowserMatch "^gvfs" redirect-carefully
+    BrowserMatch "WebDAVLib" redirect-carefully
+{{- end }}

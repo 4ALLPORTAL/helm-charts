@@ -1,0 +1,17 @@
+{{- if .Values.webdav.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ include "common.names.fullname" $ }}-webdav"
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: webdav
+spec:
+  ports:
+    - port: 80
+      targetPort: webdav
+      protocol: TCP
+      name: webdav
+  selector: {{- include "common.labels.matchLabels" $ | nindent 4 }}
+    app.kubernetes.io/component: webdav
+  {{- end }}

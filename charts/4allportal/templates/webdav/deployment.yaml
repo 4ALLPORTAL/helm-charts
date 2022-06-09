@@ -1,0 +1,157 @@
+{{- if .Values.webdav.enabled }}
+  {{- $securityOptions := .Values.webdav.securityOptions | toYaml -}}
+  {{- $securityContext := .Values.webdav.securityContext | toYaml -}}
+  {{- $containerSecurityContext := .Values.webdav.containerSecurityContext | toYaml -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ include "common.names.fullname" $ }}-webdav"
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: webdav
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" $ | nindent 6 }}
+      app.kubernetes.io/component: webdav
+  template:
+    metadata:
+      labels: {{- include "common.labels.stable" $ | nindent 8 }}
+        app.kubernetes.io/component: webdav
+      annotations:
+        checksum/secret: {{ include (print $.Template.BasePath "/webdav/secret.yaml") $ | sha256sum }}
+        checksum/configmap: {{ include (print $.Template.BasePath "/webdav/configmap.yaml") $ | sha256sum }}
+    spec:
+      {{- include "4allportal.webdav.priorityClassName" $ | nindent 6 }}
+      {{- $securityOptions | nindent 6 }}
+      automountServiceAccountToken: false
+      securityContext: {{- $securityContext | nindent 8 }}
+      enableServiceLinks: false
+      initContainers:
+        - name: auth
+          securityContext: {{- $containerSecurityContext | nindent 12 }}
+          image: {{ template "4allportal.webdav.image" $ }}
+          {{- if $.Values.webdav.image.repository | contains "@" }}
+          imagePullPolicy: IfNotPresent
+          {{- else }}
+          imagePullPolicy: Always
+          {{- end }}
+          command:
+            - bash
+            - -e
+            - -c
+            - |-
+              while read -r username password; do
+                digest="$(printf "%s:%s:%s" "$username" "WebDAV" "$password" | md5sum | awk '{print $1}')"
+                printf "%s:%s:%s\n" "$username" "WebDAV" "$digest"
+              done < /tmp/users > /dav/user.passwd
+          volumeMounts:
+            - name: auth
+              mountPath: /dav
+            - name: users
+              subPath: users
+              mountPath: /tmp/users
+              readOnly: true
+          resources: {{- toYaml $.Values.webdav.resources | nindent 12 }}
+      containers:
+        - name: webdav
+          securityContext: {{- $containerSecurityContext | nindent 12 }}
+          image: {{ template "4allportal.webdav.image" $ }}
+          {{- if $.Values.webdav.image.repository | contains "@" }}
+          imagePullPolicy: IfNotPresent
+          {{- else }}
+          imagePullPolicy: Always
+          {{- end }}
+          ports:
+            - containerPort: 8080
+              name: webdav
+              protocol: TCP
+          command:
+            - bash
+            - -ex
+            - -c
+            - |-
+              for path in {{ $.Values.webdav.mounts | keys | sortAlpha | join " " }}; do
+                mkdir -p /dav/data/webdav$path
+              done
+              exec /usr/local/bin/httpd-foreground
+          volumeMounts:
+            - name: assets
+              mountPath: /dav/data/webdav/assets
+            - name: config
+              mountPath: /dav/data/webdav/data
+            - name: webdavconfig
+              subPath: dav.conf
+              mountPath: /usr/local/apache2/conf/conf-enabled/dav.conf
+              readOnly: true
+            - name: webdavconfig
+              subPath: site.conf
+              mountPath: /usr/local/apache2/conf/sites-enabled/site.conf
+              readOnly: true
+            - name: webdavconfig
+              subPath: httpd.conf
+              mountPath: /usr/local/apache2/conf/httpd.conf
+              readOnly: true
+            - name: webdavconfig
+              subPath: groups
+              mountPath: /dav/groups
+              readOnly: true
+            - name: auth
+              subPath: user.passwd
+              mountPath: /dav/user.passwd
+              readOnly: true
+            - name: tmp
+              mountPath: /dav
+          {{- if $.Values.webdav.livenessProbe.enabled }}
+          livenessProbe:
+            exec:
+              command:
+                - bash
+                - -c
+                - timeout 1 ls -d /dav/data/webdav/assets
+                - timeout 1 ls -d /dav/data/webdav/data
+            failureThreshold: {{ $.Values.webdav.livenessProbe.failureThreshold }}
+            initialDelaySeconds: {{ $.Values.webdav.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ $.Values.webdav.livenessProbe.periodSeconds }}
+            successThreshold: {{ $.Values.webdav.livenessProbe.successThreshold }}
+            timeoutSeconds: {{ $.Values.webdav.livenessProbe.timeoutSeconds }}
+          {{- end }}
+          {{- if $.Values.webdav.readinessProbe.enabled }}
+          readinessProbe:
+            tcpSocket:
+              port: webdav
+            failureThreshold: {{ $.Values.webdav.readinessProbe.failureThreshold }}
+            initialDelaySeconds: {{ $.Values.webdav.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ $.Values.webdav.readinessProbe.periodSeconds }}
+            successThreshold: {{ $.Values.webdav.readinessProbe.successThreshold }}
+            timeoutSeconds: {{ $.Values.webdav.readinessProbe.timeoutSeconds }}
+          {{- end }}
+          resources: {{- toYaml $.Values.webdav.resources | nindent 12 }}
+      volumes:
+        - name: assets
+        {{- include "4allportal.fourallportal.persistence.assets.mount" $ | nindent 10 }}
+        - name: config
+        {{- include "4allportal.fourallportal.persistence.config.mount" $ | nindent 10 }}
+        - name: webdavconfig
+          configMap:
+            name: "{{ include "common.names.fullname" $ }}-webdav"
+        - name: auth
+          emptyDir: { }
+        - name: users
+          secret:
+            secretName: {{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "webdav" "context" $) }}
+        - name: tmp
+          emptyDir:
+            medium: Memory
+      {{- with $.Values.webdav.nodeSelector }}
+      nodeSelector: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.webdav.affinity }}
+      affinity: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.webdav.tolerations }}
+      tolerations: {{- toYaml . | nindent 8 }}
+  {{- end }}
+  {{- end -}}

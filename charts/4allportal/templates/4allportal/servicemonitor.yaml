@@ -1,0 +1,19 @@
+{{- if and .Values.fourAllPortal.metrics.enabled .Values.fourAllPortal.metrics.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: backend
+  name: "{{ include "common.names.fullname" . }}-backend"
+  namespace: {{ .Release.Namespace }}
+spec:
+  endpoints:
+    - path: /actuator/prometheus
+      port: metrics
+  namespaceSelector:
+    matchNames:
+      - "{{ .Release.Namespace }}"
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" $ | nindent 6 }}
+      app.kubernetes.io/component: backend
+  {{- end }}
