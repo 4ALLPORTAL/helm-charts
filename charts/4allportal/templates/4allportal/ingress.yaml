@@ -1,0 +1,50 @@
+{{- if .Values.fourAllPortal.ingress.enabled -}}
+  {{- if false }}
+apiVersion: networking.k8s.io/v1
+  {{- else }}
+apiVersion: {{ include "common.capabilities.ingress.apiVersion" . }}
+  {{- end }}
+kind: Ingress
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "true"
+  {{- with .Values.fourAllPortal.ingress.annotations }}
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  rules:
+    - host: {{ required "You must provide a host, when enabling ingress" .Values.fourAllPortal.ingress.host | quote }}
+      http:
+        paths:
+          - path: /
+            backend: {{- include "common.ingress.backend" (dict "serviceName" (printf "%s-backend" (include "common.names.fullname" .)) "servicePort" "http" "context" $) | nindent 14 }}
+            pathType: Prefix
+
+          {{- if .Values.webdav.enabled }}
+          - path: "/webdav"
+            backend: {{- include "common.ingress.backend" (dict "serviceName" (printf "%s-webdav" (include "common.names.fullname" $)) "servicePort" "webdav" "context" $) | nindent 14 }}
+            pathType: Prefix
+            {{- end }}
+
+{{- range $name, $ingress := .Values.fourAllPortal.ingress.additionalHosts }}
+    - host: {{ required "You must provide a host, when enabling ingress" $ingress.host | quote }}
+      http:
+        paths:
+          - path: /
+            backend: {{- include "common.ingress.backend" (dict "serviceName" (printf "%s-backend" (include "common.names.fullname" $)) "servicePort" "http" "context" $) | nindent 14 }}
+            pathType: Prefix
+  {{- end }}
+
+  tls:
+    - hosts:
+        - {{ required "You must provide a host, when enabling ingress" .Values.fourAllPortal.ingress.host | quote }}
+      secretName: {{ include "common.secrets.name" (dict "existingSecret" .Values.fourAllPortal.ingress.existingCertificate "defaultNameSuffix" "custom-certificate" "context" $) }}
+      {{- range $name, $ingress := .Values.fourAllPortal.ingress.additionalHosts }}
+    - hosts:
+        - {{ required "You must provide a host, when enabling ingress" $ingress.host | quote }}
+      secretName: {{ include "common.secrets.name" (dict "existingSecret" $ingress.existingCertificate "defaultNameSuffix" (printf "%s-%s" "custom-certificate" $name) "context" $) }}
+      {{- end }}
+      {{- end }}

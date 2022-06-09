@@ -1,0 +1,20 @@
+{{- if and (or $.Values.global.persistence.enabled $.Values.fourAllPortal.persistence.assets.enabled) .Values.backups.volumes.enabled -}}
+  {{- range $volume := list "config" "assets" -}}
+apiVersion: stash.appscode.com/v1alpha1
+kind: Repository
+metadata:
+  name: "{{ include "common.names.fullname" $ }}-{{ $volume }}"
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: volume
+    app.kubernetes.io/part-of: backup
+spec:
+  backend:
+    storageSecretName: {{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "backup" "context" $) }}
+    s3:
+      bucket: {{ $.Values.backups.target.s3.bucket | quote }}
+      endpoint: {{ $.Values.backups.target.s3.endpoint | quote }}
+      prefix: {{ printf "%s/%s/persistentvolumeclaim/%s" $.Release.Namespace $.Release.Name $volume | quote }}
+---
+{{ end -}}
+  {{- end -}}

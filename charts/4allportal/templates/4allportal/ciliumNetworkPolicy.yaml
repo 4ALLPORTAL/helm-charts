@@ -1,0 +1,77 @@
+{{- if eq (include "common.networkPolicy.type" .) "cilium" }}
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: "{{ include "common.names.fullname" . }}-backend"
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: backend
+spec:
+  endpointSelector:
+    matchLabels: {{- include "common.labels.matchLabels" $ | nindent 6 }}
+      app.kubernetes.io/component: backend
+  ingress:
+    - fromEndpoints:
+        - matchLabels: {{- include "common.tplvalues.render" (dict "value" (include "common.dict.filterEmptyValues" .Values.global.networkPolicy.ingressLabels) "context" $) | nindent 12 }}
+        - matchLabels: {{- include "common.tplvalues.render" (dict "value" (include "common.dict.filterEmptyValues" .Values.global.networkPolicy.metricsLabels) "context" $) | nindent 12 }}
+      toPorts:
+        - ports:
+            - port: "8181"
+              protocol: TCP
+  egress:
+    {{- if .Values.dreiDRenderer.enabled }}
+    - toEndpoints:
+        - matchLabels: {{- include "common.labels.matchLabels" . | nindent 12 }}
+            app.kubernetes.io/component: 3d-renderer
+            io.kubernetes.pod.namespace: {{ .Release.Namespace }}
+      toPorts:
+        - ports:
+            - port: "8190"
+              protocol: TCP
+    {{- end }}
+    {{- if .Values.maxscale.enabled }}
+    - toEndpoints:
+        - matchLabels: {{- include "common.labels.matchLabels" (dict "Release" $.Release "Chart" (dict "Name" "maxscale") "Values" $.Values.maxscale) | nindent 12 }}
+            io.kubernetes.pod.namespace: {{ .Release.Namespace }}
+      toPorts:
+        - ports:
+            - port: "3306"
+              protocol: TCP
+    {{- else }}
+    - toFQDNs:
+        {{ range $host := (.Values.fourAllPortal.database.existing.host | splitList "," ) }}
+        - matchName: {{ $host | quote }}
+        {{ end }}
+      toPorts:
+        - ports:
+            - port: {{ .Values.fourAllPortal.database.existing.port | quote }}
+              protocol: TCP
+    {{- end }}
+    {{- if or .Values.fourAllPortal.tracing.enabled .Values.global.tracing.enabled }}
+    - toPorts:
+        - ports:
+            - port: {{ .Values.fourAllPortal.tracing.jaeger.agent.port | default .Values.global.tracing.jaeger.agent.port | quote }}
+     {{- if .Values.fourAllPortal.tracing.jaeger.agent.useDaemonSet | default .Values.global.tracing.jaeger.agent.useDaemonSet }}
+      toEntities:
+        - host
+    {{- else }}
+      toFQDNs:
+        - matchName: {{ .Values.fourAllPortal.tracing.jaeger.agent.host | default .Values.global.tracing.jaeger.agent.host }}
+    {{- end }}
+    {{- end }}
+    - toFQDNs:
+        - matchPattern: "repository.4allportal.net"
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels: {{- include "common.tplvalues.render" (dict "value" (include "common.dict.filterEmptyValues" .Values.global.networkPolicy.dnsLabels) "context" $) | nindent 12 }}
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+  {{- end }}

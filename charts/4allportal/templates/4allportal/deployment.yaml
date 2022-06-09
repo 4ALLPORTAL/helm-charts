@@ -1,0 +1,273 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ include "common.names.fullname" . }}-backend"
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: backend
+spec:
+  strategy:
+    {{- if (and (or (not (or .Values.global.persistence.enabled .Values.fourAllPortal.persistence.config.enabled)) (eq .Values.fourAllPortal.persistence.config.accessMode "ReadWriteMany")) (or (not (or .Values.global.persistence.enabled .Values.fourAllPortal.persistence.assets.enabled)) (eq .Values.fourAllPortal.persistence.assets.accessMode "ReadWriteMany"))) }}
+    type: RollingUpdate
+    {{- else }}
+    type: Recreate
+  {{- end }}
+  {{- if not .Values.fourAllPortal.hpa.enabled }}
+  replicas: {{ .Values.fourAllPortal.replicas }}
+  {{- else }}
+  replicas: {{ .Values.fourAllPortal.hpa.minReplicas }}
+  {{- end }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" $ | nindent 6 }}
+      app.kubernetes.io/component: backend
+  template:
+    metadata:
+      labels: {{- include "common.labels.stable" $ | nindent 8 }}
+        app.kubernetes.io/component: backend
+      annotations:
+        checksum/secret: {{ include (print $.Template.BasePath "/4allportal/secrets.yaml") . | sha256sum }}
+    spec:
+      {{- if .Values.maxscale.enabled }}
+      affinity:
+        podAffinity: {{- include "common.affinities.pods.soft" (dict "context" (dict "Release" $.Release "Chart" (dict "Name" "maxscale") "Values" $.Values.maxscale.mariadb)) | nindent 10 }}
+      {{- end }}
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels: {{- include "common.labels.matchLabels" $ | nindent 14 }}
+              app.kubernetes.io/component: backend
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels: {{- include "common.labels.matchLabels" $ | nindent 14 }}
+              app.kubernetes.io/component: backend
+      {{- include "4allportal.webdav.priorityClassName" $ | nindent 6 }}
+      {{- .Values.fourAllPortal.securityOptions | toYaml | nindent 6 }}
+      automountServiceAccountToken: true
+      serviceAccountName: "{{ include "common.names.fullname" . }}-backend"
+      securityContext: {{- .Values.fourAllPortal.securityContext | toYaml | nindent 8 }}
+      enableServiceLinks: false
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext: {{- .Values.fourAllPortal.containerSecurityContext | toYaml | nindent 12 }}
+          image: {{ template "4allportal.image" . }}
+          {{- if .Values.fourAllPortal.image.repository | contains "@" }}
+          imagePullPolicy: IfNotPresent
+          {{- else }}
+          imagePullPolicy: Always
+          {{- end }}
+          env:
+            {{- $apps := dict -}}
+            {{- if regexMatch "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$" .Values.fourAllPortal.image.tag }}
+            {{- if semverCompare ">=4.0.0-0" .Values.fourAllPortal.image.tag -}}
+            {{- $apps = set $apps "4allportal-k8s-cluster-restart" "1.0.0" -}}
+            {{- end -}}
+            {{- end -}}
+            {{- if .Values.fourAllPortal.fourApps -}}
+            {{- range $app, $version := .Values.fourAllPortal.fourApps -}}
+            {{- $apps = set $apps $app $version -}}
+            {{- end -}}
+            {{- end -}}
+            {{- if $apps -}}
+            {{- $appsList := list -}}
+            {{- range $app, $version := $apps -}}
+            {{- $appsList = append $appsList (printf "%s:%s" $app $version) -}}
+            {{- end }}
+            - name: APPS_INSTALL
+              value: "{{ $appsList | join "," }}"
+            {{- end }}
+            - name: GENERAL_EXTERNAL_URL
+              {{- if .Values.fourAllPortal.ingress.enabled }}
+              value: "https://{{ .Values.fourAllPortal.ingress.host }}"
+              {{- else }}
+              value: "https://localhost"
+            {{- end }}
+            - name: GENERAL_ADMIN_USER_NAME
+              value: {{ .Values.fourAllPortal.general.admin.username | quote }}
+            - name: GENERAL_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "general" "context" $) }}
+                  key: {{ include "common.secrets.key" (dict "existingSecret" (dict) "key" "admin-password") }}
+            - name: GENERAL_ADMIN_EMAIL
+              value: {{ required "You must provide the email for the administrator" .Values.fourAllPortal.general.admin.email | quote }}
+            - name: GENERAL_ADMIN_FIRSTNAME
+              value: {{ .Values.fourAllPortal.general.admin.firstName | quote }}
+            - name: GENERAL_ADMIN_LASTNAME
+              value: {{ .Values.fourAllPortal.general.admin.lastName | quote }}
+            - name: GENERAL_DEFAULT_LANGUAGE
+              value: {{ .Values.fourAllPortal.general.defaultLanguage | quote }}
+
+            - name: DEBUG
+              value: {{ .Values.fourAllPortal.debug | quote }}
+
+            - name: MANAGED
+              value: "true"
+
+            - name: MAIL_ENABLED
+              value: {{ .Values.fourAllPortal.mail.enabled | quote }}
+            {{- if .Values.fourAllPortal.mail.enabled }}
+            - name: MAIL_HOST
+              value: {{ required "You must provide a mail host, when enabling mail" .Values.fourAllPortal.mail.host | quote }}
+            - name: MAIL_PORT
+              value: {{ .Values.fourAllPortal.mail.port | quote }}
+            - name: MAIL_USE_AUTHENTICATION
+              value: {{ .Values.fourAllPortal.mail.useAuthentication | quote }}
+            {{- if .Values.fourAllPortal.mail.useAuthentication }}
+            - name: MAIL_USER
+              value: {{ required "You must provide a mail user, when enabling mail authentication. If this is not a mistake, set `useAuthentication: false`" .Values.fourAllPortal.mail.user | quote }}
+            - name: MAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "mail" "context" $) }}
+                  key: {{ include "common.secrets.key" (dict "existingSecret" (dict) "key" "password") }}
+            {{- end }}
+            - name: MAIL_SYSTEM_FROM_EMAIL
+              value: {{ required "You must provide a sender address, when enabling mail" .Values.fourAllPortal.mail.system.from.email | quote }}
+            - name: MAIL_SYSTEM_FROM_NAME
+              value: {{ required "You must provide a sender name, when enabling mail" .Values.fourAllPortal.mail.system.from.name | quote }}
+            - name: MAIL_SYSTEM_MAIL_SENDER
+              value: {{ required "You must provide a sender address, when enabling mail" .Values.fourAllPortal.mail.system.sender | quote }}
+            - name: MAIL_USE_REPLY_TO
+              value: {{ .Values.fourAllPortal.mail.replyTo | default (not (empty .Values.fourAllPortal.mail.system.replyTo.email)) | quote }}
+            - name: MAIL_SYSTEM_REPLY_TO_EMAIL
+              value: {{ .Values.fourAllPortal.mail.system.replyTo.email | quote }}
+            - name: MAIL_SECURITY
+              value: {{ .Values.fourAllPortal.mail.security | quote }}
+            {{- end }}
+
+            - name: DATABASE_USER
+              value: {{ include "4allportal.fourallportal.database.user" . | quote }}
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "common.secrets.name" (dict "existingSecret" .Values.fourAllPortal.database.existing.existingSecret "defaultNameSuffix" "database" "context" $) }}
+                  key: {{ include "common.secrets.key" (dict "existingSecret" .Values.fourAllPortal.database.existing.existingSecret "key" "password") }}
+            - name: DATABASE_TYPE
+              value: {{ include "4allportal.fourallportal.database.type" . | quote }}
+            - name: DATABASE_HOST
+              value: {{ include "4allportal.fourallportal.database.host" . | quote }}
+            - name: DATABASE_PORT
+              value: {{ include "4allportal.fourallportal.database.port" . | quote }}
+            - name: DATABASE_DATABASE_NAME
+              value: {{ include "4allportal.fourallportal.database.name" . | quote }}
+            - name: DATABASE_INITIAL_POOL_SIZE
+              value: {{ .Values.fourAllPortal.database.initialPoolSize | quote }}
+            - name: DATABASE_MAX_IDLE_TIME
+              value: {{ .Values.fourAllPortal.database.maxIdleTime | quote }}
+            - name: DATABASE_MAX_POOL_SIZE
+              value: {{ .Values.fourAllPortal.database.maxPoolSize | quote }}
+            - name: DATABASE_MIN_POOL_SIZE
+              value: {{ .Values.fourAllPortal.database.minPoolSize | quote }}
+            - name: DATABASE_NUM_HELPER_THREADS
+              value: {{ .Values.fourAllPortal.database.numHelperThreads | quote }}
+            - name: DATABASE_ACQUIRE_INCREMENT
+              value: {{ .Values.fourAllPortal.database.acquireIncrement | quote }}
+            - name: KUBERNETES_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: KUBERNETES_DEPLOYMENT
+              value: "{{ include "common.names.fullname" . }}-backend"
+
+            - name: LOGGING_PATTERN_CONSOLE
+              value: "{\"time\": \"%d\", \"thread\": \"%thread\", \"level\": \"%p\", \"logger\": \"%logger{63}\", \"line\": \"%L\", \"message\": \"%replace(%replace(%m%wEx{6}){'[\r\n]+', '\\\\n'}%nopex\"}){'[\t]+', '\\\\t'}%n"
+
+            {{- include "4allportal.tracing.jaeger.env" (dict "Chart" .Chart "Release" .Release "Values" .Values "local" .Values.fourAllPortal.tracing) | nindent 12 }}
+
+            {{- range $name, $value := .Values.fourAllPortal.env }}
+            - name: {{ $name }}
+              value: {{ $value | quote }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 8181
+              protocol: TCP
+            {{- if .Values.fourAllPortal.debug }}
+            - name: debug
+              containerPort: 8001
+              protocol: TCP
+            {{- end }}
+            {{- if .Values.fourAllPortal.metrics.enabled }}
+            - name: metrics
+              containerPort: 8181
+              protocol: TCP
+          {{- end }}
+          {{- if and (not .Values.fourAllPortal.debug) .Values.fourAllPortal.livenessProbe.enabled }}
+          livenessProbe:
+            exec:
+              command:
+                - bash
+                - -c
+                - |
+                  timeout {{ .Values.fourAllPortal.livenessProbe.timeoutSeconds }} curl --silent -f localhost:8181/health &&
+                  timeout 1 ls -d /4allportal/data && timeout 1 ls -d /4allportal/assets
+            failureThreshold: {{ .Values.fourAllPortal.livenessProbe.failureThreshold }}
+            initialDelaySeconds: {{ .Values.fourAllPortal.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.fourAllPortal.livenessProbe.periodSeconds }}
+            successThreshold: {{ .Values.fourAllPortal.livenessProbe.successThreshold }}
+            timeoutSeconds: {{ .Values.fourAllPortal.livenessProbe.timeoutSeconds }}
+          {{- end }}
+          {{- if .Values.fourAllPortal.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            failureThreshold: {{ .Values.fourAllPortal.readinessProbe.failureThreshold }}
+            initialDelaySeconds: {{ .Values.fourAllPortal.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.fourAllPortal.readinessProbe.periodSeconds }}
+            successThreshold: {{ .Values.fourAllPortal.readinessProbe.successThreshold }}
+            timeoutSeconds: {{ .Values.fourAllPortal.readinessProbe.timeoutSeconds }}
+          {{- end }}
+          {{- if .Values.fourAllPortal.startupProbe.enabled }}
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            failureThreshold: {{ .Values.fourAllPortal.startupProbe.failureThreshold }}
+            initialDelaySeconds: {{ .Values.fourAllPortal.startupProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.fourAllPortal.startupProbe.periodSeconds }}
+            successThreshold: {{ .Values.fourAllPortal.startupProbe.successThreshold }}
+            timeoutSeconds: {{ .Values.fourAllPortal.startupProbe.timeoutSeconds }}
+          {{- end }}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: runtime
+              mountPath: /4allportal/_runtime
+            - name: assets
+              mountPath: /4allportal/assets
+            - name: config
+              mountPath: /4allportal/data
+            - name: read-only
+              mountPath: /4allportal/data/data
+              readOnly: true
+          resources: {{- toYaml .Values.fourAllPortal.resources | nindent 12 }}
+      initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.fourAllPortal.initContainers "context" $) | nindent 8 }}
+      volumes:
+        - name: tmp
+          emptyDir: { }
+        - name: read-only
+          emptyDir: { }
+        - name: runtime
+          emptyDir:
+            medium: Memory
+        - name: assets
+        {{- include "4allportal.fourallportal.persistence.assets.mount" . | nindent 10 }}
+        - name: config
+      {{- include "4allportal.fourallportal.persistence.config.mount" . | nindent 10 }}
+      {{- with .Values.fourAllPortal.nodeSelector }}
+      nodeSelector: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.fourAllPortal.hostAliases }}
+      hostAliases: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.fourAllPortal.affinity }}
+      affinity: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.fourAllPortal.tolerations }}
+      tolerations: {{- toYaml . | nindent 8 }}
+  {{- end }}

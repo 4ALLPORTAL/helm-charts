@@ -1,0 +1,170 @@
+{{- if .Values.backups.mysql.enabled }}
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: "{{ include "common.names.fullname" . }}-mysql-backup"
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: mysql
+    app.kubernetes.io/part-of: backup
+spec:
+  schedule: '@daily'
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  startingDeadlineSeconds: 3600
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    metadata:
+      labels: {{- include "common.labels.standard" $ | nindent 8 }}
+        app.kubernetes.io/component: mysql
+        app.kubernetes.io/part-of: backup
+    spec:
+      template:
+        metadata:
+          labels: {{- include "common.labels.standard" $ | nindent 12 }}
+            app.kubernetes.io/component: mysql
+            app.kubernetes.io/part-of: backup
+        spec: {{- .Values.backups.mysql.securityOptions | toYaml | nindent 10 }}
+          securityContext: {{- .Values.backups.mysql.securityContext | toYaml | nindent 12 }}
+          enableServiceLinks: false
+          initContainers:
+            - name: backup
+              securityContext: {{- .Values.backups.mysql.containerSecurityContext | toYaml | nindent 16 }}
+              image: {{ template "4allportal.backup.mysql.image" . }}
+              {{- if .Values.maxscale.image.repository | contains "@" }}
+              imagePullPolicy: IfNotPresent
+              {{- else }}
+              imagePullPolicy: Always
+              {{- end }}
+              env:
+                - name: BACKUP_DIR
+                  value: "/backups"
+                - name: MYSQL_HOST
+                  value: {{ include "4allportal.fourallportal.database.host" . | quote }}
+                - name: MYSQL_PORT
+                  value: {{ include "4allportal.fourallportal.database.port" . | quote }}
+                - name: MYSQL_DB
+                  value: {{ include "4allportal.fourallportal.database.name" . | quote }}
+                - name: MYSQL_USER
+                  value: {{ include "4allportal.fourallportal.database.user" . | quote }}
+                - name: MYSQL_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "database" "context" $) }}
+                      key: {{ include "common.secrets.key" (dict "existingSecret" (dict) "key" "password") }}
+                - name: MYSQL_EXTRA_OPTS
+                  value: "--hex-blob"
+              command:
+                - bash
+                - -x
+                - -o
+                - pipefail
+                - -c
+                - |
+                  MYSQL_HOST_OPTS="--host=${MYSQL_HOST} --port=${MYSQL_PORT} --user=${MYSQL_USER} --password=${MYSQL_PASSWORD} ${MYSQL_EXTRA_OPTS}"
+
+                  DFILE="${BACKUP_DIR}/${MYSQL_DB}-$(date --iso-8601=date).sql.gz"
+                  echo "Creating dump of ${MYSQL_DB} database from ${MYSQL_HOST}..."
+                  for try in {10..1}; do
+                    mysqldump -v ${MYSQL_HOST_OPTS} ${MYSQL_DB} | gzip -9 > "${DFILE}"
+                    if [[ "$?" == "0" ]]; then
+                      break
+                    elif [[ "$try" == "1" ]]; then
+                      echo Failed to dump database
+                      exit 1
+                    fi
+                  done
+
+                  echo "SQL backup finished successfully"
+              resources: {{- toYaml .Values.backups.mysql.resources | nindent 16 }}
+              volumeMounts:
+                - mountPath: /backups
+                  name: backups
+          containers:
+            - name: upload
+              securityContext: {{- .Values.backups.mysql.containerSecurityContext | toYaml | nindent 16 }}
+              image: {{ template "4allportal.backup.s3.image" . }}
+              {{- if .Values.backups.s3.image.repository | contains "@" }}
+              imagePullPolicy: IfNotPresent
+              {{- else }}
+              imagePullPolicy: Always
+              {{- end }}
+              env:
+                - name: BACKUP_KEEP_DAYS
+                  value: "{{ .Values.backups.mysql.daysToKeep }}"
+                - name: BACKUP_KEEP_WEEKS
+                  value: "{{ .Values.backups.mysql.weeksToKeep }}"
+                - name: BACKUP_KEEP_MONTHS
+                  value: "{{ .Values.backups.mysql.monthsToKeep }}"
+                - name: MYSQL_DB
+                  value: {{ include "4allportal.fourallportal.database.name" . | quote }}
+                - name: S3_BUCKET
+                  value: s3://{{ .Values.backups.target.s3.bucket }}
+              workingDir: /tmp
+              command:
+                - bash
+                - -ex
+                - -o
+                - pipefail
+                - -c
+                - |
+                  s3cmd="s3cmd --config=/tmp/s3cfg"
+
+                  DFILE=$(echo /backups/*)
+                  DAILY_URL=$S3_BUCKET/{{ printf "%s/%s/database/daily" $.Release.Namespace $.Release.Name }}
+                  WFILE="${MYSQL_DB}-$(date +%G-%V).sql.gz"
+                  WEEKLY_URL=$S3_BUCKET/{{ printf "%s/%s/database/weekly" $.Release.Namespace $.Release.Name }}
+                  MFILE="${MYSQL_DB}-$(date +%Y-%m).sql.gz"
+                  MONTHLY_URL=$S3_BUCKET/{{ printf "%s/%s/database/monthly" $.Release.Namespace $.Release.Name }}
+
+                  $s3cmd put $DFILE $DAILY_URL/
+                  DFILE_URL=$DAILY_URL/${DFILE/\/backups\/}
+
+                  function deleteOldFiles() {
+                    $s3cmd ls "$1" | while read -r file; do
+                      createDate=$(echo $file | awk '{print $1 "T" $2}')
+                      createDate=$(date --date "$createDate" +%s)
+                      olderThan=$(date --date "$2" +%s)
+                      if [[ $createDate -lt $olderThan ]]; then
+                        fileName=$(echo $file | awk {'print $4'})
+                        if [[ $fileName != "" ]]; then
+                          $s3cmd del "$fileName"
+                        fi
+                      fi
+                    done;
+                  }
+
+                        #Clean old files
+                  echo "Cleaning older than ${BACKUP_KEEP_DAYS} days for ${MYSQL_DB} database ..."
+                  deleteOldFiles $DAILY_URL/ "$BACKUP_KEEP_DAYS days ago"
+                  if [ "$BACKUP_KEEP_WEEKS" -gt 0 ]; then
+                    $s3cmd cp $DFILE_URL $WEEKLY_URL/$WFILE
+                  fi
+                  echo "Cleaning older than ${BACKUP_KEEP_WEEKS} weeks for ${MYSQL_DB} database ..."
+                  deleteOldFiles $WEEKLY_URL/ "$BACKUP_KEEP_WEEKS weeks ago"
+                  if [ "$BACKUP_KEEP_MONTHS" -gt 0 ]; then
+                    $s3cmd cp $DFILE_URL $MONTHLY_URL/$MFILE
+                  fi
+                  echo "Cleaning older than ${BACKUP_KEEP_MONTHS} months for ${MYSQL_DB} database ..."
+                  deleteOldFiles $MONTHLY_URL/ "$BACKUP_KEEP_MONTHS months ago"
+              resources: {{- toYaml .Values.backups.s3.resources | nindent 16 }}
+              volumeMounts:
+                - mountPath: /backups
+                  name: backups
+                - mountPath: /tmp/s3cfg
+                  name: s3cfg
+                  subPath: s3cfg
+          restartPolicy: Never
+          volumes:
+            - name: backups
+              emptyDir: { }
+            - name: s3cfg
+              secret:
+                secretName: {{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "mysql-backup" "context" $) }}
+          {{- if .Values.backups.mysql.nodeSelector }}
+          nodeSelector: {{- toYaml .Values.backups.mysql.nodeSelector | nindent 8 }}
+          {{- end }}
+          {{- if .Values.backups.mysql.tolerations }}
+          tolerations: {{- toYaml .Values.backups.mysql.tolerations | nindent 8 }}
+  {{- end }}
+  {{- end }}

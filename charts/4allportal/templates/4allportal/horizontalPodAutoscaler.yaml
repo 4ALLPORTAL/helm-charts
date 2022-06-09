@@ -1,0 +1,17 @@
+{{- if .Values.fourAllPortal.hpa.enabled }}
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: "{{ include "common.names.fullname" . }}-backend"
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: backend
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: "{{ include "common.names.fullname" . }}-backend"
+  minReplicas: {{ .Values.fourAllPortal.hpa.minReplicas }}
+  maxReplicas: {{ .Values.fourAllPortal.hpa.maxReplicas }}
+  targetCPUUtilizationPercentage: 90
+  {{- end }}

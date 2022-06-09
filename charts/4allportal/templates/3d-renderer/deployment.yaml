@@ -1,0 +1,106 @@
+{{ if .Values.dreiDRenderer.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ include "common.names.fullname" . }}-3d-renderer"
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: 3d-renderer
+spec:
+  strategy:
+    {{- if (and (or (not (or .Values.global.persistence.enabled .Values.fourAllPortal.persistence.config.enabled)) (eq .Values.fourAllPortal.persistence.config.accessMode "ReadWriteMany")) (or (not (or .Values.global.persistence.enabled .Values.fourAllPortal.persistence.assets.enabled)) (eq .Values.fourAllPortal.persistence.assets.accessMode "ReadWriteMany"))) }}
+    type: RollingUpdate
+    {{- else }}
+    type: Recreate
+  {{- end }}
+  {{- if not .Values.dreiDRenderer.hpa.enabled }}
+  replicas: {{ .Values.dreiDRenderer.replicas }}
+  {{- else }}
+  replicas: {{ .Values.dreiDRenderer.hpa.minReplicas }}
+  {{- end }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" $ | nindent 6 }}
+      app.kubernetes.io/component: 3d-renderer
+  template:
+    metadata:
+      labels: {{- include "common.labels.stable" $ | nindent 8 }}
+        app.kubernetes.io/component: 3d-renderer
+    spec:
+      affinity:
+        podAffinity: {{- include "common.affinities.pods.soft" (dict "component" "backend" "extraMatchLabels" (dict) "context" $) | nindent 10 }}
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels: {{- include "common.labels.matchLabels" $ | nindent 14 }}
+              app.kubernetes.io/component: 3d-renderer
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels: {{- include "common.labels.matchLabels" $ | nindent 14 }}
+              app.kubernetes.io/component: 3d-renderer
+      {{- include "4allportal.webdav.priorityClassName" $ | nindent 6 }}
+      {{- .Values.dreiDRenderer.securityOptions | toYaml | nindent 6 }}
+      automountServiceAccountToken: false
+      securityContext: {{- .Values.dreiDRenderer.securityContext | toYaml | nindent 8 }}
+      enableServiceLinks: false
+      containers:
+        - name: 3d-renderer
+          securityContext: {{- .Values.dreiDRenderer.containerSecurityContext | toYaml | nindent 12 }}
+          image: {{ template "4allportal.dreiDRenderer.image" $ }}
+          {{- if .Values.dreiDRenderer.image.repository | contains "@" }}
+          imagePullPolicy: IfNotPresent
+          {{- else }}
+          imagePullPolicy: Always
+          {{- end }}
+          {{- if .Values.dreiDRenderer.livenessProbe.enabled }}
+          livenessProbe:
+            exec:
+              command:
+                - bash
+                - -c
+                - timeout 1 ls -d /4allportal/data && timeout 1 ls -d /4allportal/assets
+            failureThreshold: {{ .Values.dreiDRenderer.livenessProbe.failureThreshold }}
+            initialDelaySeconds: {{ .Values.dreiDRenderer.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.dreiDRenderer.livenessProbe.periodSeconds }}
+            successThreshold: {{ .Values.dreiDRenderer.livenessProbe.successThreshold }}
+            timeoutSeconds: {{ .Values.dreiDRenderer.livenessProbe.timeoutSeconds }}
+          {{- end }}
+          {{- if .Values.dreiDRenderer.readinessProbe.enabled }}
+          readinessProbe:
+            tcpSocket:
+              port: http
+            failureThreshold: {{ .Values.dreiDRenderer.readinessProbe.failureThreshold }}
+            initialDelaySeconds: {{ .Values.dreiDRenderer.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.dreiDRenderer.readinessProbe.periodSeconds }}
+            successThreshold: {{ .Values.dreiDRenderer.readinessProbe.successThreshold }}
+            timeoutSeconds: {{ .Values.dreiDRenderer.readinessProbe.timeoutSeconds }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 8190
+              protocol: TCP
+          volumeMounts:
+            - name: assets
+              mountPath: /4allportal/assets
+            - name: config
+              mountPath: /4allportal/data
+          env: {{- include "4allportal.tracing.jaeger.env" (dict "Chart" .Chart "Release" .Release "Values" .Values "local" .Values.dreiDRenderer.tracing) | nindent 12 }}
+          resources: {{- toYaml .Values.dreiDRenderer.resources | nindent 12 }}
+      volumes:
+        - name: assets
+        {{- include "4allportal.fourallportal.persistence.assets.mount" . | nindent 10 }}
+        - name: config
+      {{- include "4allportal.fourallportal.persistence.config.mount" . | nindent 10 }}
+      {{- with .Values.dreiDRenderer.nodeSelector }}
+      nodeSelector: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.dreiDRenderer.affinity }}
+      affinity: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.dreiDRenderer.tolerations }}
+      tolerations: {{- toYaml . | nindent 8 }}
+  {{- end }}
+  {{ end }}

@@ -1,0 +1,20 @@
+  {{- if false }}
+apiVersion: rbac.authorization.k8s.io/v1
+  {{- else }}
+apiVersion: {{ include "common.capabilities.rbac.apiVersion" . }}
+  {{- end }}
+kind: Role
+metadata:
+  name: "{{ include "common.names.fullname" . }}-backend-restart"
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+rules:
+  - verbs:
+      - get
+      - patch
+    apiGroups:
+      - apps
+    resources:
+      - deployments
+    resourceNames:
+      - "{{ include "common.names.fullname" . }}-backend"

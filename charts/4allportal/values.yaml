@@ -1,0 +1,340 @@
+global:
+  persistence:
+    enabled: true
+  tracing:
+    enabled: true
+    jaeger:
+      agent:
+        useDaemonSet: true
+        port: 6831
+      sampler:
+        type: const
+        param: 1
+  networkPolicy:
+    type: auto
+    ingressLabels:
+      io.kubernetes.pod.namespace: ingress
+      app.kubernetes.io/name: traefik
+    metricsLabels:
+      io.kubernetes.pod.namespace: monitoring
+      app.kubernetes.io/name: prometheus
+    dnsLabels:
+      io.kubernetes.pod.namespace: kube-system
+      k8s-app: kube-dns
+    applicationLabels:
+      app.kubernetes.io/name: 4allportal
+      app.kubernetes.io/component: backend
+
+fourAllPortal:
+  image:
+    registry: registry.4allportal.net
+    repository: 4allportal
+    tag: 3.10.8
+
+  replicas: 2
+
+  debug: false
+
+  fourApps: { }
+
+  persistence:
+    config:
+      enabled: false
+      accessMode: ReadWriteMany
+      size: 100Gi
+      annotations: { }
+    assets:
+      enabled: false
+      accessMode: ReadWriteMany
+      size: 5Gi
+      annotations: { }
+
+  hpa:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 4
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 2Gi
+    limits:
+      cpu: 4
+      memory: 4Gi
+
+  livenessProbe:
+    enabled: true
+    failureThreshold: 3
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+    initialDelaySeconds: 30
+
+  readinessProbe:
+    enabled: true
+    failureThreshold: 3
+    periodSeconds: 1
+    successThreshold: 1
+    timeoutSeconds: 5
+    initialDelaySeconds: 0
+
+  startupProbe:
+    enabled: true
+    failureThreshold: 33
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+    initialDelaySeconds: 30
+
+  securityContext: &securityContext
+    fsGroup: 1000
+    runAsUser: 1000
+    runAsGroup: 1000
+    runAsNonRoot: true
+
+  securityOptions: &securityOptions
+    hostIPC: false
+    hostPID: false
+    hostNetwork: false
+
+  containerSecurityContext: &containerSecurityContext
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    privileged: false
+    capabilities:
+      drop:
+        - ALL
+    runAsGroup: 1000
+    runAsUser: 1000
+
+  general:
+    admin:
+      username: administrator
+      firstName: ""
+      lastName: ""
+      password: ""
+    defaultLanguage: en_US
+
+  mail:
+    enabled: false
+    host: ""
+    port: 25
+    useAuthentication: true
+    security: SSL
+    user: ""
+    password: ""
+    replyTo: false
+    system:
+      sender: ""
+      replyTo:
+        email: ""
+      from:
+        email: ""
+        name: ""
+
+  database:
+    initialPoolSize: 5
+    maxIdleTime: 180
+    minPoolSize: 5
+    maxPoolSize: 90
+    numHelperThreads: 5
+    acquireIncrement: 5
+    existing: { }
+
+  env: { }
+
+  ingress:
+    enabled: false
+    existingCertificate: { }
+    endpointMonitor:
+      enabled: false
+    additionalHosts: { }
+    host: ""
+    annotations: { }
+
+  nodeSelector: { }
+  hostAliases: [ ]
+  affinity: { }
+  tolerations: [ ]
+
+  tracing:
+    enabled: false
+    jaeger:
+      serviceName: 4ALLPORTAL
+      agent:
+        useDaemonSet: true
+      sampler:
+        type: const
+        param: 1
+
+  initContainers: [ ]
+
+  podDisruptionBudget: true
+
+  metrics:
+    # whether to expose the metrics port
+    enabled: true
+    serviceMonitor:
+      # whether to create a prometheus ServiceMonitor
+      enabled: true
+
+dreiDRenderer:
+  enabled: false
+  image:
+    registry: registry.4allportal.net
+    repository: 3d-renderer
+    tag: latest
+  livenessProbe:
+    enabled: true
+    failureThreshold: 8
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+    initialDelaySeconds: 10
+
+  readinessProbe:
+    enabled: true
+    failureThreshold: 3
+    periodSeconds: 1
+    successThreshold: 1
+    timeoutSeconds: 1
+    initialDelaySeconds: 0
+  resources:
+    requests:
+      cpu: 10m
+      memory: 128Mi
+    limits:
+      cpu: 2
+      memory: 2Gi
+
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 4
+
+  replicas: 1
+
+  securityContext: *securityContext
+  securityOptions: *securityOptions
+  containerSecurityContext: *containerSecurityContext
+
+  nodeSelector: { }
+  affinity: { }
+  tolerations: [ ]
+
+  podDisruptionBudget: true
+
+  tracing:
+    enabled: false
+    jaeger:
+      serviceName: 4ALLPORTAL-3D-Renderer
+      agent:
+        useDaemonSet: true
+      sampler:
+        type: const
+        param: 1
+
+webdav:
+  enabled: false
+  image:
+    registry: docker.io
+    repository: httpd
+    tag: 2.4.54
+
+  livenessProbe:
+    enabled: true
+    failureThreshold: 4
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+    initialDelaySeconds: 5
+
+  readinessProbe:
+    enabled: true
+    failureThreshold: 3
+    periodSeconds: 1
+    successThreshold: 1
+    timeoutSeconds: 1
+    initialDelaySeconds: 0
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      cpu: 4
+      memory: 1Gi
+
+  users: { }
+  groups: { }
+  mounts: { }
+
+  securityContext: *securityContext
+  securityOptions: *securityOptions
+  containerSecurityContext: *containerSecurityContext
+
+  affinity: { }
+  nodeSelector: { }
+  tolerations: [ ]
+
+  podDisruptionBudget: true
+
+users: [ ]
+
+backups:
+  target:
+    s3:
+      bucket: ""
+      endpoint: ""
+      accessKey: ""
+      secretKey: ""
+  s3:
+    image:
+      registry: docker.io
+      repository: jess/s3cmd@sha256
+      tag: ed9c4389bedf382edf1c243ac9c95b042725a564773c7ffc2ea01ed17152bded
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 2
+        memory: 1Gi
+  volumes:
+    enabled: false
+    retention:
+      prune: true
+      policy: { }
+    password: ""
+    schedule: ""
+  mysql:
+    enabled: false
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 2
+        memory: 1Gi
+    persistence: { }
+    daysToKeep: 7
+    weeksToKeep: 4
+    monthsToKeep: 6
+    securityContext: *securityContext
+    securityOptions: *securityOptions
+    containerSecurityContext: *containerSecurityContext
+    nodeSelector: { }
+    tolerations: [ ]
+
+maxscale:
+  enabled: true
+  replicas: 2
+  enterpriseLicensed: false
+  hpa:
+    enabled: false
+  mariadb:
+    db:
+      name: 4allportal
+      user: 4allportal
+    podDisruptionBudget: { }

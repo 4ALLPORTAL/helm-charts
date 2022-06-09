@@ -1,0 +1,1135 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "title": "Values",
+  "allOf": [
+    {
+      "properties": {
+        "global": {
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/tracing"
+            },
+            {
+              "properties": {
+                "imageRegistry": {
+                  "description": "Registry used as mirror to pull from",
+                  "type": "string"
+                },
+                "imagePullSecrets": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "persistence": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "storageClass": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "priorityClassName": {
+                  "type": "string"
+                },
+                "networkPolicy": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "none",
+                        "auto",
+                        "cilium"
+                      ]
+                    },
+                    "ingressLabels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "minProperties": 1
+                    },
+                    "metricsLabels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "minProperties": 1
+                    },
+                    "dnsLabels": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "minProperties": 1
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "fourAllPortal": {
+          "type": "object",
+          "description": "Options for the 4ALLPORTAL itself",
+          "allOf": [
+            {
+              "$ref": "#/definitions/deployment",
+              "additionalProperties": false
+            },
+            {
+              "$ref": "#/definitions/tracing"
+            },
+            {
+              "$ref": "#/definitions/metrics"
+            },
+            {
+              "$ref": "#/definitions/hpa"
+            },
+            {
+              "$ref": "#/definitions/scalable"
+            },
+            {
+              "properties": {
+                "database": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "$ref": "#/definitions/existingDatabase"
+                        },
+                        {
+                          "existing": {
+                            "type": "object"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "properties": {
+                        "acquireIncrement": {
+                          "type": "integer"
+                        },
+                        "initialPoolSize": {
+                          "type": "integer"
+                        },
+                        "maxIdleTime": {
+                          "type": "integer"
+                        },
+                        "maxPoolSize": {
+                          "type": "integer"
+                        },
+                        "minPoolSize": {
+                          "type": "integer"
+                        },
+                        "numHelperThreads": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "debug": {
+                  "type": "boolean"
+                },
+                "env": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                "fourApps": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string",
+                    "pattern": "^[0-9A-Za-z\\-.+]+$"
+                  }
+                },
+                "startupProbe": {
+                  "$ref": "#/definitions/probe"
+                },
+                "general": {
+                  "type": "object",
+                  "properties": {
+                    "admin": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "$ref": "#/definitions/email"
+                        },
+                        "firstName": {
+                          "type": "string"
+                        },
+                        "lastName": {
+                          "type": "string"
+                        },
+                        "password": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "defaultLanguage": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "hostAliases": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.HostAlias"
+                  }
+                },
+                "ingress": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "properties": {
+                        "annotations": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string"
+                          }
+                        },
+                        "enabled": {
+                          "type": "boolean"
+                        },
+                        "host": {
+                          "type": "string"
+                        },
+                        "endpointMonitor": {
+                          "type": "object",
+                          "description": "See https://github.com/stakater/IngressMonitorController#add-endpointmonitor",
+                          "properties": {
+                            "enabled": {
+                              "type": "boolean"
+                            }
+                          }
+                        },
+                        "existingCertificate": {
+                          "$ref": "#/definitions/existingCertificate"
+                        },
+                        "additionalHosts": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "object",
+                            "properties": {
+                              "host": {
+                                "type": "string"
+                              },
+                              "existingCertificate": {
+                                "$ref": "#/definitions/existingCertificate"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "oneOf": [
+                        {
+                          "properties": {
+                            "enabled": {
+                              "type": "boolean",
+                              "const": false
+                            }
+                          }
+                        },
+                        {
+                          "properties": {
+                            "enabled": {
+                              "type": "boolean",
+                              "const": true
+                            }
+                          },
+                          "required": [
+                            "host"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "initContainers": {
+                  "oneOf": [
+                    {
+                      "type": "array",
+                      "items": {
+                        "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.Container"
+                      }
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "mail": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "host": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    },
+                    "port": {
+                      "type": "integer"
+                    },
+                    "replyTo": {
+                      "type": "boolean"
+                    },
+                    "security": {
+                      "type": "string",
+                      "enum": [
+                        "NONE",
+                        "SSL",
+                        "STARTTLS"
+                      ]
+                    },
+                    "system": {
+                      "type": "object",
+                      "properties": {
+                        "from": {
+                          "type": "object",
+                          "properties": {
+                            "email": {
+                              "type": "string"
+                            },
+                            "name": {
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false
+                        },
+                        "sender": {
+                          "type": "string"
+                        },
+                        "replyTo": {
+                          "type": "object",
+                          "properties": {
+                            "email": {
+                              "$ref": "#/definitions/email"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "useAuthentication": {
+                      "type": "boolean"
+                    },
+                    "user": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "persistence": {
+                  "type": "object",
+                  "properties": {
+                    "assets": {
+                      "$ref": "#/definitions/volume"
+                    },
+                    "config": {
+                      "$ref": "#/definitions/volume"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            }
+          ]
+        },
+        "maxscale": {
+          "type": "object",
+          "description": "Refer to https://gitlab.4allportal.net/4allportal/helm-charts/maxscale/-/raw/3.1.1/values.schema.json"
+        },
+        "dreiDRenderer": {
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/deployment",
+              "additionalProperties": false
+            },
+            {
+              "$ref": "#/definitions/tracing"
+            },
+            {
+              "$ref": "#/definitions/metrics"
+            },
+            {
+              "$ref": "#/definitions/hpa"
+            },
+            {
+              "$ref": "#/definitions/scalable"
+            },
+            {
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "image": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "$ref": "#/definitions/image",
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "enabled"
+              ]
+            }
+          ]
+        },
+        "webdav": {
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/deployment"
+            },
+            {
+              "oneOf": [
+                {
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean",
+                      "const": true
+                    },
+                    "mounts": {
+                      "type": "object",
+                      "description": "The key is the url path and the value is the permission",
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "users": {
+                            "type": "array",
+                            "additionalItems": {
+                              "type": "string"
+                            },
+                            "minItems": 1
+                          },
+                          "groups": {
+                            "type": "array",
+                            "additionalItems": {
+                              "type": "string"
+                            },
+                            "minItems": 1
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      "propertyNames": {
+                        "pattern": "^/((assets|data)($|/.+)|$)"
+                      }
+                    },
+                    "groups": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "array",
+                        "additionalItems": {
+                          "description": "The users in this group",
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "users": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "description": "The user's password",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "minItems": 1
+                    }
+                  },
+                  "required": [
+                    "enabled",
+                    "mounts",
+                    "users"
+                  ]
+                },
+                {
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean",
+                      "const": false
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "backups": {
+          "type": "object",
+          "properties": {
+            "target": {
+              "type": "object",
+              "properties": {
+                "s3": {
+                  "type": "object",
+                  "properties": {
+                    "accessKey": {
+                      "type": "string"
+                    },
+                    "secretKey": {
+                      "type": "string"
+                    },
+                    "endpoint": {
+                      "type": "string"
+                    },
+                    "bucket": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "encryptionKey": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            },
+            "s3": {
+              "type": "object",
+              "properties": {
+                "image": {
+                  "$ref": "#/definitions/image"
+                },
+                "resources": {
+                  "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+                }
+              },
+              "additionalProperties": false
+            },
+            "mysql": {
+              "type": "object",
+              "allOf": [
+                {
+                  "$ref": "#/definitions/security"
+                },
+                {
+                  "oneOf": [
+                    {
+                      "properties": {
+                        "enabled": {
+                          "type": "boolean",
+                          "const": true
+                        },
+                        "nodeSelector": {
+                          "$ref": "#/definitions/nodeSelector"
+                        },
+                        "resources": {
+                          "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+                        },
+                        "tolerations": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.Toleration"
+                          }
+                        },
+                        "daysToKeep": {
+                          "type": "integer"
+                        },
+                        "monthsToKeep": {
+                          "type": "integer"
+                        },
+                        "weeksToKeep": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "enabled"
+                      ]
+                    },
+                    {
+                      "properties": {
+                        "enabled": {
+                          "type": "boolean",
+                          "const": false
+                        }
+                      },
+                      "required": [
+                        "enabled"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "volumes": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "retention": {
+                  "type": "object",
+                  "properties": {
+                    "policy": {
+                      "type": "object"
+                    },
+                    "prune": {
+                      "type": "boolean"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "schedule": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "enabled",
+                "password"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "mysql",
+            "volumes"
+          ],
+          "additionalProperties": false
+        },
+        "users": {
+          "type": "array",
+          "description": "Grants access to the following users",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "backups",
+        "dreiDRenderer",
+        "fourAllPortal",
+        "global",
+        "users",
+        "webdav"
+      ]
+    },
+    {
+      "oneOf": [
+        {
+          "properties": {
+            "fourAllPortal": {
+              "type": "object",
+              "properties": {
+                "database": {
+                  "$ref": "#/definitions/existingDatabase"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "maxscale": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "const": true
+                }
+              },
+              "required": [
+                "enabled"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "definitions": {
+    "hpa": {
+      "type": "object",
+      "properties": {
+        "hpa": {
+          "type": "object",
+          "oneOf": [
+            {
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "minReplicas": {
+                  "type": "integer"
+                },
+                "maxReplicas": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "enabled"
+              ]
+            },
+            {
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "const": false
+                }
+              },
+              "required": [
+                "enabled"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "image": {
+      "type": "object",
+      "properties": {
+        "registry": {
+          "type": "string"
+        },
+        "repository": {
+          "type": "string"
+        },
+        "tag": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "email": {
+      "type": "string",
+      "pattern": "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])\\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])"
+    },
+    "probe": {
+      "type": "object",
+      "oneOf": [
+        {
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "const": true
+            },
+            "failureThreshold": {
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "type": "integer"
+            },
+            "successThreshold": {
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "type": "integer"
+            },
+            "initialDelaySeconds": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "enabled"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "const": false
+            }
+          },
+          "required": [
+            "enabled"
+          ]
+        }
+      ]
+    },
+    "nodeSelector": {
+      "oneOf": [
+        {
+          "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.NodeSelector"
+        },
+        {
+          "maxProperties": 0
+        }
+      ]
+    },
+    "volume": {
+      "type": "object",
+      "oneOf": [
+        {
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "const": true
+            },
+            "accessMode": {
+              "type": "string",
+              "enum": [
+                "ReadWriteOnce",
+                "ReadOnlyMany",
+                "ReadWriteMany"
+              ]
+            },
+            "annotations": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "storageClass": {
+              "type": "string"
+            },
+            "size": {
+              "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+            }
+          },
+          "required": [
+            "enabled",
+            "storageClass"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "const": false
+            }
+          }
+        }
+      ]
+    },
+    "security": {
+      "type": "object",
+      "properties": {
+        "containerSecurityContext": {
+          "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.SecurityContext"
+        },
+        "securityContext": {
+          "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.PodSecurityContext"
+        },
+        "securityOptions": {
+          "type": "object",
+          "properties": {
+            "hostIPC": {
+              "type": "boolean"
+            },
+            "hostNetwork": {
+              "type": "boolean"
+            },
+            "hostPID": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "deployment": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/security"
+        },
+        {
+          "properties": {
+            "image": {
+              "$ref": "#/definitions/image"
+            },
+            "affinity": {
+              "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.Affinity"
+            },
+            "livenessProbe": {
+              "$ref": "#/definitions/probe"
+            },
+            "nodeSelector": {
+              "$ref": "#/definitions/nodeSelector"
+            },
+            "podDisruptionBudget": {
+              "type": "boolean"
+            },
+            "readinessProbe": {
+              "$ref": "#/definitions/probe"
+            },
+            "resources": {
+              "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+            },
+            "tolerations": {
+              "type": "array",
+              "items": {
+                "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.Toleration"
+              }
+            },
+            "priorityClassName": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "tracing": {
+      "type": "object",
+      "properties": {
+        "tracing": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "jaeger": {
+              "type": "object",
+              "properties": {
+                "agent": {
+                  "type": "object",
+                  "properties": {
+                    "host": {
+                      "type": "string"
+                    },
+                    "port": {
+                      "type": "integer"
+                    },
+                    "useDaemonSet": {
+                      "type": "boolean"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "authToken": {
+                  "type": "string"
+                },
+                "endpoint": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "propagation": {
+                  "type": "string"
+                },
+                "reporter": {
+                  "type": "object",
+                  "properties": {
+                    "flushInterval": {
+                      "type": "integer"
+                    },
+                    "logSpans": {
+                      "type": "boolean"
+                    },
+                    "maxQueueSize": {
+                      "type": "integer"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "sampler": {
+                  "type": "object",
+                  "properties": {
+                    "managerHostPort": {
+                      "type": "integer"
+                    },
+                    "param": {
+                      "type": "integer"
+                    },
+                    "type": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "serviceName": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "user": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "enabled"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "properties": {
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "serviceMonitor": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "enabled"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "enabled"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "scalable": {
+      "type": "object",
+      "properties": {
+        "replicas": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "replicas"
+      ]
+    },
+    "existingCertificate": {
+      "type": "object",
+      "oneOf": [
+        {
+          "properties": {
+            "cert": {
+              "type": "string"
+            },
+            "key": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "key",
+            "cert"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "maxProperties": 0
+        }
+      ]
+    },
+    "existingDatabase": {
+      "type": "object",
+      "properties": {
+        "existing": {
+          "type": "object",
+          "allOf": [
+            {
+              "properties": {
+                "host": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "port": {
+                  "type": "integer"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "mysql",
+                    "mariadb"
+                  ]
+                },
+                "user": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "host",
+                "name",
+                "user"
+              ]
+            },
+            {
+              "oneOf": [
+                {
+                  "properties": {
+                    "password": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "password"
+                  ]
+                },
+                {
+                  "properties": {
+                    "existingSecret": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "key": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "key"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "existingSecret"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "existing"
+      ]
+    }
+  }
+}
