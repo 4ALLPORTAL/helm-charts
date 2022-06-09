@@ -13,7 +13,7 @@ jobs:
       - name: generate CODEOWNERS
         run: |
           ./.github/scripts/sync-codeowners.sh > .github/CODEOWNERS
-      - name: check CODEOWNERS for modifications
+      - name: commit CODEOWNERS modifications
         run: |
           if ! git diff --exit-code; then
             git config user.name "$GITHUB_ACTOR"
