@@ -1,7 +1,7 @@
 # 4ALLPORTAL Kubernetes Helm Charts
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/4ALLPORTAL)](https://artifacthub.io/packages/search?repo=4ALLPORTAL)
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/four-allportal)](https://artifacthub.io/packages/search?repo=four-allportal)
 
 The code is provided as-is with no warranties.
 
