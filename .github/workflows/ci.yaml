@@ -6,4 +6,4 @@ jobs:
   call-check-codeowners:
     uses: ./.github/workflows/sync-codeowners.yaml
   call-lint:
-    uses: ./.github/workflows/linter.yml
+    uses: ./.github/workflows/linter.yaml
