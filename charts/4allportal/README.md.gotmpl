@@ -1,0 +1,46 @@
+{{ template "chart.header" . }}
+{{ template "chart.deprecationWarning" . }}
+
+{{ template "chart.badgesSection" . }}
+
+{{ template "chart.description" . }}
+
+{{ template "chart.homepageLine" . }}
+
+{{ template "chart.maintainersSection" . }}
+
+{{ template "chart.sourcesSection" . }}
+
+{{ template "chart.requirementsSection" . }}
+
+{{ template "chart.valuesSection" . }}
+
+# Upgrading
+
+## To 14.0.0
+
+This version replaces the built-in maxscale deployment with a subchart.
+
+This means that the service names and such will change.
+
+This in turn doesn't allow for a zero-downtime update. You can circumvent this by setting `.maxscale.fullnameOverride` to `$RELEASE_NAME-4allportal-maxscale`
+
+## To 15.0.0
+
+The S3 configuration for the backups has been moved from `.backups.volumes.backends.s3` to `.backups.target.s3` and will be used by the mysql backups as well
+
+## To 16.0.0
+
+The webdav setup will change, including the configuration
+
+## To 17.0.0
+
+This release prepares the upgrade from the included maxscale chart from 1.x.x to 2.x.x.
+
+During the upgrade, it deletes the mariadb statefulSet with `--cascade orphan`.
+
+## To 18.0.0
+
+This release concludes the upgrade from the included maxscale chart.
+
+During the upgrade, it deletes the mariadb statefulSet with `--cascade orphan`.
