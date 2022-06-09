@@ -1,4 +1,4 @@
-name: Sync CODEOWNERS
+name: Sync CODEOWNERS and Docs
 
 "on": workflow_call
 
@@ -19,10 +19,14 @@ jobs:
         run: |
           ./.github/scripts/sync-codeowners.sh > .github/CODEOWNERS
 
-      - name: commit CODEOWNERS modifications
+      - name: generate Docs
+        run: |
+          docker run --rm --volume "$(pwd):/helm-docs" -u "$(id -u)" jnorwood/helm-docs:v1.8.1
+
+      - name: Commit updated Docs and CODEOWNERS
         run: |
           if ! git diff --exit-code; then
             git config user.name "$GITHUB_ACTOR"
             git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-            git add . && git commit -am "Update 'CODEOWNERS'" && git push
+            git add . && git commit -am "Update 'README.md's and 'CODEOWNERS'" && git push
           fi
