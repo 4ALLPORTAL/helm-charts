@@ -1,0 +1,128 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  strategy:
+    type: RollingUpdate
+  {{- if not .Values.hpa.enabled }}
+  replicas: {{ .Values.replicas }}
+  {{- else }}
+  replicas: {{ .Values.hpa.minReplicas }}
+  {{- end }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" $ | nindent 6 }}
+  template:
+    metadata:
+      labels: {{- include "common.labels.stable" $ | nindent 8 }}
+      annotations:
+        checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+    spec:
+      affinity:
+        podAffinity: {{- include "common.affinities.pods.soft" (dict "component" "" "extraMatchLabels" (dict) "context" (dict "Release" .Release "Chart" (dict "Name" "mariadb") "Values" .Values.mariadb)) | nindent 10 }}
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels: {{- include "common.labels.matchLabels" $ | nindent 14 }}
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels: {{- include "common.labels.matchLabels" $ | nindent 14 }}
+      {{- include "maxscale.maxscale.priorityClassName" $ | nindent 6 }}
+      {{- include "maxscale.imagePullSecrets" . | nindent 6 }}
+      {{- .Values.securityOptions | toYaml | nindent 6 }}
+      automountServiceAccountToken: false
+      securityContext: {{- .Values.securityContext | toYaml | nindent 8 }}
+      enableServiceLinks: false
+      containers:
+        - name: maxscale
+          securityContext: {{- .Values.containerSecurityContext | toYaml | nindent 12 }}
+          image: {{ template "maxscale.image" . }}
+          {{- if .Values.image.repository | contains "@" }}
+          imagePullPolicy: IfNotPresent
+          {{- else }}
+          imagePullPolicy: Always
+          {{- end }}
+          command:
+            - maxscale
+            - --syslog=no
+            - --log=stdout
+            - --nodaemon
+          env:
+            - name: MAXSCALE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "" "context" $) }}
+                  key: {{ include "common.secrets.key" (dict "existingSecret" (dict) "key" "root-password") }}
+          ports:
+            - name: mysql
+              containerPort: 3306
+              protocol: TCP
+          {{- if .Values.readinessProbe.enabled }}
+          readinessProbe:
+            tcpSocket:
+              port: mysql
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          {{- end }}
+          {{- if .Values.livenessProbe.enabled }}
+          livenessProbe:
+            exec:
+              command:
+                - bash
+                - -ex
+                - -c
+                - |-
+                  maxctrl show maxscale
+                  {{ $fullName := include "common.names.dependency.fullname" (dict "chartName" "mariadb" "chartValues" $.Values.mariadb "context" $) -}}
+                  {{ range $INDEX := until (.Values.mariadb.replicaCount | int) -}}
+                  timeout 2 nslookup {{ printf "%s-%d.%s-headless.%s.svc.%s" $fullName $INDEX $fullName ($.Release.Namespace) $.Values.mariadb.clusterDomain }}
+                  {{ end }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+            timeoutSeconds: {{ add (mul 2 (.Values.mariadb.replicaCount | int)) 5 }}
+          {{- end }}
+          volumeMounts:
+            - name: configuration
+              mountPath: /etc/maxscale.cnf.d/mariadb-galera.cnf
+              readOnly: true
+              subPath: mariadb-galera.cnf
+            - name: configuration
+              mountPath: /etc/maxscale.cnf
+              readOnly: true
+              subPath: maxscale.cnf
+            - name: cache
+              mountPath: /var/cache/maxscale
+          resources: {{- toYaml .Values.resources | nindent 12 }}
+      initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.initContainers "context" $) | nindent 8 }}
+      volumes:
+        - name: configuration
+          configMap:
+            optional: false
+            name: "{{ include "common.names.fullname" . }}-configuration"
+        - name: cache
+          emptyDir:
+            medium: Memory
+      {{- with .Values.nodeSelector }}
+      nodeSelector: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.hostAliases }}
+      hostAliases: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations: {{- toYaml . | nindent 8 }}
+  {{- end }}

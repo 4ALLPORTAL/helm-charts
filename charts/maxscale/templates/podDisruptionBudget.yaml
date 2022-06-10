@@ -1,0 +1,16 @@
+{{- if eq (include "maxscale.isHa" .) "true" -}}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  {{- if not .Values.hpa.enabled }}
+  minAvailable: {{ div (int .Values.replicas) 2 }}
+  {{- else }}
+  minAvailable: {{ div (int .Values.hpa.minReplicas) 2 }}
+  {{- end }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" $ | nindent 6 }}
+  {{- end -}}

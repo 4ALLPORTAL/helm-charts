@@ -1,0 +1,47 @@
+{{- if and false .Release.IsUpgrade }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "common.names.fullname" . }}-upgrade
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+  annotations:
+    helm.sh/hook: pre-upgrade,pre-rollback
+    helm.sh/hook-delete-policy: hook-succeeded,before-hook-creation
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "common.names.fullname" . }}-upgrade
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+  annotations:
+    helm.sh/hook: pre-upgrade,pre-rollback
+    helm.sh/hook-delete-policy: hook-succeeded,before-hook-creation
+rules:
+  - verbs:
+      - delete
+    apiGroups:
+      - apps
+    resources:
+      - statefulsets
+    resourceNames:
+      - {{ include "common.names.dependency.fullname" (dict "chartName" "mariadb" "chartValues" $.Values.mariadb "context" $) }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "common.names.fullname" . }}-upgrade
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+  annotations:
+    helm.sh/hook: pre-upgrade,pre-rollback
+    helm.sh/hook-delete-policy: hook-succeeded,before-hook-creation
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "common.names.fullname" . }}-upgrade
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "common.names.fullname" . }}-upgrade
+{{- end }}

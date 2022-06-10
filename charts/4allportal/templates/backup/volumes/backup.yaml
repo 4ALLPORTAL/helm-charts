@@ -1,0 +1,30 @@
+{{/*{{- if and (or $.Values.global.persistence.enabled $.Values.fourAllPortal.persistence.assets.enabled) .Values.backups.volumes.enabled -}}*/}}
+{{/*  {{- range $volume := list "config" "assets" -}}*/}}
+{{/*apiVersion: k8up.io/v1*/}}
+{{/*kind: Backup*/}}
+{{/*metadata:*/}}
+{{/*  name: "{{ include "common.names.fullname" $ }}-{{ $volume }}"*/}}
+{{/*  labels: {{- include "common.labels.standard" $ | nindent 4 }}*/}}
+{{/*    app.kubernetes.io/component: {{ $volume }}*/}}
+{{/*    app.kubernetes.io/part-of: backup*/}}
+{{/*spec:*/}}
+{{/*  failedJobsHistoryLimit: 1*/}}
+{{/*  successfulJobsHistoryLimit: 0*/}}
+{{/*  promURL: http://*/}}
+{{/*  backend:*/}}
+{{/*    s3:*/}}
+{{/*      endpoint: {{ $.Values.backups.target.s3.endpoint | quote }}*/}}
+{{/*      bucket: {{ $.Values.backups.target.s3.bucket | quote }}*/}}
+{{/*      prefix: {{ printf "%s/%s/persistentvolumeclaim/%s" $.Release.Namespace $.Release.Name $volume | quote }}*/}}
+{{/*      accessKeyIDSecretRef:*/}}
+{{/*        name: {{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "backup" "context" $) }}*/}}
+{{/*        key: AWS_ACCESS_KEY_ID*/}}
+{{/*      secretAccessKeyIDSecretRef:*/}}
+{{/*        name: {{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "backup" "context" $) }}*/}}
+{{/*        key: AWS_SECRET_ACCESS_KEY*/}}
+{{/*    repoPasswordSecretRef:*/}}
+{{/*      name: {{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "backup" "context" $) }}*/}}
+{{/*      key: RESTIC_PASSWORD*/}}
+{{/*---*/}}
+{{/*{{ end -}}*/}}
+{{/*  {{- end -}}*/}}
