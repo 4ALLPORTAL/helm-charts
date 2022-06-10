@@ -1,8 +1,18 @@
 name: Sync CODEOWNERS and Docs
 
 "on":
-  - pull_request
-  - push
+  pull_request:
+    paths:
+      - charts/*/README.md.gotmpl
+      - charts/*/README.md
+      - charts/*/Chart.yaml
+      - .github/CODEOWNERS
+  push:
+    paths:
+      - charts/*/README.md.gotmpl
+      - charts/*/README.md
+      - charts/*/Chart.yaml
+      - .github/CODEOWNERS
 
 jobs:
   build:
