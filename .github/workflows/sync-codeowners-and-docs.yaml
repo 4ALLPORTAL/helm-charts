@@ -1,6 +1,8 @@
 name: Sync CODEOWNERS and Docs
 
-"on": workflow_call
+"on":
+  - pull_request
+  - push
 
 jobs:
   build:
