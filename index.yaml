@@ -3,6 +3,32 @@ entries:
   4allportal:
   - apiVersion: v2
     appVersion: 3.10.8
+    created: "2022-06-10T09:16:04.706234436Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com
+      version: 1.16.0
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://charts.4allportal.net
+      version: 3.1.1
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 72c82793367703b1f6438abbd9421c59adca8b2e5244c34b28387618d8186b42
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: cwrau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-18.2.2/4allportal-18.2.2.tgz
+    version: 18.2.2
+  - apiVersion: v2
+    appVersion: 3.10.8
     created: "2022-06-09T16:27:05.021271523Z"
     dependencies:
     - name: common
@@ -4396,4 +4422,26 @@ entries:
     urls:
     - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-import/4allportal-1.0.5.tgz
     version: 1.0.5
-generated: "2022-06-09T16:27:05.023107535Z"
+  maxscale:
+  - apiVersion: v2
+    appVersion: 6.3.1
+    created: "2022-06-10T09:16:04.976556738Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com
+      version: 1.16.0
+    - alias: mariadb
+      name: mariadb-galera
+      repository: https://charts.bitnami.com
+      version: 7.3.4
+    description: Deploys a maxscale mariadb-galera proxy including mariadb-galera
+    digest: 995088b6d4668e357e9d8d10fb6b7865c3b02a3316c95f6ae56fcc9c3766d2d0
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: cwrau
+    name: maxscale
+    type: application
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/maxscale-3.2.1/maxscale-3.2.1.tgz
+    version: 3.2.1
+generated: "2022-06-10T09:16:04.979391474Z"
