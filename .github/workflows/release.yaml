@@ -4,6 +4,8 @@ name: Release Charts
   push:
     branches:
       - main
+    paths:
+      - charts/*
 
 jobs:
   release:
