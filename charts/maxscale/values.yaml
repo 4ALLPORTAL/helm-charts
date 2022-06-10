@@ -1,0 +1,130 @@
+global:
+  networkPolicy:
+    type: auto
+    metricsLabels:
+      io.kubernetes.pod.namespace: monitoring
+      app.kubernetes.io/name: prometheus
+    dnsLabels:
+      io.kubernetes.pod.namespace: kube-system
+      k8s-app: kube-dns
+    applicationLabels:
+      app.kubernetes.io/name: null
+      app.kubernetes.io/instance: "{{ .Release.Name }}"
+      io.kubernetes.pod.namespace: "{{ .Release.Namespace }}"
+
+image:
+  registry: docker.io
+  repository: mariadb/maxscale
+  tag: 6.3.1
+
+replicas: 2
+enterpriseLicensed: false
+
+hpa:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 4
+
+resources:
+  requests:
+    cpu: 125m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+livenessProbe:
+  enabled: true
+  failureThreshold: 3
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 5
+  initialDelaySeconds: 2
+
+readinessProbe:
+  enabled: true
+  failureThreshold: 3
+  periodSeconds: 1
+  successThreshold: 1
+  timeoutSeconds: 1
+  initialDelaySeconds: 0
+
+securityContext:
+  runAsNonRoot: true
+  fsGroup: 996
+  runAsUser: 998
+  runAsGroup: 996
+
+securityOptions:
+  hostIPC: false
+  hostPID: false
+  hostNetwork: false
+
+containerSecurityContext:
+  runAsNonRoot: true
+  allowPrivilegeEscalation: false
+  privileged: false
+  capabilities:
+    drop:
+      - ALL
+  runAsGroup: 996
+  runAsUser: 998
+  readOnlyRootFilesystem: true
+
+podDisruptionBudget: true
+
+mariadb:
+  replicaCount: 3
+  rootUser:
+    forcePassword: true
+    password: "CHANGEME"
+  db:
+    forcePassword: true
+    password: "CHANGEME"
+  galera:
+    mariabackup:
+      forcePassword: true
+      password: "CHANGEME"
+  podDisruptionBudget:
+    create: true
+    minAvailable: 2
+  podAntiAffinityPreset: hard
+  extraEnvVars:
+    - name: MARIADB_EXTRA_FLAGS
+      value: --skip-log-bin
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      selector: false
+    resources:
+      requests:
+        memory: 32Mi
+        cpu: 10m
+      limits:
+        memory: 32Mi
+        cpu: 250m
+  persistence:
+    enabled: true
+    size: 8Gi
+  resources:
+    requests:
+      memory: 1Gi
+      cpu: 100m
+    limits:
+      memory: 2Gi
+      cpu: 1
+  podSecurityContext:
+    enabled: true
+  containerSecurityContext:
+    enabled: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    privileged: false
+    runAsNonRoot: true
+  serviceAccount:
+    create: false
+  rbac:
+    create: false

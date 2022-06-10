@@ -1,0 +1,261 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "title": "Values",
+  "allOf": [
+    {
+      "$ref": "#/definitions/deployment",
+      "additionalProperties": false
+    },
+    {
+      "$ref": "#/definitions/hpa"
+    },
+    {
+      "$ref": "#/definitions/scalable"
+    },
+    {
+      "properties": {
+        "global": {
+          "type": "object",
+          "properties": {
+            "priorityClassName": {
+              "type": "string"
+            },
+            "networkPolicy": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "none",
+                    "auto",
+                    "cilium"
+                  ]
+                },
+                "metricsLabels": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "minProperties": 1
+                },
+                "dnsLabels": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "minProperties": 1
+                },
+                "applicationLabels": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "oneOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    ]
+                  },
+                  "minProperties": 1
+                }
+              }
+            }
+          }
+        },
+        "mariadb": {
+          "type": "object",
+          "$ref": "https://raw.githubusercontent.com/bitnami/charts/master/bitnami/mariadb-galera/values.schema.json"
+        },
+        "enterpriseLicensed": {
+          "type": "boolean",
+          "description": "If you have an enterprise license you can have more than two replicas"
+        }
+      }
+    }
+  ],
+  "definitions": {
+    "hpa": {
+      "type": "object",
+      "properties": {
+        "hpa": {
+          "type": "object",
+          "oneOf": [
+            {
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "minReplicas": {
+                  "type": "integer"
+                },
+                "maxReplicas": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "enabled"
+              ]
+            },
+            {
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "const": false
+                }
+              },
+              "required": [
+                "enabled"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "image": {
+      "type": "object",
+      "properties": {
+        "registry": {
+          "type": "string"
+        },
+        "repository": {
+          "type": "string"
+        },
+        "tag": {
+          "oneOf": [
+            {
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    "probe": {
+      "type": "object",
+      "oneOf": [
+        {
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "const": true
+            },
+            "failureThreshold": {
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "type": "integer"
+            },
+            "successThreshold": {
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "type": "integer"
+            },
+            "initialDelaySeconds": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "enabled"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "const": false
+            }
+          },
+          "required": [
+            "enabled"
+          ]
+        }
+      ]
+    },
+    "nodeSelector": {
+      "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.NodeSelector"
+    },
+    "security": {
+      "type": "object",
+      "properties": {
+        "containerSecurityContext": {
+          "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.SecurityContext"
+        },
+        "securityContext": {
+          "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.PodSecurityContext"
+        },
+        "securityOptions": {
+          "type": "object",
+          "properties": {
+            "hostIPC": {
+              "type": "boolean"
+            },
+            "hostNetwork": {
+              "type": "boolean"
+            },
+            "hostPID": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        }
+      }
+    },
+    "deployment": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/security"
+        },
+        {
+          "properties": {
+            "image": {
+              "$ref": "#/definitions/image"
+            },
+            "affinity": {
+              "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.Affinity"
+            },
+            "livenessProbe": {
+              "$ref": "#/definitions/probe"
+            },
+            "nodeSelector": {
+              "$ref": "#/definitions/nodeSelector"
+            },
+            "podDisruptionBudget": {
+              "type": "boolean"
+            },
+            "readinessProbe": {
+              "$ref": "#/definitions/probe"
+            },
+            "resources": {
+              "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+            },
+            "tolerations": {
+              "type": "array",
+              "items": {
+                "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.Toleration"
+              }
+            },
+            "priorityClassName": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "scalable": {
+      "type": "object",
+      "properties": {
+        "replicas": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "replicas"
+      ]
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{{- if and false .Release.IsUpgrade }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "common.names.fullname" . }}-upgrade
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+  annotations:
+    helm.sh/hook: pre-upgrade,pre-rollback
+    helm.sh/hook-delete-policy: hook-succeeded,before-hook-creation
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      serviceAccountName: {{ include "common.names.fullname" . }}-upgrade
+      containers:
+        - name: delete-statefulset
+            {{- if $.Values.global.imageRegistry }}
+          image: "{{ $.Values.global.imageRegistry }}/bitnami/kubectl"
+            {{- else }}
+          image: "bitnami/kubectl"
+            {{- end }}
+          args:
+            - -n
+            - {{ .Release.Namespace }}
+            - delete
+            - statefulset
+            - --cascade=orphan
+            - {{ include "common.names.dependency.fullname" (dict "chartName" "mariadb" "chartValues" $.Values.mariadb "context" $) }}
+{{- end }}
