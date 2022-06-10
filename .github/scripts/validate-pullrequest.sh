@@ -7,7 +7,7 @@ set -o pipefail
 
 repo_root=$(git rev-parse --show-toplevel)
 
-changed=$(ct list-changed --config "$repo_root/ct.yaml")
+changed=$(ct list-changed)
 
 if [[ -z "$changed" ]]; then
     exit 0
