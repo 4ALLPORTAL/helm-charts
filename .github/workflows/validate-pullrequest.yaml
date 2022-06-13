@@ -11,6 +11,8 @@ name: Validate Pull Request
 jobs:
   validate:
     runs-on: ubuntu-latest
+    env:
+      CT_TARGET_BRANCH: ${{ github.event.repository.default_branch }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -24,4 +26,3 @@ jobs:
         run: .github/scripts/validate-pullrequest.sh
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
-          CT_TARGET_BRANCH: ${{ github.event.repository.default_branch }}
