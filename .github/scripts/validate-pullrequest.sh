@@ -19,7 +19,7 @@ fi
 
 num_changed=$(wc -l <<< "$changed")
 
-if ((num_changed > 1)); then
+if ((num_changed > 1)) && ! [[ "$PR_TITLE" =~ chore(deps):* ]]; then
     echo "This PR has changes to multiple charts. Please create individual PRs per chart." >&2
     exit 1
 fi
@@ -27,7 +27,12 @@ fi
 # Strip charts directory
 changed="${changed##*/}"
 
-if [[ "$PR_TITLE" != "[$changed] "* ]]; then
-    echo "PR title must start with '[$changed] '." >&2
+if ! cog verify "$PR_TITLE"; then
+  echo "PR title must be a conventional commit message"
+  exit 1
+fi
+
+if [[ "$PR_TITLE" != *"($changed):"* ]]; then
+    echo "PR title must start with '\$type($changed):'." >&2
     exit 1
 fi
