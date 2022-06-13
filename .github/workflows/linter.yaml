@@ -27,7 +27,7 @@ jobs:
       - name: Extract helm repos
         id: helm-repos
         run: |
-          echo -n "::set-output repos="
+          echo -n "::set-output name=repos::"
           for DIR in ./charts/*; do
             FILE="$DIR/Chart.yaml"
             DIR="${DIR//\./}"
