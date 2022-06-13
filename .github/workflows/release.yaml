@@ -5,7 +5,7 @@ name: Release Charts
     branches:
       - main
     paths:
-      - charts/*
+      - charts/**
   workflow_dispatch: {}
 
 jobs:
