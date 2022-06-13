@@ -32,8 +32,13 @@ jobs:
             FILE="$DIR/Chart.yaml"
             DIR="${DIR//\./}"
             yq e '.dependencies.[].repository' "$FILE"
-          done | sort -u | awk '{printf (NR>1 ? "," : "")NR "=" $1}'
+          done | sort -u | awk '{printf (NR>1 ? "," : "") NR "=" $1}'
           echo
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
 
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.2.1
