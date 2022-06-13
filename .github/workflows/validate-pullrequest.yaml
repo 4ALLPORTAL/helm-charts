@@ -17,9 +17,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.0.1
-
       - name: Validate PR
         run: .github/scripts/validate-pullrequest.sh
         env:
