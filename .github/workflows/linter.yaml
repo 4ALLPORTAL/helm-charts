@@ -1,12 +1,12 @@
 name: Lint Code Base
 
-# Documentation:
-# https://help.github.com/en/articles/workflow-syntax-for-github-actions
-
 "on":
   pull_request:
-    paths:
-      - charts/*
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
 
 jobs:
   build:
@@ -17,9 +17,33 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: install yq
+        run: |
+          sudo snap install yq
+
+      - name: Extract helm repos
+        id: helm-repos
+        run: |
+          echo -n "::set-output name=repos::"
+          for DIR in ./charts/*; do
+            FILE="$DIR/Chart.yaml"
+            DIR="${DIR//\./}"
+            yq e '.dependencies.[].repository' "$FILE"
+          done | sort -u | awk '{printf (NR>1 ? "," : "") NR "=" $1}'
+          echo
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
 
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.2.1
 
       - name: Lint charts
         run: ct lint
+        env:
+          CT_CHART_REPOS: ${{ steps.helm-repos.outputs.repos }}
