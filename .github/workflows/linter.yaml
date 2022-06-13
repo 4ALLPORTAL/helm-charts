@@ -46,4 +46,4 @@ jobs:
       - name: Lint charts
         run: ct lint
         env:
-          CT_CHART_REPOS: ${{ jobs.helm-repos.outputs.repos }}
+          CT_CHART_REPOS: ${{ steps.helm-repos.outputs.repos }}
