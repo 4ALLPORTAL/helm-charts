@@ -1,0 +1,32 @@
+{{- if .Values.rbac.create }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: cluster-view-rolebinding
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: view
+subjects:
+  {{ if .Values.rbac.view.authenticated }}
+  - apiGroup: rbac.authorization.k8s.io
+    kind: Group
+    name: system:authenticated
+  {{ end }}
+  {{ range $name := .Values.rbac.view.users }}
+  - apiGroup: rbac.authorization.k8s.io
+    kind: User
+    name: {{ $name }}
+  # deprecated
+  - kind: ServiceAccount
+    name: {{ $name }}
+    namespace: {{ $.Release.Namespace }}
+  {{ end }}
+  {{ range $name := .Values.rbac.view.groups }}
+  - apiGroup: rbac.authorization.k8s.io
+    kind: Group
+    name: {{ $name }}
+  {{ end }}
+  {{- end }}

@@ -1,0 +1,54 @@
+{{- if .Values.backup.enabled -}}
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: stash
+  namespace: kube-system
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: stash
+spec:
+  chart:
+    spec:
+      chart: stash
+      sourceRef:
+        kind: HelmRepository
+        name: appscode
+        namespace: {{ .Release.Namespace }}
+      version: v2022.03.29
+  interval: 1m
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  values:
+    pushgateway:
+      {{- if .Values.global.imageRegistry }}
+      registry: "{{ $.Values.global.imageRegistry }}/prom"
+    {{- end }}
+    global:
+      {{- if .Values.global.imageRegistry }}
+      registry: "{{ $.Values.global.imageRegistry }}/stashed"
+      {{- end }}
+      license: |-
+    {{ required "You need to provide a license for stash 😡" .Values.backup.license | nindent 8 }}
+    features:
+      community: true
+    stash-community:
+      criticalAddon: true
+      enableAnalytics: false
+      monitoring:
+        agent: prometheus.io/operator
+        backup: true
+        operator: true
+      apiserver:
+        enableValidatingWebhook: false
+        servingCerts:
+          generate: false
+          caCrt: "{{ required "Sadly you have to provide 'backup.servingCerts.caCert'" .Values.backup.servingCerts.caCert | b64enc }}"
+          serverCrt: "{{ required "Sadly you have to provide 'backup.servingCerts.serverCert'" .Values.backup.servingCerts.serverCert | b64enc }}"
+          serverKey: "{{ required "Sadly you have to provide 'backup.servingCerts.serverKey'" .Values.backup.servingCerts.serverKey | b64enc }}"
+---
+{{ template "base-cluster.dashboards.configmap" (dict "folder" "backup" "context" .) }}
+{{- end -}}

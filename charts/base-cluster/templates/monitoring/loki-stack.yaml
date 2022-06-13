@@ -1,0 +1,76 @@
+{{- if and .Values.monitoring.prometheus.enabled .Values.monitoring.loki.enabled -}}
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: loki
+  namespace: monitoring
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: loki
+spec:
+  chart:
+    spec:
+      chart: loki-stack
+      sourceRef:
+        kind: HelmRepository
+        name: grafana
+        namespace: {{ .Release.Namespace }}
+      version: 2.x.x
+  interval: 1m
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  values:
+    loki:
+      isDefault: false
+      {{- if .Values.global.imageRegistry }}
+      image:
+        repository: "{{ $.Values.global.imageRegistry }}/grafana/loki"
+      {{- end }}
+      resources: {{- .Values.monitoring.loki.resources | toYaml | nindent 8 }}
+      replicas: {{ .Values.monitoring.loki.replicas }}
+      persistence:
+        enabled: true
+        storageClassName: {{ default .Values.monitoring.loki.storageClass .Values.global.storageClass }}
+        size: {{ .Values.monitoring.loki.storageSize }}
+      {{- if .Values.monitoring.prometheus.enabled }}
+      serviceMonitor:
+        enabled: true
+      {{- end }}
+      table_manager:
+        retention_deletes_enabled: true
+        retention_period: 2w
+      config:
+        ingester:
+          chunk_block_size: 524288
+          chunk_target_size: 5242880
+{{/* Only after 2.5 is released 🙁 */}}
+{{/*        schema_config:*/}}
+{{/*          configs:*/}}
+{{/*            - from: 2022-02-26*/}}
+{{/*              store: boltdb-shipper*/}}
+{{/*              object_store: filesystem*/}}
+{{/*              schema: v12*/}}
+{{/*              index:*/}}
+{{/*                prefix: index_*/}}
+{{/*                period: 24h*/}}
+    promtail:
+      {{- if .Values.global.imageRegistry }}
+      image:
+        repository: "{{ $.Values.global.imageRegistry }}/grafana/promtail"
+      {{- end }}
+      resources: {{- .Values.monitoring.loki.promtail.resources | toYaml | nindent 8 }}
+      {{- if .Values.monitoring.prometheus.enabled }}
+      serviceMonitor:
+        enabled: true
+    {{- end }}
+    grafana:
+      enabled: false
+      sidecar:
+        datasources:
+          enabled: true
+    prometheus:
+      enabled: false
+  {{- end -}}

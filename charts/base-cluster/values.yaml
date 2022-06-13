@@ -1,0 +1,330 @@
+global:
+  baseDomain: "4allportal.com"
+  clusterName: "eu-west-1"
+  imageCredentials: {}
+  certificates: {}
+  priorityClasses:
+    defaultClasses:
+      very-high:
+        preemptionPolicy: PreemptLowerPriority
+        value: 10000
+        description: Meant for production workloads
+      high:
+        preemptionPolicy: PreemptLowerPriority
+        value: 7000
+      normal:
+        preemptionPolicy: PreemptLowerPriority
+        value: 5000
+      low:
+        preemptionPolicy: PreemptLowerPriority
+        value: 3000
+        description: Meant for development / testing workloads
+    classes: {}
+    default: {}
+  networkPolicy:
+    type: auto
+    dnsLabels:
+      io.kubernetes.pod.namespace: kube-system
+      k8s-app: kube-dns
+    metricsLabels:
+      io.kubernetes.pod.namespace: monitoring
+      app.kubernetes.io/name: prometheus
+  authentication:
+    enabled: false
+    config:
+      clientId: ""
+      clientSecret: ""
+      issuerHost: ""
+      issuerPath: ""
+      emailDomains: []
+      cookieSecret: ""
+    oauth:
+      resources:
+        limits:
+          cpu: 100m
+          memory: 32Mi
+        requests:
+          cpu: 10m
+          memory: 16Mi
+  kubectl:
+    image:
+      registry: docker.io
+      repository: bitnami/kubectl
+      tag: 1.24.1
+  helm:
+    image:
+      registry: docker.io
+      repository: alpine/helm
+      tag: 3.9.0
+  imageRegistry: ""
+
+flux:
+  resources: {}
+
+traefik:
+  resources:
+    requests:
+      cpu: "1"
+      memory: 250Mi
+    limits:
+      cpu: "4"
+      memory: 500Mi
+  minReplicas: 2
+  maxReplicas: 8
+
+speedtest:
+  enabled: true
+  host: speedtest
+
+janitor:
+  enabled: true
+
+monitoring:
+  ingress:
+    enabled: false
+    enableMonitorDeletion: true
+    providers: []
+    creationDelay: 10m
+  grafana:
+    adminPassword: ""
+    host: grafana
+    additionalDashboards: {}
+    dashboards:
+      fourAllPortal: true
+      mariadb: true
+    config: {}
+    notifiers: []
+    resources:
+      requests:
+        cpu: 500m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+    sidecar:
+      resources:
+        requests:
+          memory: 128Mi
+          cpu: 1
+        limits:
+          memory: 128Mi
+          cpu: 1
+  costAnalysis:
+    currency: currencyEUR
+    storageClassMapping: {}
+  prometheus:
+    enabled: true
+    storage:
+      retention: 4w
+      size: 100Gi
+    resources:
+      requests:
+        cpu: "2"
+        memory: 8Gi
+      limits:
+        cpu: "2"
+        memory: 8Gi
+    operator:
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          cpu: 500m
+          memory: 512Mi
+    kubeStateMetrics:
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: 100m
+          memory: 512Mi
+    nodeExporter:
+      resources:
+        requests:
+          cpu: 500m
+          memory: 64Mi
+        limits:
+          cpu: "2"
+          memory: 128Mi
+    overrides: {}
+    host: prometheus
+    alertmanager:
+      host: alertmanager
+      storage:
+        size: 1Gi
+        retention: 120h
+      pagerduty:
+        enabled: false
+        url: ""
+        routingKey: ""
+    authentication: {}
+  loki:
+    enabled: true
+    storageSize: 10Gi
+    replicas: 1
+    resources:
+      requests:
+        cpu: 250m
+        memory: 256Mi
+      limits:
+        cpu: 1
+        memory: 1Gi
+    promtail:
+      resources:
+        requests:
+          cpu: 100m
+          memory: 64Mi
+        limits:
+          cpu: 1
+          memory: 128Mi
+  metricsServer:
+    enabled: true
+  securityScanning:
+    enabled: true
+  jaeger:
+    enabled: true
+    host: jaeger
+    authentication: {}
+    agent:
+      resources:
+        requests:
+          memory: 16Mi
+          cpu: 100m
+        limits:
+          memory: 64Mi
+          cpu: 200m
+    collector:
+      resources:
+        requests:
+          memory: 32Mi
+          cpu: 500m
+        limits:
+          memory: 64Mi
+          cpu: 1
+    query:
+      resources:
+        requests:
+          memory: 32Mi
+          cpu: 50m
+        limits:
+          memory: 64Mi
+          cpu: 100m
+    elasticsearch:
+      storage:
+        size: 5Gi
+      resources:
+        requests:
+          memory: 4Gi
+          cpu: 2
+        limits:
+          memory: 4Gi
+          cpu: 2
+  goldpinger:
+    enabled: true
+    host: pinger
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        cpu: 250m
+        memory: 64Mi
+    pingHosts: []
+  deadMansSwitch:
+    enabled: false
+    apiKey: ""
+    pingKey: ""
+
+git:
+  instances: {}
+
+dns:
+  apiKey: ""
+  domains: []
+
+rbac:
+  create: true
+  admin:
+    users: []
+    groups: []
+  view:
+    users: []
+    groups: []
+    authenticated: false
+  # deprecated
+  users: []
+
+backup:
+  enabled: false
+
+externalDNS:
+  resources:
+    limits:
+      cpu: 50m
+      memory: 128Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
+
+descheduler:
+  enabled: true
+  strategies:
+    RemoveDuplicates:
+      enabled: true
+    RemovePodsViolatingNodeTaints:
+      enabled: true
+    RemovePodsViolatingNodeAffinity:
+      enabled: true
+      params:
+        nodeAffinityType:
+          - requiredDuringSchedulingIgnoredDuringExecution
+    RemovePodsViolatingInterPodAntiAffinity:
+      enabled: true
+    RemovePodsViolatingTopologySpreadConstraint:
+      enabled: true
+      params:
+        includeSoftContraints: true
+    RemovePodsHavingTooManyRestarts:
+      enabled: true
+      params:
+        podsHavingTooManyRestarts:
+          podRestartThreshold: 10
+    LowNodeUtilization:
+      enabled: true
+      params:
+        nodeResourceUtilizationThresholds:
+          thresholds:
+            cpu: 50
+            memory: 50
+            pods: 50
+          targetThresholds:
+            cpu: 70
+            memory: 80
+            pods: 95
+
+certManager:
+  resources:
+    limits:
+      cpu: 250m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 512Mi
+  caInjector:
+    resources:
+      limits:
+        cpu: 250m
+        memory: 512Mi
+      requests:
+        cpu: 250m
+        memory: 512Mi
+  webhook:
+    resources:
+      limits:
+        cpu: 1
+        memory: 512Mi
+      requests:
+        cpu: 250m
+        memory: 512Mi

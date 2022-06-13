@@ -1,0 +1,116 @@
+{{ template "chart.header" . }}
+{{ template "chart.deprecationWarning" . }}
+
+{{ template "chart.badgesSection" . }}
+
+{{ template "chart.description" . }}
+
+{{ template "chart.homepageLine" . }}
+
+{{ template "chart.maintainersSection" . }}
+
+{{ template "chart.sourcesSection" . }}
+
+{{ template "chart.requirementsSection" . }}
+
+This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/installation)
+
+{{ template "chart.valuesSection" . }}
+
+# Upgrading
+
+## To 25.0.0
+
+Prometheus requires a CRD upgrade;
+
+```
+kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.52.0/example/prometheus-operator-crd/monitoring.coreos.com_alertmanagerconfigs.yaml
+kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.52.0/example/prometheus-operator-crd/monitoring.coreos.com_alertmanagers.yaml
+kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.52.0/example/prometheus-operator-crd/monitoring.coreos.com_podmonitors.yaml
+kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.52.0/example/prometheus-operator-crd/monitoring.coreos.com_probes.yaml
+kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.52.0/example/prometheus-operator-crd/monitoring.coreos.com_prometheuses.yaml
+kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.52.0/example/prometheus-operator-crd/monitoring.coreos.com_prometheusrules.yaml
+kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.52.0/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml
+kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.52.0/example/prometheus-operator-crd/monitoring.coreos.com_thanosrulers.yaml
+```
+
+## To 26.0.0
+
+Prometheus requires a CRD upgrade;
+
+```
+kubectl apply --server-side -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.53.1/example/prometheus-operator-crd/monitoring.coreos.com_alertmanagerconfigs.yaml
+kubectl apply --server-side -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.53.1/example/prometheus-operator-crd/monitoring.coreos.com_alertmanagers.yaml
+kubectl apply --server-side -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.53.1/example/prometheus-operator-crd/monitoring.coreos.com_podmonitors.yaml
+kubectl apply --server-side -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.53.1/example/prometheus-operator-crd/monitoring.coreos.com_probes.yaml
+kubectl apply --server-side -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.53.1/example/prometheus-operator-crd/monitoring.coreos.com_prometheuses.yaml
+kubectl apply --server-side -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.53.1/example/prometheus-operator-crd/monitoring.coreos.com_prometheusrules.yaml
+kubectl apply --server-side -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.53.1/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml
+kubectl apply --server-side -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.53.1/example/prometheus-operator-crd/monitoring.coreos.com_thanosrulers.yaml
+```
+
+## To 27.0.0
+
+Prometheus requries a CRD upgrade
+
+```
+kubectl apply --server-side -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.54.0/example/prometheus-operator-crd/monitoring.coreos.com_alertmanagerconfigs.yaml
+kubectl apply --server-side -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.54.0/example/prometheus-operator-crd/monitoring.coreos.com_alertmanagers.yaml
+kubectl apply --server-side -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.54.0/example/prometheus-operator-crd/monitoring.coreos.com_podmonitors.yaml
+kubectl apply --server-side -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.54.0/example/prometheus-operator-crd/monitoring.coreos.com_probes.yaml
+kubectl apply --server-side -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.54.0/example/prometheus-operator-crd/monitoring.coreos.com_prometheuses.yaml
+kubectl apply --server-side -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.54.0/example/prometheus-operator-crd/monitoring.coreos.com_prometheusrules.yaml
+kubectl apply --server-side -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.54.0/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml
+kubectl apply --server-side -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.54.0/example/prometheus-operator-crd/monitoring.coreos.com_thanosrulers.yaml
+```
+
+## To 28.0.0
+
+The following components are now under the `monitoring` section:
+
+- `ingressMonitoring` as `ingress`
+- `grafana`
+- `costAnalysis`
+- `prometheus`
+- `loki`
+- `metricsServer`
+- `securityScanning`
+- `jaeger`
+- `goldpinger`
+
+## To 29.0.0
+
+The helm-operator will now be installed / upgraded via a pre-install/pre-upgrade hook.
+
+Therefore the `HelmRelease` `helm-operator` has been deleted. This means this chart has to be upgraded manually after the helm-operator  will be uninstalled.
+
+## To 30.0.0
+
+Loki HelmRelease moves from namespace `flux` to `monitoring`. You either need to reconnect the PV with the new PVC, or start fresh with 0 logs.
+
+Traefik HelmRelease moves from namespace `flux` to `ingress`. You may need to adjust some things referencing the resources.
+
+## To 31.0.0
+
+This release supports cilium network policies. To create the correct ones, the `.spec.values.global.authentication.config.issuerURL` has been split into `spec.values.global.authentication.config.issuerHost` and `spec.values.global.authentication.config.issuerPath`.
+
+## To 32.0.0
+
+This release installs flux v2 alongside flux v1 and prepares the migration
+
+## To 33.0.0
+
+You have to migrate your resources, at least this cluster resource, to flux v2 after this upgrade to reenable syncing
+
+After this upgrade, flux v1 and the helm-operator will be removed, therefore you have to migrate your resources accordingly
+
+Also, the `.git.instances.$name.url` should not contain `$(GIT_AUTHUSER):$(GIT_AUTHKEY)@` anymore
+
+## To 34.0.0
+
+This concludes the migration, the following HelmReleases will be recreated by this upgrade;
+
+- Loki
+- Jaeger
+
+You either need to reconnect the PVs with the new PVCs, or start fresh with no data.

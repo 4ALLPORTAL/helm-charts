@@ -1,0 +1,64 @@
+{{- if .Values.speedtest.enabled -}}
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: speedtest
+  namespace: ingress
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: speedtest
+spec:
+  chart:
+    spec:
+      chart: nginx
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami
+        namespace: {{ .Release.Namespace }}
+      version: 12.x.x
+  interval: 1m
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  values:
+    replicaCount: 2
+    image:
+      {{- with .Values.global.imageRegistry }}
+      registry: {{ . | quote }}
+      {{- end }}
+      repository: "adolfintel/speedtest"
+      tag: "latest"
+      pullPolicy: Always
+    extraEnvVars:
+      - name: WEBPORT
+        value: "8080"
+    containerSecurityContext:
+      enabled: true
+      readOnlyRootFilesystem: false
+      capabilities:
+        drop:
+          - ALL
+      allowPrivilegeEscalation: true
+      privileged: true
+      runAsUser: 0
+      runAsGroup: 1000
+      runAsNonRoot: false
+    podSecurityContext:
+      enabled: true
+    ingress:
+      enabled: true
+      hostname: {{ include "base-cluster.speedtest.host" . }}
+      extraTls: |-
+        - secretName: cluster-wildcard-certificate
+          hosts:
+            - {{ include "base-cluster.speedtest.host" . }}
+    service:
+      type: ClusterIP
+    readinessProbe:
+      enabled: true
+      initialDelaySeconds: 0
+    livenessProbe:
+      enabled: true
+  {{- end -}}

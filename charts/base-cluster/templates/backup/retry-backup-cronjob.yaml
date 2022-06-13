@@ -1,0 +1,61 @@
+{{- if .Values.backup.enabled -}}
+{{- if false }}
+apiVersion: batch/v1beta1
+{{- else }}
+apiVersion: {{ include "common.capabilities.cronjob.apiVersion" . }}
+{{- end }}
+kind: CronJob
+metadata:
+  name: stash-retry-backup
+  namespace: kube-system
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  concurrencyPolicy: Forbid
+  schedule: "30 0-8 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          securityContext:
+            runAsGroup: 1000
+            runAsUser: 1000
+            runAsNonRoot: true
+            fsGroup: 1000
+          automountServiceAccountToken: true
+          serviceAccountName: stash-retry-backup
+          restartPolicy: Never
+          containers:
+            - name: stash-retry-backup
+              {{- if $.Values.global.imageRegistry }}
+              image: "{{ $.Values.global.imageRegistry }}/bitnami/kubectl"
+              {{- else }}
+              image: "bitnami/kubectl"
+              {{- end }}
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                privileged: false
+                readOnlyRootFilesystem: true
+              command:
+                - bash
+              args:
+                - -ex
+                - -c
+                - |
+                  kubectl get backupsession -A -o json | \
+                    jq -r '.items[] | select(.status.phase == "Failed") | del(.status) | .metadata.name=(.metadata.name | sub("\\d+$"; (now | strftime("%s"))))' \
+                    > /tmp/backupsessions.json
+
+                  if [ -s /tmp/backupsessions.json ]; then
+                    kubectl create -f /tmp/backupsessions.json
+                  fi
+              volumeMounts:
+                - mountPath: /tmp
+                  name: tmp
+          volumes:
+            - name: tmp
+              emptyDir:
+                medium: Memory
+  {{- end -}}

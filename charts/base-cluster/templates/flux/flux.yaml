@@ -1,0 +1,43 @@
+{{- range $name, $instance := .Values.git.instances }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: flux-{{- $name }}
+  namespace: flux
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $name | quote }}
+    app.kubernetes.io/part-of: flux
+stringData:
+  username: {{ $instance.user }}
+  password: {{ $instance.key }}
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: GitRepository
+metadata:
+  name: flux-{{- $name }}
+  namespace: flux
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $name | quote }}
+    app.kubernetes.io/part-of: flux
+spec:
+  interval: {{ $instance.gitInterval | default "1m" | quote }}
+  url: {{ $instance.url | quote }}
+  secretRef:
+    name: flux-{{- $name }}
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: flux-{{- $name }}
+  namespace: flux
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: flux
+spec:
+  interval: 1m
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-{{- $name }}
+    namespace: flux
+{{- end }}

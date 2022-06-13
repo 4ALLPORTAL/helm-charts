@@ -1,0 +1,3 @@
+{{- if and .Values.monitoring.prometheus.enabled .Values.monitoring.grafana.dashboards.mariadb }}
+{{- template "base-cluster.dashboards.configmap" (dict "folder" "mariadb" "context" .) -}}
+{{- end }}

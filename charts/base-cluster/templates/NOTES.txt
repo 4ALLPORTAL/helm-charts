@@ -1,0 +1,32 @@
+To access this cluster you have to install kubectl
+
+  $ curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/$(uname -s | tr 'A-Z' 'a-z')/amd64/kubectl
+  $ chmod +x ./kubectl
+  $ sudo mv ./kubectl /usr/local/bin/kubectl
+
+{{- if and .Values.rbac.create (gt (len .Values.rbac.users) 0) }}
+ And create the following kubeconfig(s):
+
+user={{ index .Values.rbac.users (sub (len .Values.rbac.users) 1) }}
+cluster=$(kubectl config view --raw -o json | jq -r ".contexts[] | select(.name == \"$(kubectl config current-context)\") | .context.cluster")
+
+/bin/cat - <<EOF
+apiVersion: v1
+kind: Config
+clusters:
+- cluster:
+    certificate-authority-data: $(kubectl config view --raw -o json | jq -r ".clusters[] | select(.name == \"$cluster\") | .cluster[\"certificate-authority-data\"]")
+    server: $(kubectl config view --raw -o json | jq -r ".clusters[] | select(.name == \"$cluster\") | .cluster.server")
+  name: $cluster
+contexts:
+- context:
+    cluster: $cluster
+    user: ${user}@${cluster}
+  name: ${user}@${cluster}
+current-context: ${user}@${cluster}
+users:
+- name: ${user}@${cluster}
+  user:
+    token: $(kubectl -n {{ .Release.Namespace }} get secret $(kubectl -n {{ .Release.Namespace }} get serviceaccount -l user=$user -o jsonpath='{.items[].secrets[].name}') -o jsonpath={.data.token} | base64 -d)
+EOF
+{{- end }}

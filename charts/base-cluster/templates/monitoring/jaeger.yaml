@@ -1,0 +1,126 @@
+{{- if .Values.monitoring.jaeger.enabled -}}
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: jaeger-tracing
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: jaeger
+    app.kubernetes.io/part-of: jaeger
+  namespace: monitoring
+spec:
+  chart:
+    spec:
+      chart: jaeger
+      sourceRef:
+        kind: HelmRepository
+        name: jaeger
+        namespace: {{ .Release.Namespace }}
+      version: 0.x.x
+  interval: 1m
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  values:
+    provisionDataStore:
+      cassandra: false
+      elasticsearch: true
+    storage:
+      type: elasticsearch
+    {{- if .Values.global.imageRegistry }}
+    ingester:
+      image: "{{ $.Values.global.imageRegistry }}/jaegertracing/jaeger-ingester"
+    {{- end }}
+    agent:
+      {{- if .Values.global.imageRegistry }}
+      image: "{{ $.Values.global.imageRegistry }}/jaegertracing/jaeger-agent"
+      {{- end }}
+      resources: {{- .Values.monitoring.jaeger.agent.resources | toYaml | nindent 8 }}
+      daemonset:
+        useHostPort: true
+      securityContext: &securityContext
+        runAsNonRoot: true
+        readOnlyRootFilesystem: true
+        allowPrivilegeEscalation: false
+        privileged: false
+        capabilities:
+          drop:
+            - ALL
+        runAsGroup: 1000
+        runAsUser: 1000
+      podSecurityContext: &podSecurityContext
+        fsGroup: 1000
+        runAsUser: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+      {{- if .Values.monitoring.prometheus.enabled }}
+      serviceMonitor:
+        enabled: true
+    {{- end }}
+    collector:
+      {{- if .Values.global.imageRegistry }}
+      image: "{{ $.Values.global.imageRegistry }}/jaegertracing/jaeger-collector"
+      {{- end }}
+      resources: {{- .Values.monitoring.jaeger.collector.resources | toYaml | nindent 8 }}
+      securityContext: *securityContext
+      podSecurityContext: *podSecurityContext
+      {{- if .Values.monitoring.prometheus.enabled }}
+      serviceMonitor:
+        enabled: true
+    {{- end }}
+    query:
+      {{- if .Values.global.imageRegistry }}
+      image: "{{ $.Values.global.imageRegistry }}/jaegertracing/jaeger-query"
+      {{- end }}
+      resources: {{- .Values.monitoring.jaeger.query.resources | toYaml | nindent 8 }}
+      securityContext: *securityContext
+      podSecurityContext: *podSecurityContext
+      {{- if .Values.monitoring.prometheus.enabled }}
+      serviceMonitor:
+        enabled: true
+      {{- end }}
+      ingress:
+        enabled: true
+        hosts:
+          - {{ include "base-cluster.jaeger.host" $ }}
+        tls:
+          - hosts:
+              - {{ include "base-cluster.jaeger.host" $ }}
+            secretName: cluster-wildcard-certificate
+      {{- if empty .Values.monitoring.jaeger.authentication.enabled | ternary .Values.global.authentication.enabled .Values.monitoring.jaeger.authentication.enabled }}
+      oAuthSidecar:
+        enabled: true
+        args:
+          - --config=/etc/oauth2-proxy/oauth2-proxy.cfg
+          - --http-address=0.0.0.0:4180
+          - --upstream=http://localhost:16686
+          - --skip-provider-button=true
+        config: |-
+          provider = "oidc"
+          reverse_proxy = true
+          client_id = {{ .Values.global.authentication.config.clientId | quote }}
+          client_secret = {{ .Values.global.authentication.config.clientSecret | quote }}
+          cookie_secret = {{ .Values.global.authentication.config.cookieSecret | quote }}
+          oidc_issuer_url = {{ printf "https://%s%s" $.Values.global.authentication.config.issuerHost $.Values.global.authentication.config.issuerPath | quote }}
+          skip_provider_button = true
+          email_domains = [ "{{ .Values.global.authentication.config.emailDomains | join "\", \"" }}" ]
+    {{- end }}
+    elasticsearch:
+      maxUnavailable: 2
+      resources: {{- .Values.monitoring.jaeger.elasticsearch.resources | toYaml | nindent 8 }}
+      persistence:
+        enabled: true
+        storageClass: {{ default .Values.monitoring.jaeger.storageClass .Values.global.storageClass }}
+      volumeClaimTemplate:
+        resources:
+          requests:
+            storage: {{ .Values.monitoring.jaeger.elasticsearch.storage.size }}
+    esIndexCleaner:
+      enabled: true
+      numberOfDays: 2
+      {{- if .Values.global.imageRegistry }}
+      image: "{{ $.Values.global.imageRegistry }}/jaegertracing/jaeger-es-index-cleaner"
+  {{- end }}
+  {{- end -}}

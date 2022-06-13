@@ -1,0 +1,38 @@
+{{- if .Values.monitoring.ingress.enabled -}}
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: ingress-monitor-operator
+  namespace: monitoring
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: ingress-monitoring
+spec:
+  chart:
+    spec:
+      chart: ingressmonitorcontroller
+      sourceRef:
+        kind: HelmRepository
+        name: stakater
+        namespace: {{ .Release.Namespace }}
+      version: 2.x.x
+  interval: 1m
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  values:
+    fullnameOverride: monitoring-ingress-monitor-operator
+    {{- if .Values.global.imageRegistry }}
+    image:
+      repository: "{{ $.Values.global.imageRegistry }}/stakater/ingressmonitorcontroller"
+    {{- end }}
+    {{- if .Values.monitoring.prometheus.enabled }}
+    serviceMonitor:
+      enabled: true
+    {{- end }}
+    configSecretName: ingress-monitor-operator
+    podAnnotations:
+      checksum/secret: {{ include (print $.Template.BasePath "/monitoring/ingress/operator-secret.yaml") . | sha256sum }}
+  {{- end -}}

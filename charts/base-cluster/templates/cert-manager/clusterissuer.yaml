@@ -1,0 +1,26 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: cert-manager
+spec:
+  acme:
+    email: {{ .Values.dns.email }}
+    solvers:
+      - dns01:
+          cloudflare:
+            email: {{ .Values.dns.email }}
+            apiKeySecretRef:
+              name: cert-manager-cloudflare
+              key: key
+        {{ with .Values.dns.domains }}
+        selector:
+          dnsZones:
+      {{ . | toYaml | nindent 12 }}
+      {{ end }}
+      - http01:
+          ingress: {}
+    privateKeySecretRef:
+      name: letsencrypt-prod-account
+    server: https://acme-v02.api.letsencrypt.org/directory

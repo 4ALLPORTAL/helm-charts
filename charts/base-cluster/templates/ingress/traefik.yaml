@@ -1,0 +1,205 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ingress-traefik-config
+  namespace: ingress
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: traefik
+data:
+  config.toml: |-
+    [http.middlewares]
+      [http.middlewares.compress.compress]
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: ingress-traefik
+  namespace: ingress
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: traefik
+spec:
+  chart:
+    spec:
+      chart: traefik
+      sourceRef:
+        kind: HelmRepository
+        name: traefik
+        namespace: {{ .Release.Namespace }}
+      version: 10.x.x
+  interval: 1m
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  values:
+    {{- if .Values.global.imageRegistry }}
+    image:
+      name: "{{ $.Values.global.imageRegistry }}/traefik"
+    {{- end }}
+    providers:
+      kubernetesCRD:
+        enabled: true
+      kubernetesIngress:
+        enabled: true
+        {{- if not .Values.traefik.ingressIP }}
+        publishedService:
+          enabled: true
+    {{- end }}
+
+    rbac:
+      enabled: true
+
+    service:
+      enabled: true
+      {{- if .Values.traefik.serviceType }}
+      type: {{ .Values.traefik.serviceType }}
+      {{- end }}
+      {{- if .Values.traefik.externalIP }}
+      externalIPs:
+        - {{ .Values.traefik.externalIP }}
+      {{- end }}
+      spec:
+        externalTrafficPolicy: Local
+        {{- if .Values.traefik.loadBalancerIP }}
+        loadBalancerIP: {{ .Values.traefik.loadBalancerIP }}
+    {{- end }}
+
+    globalArguments: [ ]
+
+    additionalArguments:
+      {{- if .Values.traefik.ingressIP }}
+      - "--providers.kubernetesIngress.ingressEndpoint.ip={{ .Values.traefik.ingressIP }}"
+      {{- end }}
+      - "--entryPoints.web.http.redirections.entryPoint.permanent=true"
+      {{- if .Values.monitoring.jaeger.enabled }}
+      - "--tracing.jaeger=true"
+      - "--tracing.jaeger.localAgentHostPort=$(JAEGER_AGENT_HOST):$(JAEGER_AGENT_PORT)"
+    {{- end }}
+      - "--providers.file.filename=/config/config.toml"
+      - "--entrypoints.websecure.http.middlewares=compress@file"
+      - "--providers.kubernetesingress.allowexternalnameservices=true"
+      - "--providers.kubernetesingress.allowEmptyServices=true"
+      - "--providers.kubernetescrd.allowexternalnameservices=true"
+
+    volumes:
+      - name: ingress-traefik-config
+        mountPath: /config
+        type: configMap
+
+    ports:
+      web:
+        redirectTo: websecure
+      websecure:
+        tls:
+          enabled: true
+
+    {{- if .Values.monitoring.jaeger.enabled }}
+    env:
+      - name: JAEGER_AGENT_HOST
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: status.hostIP
+      - name: JAEGER_AGENT_PORT
+        value: "6831"
+    {{- end }}
+
+    ingressClass:
+      enabled: false
+      isDefaultClass: true
+
+    tlsOptions:
+      default:
+        preferServerCipherSuites: true
+        minVersion: VersionTLS12
+
+    podSecurityPolicy:
+      enabled: true
+    podSecurityContext:
+      runAsUser: 65532
+      runAsGroup: 65532
+      runAsNonRoot: true
+    securityContext:
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      runAsGroup: 65532
+      runAsUser: 65532
+      runAsNonRoot: true
+      privileged: false
+      capabilities:
+        drop:
+          - ALL
+
+    priorityClassName: system-cluster-critical
+
+    {{- if ge (.Values.traefik.minReplicas | int) 2 }}
+    podDisruptionBudget:
+      enabled: true
+      {{- if ge (.Values.traefik.maxReplicas | int) (.Values.traefik.minReplicas | int) }}
+      minAvailable: {{ sub .Values.traefik.minReplicas 1 }}
+      {{ else }}
+      minAvailable: 1
+    {{- end }}
+    {{- end }}
+
+    resources: {{- .Values.traefik.resources | toYaml | nindent 6 }}
+
+    affinity:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: traefik
+
+    rollingUpdate:
+      maxSurge: {{ max 1 (div .Values.traefik.maxReplicas 2) }}
+
+    autoscaling:
+      enabled: true
+      minReplicas: {{ .Values.traefik.minReplicas }}
+      maxReplicas: {{ .Values.traefik.maxReplicas }}
+      metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            targetAverageUtilization: 90
+---
+  {{- if .Values.monitoring.prometheus.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: ingress-traefik-metrics
+  namespace: ingress
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: traefik
+spec:
+  ports:
+    - port: 9100
+      name: metrics
+      targetPort: metrics
+  selector:
+    app.kubernetes.io/name: traefik
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: ingress-traefik
+  namespace: ingress
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: traefik
+spec:
+  endpoints:
+    - path: /metrics
+      port: metrics
+  namespaceSelector:
+    matchNames:
+      - ingress
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" $ | nindent 6 }}
+      app.kubernetes.io/component: traefik
+  {{- end }}

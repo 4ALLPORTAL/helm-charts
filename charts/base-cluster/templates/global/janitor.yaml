@@ -1,0 +1,46 @@
+{{- if .Values.janitor.enabled -}}
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: GitRepository
+metadata:
+  name: kube-janitor
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: kube-janitor
+spec:
+  interval: 5m
+  url: https://codeberg.org/hjacobs/kube-janitor
+  ref:
+    tag: 20.10.0
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: kube-janitor
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: kube-janitor
+spec:
+  chart:
+    spec:
+      chart: unsupported/helm
+      sourceRef:
+        kind: GitRepository
+        name: kube-janitor
+        namespace: {{ $.Release.Namespace }}
+  interval: 1m
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  values:
+    image:
+      {{- if .Values.global.imageRegistry }}
+      repository: "{{ $.Values.global.imageRegistry }}/hjacobs/kube-janitor"
+      {{- end }}
+      tag: 20.10.0
+    resources:
+      limits:
+        memory: 1Gi
+  {{- end -}}

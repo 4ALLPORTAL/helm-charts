@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: "cluster-wildcard"
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: letsencrypt-prod
+  dnsNames:
+    - "{{ include "base-cluster.domain" $ }}"
+    - "*.{{ include "base-cluster.domain" $ }}"
+  secretName: "cluster-wildcard-certificate"

@@ -1,0 +1,3 @@
+{{- if .Values.monitoring.grafana.dashboards.fourAllPortal -}}
+{{- template "base-cluster.dashboards.configmap" (dict "folder" "4allportal" "context" .) -}}
+{{- end -}}

@@ -1,0 +1,60 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: cert-manager
+  namespace: cert-manager
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: cert-manager
+spec:
+  chart:
+    spec:
+      chart: cert-manager
+      sourceRef:
+        kind: HelmRepository
+        name: jetstack
+        namespace: {{ .Release.Namespace }}
+      version: ">={{ include "base-cluster.cert-manager.version" . }} <v2.0.0 <2.0.0"
+  interval: 1m
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  values:
+    {{- if .Values.global.imageRegistry }}
+    image:
+      repository: "{{ $.Values.global.imageRegistry }}/jetstack/cert-manager-controller"
+    {{- end }}
+    ingressShim:
+      defaultIssuerName: letsencrypt-prod
+      defaultIssuerKind: ClusterIssuer
+    extraArgs:
+      - --dns01-recursive-nameservers=1.1.1.1:53
+    resources: {{- $.Values.certManager.resources | toYaml | nindent 6 }}
+    replicaCount: 1
+    securityContext: &securityContext
+      runAsNonRoot: true
+      runAsUser: 1001
+      runAsGroup: 1001
+      fsGroup: 1001
+    cainjector:
+      resources: {{- $.Values.certManager.caInjector.resources | toYaml | nindent 8 }}
+      securityContext: *securityContext
+      {{- if .Values.global.imageRegistry }}
+      image:
+        repository: "{{ $.Values.global.imageRegistry }}/jetstack/cert-manager-cainjector"
+    {{- end }}
+    webhook:
+      resources: {{- $.Values.certManager.webhook.resources | toYaml | nindent 8 }}
+      securityContext: *securityContext
+      {{- if .Values.global.imageRegistry }}
+      image:
+        repository: "{{ $.Values.global.imageRegistry }}/jetstack/cert-manager-webhook"
+    {{- end }}
+    {{- if .Values.monitoring.prometheus.enabled }}
+    prometheus:
+      enabled: true
+      servicemonitor:
+        enabled: true
+  {{- end }}

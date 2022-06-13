@@ -1,0 +1,12 @@
+{{- if .Values.rbac.create }}
+  {{ range $name := .Values.rbac.users }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ $name }}
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    user: {{ $name }}
+---
+{{ end }}
+  {{- end }}

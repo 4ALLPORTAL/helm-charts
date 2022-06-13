@@ -1,0 +1,25 @@
+{{- $priorityClasses := merge .Values.global.priorityClasses.defaultClasses .Values.global.priorityClasses.classes -}}
+  {{- range $priorityClassName, $priorityClass := $priorityClasses }}
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: {{ $priorityClassName }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+description: {{ $priorityClass.description }}
+preemptionPolicy: {{ $priorityClass.preemptionPolicy | default "PreemptLowerPriority" }}
+value: {{ $priorityClass.value }}
+---
+  {{- end }}
+  {{- if .Values.global.priorityClasses.default }}
+  {{- $defaultPriorityClassName := (.Values.global.priorityClasses.default | keys | first) -}}
+  {{- $defaultPriorityClass := (index .Values.global.priorityClasses.default $defaultPriorityClassName) -}}
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: {{ $defaultPriorityClassName }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+description: {{ $defaultPriorityClass.description }}
+preemptionPolicy: {{ $defaultPriorityClass.preemptionPolicy | default "PreemptLowerPriority" }}
+value: {{ $defaultPriorityClass.value }}
+globalDefault: true
+  {{- end }}

@@ -1,0 +1,22 @@
+{{- if .Values.monitoring.prometheus.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: mysql-wsrep-cluster
+  namespace: monitoring
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: prometheus
+spec:
+  groups:
+    - name: mysql-wsrep-cluster
+      rules:
+        - alert: MysqlClusterMemberMismatch
+          annotations:
+            description: Mysql cluster {{ "{{ $labels.namespace }}/{{ $labels.cluster }}" }} has not matched the configured number of members for longer than 10 minutes. Only {{ "{{ $value | humanizePercentage }}" }} of members are connected
+            summary: Mysql cluster has not matched the configured number of members.
+          expr: |-
+            label_replace(min(mysql_global_status_wsrep_cluster_size and on(namespace,service) mysql_global_variables_wsrep_on > 0) by (namespace,service), "cluster", "$1", "service", "(.*)") / on(namespace,cluster) label_replace(kube_endpoint_address_available, "cluster", "$1", "endpoint", "(.*)") < 1
+          for: 10m
+          labels:
+            severity: critical
+  {{- end }}

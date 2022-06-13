@@ -1,0 +1,293 @@
+{
+  "editable": true,
+  "links": [
+    {
+      "icon": "dashboard",
+      "targetBlank": true,
+      "title": "View Logs",
+      "type": "link",
+      "url": "/d/4allportal-logs/4allportal-logs"
+    },
+    {
+      "icon": "dashboard",
+      "targetBlank": true,
+      "title": "View Metrics",
+      "type": "link",
+      "url": "/d/4allportal-metrics/4allportal-metrics"
+    }
+  ],
+  "panels": [
+    {
+      "datasource": "Prometheus",
+      "gridPos": {
+        "h": 9,
+        "w": 12
+      },
+      "id": 2,
+      "nullPointMode": "null as zero",
+      "options": {
+        "dataLinks": [
+          {
+            "targetBlank": true,
+            "title": "View Logs",
+            "url": "/d/4allportal-logs/4allportal-logs?orgId=1&var-Pod=${__field.labels.instance}"
+          }
+        ]
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(logback_events_total{level=~\"error\",service=~\".*4allportal-backend\"}[5m])) by (service,level)",
+          "legendFormat": "{{level}}: {{service}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "value": 0,
+          "op": "gt",
+          "fill": true,
+          "line": true,
+          "colorMode": "critical"
+        }
+      ],
+      "title": "ERROR Log Count",
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      },
+      "alert": {
+        "conditions": [
+          {
+            "type": "query",
+            "query": {
+              "params": [
+                "A",
+                "1m",
+                "now"
+              ]
+            },
+            "reducer": {
+              "type": "max",
+              "params": []
+            },
+            "evaluator": {
+              "type": "gt",
+              "params": [
+                0
+              ]
+            },
+            "operator": {
+              "type": "and"
+            }
+          }
+        ],
+        "noDataState": "keep_state",
+        "executionErrorState": "alerting",
+        "frequency": "1m",
+        "handler": 1,
+        "for": "",
+        "name": "ERROR Log Count"
+      }
+    },
+    {
+      "datasource": "Prometheus",
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12
+      },
+      "id": 3,
+      "nullPointMode": "null as zero",
+      "options": {
+        "dataLinks": [
+          {
+            "targetBlank": true,
+            "title": "View Logs",
+            "url": "/d/4allportal-logs/4allportal-logs?orgId=1&var-Pod=${__field.labels.instance}"
+          }
+        ]
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(logback_events_total{level=~\"warn\",service=~\".*4allportal-backend\"}[5m])) by (service,level)",
+          "legendFormat": "{{level}}: {{service}}",
+          "refId": "A"
+        }
+      ],
+      "title": "WARN Log Count",
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "alert": {
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                0.9
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "10m",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "avg"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "1m",
+        "frequency": "1m",
+        "handler": 1,
+        "name": "High Memory Usage",
+        "noDataState": "ok"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 9
+      },
+      "id": 4,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "sort": "avg",
+        "sortDesc": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "nullPointMode": "null",
+      "targets": [
+        {
+          "expr": "(sum(container_memory_working_set_bytes{container!~\"^$|POD\",pod=~\".*4allportal.*\"}) by (pod, container) / sum(container_spec_memory_limit_bytes{container!~\"^$|POD\",pod=~\".*4allportal.*\"} > 0) by (pod, container))",
+          "interval": "",
+          "legendFormat": "{{pod}}/{{container}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "fill": true,
+          "line": true,
+          "op": "gt",
+          "value": 0.9,
+          "yaxis": "left"
+        }
+      ],
+      "title": "Memory Usage",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "percentunit",
+          "label": null,
+          "logBase": 1,
+          "max": "1",
+          "min": "0.8",
+          "show": true
+        },
+        {
+          "format": "percentunit",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    }
+  ],
+  "schemaVersion": 21,
+  "style": "dark",
+  "title": "4ALLPORTAL Alerts",
+  "uid": "4allportal-alerts"
+}

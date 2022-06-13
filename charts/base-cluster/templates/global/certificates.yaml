@@ -1,0 +1,19 @@
+{{- if .Values.global.certificates -}}
+  {{- range $name, $cert := .Values.global.certificates }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: "{{ $name }}"
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: letsencrypt-prod
+  dnsNames:
+  {{- $cert.dnsNames | toYaml | nindent 4 }}
+  secretName: "{{ $name }}-certificate"
+---
+{{- end -}}
+  {{- end -}}

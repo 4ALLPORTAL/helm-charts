@@ -1,0 +1,39 @@
+{{- if .Values.backup.enabled -}}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: stash-retry-backup
+  namespace: kube-system
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: stash-retry-backup
+  namespace: kube-system
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+rules:
+  - apiGroups:
+      - stash.appscode.com
+    resources:
+      - backupsessions
+    verbs:
+      - list
+      - get
+      - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: stash-retry-backup
+  namespace: kube-system
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: stash-retry-backup
+subjects:
+  - kind: ServiceAccount
+    name: stash-retry-backup
+    namespace: kube-system
+  {{- end -}}

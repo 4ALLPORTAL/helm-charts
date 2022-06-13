@@ -1,0 +1,22 @@
+{{- if and .Values.backup.enabled .Values.monitoring.prometheus.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: backup-failure
+  namespace: kube-system
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: prometheus
+spec:
+  groups:
+    - name: backup-failure
+      rules:
+        - alert: BackupFailure
+          annotations:
+            description: Backup {{ "{{ $labels.namespace }}/{{ $labels.repository }}" }} failed
+            summary: Backup failed for more than 1 hour
+          expr: |-
+            stash_backup_session_success == 0
+          for: 1h
+          labels:
+            severity: critical
+  {{- end }}

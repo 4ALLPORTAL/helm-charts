@@ -1,0 +1,99 @@
+{
+  "editable": true,
+  "links": [
+    {
+      "icon": "dashboard",
+      "includeVars": true,
+      "targetBlank": true,
+      "title": "View Metrics",
+      "type": "link",
+      "url": "/d/4allportal-metrics/4allportal-metrics"
+    }
+  ],
+  "panels": [
+    {
+      "datasource": "Loki",
+      "gridPos": {
+        "h": 18,
+        "w": 12
+      },
+      "id": 2,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "Create Issue",
+          "url": "https://jira.4allportal.net/secure/CreateIssueDetails!init.jspa?pid=10801&issuetype=10004&summary=ERROR%20logs%20in%20${4ALLPORTAL}&priority=3&assignee=m.stroecker"
+        }
+      ],
+      "options": {
+        "showLabels": true,
+        "sortOrder": "Ascending"
+      },
+      "targets": [
+        {
+          "expr": "{app=\"4allportal\",component=\"backend\",pod=~\"$4ALLPORTAL-4allportal-backend-$POD\"} | json | line_format \"{{.log}}\" | json | __error__ != \"JSONParserErr\" | level = \"ERROR\" | label_format pod=\"{{ Replace .pod \\\"$4ALLPORTAL-4allportal-backend-\\\" \\\"\\\" -1 }}\",time=\"\",thread=\"\",line=\"\",log=\"\",logger=\"\",message=\"\"",
+          "refId": "A"
+        }
+      ],
+      "title": "Error Logs",
+      "type": "logs"
+    },
+    {
+      "datasource": "Loki",
+      "gridPos": {
+        "h": 18,
+        "w": 12,
+        "x": 12
+      },
+      "id": 3,
+      "options": {
+        "showLabels": true,
+        "sortOrder": "Ascending"
+      },
+      "targets": [
+        {
+          "expr": "{app=\"4allportal\",component=\"backend\",pod=~\"$4ALLPORTAL-4allportal-backend-$POD\"} | json | line_format \"{{.log}}\" | json | __error__ != \"JSONParserErr\" | label_format pod=\"{{ Replace .pod \\\"$4ALLPORTAL-4allportal-backend-\\\" \\\"\\\" -1 }}\",time=\"\",thread=\"\",line=\"\",log=\"\",logger=\"\",message=\"\"",
+          "refId": "A"
+        }
+      ],
+      "title": "All Logs",
+      "type": "logs"
+    }
+  ],
+  "schemaVersion": 26,
+  "style": "dark",
+  "templating": {
+    "list": [
+      {
+        "datasource": "Prometheus",
+        "hide": 1,
+        "includeAll": false,
+        "multi": false,
+        "name": "4ALLPORTAL",
+        "query": "label_values(kube_deployment_labels{label_app_kubernetes_io_name=\"4allportal\",label_app_kubernetes_io_component=\"backend\"},label_app_kubernetes_io_instance)",
+        "refresh": 2,
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": ".*",
+        "datasource": "Prometheus",
+        "hide": 1,
+        "includeAll": true,
+        "multi": true,
+        "name": "POD",
+        "query": "label_values(kube_pod_labels{label_app_kubernetes_io_name=\"4allportal\",label_app_kubernetes_io_component=\"backend\", label_app_kubernetes_io_instance=\"$4ALLPORTAL\"}, pod)",
+        "refresh": 2,
+        "regex": "/^.*-4allportal-backend-(.*)$/",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query",
+        "useTags": false
+      }
+    ]
+  },
+  "title": "4ALLPORTAL Logs",
+  "uid": "4allportal-logs"
+}

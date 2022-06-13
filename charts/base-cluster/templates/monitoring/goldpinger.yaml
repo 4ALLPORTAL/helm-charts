@@ -1,0 +1,68 @@
+{{- if .Values.monitoring.goldpinger.enabled }}
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: GitRepository
+metadata:
+  name: goldpinger
+  namespace: monitoring
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: goldpinger
+spec:
+  interval: 5m
+  url: https://github.com/okgolove/helm-charts
+  ref:
+    tag: goldpinger-5.1.0
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: goldpinger
+  namespace: monitoring
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: goldpinger
+spec:
+  chart:
+    spec:
+      chart: charts/goldpinger
+      sourceRef:
+        kind: GitRepository
+        name: goldpinger
+        namespace: monitoring
+  interval: 1m
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  values:
+    serviceMonitor:
+      enabled: true
+    prometheusRule:
+      enabled: true
+    {{- if .Values.global.imageRegistry }}
+    image:
+      repository: "{{ $.Values.global.imageRegistry }}/bloomberg/goldpinger"
+    {{- end }}
+    resources: {{- .Values.monitoring.goldpinger.resources | toYaml | nindent 6 }}
+    tolerations:
+      - effect: NoSchedule
+        operator: Exists
+    {{- if .Values.monitoring.goldpinger.pingHosts }}
+    extraEnv:
+      - name: HOSTS_TO_RESOLVE
+        value: {{ .Values.monitoring.goldpinger.pingHosts | sortAlpha | uniq | join " " | quote }}
+    {{- end }}
+    service:
+      type: ClusterIP
+    ingress:
+      enabled: true
+      hosts:
+        - host: {{ include "base-cluster.goldpinger.host" $ }}
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - hosts:
+            - {{ include "base-cluster.goldpinger.host" $ }}
+          secretName: cluster-wildcard-certificate
+  {{- end }}
