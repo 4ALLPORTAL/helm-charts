@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "* @4ALLPORTAL"
+echo "* @4ALLPORTAL/Developers"
 
 for DIR in ./charts/*; do
   FILE="$DIR/Chart.yaml"
