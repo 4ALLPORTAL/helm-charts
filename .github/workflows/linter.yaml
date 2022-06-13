@@ -1,12 +1,7 @@
 name: Lint Code Base
 
 "on":
-  pull_request:
-    types:
-      - opened
-      - edited
-      - reopened
-      - synchronize
+  - pull_request
 
 jobs:
   build:
