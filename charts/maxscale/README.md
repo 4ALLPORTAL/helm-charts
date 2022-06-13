@@ -1,6 +1,6 @@
 # maxscale
 
-![Version: 3.2.1](https://img.shields.io/badge/Version-3.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 6.3.1](https://img.shields.io/badge/AppVersion-6.3.1-informational?style=flat-square)
+![Version: 3.2.2](https://img.shields.io/badge/Version-3.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 6.3.1](https://img.shields.io/badge/AppVersion-6.3.1-informational?style=flat-square)
 
 Deploys a maxscale mariadb-galera proxy including mariadb-galera
 
@@ -15,7 +15,7 @@ Deploys a maxscale mariadb-galera proxy including mariadb-galera
 | Repository | Name | Version |
 |------------|------|---------|
 | https://charts.bitnami.com | common | 1.16.0 |
-| https://charts.bitnami.com | mariadb(mariadb-galera) | 7.3.4 |
+| https://charts.bitnami.com | mariadb(mariadb-galera) | 7.3.5 |
 
 ## Values
 
@@ -42,7 +42,7 @@ Deploys a maxscale mariadb-galera proxy including mariadb-galera
 | hpa.minReplicas | int | `2` |  |
 | image.registry | string | `"docker.io"` |  |
 | image.repository | string | `"mariadb/maxscale"` |  |
-| image.tag | string | `"6.3.1"` |  |
+| image.tag | string | `"6.4.0"` |  |
 | livenessProbe.enabled | bool | `true` |  |
 | livenessProbe.failureThreshold | int | `3` |  |
 | livenessProbe.initialDelaySeconds | int | `2` |  |
