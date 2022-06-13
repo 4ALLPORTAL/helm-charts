@@ -55,6 +55,30 @@ spec:
               mountPath: /tmp/users
               readOnly: true
           resources: {{- toYaml $.Values.webdav.resources | nindent 12 }}
+        - name: path-creation
+          securityContext: {{- $containerSecurityContext | nindent 12 }}
+          image: {{ template "4allportal.webdav.image" $ }}
+          {{- if $.Values.webdav.image.repository | contains "@" }}
+          imagePullPolicy: IfNotPresent
+          {{- else }}
+          imagePullPolicy: Always
+          {{- end }}
+          command:
+            - bash
+            - -e
+            - -c
+            - |-
+              for path in "{{ $.Values.webdav.mounts | keys | sortAlpha | join "\" \"" }}"; do
+                mkdir -p "/dav/data/webdav$path"
+              done
+          volumeMounts:
+            - name: auth
+              mountPath: /dav
+            - name: users
+              subPath: users
+              mountPath: /tmp/users
+              readOnly: true
+          resources: {{- toYaml $.Values.webdav.resources | nindent 12 }}
       containers:
         - name: webdav
           securityContext: {{- $containerSecurityContext | nindent 12 }}
@@ -68,15 +92,6 @@ spec:
             - containerPort: 8080
               name: webdav
               protocol: TCP
-          command:
-            - bash
-            - -ex
-            - -c
-            - |-
-              for path in {{ $.Values.webdav.mounts | keys | sortAlpha | join " " }}; do
-                mkdir -p /dav/data/webdav$path
-              done
-              exec /usr/local/bin/httpd-foreground
           volumeMounts:
             - name: assets
               mountPath: /dav/data/webdav/assets
