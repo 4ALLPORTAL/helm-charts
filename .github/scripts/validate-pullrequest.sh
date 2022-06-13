@@ -13,6 +13,10 @@ if [[ -z "$changed" ]]; then
     exit 0
 fi
 
+if [[ "$PR_TITLE" =~ chore(deps)* ]]; then
+  exit 0
+fi
+
 num_changed=$(wc -l <<< "$changed")
 
 if ((num_changed > 1)); then
