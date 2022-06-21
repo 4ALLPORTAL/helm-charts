@@ -27,10 +27,18 @@ jobs:
         with:
           version: v3.5.2
 
-      - name: Add dependency chart repos
+      - name: install yq
         run: |
-          helm repo add bitnami https://charts.bitnami.com
-          helm repo add 4allportal https://charts.4allportal.net
+          sudo snap install yq
+
+      - name: Extract and add helm repos
+        id: helm-repos
+        run: |
+          for DIR in ./charts/*; do
+            FILE="$DIR/Chart.yaml"
+            DIR="${DIR//\./}"
+            yq e '.dependencies.[].repository' "$FILE"
+          done | sort -u | awk '{print NR " " $1}' | xargs -r -n 2 helm repo add
 
       - name: generate Docs
         run: |
