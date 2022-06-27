@@ -3,6 +3,32 @@ entries:
   4allportal:
   - apiVersion: v2
     appVersion: 3.10.8
+    created: "2022-06-27T11:49:21.392148478Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com
+      version: 1.16.0
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://4allportal.github.io/helm-charts
+      version: 3.2.1
+    description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
+    digest: 8b60100d23d3b71e9fef715838d259f295bf5a123de289e583d02efb5e91a779
+    home: https://4allportal.com
+    icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: cwrau
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-18.3.4/4allportal-18.3.4.tgz
+    version: 18.3.4
+  - apiVersion: v2
+    appVersion: 3.10.8
     created: "2022-06-21T08:31:57.434267397Z"
     dependencies:
     - name: common
@@ -341,7 +367,7 @@ entries:
     version: 18.0.0
   - apiVersion: v2
     appVersion: 3.10.8
-    created: "2022-04-01T09:31:12.984584683Z"
+    created: "2022-04-01T12:26:07.637475607Z"
     dependencies:
     - name: common
       repository: https://charts.bitnami.com/bitnami
@@ -351,7 +377,7 @@ entries:
       repository: https://charts.4allportal.net
       version: 2.0.0
     description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
-    digest: 6378e9dba24ec150ce18fbd562c71e0c6edf9466f96ca74d7fa305b15e5fb191
+    digest: 01e87254beef56b604f811b3cd42080a77fbd9afded0e9db10a78362cab2a521
     home: https://4allportal.com
     icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
     keywords:
@@ -367,7 +393,7 @@ entries:
     version: 17.0.0
   - apiVersion: v2
     appVersion: 3.10.8
-    created: "2022-04-01T12:26:07.637475607Z"
+    created: "2022-04-01T09:31:12.984584683Z"
     dependencies:
     - name: common
       repository: https://charts.bitnami.com/bitnami
@@ -377,7 +403,7 @@ entries:
       repository: https://charts.4allportal.net
       version: 2.0.0
     description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
-    digest: 01e87254beef56b604f811b3cd42080a77fbd9afded0e9db10a78362cab2a521
+    digest: 6378e9dba24ec150ce18fbd562c71e0c6edf9466f96ca74d7fa305b15e5fb191
     home: https://4allportal.com
     icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
     keywords:
@@ -5124,4 +5150,4 @@ entries:
     urls:
     - https://github.com/4ALLPORTAL/helm-charts/releases/download/maxscale-import/maxscale-0.1.0.tgz
     version: 0.1.0
-generated: "2022-06-21T08:31:57.436010409Z"
+generated: "2022-06-27T11:49:21.394408877Z"
