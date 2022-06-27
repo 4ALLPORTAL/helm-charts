@@ -1,7 +1,6 @@
 {
   "extends": [
-    "config:base",
-    "group:all"
+    "config:base"
   ],
   "assigneesFromCodeOwners": true,
   "assigneesSampleSize": 1,
