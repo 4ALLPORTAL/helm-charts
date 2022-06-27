@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: "3.10.8"
 description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
 name: 4allportal
-version: 18.3.3
+version: 18.3.4
 icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
 keywords:
   - 4ALLPORTAL

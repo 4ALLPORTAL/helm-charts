@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 18.3.3](https://img.shields.io/badge/Version-18.3.3-informational?style=flat-square) ![AppVersion: 3.10.8](https://img.shields.io/badge/AppVersion-3.10.8-informational?style=flat-square)
+![Version: 18.3.4](https://img.shields.io/badge/Version-18.3.4-informational?style=flat-square) ![AppVersion: 3.10.8](https://img.shields.io/badge/AppVersion-3.10.8-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.9.0 and up
 
@@ -50,7 +50,7 @@ A Helm chart for 4ALLPORTAL version 3.9.0 and up
 | backups.mysql.weeksToKeep | int | `4` |  |
 | backups.s3.image.registry | string | `"docker.io"` |  |
 | backups.s3.image.repository | string | `"jess/s3cmd"` |  |
-| backups.s3.image.tag | string | `"latest@sha256:6c58d77238e952bbec93c1834343021f8d8ed5ea8bb6ad8483c23124a56696ce"` |  |
+| backups.s3.image.tag | string | `"latest@sha256:220ca05132369f1f20bde77788b7ef5af40f557181f67781fda83623f4711cac"` |  |
 | backups.s3.resources.limits.cpu | int | `2` |  |
 | backups.s3.resources.limits.memory | string | `"1Gi"` |  |
 | backups.s3.resources.requests.cpu | string | `"100m"` |  |
