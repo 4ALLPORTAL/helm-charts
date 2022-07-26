@@ -55,7 +55,7 @@ global:
     image:
       registry: docker.io
       repository: alpine/helm
-      tag: 3.9.0
+      tag: 3.9.1
   imageRegistry: ""
 
 flux:
