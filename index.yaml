@@ -4519,6 +4519,27 @@ entries:
     version: 34.8.1
   maxscale:
   - apiVersion: v2
+    appVersion: 6.4.1
+    created: "2022-07-26T09:20:11.840645191Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com
+      version: 1.16.0
+    - alias: mariadb
+      name: mariadb-galera
+      repository: https://charts.bitnami.com
+      version: 7.3.6
+    description: Deploys a maxscale mariadb-galera proxy including mariadb-galera
+    digest: 0cdaa3c18a3bc122b4334991e156f10aeac8f8e8bc36c560d5ecaef676c0159d
+    maintainers:
+    - email: c.rau@4allportal.com
+      name: cwrau
+    name: maxscale
+    type: application
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/maxscale-3.2.4/maxscale-3.2.4.tgz
+    version: 3.2.4
+  - apiVersion: v2
     appVersion: 6.3.1
     created: "2022-07-04T08:25:52.203570114Z"
     dependencies:
@@ -5214,4 +5235,4 @@ entries:
     urls:
     - https://github.com/4ALLPORTAL/helm-charts/releases/download/maxscale-import/maxscale-0.1.0.tgz
     version: 0.1.0
-generated: "2022-07-04T13:00:45.975092115Z"
+generated: "2022-07-26T09:20:11.842654209Z"
