@@ -901,7 +901,7 @@ spec:
                                 name:
                                   description: 'Name of the resource being referred to. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                                   type: string
-                        route53:
+                        aws:
                           description: Use the AWS Route53 API to manage DNS01 challenge records.
                           type: object
                           required:
@@ -911,7 +911,7 @@ spec:
                               description: 'The AccessKeyID is used for authentication. If not set we fall-back to using env vars, shared credentials file or AWS Instance metadata see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials'
                               type: string
                             hostedZoneID:
-                              description: If set, the provider will manage only this zone in Route53 and will not do an lookup using the route53:ListHostedZonesByName api call.
+                              description: If set, the provider will manage only this zone in Route53 and will not do an lookup using the aws:ListHostedZonesByName api call.
                               type: string
                             region:
                               description: Always set the region when using AccessKeyID and SecretAccessKey
@@ -1934,7 +1934,7 @@ spec:
                                       name:
                                         description: 'Name of the resource being referred to. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                                         type: string
-                              route53:
+                              aws:
                                 description: Use the AWS Route53 API to manage DNS01 challenge records.
                                 type: object
                                 required:
@@ -1944,7 +1944,7 @@ spec:
                                     description: 'The AccessKeyID is used for authentication. If not set we fall-back to using env vars, shared credentials file or AWS Instance metadata see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials'
                                     type: string
                                   hostedZoneID:
-                                    description: If set, the provider will manage only this zone in Route53 and will not do an lookup using the route53:ListHostedZonesByName api call.
+                                    description: If set, the provider will manage only this zone in Route53 and will not do an lookup using the aws:ListHostedZonesByName api call.
                                     type: string
                                   region:
                                     description: Always set the region when using AccessKeyID and SecretAccessKey
@@ -3144,7 +3144,7 @@ spec:
                                       name:
                                         description: 'Name of the resource being referred to. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                                         type: string
-                              route53:
+                              aws:
                                 description: Use the AWS Route53 API to manage DNS01 challenge records.
                                 type: object
                                 required:
@@ -3154,7 +3154,7 @@ spec:
                                     description: 'The AccessKeyID is used for authentication. If not set we fall-back to using env vars, shared credentials file or AWS Instance metadata see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials'
                                     type: string
                                   hostedZoneID:
-                                    description: If set, the provider will manage only this zone in Route53 and will not do an lookup using the route53:ListHostedZonesByName api call.
+                                    description: If set, the provider will manage only this zone in Route53 and will not do an lookup using the aws:ListHostedZonesByName api call.
                                     type: string
                                   region:
                                     description: Always set the region when using AccessKeyID and SecretAccessKey

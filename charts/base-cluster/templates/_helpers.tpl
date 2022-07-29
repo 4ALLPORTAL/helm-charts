@@ -161,3 +161,49 @@ spec:
                 helm uninstall --namespace={{ $namespace }} {{ $namespace }}-{{ $name }}
               fi
 {{- end -}}
+
+{{- define "base-cluster.dns.secret" -}}
+{{- $key := .key }}
+{{- $context := .context -}}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .name }}
+  namespace: {{ .namespace }}
+  labels: {{- include "common.labels.standard" $context | nindent 4 }}
+    app.kubernetes.io/component: cert-manager
+stringData:
+  {{- if ($context.Values.dns.provider).cloudflare -}}
+    {{- $apiKey := "" -}}
+    {{- $apiToken := "" -}}
+    {{- if $context.Values.dns.provider.cloudflare -}}
+      {{- with $context.Values.dns.provider.cloudflare -}}
+        {{- if $.apiKey -}}
+          {{- $apiKey = $.apiKey -}}
+        {{- else -}}
+          {{- $apiToken = $.apiToken -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- if $key }}
+  {{ $key }}: {{ (empty $apiKey) | ternary $apiToken $apiKey | quote }}
+  {{- else }}
+    {{- if $apiToken }}
+  cloudflare_api_token: {{ $apiToken | quote }}
+    {{- else if $apiKey }}
+  cloudflare_api_key: {{ $apiKey | quote }}
+    {{- end }}
+  {{- end }}
+  {{- else if ($context.Values.dns.provider).aws -}}
+    {{- with $context.Values.dns.provider.aws -}}
+      {{- if $key }}
+  {{ $key }}: {{ .secretAccessKey | quote }}
+      {{- else }}
+  credentials: |-
+    [default]
+    aws_access_key_id = {{ .accessKeyID }}
+    aws_secret_access_key = {{ .secretAccessKey }}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}

@@ -34,11 +34,21 @@ spec:
     global:
       imageRegistry: {{ $.Values.global.imageRegistry | quote }}
     {{- end }}
+    provider: {{ .Values.dns.provider | keys | first | quote }}
+    {{- if (.Values.dns.provider).cloudflare }}
     cloudflare:
-      apiKey: {{ required "You must provide the apiKey for Cloudflare" .Values.dns.apiKey }}
-      email: {{ required "You must provide the email for Cloudflare" .Values.dns.email }}
+      secretName: "external-dns"
+      email: {{ required "You must provide the email for DNS" .Values.dns.email | quote }}
       proxied: false
-    provider: cloudflare
+    {{- else if (.Values.dns.provider).aws }}
+      {{- with .Values.dns.provider.aws }}
+    aws:
+      credentials:
+        secretName: "external-dns"
+      region: {{ .region | quote }}
+      roleArn: {{ .role | quote }}
+      {{- end }}
+    {{- end }}
     sources:
       - ingress
     rbac:

@@ -114,3 +114,9 @@ This concludes the migration, the following HelmReleases will be recreated by th
 - Jaeger
 
 You either need to reconnect the PVs with the new PVCs, or start fresh with no data.
+
+## To 35.0.0
+
+This moves the `dns.apiKey` (cloudflare) to `dns.provider.cloudflare.apiKey`.
+
+This also allows the usage of cloudflare tokens; `dns.provider.cloudflare.apiToken`.
