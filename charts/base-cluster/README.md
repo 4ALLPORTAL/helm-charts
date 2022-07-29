@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 34.8.5](https://img.shields.io/badge/Version-34.8.5-informational?style=flat-square)
+![Version: 35.0.0](https://img.shields.io/badge/Version-35.0.0-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -54,7 +54,6 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | descheduler.strategies.RemovePodsViolatingNodeTaints.enabled | bool | `true` |  |
 | descheduler.strategies.RemovePodsViolatingTopologySpreadConstraint.enabled | bool | `true` |  |
 | descheduler.strategies.RemovePodsViolatingTopologySpreadConstraint.params.includeSoftContraints | bool | `true` |  |
-| dns.apiKey | string | `""` |  |
 | dns.domains | list | `[]` |  |
 | externalDNS.resources.limits.cpu | string | `"50m"` |  |
 | externalDNS.resources.limits.memory | string | `"128Mi"` |  |
@@ -307,3 +306,9 @@ This concludes the migration, the following HelmReleases will be recreated by th
 - Jaeger
 
 You either need to reconnect the PVs with the new PVCs, or start fresh with no data.
+
+## To 35.0.0
+
+This moves the `dns.apiKey` (cloudflare) to `dns.provider.cloudflare.apiKey`.
+
+This also allows the usage of cloudflare tokens; `dns.provider.cloudflare.apiToken`.
