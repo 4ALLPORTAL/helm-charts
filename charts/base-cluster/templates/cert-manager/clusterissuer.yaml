@@ -6,14 +6,27 @@ metadata:
     app.kubernetes.io/component: cert-manager
 spec:
   acme:
-    email: {{ .Values.dns.email }}
+    email: {{ required "You must provide the email for DNS" .Values.dns.email }}
     solvers:
       - dns01:
+          {{- $_ := required "You must choose a DNS provider" .Values.dns.provider -}}
+          {{- if (.Values.dns.provider).cloudflare }}
           cloudflare:
             email: {{ .Values.dns.email }}
             apiKeySecretRef:
-              name: cert-manager-cloudflare
-              key: key
+              name: cert-manager-dns
+              key: credentials
+          {{- else if (.Values.dns.provider).aws }}
+            {{- with .Values.dns.provider.aws }}
+          aws:
+            region: {{ .region | quote }}
+            accessKeyID: {{ .accessKeyID | quote }}
+            secretAccessKeySecretRef:
+              name: cert-manager-dns
+              key: credentials
+            role: {{ .role | quote }}
+            {{- end -}}
+          {{- end -}}
         {{ with .Values.dns.domains }}
         selector:
           dnsZones:

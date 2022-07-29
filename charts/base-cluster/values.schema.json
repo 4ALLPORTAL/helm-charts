@@ -305,8 +305,72 @@
     "dns": {
       "type": "object",
       "properties": {
-        "apiKey": {
-          "type": "string"
+        "provider": {
+          "type": "object",
+          "oneOf": [
+            {
+              "properties": {
+                "cloudflare": {
+                  "type": "object",
+                  "oneOf": [
+                    {
+                      "properties": {
+                        "apiKey": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "apiKey"
+                      ]
+                    },
+                    {
+                      "properties": {
+                        "apiToken": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "apiToken"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "cloudflare"
+              ]
+            },
+            {
+              "properties": {
+                "aws": {
+                  "type": "object",
+                  "properties": {
+                    "region": {
+                      "type": "string"
+                    },
+                    "accessKeyID": {
+                      "type": "string"
+                    },
+                    "secretAccessKey": {
+                      "type": "string"
+                    },
+                    "role": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "region",
+                    "accessKeyID",
+                    "secretAccessKey",
+                    "role"
+                  ]
+                }
+              },
+              "required": [
+                "aws"
+              ]
+            }
+          ]
         },
         "email": {
           "type": "string",
@@ -318,8 +382,7 @@
             "type": "string"
           }
         }
-      },
-      "additionalProperties": false
+      }
     },
     "rbac": {
       "type": "object",

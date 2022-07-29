@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=./values.schema.json
 global:
   baseDomain: "4allportal.com"
   clusterName: "eu-west-1"
@@ -241,7 +242,6 @@ git:
   instances: {}
 
 dns:
-  apiKey: ""
   domains: []
 
 rbac:
