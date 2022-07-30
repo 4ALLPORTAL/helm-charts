@@ -43,8 +43,6 @@ spec:
     {{- else if (.Values.dns.provider).aws }}
       {{- with .Values.dns.provider.aws }}
     aws:
-      credentials:
-        secretName: "external-dns"
       region: {{ .region | quote }}
       roleArn: {{ .role | quote }}
       {{- end }}

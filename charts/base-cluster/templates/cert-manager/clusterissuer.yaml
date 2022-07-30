@@ -20,10 +20,6 @@ spec:
             {{- with .Values.dns.provider.aws }}
           route53:
             region: {{ .region | quote }}
-            accessKeyID: {{ .accessKeyID | quote }}
-            secretAccessKeySecretRef:
-              name: cert-manager-dns
-              key: credentials
             role: {{ .role | quote }}
             {{- end -}}
           {{- end -}}

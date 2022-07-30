@@ -321,7 +321,8 @@
                       },
                       "required": [
                         "apiKey"
-                      ]
+                      ],
+                      "additionalProperties": false
                     },
                     {
                       "properties": {
@@ -331,7 +332,8 @@
                       },
                       "required": [
                         "apiToken"
-                      ]
+                      ],
+                      "additionalProperties": false
                     }
                   ]
                 }
@@ -348,22 +350,15 @@
                     "region": {
                       "type": "string"
                     },
-                    "accessKeyID": {
-                      "type": "string"
-                    },
-                    "secretAccessKey": {
-                      "type": "string"
-                    },
                     "role": {
                       "type": "string"
                     }
                   },
                   "required": [
                     "region",
-                    "accessKeyID",
-                    "secretAccessKey",
                     "role"
-                  ]
+                  ],
+                  "additionalProperties": false
                 }
               },
               "required": [
