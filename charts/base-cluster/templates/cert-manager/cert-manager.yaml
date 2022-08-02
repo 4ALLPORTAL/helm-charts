@@ -26,8 +26,6 @@ spec:
     serviceAccount:
       annotations:
         eks.amazonaws.com/role-arn: {{ .Values.dns.provider.aws.role | quote }}
-    securityContext:
-      fsGroup: 1001
     {{- end }}
     {{- if .Values.global.imageRegistry }}
     image:
