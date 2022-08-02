@@ -44,7 +44,9 @@ spec:
       {{- with .Values.dns.provider.aws }}
     aws:
       region: {{ .region | quote }}
-      roleArn: {{ .role | quote }}
+    serviceAccount:
+      annotations:
+        eks.amazonaws.com/role-arn: {{ .role | quote }}
       {{- end }}
     {{- end }}
     sources:
