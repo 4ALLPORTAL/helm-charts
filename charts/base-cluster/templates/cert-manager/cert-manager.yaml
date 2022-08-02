@@ -22,6 +22,12 @@ spec:
     remediation:
       retries: -1
   values:
+    {{- if (.Values.dns.provider).aws }}
+    controller:
+      serviceAccount:
+        annotations:
+          eks.amazonaws.com/role-arn: {{ .Values.dns.provider.aws.role | quote }}
+    {{- end }}
     {{- if .Values.global.imageRegistry }}
     image:
       repository: "{{ $.Values.global.imageRegistry }}/jetstack/cert-manager-controller"
