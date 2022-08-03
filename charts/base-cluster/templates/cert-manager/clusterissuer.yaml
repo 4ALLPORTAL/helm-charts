@@ -20,7 +20,6 @@ spec:
             {{- with .Values.dns.provider.aws }}
           route53:
             region: {{ .region | quote }}
-            role: {{ .role | quote }}
             {{- end -}}
           {{- end -}}
         {{ with .Values.dns.domains }}
