@@ -23,7 +23,7 @@ sqlpad:
   service:
     type: ClusterIP
     port: 3000
-  
+
   ingress:
     enabled: true
     annotations: []
@@ -40,16 +40,15 @@ sqlpad:
       #    -----END RSA PRIVATE KEY-----
       #    hosts:
       #      - chart-example.local
-  
-  resources: 
-     limits:
-       memory: 512Mi
-     requests:
-       memory: 256Mi
-  
+
+  resources:
+    limits:
+      memory: 512Mi
+    requests:
+      memory: 256Mi
+
 autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
-
