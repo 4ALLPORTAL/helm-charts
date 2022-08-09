@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "sqlpad.fullname" $ }}-sqlpad
+  labels:
+    {{- include "sqlpad.labels" . | nindent 4 }}
+    app.kubernetes.io/component: sqlpad
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "sqlpad.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: sqlpad
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "sqlpad.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: sqlpad
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.sqlpad.image.repository }}:{{ .Values.sqlpad.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.sqlpad.image.pullPolicy }}
+          env:
+            - name: SQLPAD_ADMIN
+              value: {{ .Values.sqlpad.conf.username | quote }}
+            - name: SQLPAD_ADMIN_PASSWORD
+              value: {{ .Values.sqlpad.conf.password | quote }}
+            - name: SQLPAD_APP_LOG_LEVEL
+              value: "debug"
+            - name: SQLPAD_WEB_LOG_LEVEL
+              value: "warn"
+            - name: SQLPAD_SESSION_STORE
+              value: "database"
+            - name: SQLPAD_DB_PATH
+              value: "/tmp/sqlpad"
+            - name: SQLPAD_DB_IN_MEMORY
+              value: "false"
+            - name: SQLPAD_QUERY_RESULT_STORE
+              value: "database"
+            - name: SQLPAD_BASE_URL
+              value : {{ .Values.sqlpad.ingress.path | trimSuffix "/" | quote }}
+            - name: PUBLIC_URL
+              value : {{ .Values.sqlpad.ingress.host | quote }}
+            - name: SQLPAD_CONNECTIONS__mariad__name
+              value: "4ALLPORTAL"
+            - name: SQLPAD_CONNECTIONS__mariad__driver
+              value: "mysql"
+            - name: SQLPAD_CONNECTIONS__mariad__host
+              value: {{ .Values.sqlpad.conf.dbhost | quote }}
+            - name: SQLPAD_CONNECTIONS__mariad__port
+              value: {{ .Values.sqlpad.conf.dbport | quote }}
+            - name: SQLPAD_CONNECTIONS__mariad__database
+              value: "4allportal" 
+            - name: SQLPAD_CONNECTIONS__mariad__username
+              value: {{ .Values.sqlpad.conf.dbuser | quote }}
+            - name: SQLPAD_CONNECTIONS__mariad__password
+              value: {{ .Values.sqlpad.conf.dbpassword | quote }}
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.sqlpad.resources | nindent 12 }}

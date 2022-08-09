@@ -1,0 +1,33 @@
+{{- if .Values.sqlpad.ingress.enabled -}}
+  {{- if false }}
+apiVersion: networking.k8s.io/v1
+  {{- else }}
+apiVersion: {{ include "common.capabilities.ingress.apiVersion" . }}
+  {{- end }}
+kind: Ingress 
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "true"
+  {{- with .Values.sqlpad.ingress.annotations }}
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  rules:
+    - host: {{ .Values.sqlpad.ingress.host | quote }}
+      http:
+        paths:
+          - path: {{ .Values.sqlpad.ingress.path | quote }}
+            backend: {{- include "common.ingress.backend" (dict "serviceName" (printf "%s-service" (include "common.names.fullname" .)) "servicePort" "http" "context" $) | nindent 14 }}
+            pathType: Prefix
+  tls:
+    - hosts:
+        - {{ .Values.sqlpad.ingress.host | quote }}
+      {{- if .Values.sqlpad.ingress.existingCertificate }}
+      secretName: {{ include "common.secrets.name" (dict "existingSecret" .Values.sqlpad.ingress.existingCertificate "defaultNameSuffix" "custom-certificate" "context" $) | nindent 14 }}
+      {{- else }}
+      secretName: {{ .Values.sqlpad.ingress.secretName }}
+      {{- end }}
+{{- end }}

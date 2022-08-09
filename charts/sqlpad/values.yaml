@@ -1,0 +1,55 @@
+# Default values for sqlpad.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+
+sqlpad:
+  image:
+    repository: sqlpad/sqlpad
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "6.11.1"
+
+  conf:
+    username: admin
+    password: sqlpad
+    dbhost: localhost
+    dbport: 3306
+    dbuser: root
+    dbpassword: toor
+
+  service:
+    type: ClusterIP
+    port: 3000
+  
+  ingress:
+    enabled: true
+    annotations: []
+    host:
+    path: /sql/
+    # Use either secretName or existingCertificate
+    secretName:
+    existingCertificate: {}
+      #  cert: |-
+      #      -----BEGIN CERTIFICATE-----
+      #      -----END CERTIFICATE-----
+      #  key: |-
+      #    -----BEGIN RSA PRIVATE KEY-----
+      #    -----END RSA PRIVATE KEY-----
+      #    hosts:
+      #      - chart-example.local
+  
+  resources: 
+     limits:
+       memory: 512Mi
+     requests:
+       memory: 256Mi
+  
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
