@@ -1,7 +1,7 @@
 apiVersion: v2
 description: A generic, base cluster setup
 name: base-cluster
-version: 34.8.5
+version: 34.8.6
 home: "https://4allportal.com"
 maintainers:
   - name: cwrau
@@ -9,4 +9,4 @@ maintainers:
 dependencies:
   - name: common
     repository: https://charts.bitnami.com
-    version: 1.16.1
+    version: 1.17.0
