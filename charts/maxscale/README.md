@@ -1,6 +1,6 @@
 # maxscale
 
-![Version: 3.2.6](https://img.shields.io/badge/Version-3.2.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 6.4.1](https://img.shields.io/badge/AppVersion-6.4.1-informational?style=flat-square)
+![Version: 3.2.7](https://img.shields.io/badge/Version-3.2.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 6.4.1](https://img.shields.io/badge/AppVersion-6.4.1-informational?style=flat-square)
 
 Deploys a maxscale mariadb-galera proxy including mariadb-galera
 
@@ -8,7 +8,7 @@ Deploys a maxscale mariadb-galera proxy including mariadb-galera
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| cwrau | <c.rau@4allportal.com> |  |
+| tasches | <s.tasche@4allportal.com> |  |
 
 ## Requirements
 
