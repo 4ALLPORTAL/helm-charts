@@ -8,7 +8,7 @@ Deploys a maxscale mariadb-galera proxy including mariadb-galera
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| cwrau | <c.rau@4allportal.com> |  |
+| tasches | <s.tasche@4allportal.com> |  |
 
 ## Requirements
 

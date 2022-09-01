@@ -5,8 +5,8 @@ type: application
 version: 3.2.8
 appVersion: 6.4.1
 maintainers:
-  - name: cwrau
-    email: c.rau@4allportal.com
+  - name: tasches
+    email: s.tasche@4allportal.com
 
 dependencies:
   - name: common
