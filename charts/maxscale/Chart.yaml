@@ -2,7 +2,7 @@ apiVersion: v2
 name: maxscale
 description: Deploys a maxscale mariadb-galera proxy including mariadb-galera
 type: application
-version: 3.2.7
+version: 3.2.8
 appVersion: 6.4.1
 maintainers:
   - name: cwrau
