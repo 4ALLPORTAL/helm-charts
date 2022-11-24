@@ -14,8 +14,8 @@ Deploys a maxscale mariadb-galera proxy including mariadb-galera
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com | common | 1.16.1 |
-| https://charts.bitnami.com | mariadb(mariadb-galera) | 7.4.8 |
+| https://charts.bitnami.com/bitnami | common | 1.16.1 |
+| https://charts.bitnami.com/bitnami | mariadb(mariadb-galera) | 7.4.8 |
 
 ## Values
 
