@@ -8,5 +8,5 @@ maintainers:
     email: s.tasche@4allportal.net
 dependencies:
   - name: common
-    repository: https://charts.bitnami.com
+    repository: https://charts.bitnami.com/bitnami
     version: 1.16.1
