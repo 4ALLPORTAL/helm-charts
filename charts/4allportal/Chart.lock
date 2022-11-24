@@ -1,6 +1,6 @@
 dependencies:
 - name: common
-  repository: https://charts.bitnami.com
+  repository: https://charts.bitnami.com/bitnami
   version: 1.16.1
 - name: maxscale
   repository: https://4allportal.github.io/helm-charts
