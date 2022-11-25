@@ -3,7 +3,7 @@ name: maxscale
 description: Deploys a maxscale mariadb-galera proxy including mariadb-galera
 type: application
 version: 4.0.0
-appVersion: 6.4.1
+appVersion: 22.08.2
 maintainers:
   - name: tasches
     email: s.tasche@4allportal.com
