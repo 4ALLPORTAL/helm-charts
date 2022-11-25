@@ -50,7 +50,6 @@
       },
       "lines": true,
       "linewidth": 1,
-      "nullPointMode": "null",
       "options": {
         "alertThreshold": true
       },
@@ -61,7 +60,8 @@
       "renderer": "flot",
       "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": false,
+      "stack": true,
+      "nullPointMode": "connected",
       "steppedLine": false,
       "targets": [
         {
