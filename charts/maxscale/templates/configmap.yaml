@@ -35,9 +35,9 @@ data:
     servers={{ $servers | join "," }}
     user=root
     password=$MAXSCALE_PASSWORD
-    backend_connect_timeout=3
-    backend_write_timeout=3
-    backend_read_timeout=3
+    backend_connect_timeout=3s
+    backend_write_timeout=3s
+    backend_read_timeout=3s
     disable_master_failback=false
     disable_master_role_setting=false
 
