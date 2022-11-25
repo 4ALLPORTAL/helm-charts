@@ -2,7 +2,7 @@ apiVersion: v2
 name: maxscale
 description: Deploys a maxscale mariadb-galera proxy including mariadb-galera
 type: application
-version: 3.2.10
+version: 3.2.11
 appVersion: 6.4.1
 maintainers:
   - name: tasches
@@ -11,7 +11,7 @@ maintainers:
 dependencies:
   - name: common
     repository: https://charts.bitnami.com/bitnami
-    version: 1.16.1
+    version: 1.17.1
   - repository: https://charts.bitnami.com/bitnami
     name: mariadb-galera
     version: 7.4.8
