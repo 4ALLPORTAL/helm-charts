@@ -64,7 +64,7 @@ none
 {{- if hasSuffix "Mi" .Values.resources.limits.memory }}
     {{- ceil (mulf (trimSuffix "Mi" .Values.resources.limits.memory) (0.15)) }}Mi
 {{- else if hasSuffix "Gi" .Values.resources.limits.memory -}}
-    {{- ceil (mulf (trimSuffix "Mi" .Values.resources.limits.memory) (0.15)) }}Gi
+    {{- ceil (mulf (trimSuffix "Gi" .Values.resources.limits.memory) (0.15)) }}Gi
 {{- else -}}
     {{- fail "Please insert the maxscale ressource limits in Gi or Mi" }}
 {{- end -}}
