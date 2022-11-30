@@ -51,3 +51,21 @@ none
 {{- end -}}
 {{ $out | toYaml }}
 {{- end -}}
+
+{{- define "maxscale.cnf.cpu.limit" -}}
+{{- if hasSuffix "m" .Values.resources.limits.cpu }}
+    {{- ceil (divf (trimSuffix "m" .Values.resources.limits.cpu) (1000)) }}
+{{- else -}}
+    1
+{{- end -}}
+{{- end -}}
+
+{{- define "maxscale.cnf.memory.limit" -}}
+{{- if hasSuffix "Mi" .Values.resources.limits.memory }}
+    {{- ceil (mulf (trimSuffix "Mi" .Values.resources.limits.memory) (0.15)) }}Mi
+{{- else if hasSuffix "Gi" .Values.resources.limits.memory -}}
+    {{- ceil (mulf (trimSuffix "Mi" .Values.resources.limits.memory) (0.15)) }}Gi
+{{- else -}}
+    {{- fail "Please insert the maxscale ressource limits in Gi or Mi" }}
+{{- end -}}
+{{- end -}}

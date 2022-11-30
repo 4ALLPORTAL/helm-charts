@@ -7,6 +7,8 @@ metadata:
 data:
   maxscale.cnf: |-
     [maxscale]
+    threads= {{- include "maxscale.cnf.cpu.limit" . }}
+    query_classifier_cache= {{- include "maxscale.cnf.memory.limit" . }}
     substitute_variables=true
     piddir=/var/cache/maxscale
     persistdir=/var/cache/maxscale
