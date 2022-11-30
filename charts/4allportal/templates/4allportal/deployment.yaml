@@ -131,13 +131,15 @@ spec:
               value: {{ required "You must provide a sender name, when enabling mail" .Values.fourAllPortal.mail.system.from.name | quote }}
             - name: MAIL_USE_REPLY_TO
               value: {{ .Values.fourAllPortal.mail.replyTo | default (not (empty .Values.fourAllPortal.mail.system.replyTo.email)) | quote }}
-	    {{- if -not .Values.fourallportal.mail.replyTo -and .Values.fourallportal.from.replyTo.email }}
             - name: MAIL_SYSTEM_MAIL_SENDER
-              value: {{ required "You must provide a sender address, when enabling mail" .Values.fourAllPortal.mail.system.sender | quote }}
-	    {{- else }}
+              value: {{ .Values.fourAllPortal.mail.system.sender | quote }}
             - name: MAIL_SYSTEM_REPLY_TO_EMAIL
-              value: {{ required "You must provide a replyTo email if replyTo is active and the sender adress is not set" .Values.fourAllPortal.mail.system.replyTo.email | quote }}
-	    {{- end }}
+              value: {{  .Values.fourAllPortal.mail.system.replyTo.email | quote }}
+	      {{- if (not .Values.fourAllPortal.mail.system.sender) }}
+	      {{- if and (.Values.fourAllPortal.mail.replyTo) (not .Values.fourAllPortal.mail.system.replyTo.email) }}
+	      {{- fail "If mail is enabled either the sender or the replyTo email must be provided" }}
+	      {{- end }}
+	      {{- end }}
             - name: MAIL_SECURITY
               value: {{ .Values.fourAllPortal.mail.security | quote }}
             {{- end }}
