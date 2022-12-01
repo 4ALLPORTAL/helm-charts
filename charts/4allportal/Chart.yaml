@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: "3.10.8"
 description: A Helm chart for 4ALLPORTAL version 3.9.0 and up
 name: 4allportal
-version: 19.0.3
+version: 19.0.4
 icon: https://4allportal.net/typo3conf/ext/template/Resources/Public/Media/Logo.svg
 keywords:
   - 4ALLPORTAL
@@ -19,5 +19,5 @@ dependencies:
     version: 2.2.1
   - repository: https://4allportal.github.io/helm-charts
     name: maxscale
-    version: 4.0.2
+    version: 4.0.3
     condition: maxscale.enabled
