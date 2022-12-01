@@ -134,7 +134,7 @@ spec:
             - name: MAIL_SYSTEM_MAIL_SENDER
               value: {{ .Values.fourAllPortal.mail.system.sender | quote }}
             - name: MAIL_SYSTEM_REPLY_TO_EMAIL
-              value: {{  .Values.fourAllPortal.mail.system.replyTo.email | quote }}
+              value: {{ .Values.fourAllPortal.mail.system.replyTo.email | quote }}
             {{- if (not .Values.fourAllPortal.mail.system.sender) }}
             {{- if and (.Values.fourAllPortal.mail.replyTo) (not .Values.fourAllPortal.mail.system.replyTo.email) }}
             {{- fail "If mail is enabled either the sender or the replyTo email must be provided" }}
