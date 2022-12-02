@@ -3,6 +3,32 @@ entries:
   4allportal:
   - apiVersion: v2
     appVersion: 3.10.26
+    created: "2022-12-02T14:12:08.503842961Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.2.1
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://4allportal.github.io/helm-charts
+      version: 4.0.3
+    description: A Helm chart for 4ALLPORTAL version 3.10.0 and up
+    digest: 680d817fdaa9de939df43575918e83eccf6963df646abe73656a6946d14a1db8
+    home: https://4allportal.com
+    icon: https://4allportal.com/wp-content/uploads/2022/07/cropped-4ap_logo.png
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: s.tasche@4allportal.com
+      name: tasches
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-19.0.7/4allportal-19.0.7.tgz
+    version: 19.0.7
+  - apiVersion: v2
+    appVersion: 3.10.26
     created: "2022-12-01T18:07:50.333438789Z"
     dependencies:
     - name: common
@@ -5822,4 +5848,4 @@ entries:
     urls:
     - https://github.com/4ALLPORTAL/helm-charts/releases/download/maxscale-import/maxscale-0.1.0.tgz
     version: 0.1.0
-generated: "2022-12-01T18:07:50.334479184Z"
+generated: "2022-12-02T14:12:08.504411768Z"
