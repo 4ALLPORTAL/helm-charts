@@ -1,5 +1,5 @@
 apiVersion: v2
-appVersion: "1.16.0"
+appVersion: "6.11.1"
 name: sqlpad
 description: A Helm chart for SQLPad
 type: application
