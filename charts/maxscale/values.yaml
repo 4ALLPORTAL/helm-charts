@@ -15,7 +15,7 @@ global:
 image:
   registry: docker.io
   repository: mariadb/maxscale
-  tag: 22.08.2
+  tag: 22.08.3
 
 replicas: 2
 enterpriseLicensed: false
