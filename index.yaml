@@ -3,6 +3,32 @@ entries:
   4allportal:
   - apiVersion: v2
     appVersion: 3.10.26
+    created: "2022-12-14T16:55:32.429447361Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.2.2
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://4allportal.github.io/helm-charts
+      version: 4.0.5
+    description: A Helm chart for 4ALLPORTAL version 3.10.0 and up
+    digest: 1d7b0d2e3c83d2928684f03b1db5c821a7ee8d8641f92b5d7c6e5d3aff36dfb5
+    home: https://4allportal.com
+    icon: https://4allportal.com/wp-content/uploads/2022/07/cropped-4ap_logo.png
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: s.tasche@4allportal.com
+      name: tasches
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-19.0.12/4allportal-19.0.12.tgz
+    version: 19.0.12
+  - apiVersion: v2
+    appVersion: 3.10.26
     created: "2022-12-14T13:36:51.010211904Z"
     dependencies:
     - name: common
@@ -4944,6 +4970,22 @@ entries:
     version: 1.0.5
   base-cluster:
   - apiVersion: v2
+    created: "2022-12-14T16:55:32.670436117Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.2.2
+    description: A generic, base cluster setup
+    digest: fcfd8fed17d906769ec6ce0dd52c4e7318f26c55517005e22728795339f48068
+    home: https://4allportal.com
+    maintainers:
+    - email: s.tasche@4allportal.net
+      name: tasches
+    name: base-cluster
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/base-cluster-35.0.2/base-cluster-35.0.2.tgz
+    version: 35.0.2
+  - apiVersion: v2
     created: "2022-12-14T13:36:51.207125168Z"
     dependencies:
     - name: common
@@ -6010,4 +6052,4 @@ entries:
     urls:
     - https://github.com/4ALLPORTAL/helm-charts/releases/download/maxscale-import/maxscale-0.1.0.tgz
     version: 0.1.0
-generated: "2022-12-14T13:36:51.389316802Z"
+generated: "2022-12-14T16:55:32.671319222Z"
