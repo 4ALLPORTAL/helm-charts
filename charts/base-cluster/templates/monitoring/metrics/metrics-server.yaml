@@ -29,8 +29,8 @@ spec:
     {{- end }}
     resources:
       limits:
-        cpu: 100m
-        memory: 64Mi
+        cpu: {{ .Values.monitoring.metricsServer.resources.limits.cpu }} 
+        memory: {{ .Values.monitoring.metricsServer.resources.limits.memory }} 
     priorityClassName: system-cluster-critical
     extraArgs:
       kubelet-preferred-address-types: InternalIP
