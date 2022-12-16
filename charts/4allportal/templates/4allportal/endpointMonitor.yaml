@@ -1,4 +1,4 @@
-{{- if and .Values.fourAllPortal.ingress.enabled .Values.fourAllPortal.ingress.endpointMonitor.enabled (eq (include "4allportal.isHa" .) "true") not eq .Values.fourAllPortal.replicas  0 }}
+{{- if and .Values.fourAllPortal.ingress.enabled .Values.fourAllPortal.ingress.endpointMonitor.enabled (eq (include "4allportal.isHa" .) "true") (ne (int .Values.fourAllPortal.replicas) 0) }}
 apiVersion: endpointmonitor.stakater.com/v1alpha1
 kind: EndpointMonitor
 metadata:
