@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 35.0.3](https://img.shields.io/badge/Version-35.0.3-informational?style=flat-square)
+![Version: 36.0.0](https://img.shields.io/badge/Version-36.0.0-informational?style=flat-square)
 
 A generic, base cluster setup
 
