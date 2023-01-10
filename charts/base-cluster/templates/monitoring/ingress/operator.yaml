@@ -24,6 +24,7 @@ spec:
       retries: -1
   values:
     fullnameOverride: monitoring-ingress-monitor-operator
+    namespace: monitoring
     {{- if .Values.global.imageRegistry }}
     image:
       repository: "{{ $.Values.global.imageRegistry }}/stakater/ingressmonitorcontroller"
