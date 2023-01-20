@@ -4,6 +4,6 @@ dependencies:
   version: 2.2.2
 - name: maxscale
   repository: https://4allportal.github.io/helm-charts
-  version: 4.0.5
-digest: sha256:49e1df0ce76824b0fd4220ce1f6356a956d26185d1af205a967bf2a8d20187cf
-generated: "2022-12-14T14:58:52.84358005Z"
+  version: 4.0.6
+digest: sha256:6ffe36e229ac1710226df9b163fe02d391536a5b0592eb28d11d935c84d2bf05
+generated: "2023-01-18T17:46:37.684237452Z"
