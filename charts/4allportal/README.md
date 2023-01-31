@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 19.0.15](https://img.shields.io/badge/Version-19.0.15-informational?style=flat-square) ![AppVersion: 3.10.30](https://img.shields.io/badge/AppVersion-3.10.30-informational?style=flat-square)
+![Version: 19.0.16](https://img.shields.io/badge/Version-19.0.16-informational?style=flat-square) ![AppVersion: 3.10.30](https://img.shields.io/badge/AppVersion-3.10.30-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -243,7 +243,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | webdav.groups | object | `{}` |  |
 | webdav.image.registry | string | `"docker.io"` |  |
 | webdav.image.repository | string | `"httpd"` |  |
-| webdav.image.tag | string | `"2.4.54"` |  |
+| webdav.image.tag | string | `"2.4.55"` |  |
 | webdav.livenessProbe.enabled | bool | `true` |  |
 | webdav.livenessProbe.failureThreshold | int | `4` |  |
 | webdav.livenessProbe.initialDelaySeconds | int | `5` |  |
