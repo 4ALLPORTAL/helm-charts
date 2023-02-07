@@ -1,6 +1,6 @@
 # maxscale
 
-![Version: 4.0.6](https://img.shields.io/badge/Version-4.0.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 22.08.3](https://img.shields.io/badge/AppVersion-22.08.3-informational?style=flat-square)
+![Version: 4.0.7](https://img.shields.io/badge/Version-4.0.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 22.08.3](https://img.shields.io/badge/AppVersion-22.08.3-informational?style=flat-square)
 
 Deploys a maxscale mariadb-galera proxy including mariadb-galera
 
@@ -15,7 +15,7 @@ Deploys a maxscale mariadb-galera proxy including mariadb-galera
 | Repository | Name | Version |
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | common | 2.2.2 |
-| https://charts.bitnami.com/bitnami | mariadb(mariadb-galera) | 7.4.11 |
+| https://charts.bitnami.com/bitnami | mariadb(mariadb-galera) | 7.4.14 |
 
 ## Values
 
