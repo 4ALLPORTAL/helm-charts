@@ -5284,6 +5284,27 @@ entries:
   maxscale:
   - apiVersion: v2
     appVersion: 22.08.3
+    created: "2023-02-07T16:20:33.111644178Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.2.2
+    - alias: mariadb
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.4.14
+    description: Deploys a maxscale mariadb-galera proxy including mariadb-galera
+    digest: 819cde861d6957db94cd6ab70862f475e08c9630cc6f2da5130093821eb9cf3c
+    maintainers:
+    - email: s.tasche@4allportal.com
+      name: tasches
+    name: maxscale
+    type: application
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/maxscale-4.0.7/maxscale-4.0.7.tgz
+    version: 4.0.7
+  - apiVersion: v2
+    appVersion: 22.08.3
     created: "2023-01-18T13:57:43.281159682Z"
     dependencies:
     - name: common
@@ -6209,4 +6230,18 @@ entries:
     urls:
     - https://github.com/4ALLPORTAL/helm-charts/releases/download/maxscale-import/maxscale-0.1.0.tgz
     version: 0.1.0
-generated: "2023-01-31T17:33:58.892231411Z"
+  simple-website:
+  - apiVersion: v2
+    appVersion: 1.23.3
+    created: "2023-02-07T16:20:33.307091261Z"
+    description: A simple Helm Chart to deploy a simple website
+    digest: 95a6d3a087fa060d2a938cec0a24ce01ec60a4be882e66de87ecccb11ced138d
+    home: https://4allportal.com
+    maintainers:
+    - email: s.tasche@4allportal.com
+      name: tasches
+    name: simple-website
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/simple-website-1.0.0/simple-website-1.0.0.tgz
+    version: 1.0.0
+generated: "2023-02-07T16:20:33.307705662Z"
