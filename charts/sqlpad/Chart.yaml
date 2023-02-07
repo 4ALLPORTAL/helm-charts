@@ -1,0 +1,16 @@
+apiVersion: v2
+appVersion: "6.11.1"
+name: sqlpad
+description: A Helm chart for SQLPad
+type: application
+version: 0.1.0
+keywords:
+  - SQLPad
+home: https://4allportal.com
+maintainers:
+  - name: tasches
+    email: s.tasche@4allportal.com
+dependencies:
+  - name: common
+    repository: https://charts.bitnami.com/bitnami
+    version: 2.2.1
