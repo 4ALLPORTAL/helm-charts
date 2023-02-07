@@ -6,7 +6,7 @@ replicaCount: 2
 
 image:
   name: nginx
-  tag: latest
+  tag: "1.23.3"
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
