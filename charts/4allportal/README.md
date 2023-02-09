@@ -50,7 +50,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | backups.mysql.weeksToKeep | int | `4` |  |
 | backups.s3.image.registry | string | `"docker.io"` |  |
 | backups.s3.image.repository | string | `"jess/s3cmd"` |  |
-| backups.s3.image.tag | string | `"latest@sha256:8e6bacfad28c8d04efe21683d361ad47478f04889516e34dbe343cc032c0b1f2"` |  |
+| backups.s3.image.tag | string | `"latest@sha256:e0a0c0e42541eaa3f6a31653b54895c2e40b4a62a1e341f280eba602fe79c86c"` |  |
 | backups.s3.resources.limits.cpu | int | `2` |  |
 | backups.s3.resources.limits.memory | string | `"1Gi"` |  |
 | backups.s3.resources.requests.cpu | string | `"100m"` |  |
