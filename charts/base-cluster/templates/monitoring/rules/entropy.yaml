@@ -10,7 +10,7 @@ spec:
   groups:
     - name: node-entropy
       rules:
-        - alert: MysqlClusterMemberMismatch
+        - alert: LowEntropyOnNode
           annotations:
             description: Node {{ "{{ $labels.node }}" }} has been low on entropy for longer than 10 minutes. Currently {{ "{{ $value }}" }} bits are remaining.
             summary: Node has been low on entropy.
