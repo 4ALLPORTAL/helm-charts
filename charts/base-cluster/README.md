@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 35.0.5](https://img.shields.io/badge/Version-35.0.5-informational?style=flat-square)
+![Version: 35.0.6](https://img.shields.io/badge/Version-35.0.6-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -16,7 +16,7 @@ A generic, base cluster setup
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | common | 2.2.2 |
+| https://charts.bitnami.com/bitnami | common | 2.2.3 |
 
 This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/installation)
 
