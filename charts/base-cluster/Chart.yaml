@@ -1,7 +1,7 @@
 apiVersion: v2
 description: A generic, base cluster setup
 name: base-cluster
-version: 35.0.5
+version: 35.0.6
 home: "https://4allportal.com"
 maintainers:
   - name: tasches
@@ -9,4 +9,4 @@ maintainers:
 dependencies:
   - name: common
     repository: https://charts.bitnami.com/bitnami
-    version: 2.2.2
+    version: 2.2.3
