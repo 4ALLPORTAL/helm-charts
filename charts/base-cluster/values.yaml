@@ -50,7 +50,7 @@ global:
     image:
       registry: docker.io
       repository: bitnami/kubectl
-      tag: 1.25.5
+      tag: 1.26.1
   helm:
     image:
       registry: docker.io
@@ -181,6 +181,10 @@ monitoring:
           memory: 128Mi
   metricsServer:
     enabled: true
+    resources:
+      limits:
+        cpu: 100m
+        memory: 64Mi
   securityScanning:
     enabled: true
   jaeger:
