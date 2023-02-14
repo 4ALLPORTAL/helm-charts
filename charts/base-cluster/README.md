@@ -16,7 +16,7 @@ A generic, base cluster setup
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | common | 2.2.2 |
+| https://charts.bitnami.com/bitnami | common | 2.2.3 |
 
 This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/installation)
 
