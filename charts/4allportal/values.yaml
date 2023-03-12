@@ -293,7 +293,7 @@ backups:
     image:
       registry: docker.io
       repository: jess/s3cmd
-      tag: latest@sha256:ee6f548e5b31a49af136f21cca4d34b26467d29d873848b5b02d70cce2c5c785
+      tag: latest@sha256:df28fc36e417cef6331b8eb6085e7ac2f3cbde2c3f03571102b59494603e5bbe
     resources:
       requests:
         cpu: 100m
