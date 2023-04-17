@@ -59,7 +59,8 @@ spec:
     promtail:
       {{- if .Values.global.imageRegistry }}
       image:
-        repository: "{{ $.Values.global.imageRegistry }}/grafana/promtail"
+	registry: "{{ $.Values.global.imageRegistry }}/"
+        repository: "grafana/promtail"
       {{- end }}
       resources: {{- .Values.monitoring.loki.promtail.resources | toYaml | nindent 8 }}
       {{- if .Values.monitoring.prometheus.enabled }}
