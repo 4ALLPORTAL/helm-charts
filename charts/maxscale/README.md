@@ -1,6 +1,6 @@
 # maxscale
 
-![Version: 4.0.9](https://img.shields.io/badge/Version-4.0.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 22.08.3](https://img.shields.io/badge/AppVersion-22.08.3-informational?style=flat-square)
+![Version: 4.0.10](https://img.shields.io/badge/Version-4.0.10-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 22.08.3](https://img.shields.io/badge/AppVersion-22.08.3-informational?style=flat-square)
 
 Deploys a maxscale mariadb-galera proxy including mariadb-galera
 
@@ -42,7 +42,7 @@ Deploys a maxscale mariadb-galera proxy including mariadb-galera
 | hpa.minReplicas | int | `2` |  |
 | image.registry | string | `"docker.io"` |  |
 | image.repository | string | `"mariadb/maxscale"` |  |
-| image.tag | string | `"22.08.4"` |  |
+| image.tag | string | `"23.02.1"` |  |
 | livenessProbe.enabled | bool | `true` |  |
 | livenessProbe.failureThreshold | int | `3` |  |
 | livenessProbe.initialDelaySeconds | int | `2` |  |
