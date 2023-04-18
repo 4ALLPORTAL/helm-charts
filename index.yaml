@@ -3,6 +3,32 @@ entries:
   4allportal:
   - apiVersion: v2
     appVersion: 3.10.30
+    created: "2023-04-18T16:13:22.263523641Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.2.3
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://4allportal.github.io/helm-charts
+      version: 4.0.10
+    description: A Helm chart for 4ALLPORTAL version 3.10.0 and up
+    digest: 52ce5108362108fc23d4f9b3cbe1b7a81b3b2a585a041222bba81c4e3797939f
+    home: https://4allportal.com
+    icon: https://4allportal.com/wp-content/uploads/2022/07/cropped-4ap_logo.png
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: s.tasche@4allportal.com
+      name: tasches
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-19.0.26/4allportal-19.0.26.tgz
+    version: 19.0.26
+  - apiVersion: v2
+    appVersion: 3.10.30
     created: "2023-04-18T14:06:08.146645394Z"
     dependencies:
     - name: common
@@ -5308,6 +5334,22 @@ entries:
     version: 1.0.5
   base-cluster:
   - apiVersion: v2
+    created: "2023-04-18T16:13:22.464543134Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.2.3
+    description: A generic, base cluster setup
+    digest: 73b5ab75aad0c27f1a0b3992d58e4abbc30929fbce5657226a439e9471a5c6a9
+    home: https://4allportal.com
+    maintainers:
+    - email: s.tasche@4allportal.net
+      name: tasches
+    name: base-cluster
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/base-cluster-35.0.9/base-cluster-35.0.9.tgz
+    version: 35.0.9
+  - apiVersion: v2
     created: "2023-04-18T12:07:20.137027534Z"
     dependencies:
     - name: common
@@ -6589,4 +6631,4 @@ entries:
     urls:
     - https://github.com/4ALLPORTAL/helm-charts/releases/download/simple-website-1.0.0/simple-website-1.0.0.tgz
     version: 1.0.0
-generated: "2023-04-18T14:06:08.147467611Z"
+generated: "2023-04-18T16:13:22.465284235Z"
