@@ -240,7 +240,7 @@ webdav:
   image:
     registry: docker.io
     repository: httpd
-    tag: 2.4.55
+    tag: 2.4.57
 
   livenessProbe:
     enabled: true
