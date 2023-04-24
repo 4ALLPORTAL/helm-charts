@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 35.0.8](https://img.shields.io/badge/Version-35.0.8-informational?style=flat-square)
+![Version: 35.0.10](https://img.shields.io/badge/Version-35.0.9-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -78,12 +78,12 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | global.clusterName | string | `"eu-west-1"` |  |
 | global.helm.image.registry | string | `"docker.io"` |  |
 | global.helm.image.repository | string | `"alpine/helm"` |  |
-| global.helm.image.tag | string | `"3.10.2"` |  |
+| global.helm.image.tag | string | `"3.11.3"` |  |
 | global.imageCredentials | object | `{}` |  |
 | global.imageRegistry | string | `""` |  |
 | global.kubectl.image.registry | string | `"docker.io"` |  |
 | global.kubectl.image.repository | string | `"bitnami/kubectl"` |  |
-| global.kubectl.image.tag | string | `"1.26.1"` |  |
+| global.kubectl.image.tag | string | `"1.27.1"` |  |
 | global.networkPolicy.dnsLabels."io.kubernetes.pod.namespace" | string | `"kube-system"` |  |
 | global.networkPolicy.dnsLabels.k8s-app | string | `"kube-dns"` |  |
 | global.networkPolicy.metricsLabels."app.kubernetes.io/name" | string | `"prometheus"` |  |
