@@ -17,9 +17,13 @@ spec:
       version: 2.x.x
   interval: 1m
   install:
+    timeout: 20m0s
+    crds: CreateReplace
     remediation:
       retries: -1
   upgrade:
+    timeout: 20m0s
+    crds: CreateReplace
     remediation:
       retries: -1
   values:
