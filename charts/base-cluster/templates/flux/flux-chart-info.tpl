@@ -7,11 +7,11 @@ flux2
 {{- end -}}
 
 {{- define "base-cluster.flux2.chartVersion" -}}
-0.x.x
+1.x.x
 {{- end -}}
 
 {{- define "base-cluster.flux2.version" -}}
-v0.29.3
+v0.36.0
 {{- end -}}
 
 {{- define "base-cluster.flux2.values" -}}
