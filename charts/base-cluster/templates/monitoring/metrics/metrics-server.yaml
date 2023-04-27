@@ -16,12 +16,6 @@ spec:
         namespace: {{ .Release.Namespace }}
       version: 6.x.x
   interval: 1m
-  install:
-    remediation:
-      retries: -1
-  upgrade:
-    remediation:
-      retries: -1
   values:
     {{- if .Values.global.imageRegistry }}
     global:
@@ -33,8 +27,8 @@ spec:
         memory: {{ .Values.monitoring.metricsServer.resources.limits.memory }}
     priorityClassName: system-cluster-critical
     extraArgs:
-      kubelet-preferred-address-types: InternalIP
-      kubelet-insecure-tls: "true"
+      - --kubelet-preferred-address-types=InternalIP
+      - --kubelet-insecure-tls=true
     apiService:
       create: true
   {{- end -}}
