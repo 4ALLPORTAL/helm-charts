@@ -14,14 +14,8 @@ spec:
         kind: HelmRepository
         name: bitnami
         namespace: {{ .Release.Namespace }}
-      version: 5.x.x
+      version: 6.x.x
   interval: 1m
-  install:
-    remediation:
-      retries: -1
-  upgrade:
-    remediation:
-      retries: -1
   values:
     {{- if .Values.global.imageRegistry }}
     global:
@@ -29,12 +23,12 @@ spec:
     {{- end }}
     resources:
       limits:
-        cpu: {{ .Values.monitoring.metricsServer.resources.limits.cpu }} 
-        memory: {{ .Values.monitoring.metricsServer.resources.limits.memory }} 
+        cpu: {{ .Values.monitoring.metricsServer.resources.limits.cpu }}
+        memory: {{ .Values.monitoring.metricsServer.resources.limits.memory }}
     priorityClassName: system-cluster-critical
     extraArgs:
-      kubelet-preferred-address-types: InternalIP
-      kubelet-insecure-tls: "true"
+      - --kubelet-preferred-address-types=InternalIP
+      - --kubelet-insecure-tls=true
     apiService:
       create: true
   {{- end -}}
