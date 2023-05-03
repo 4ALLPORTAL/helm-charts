@@ -14,7 +14,7 @@ spec:
         kind: HelmRepository
         name: prometheus
         namespace: {{ .Release.Namespace }}
-      version: v43.x.x
+      version: v45.x.x
   interval: 1m
   install:
     crds: CreateReplace
