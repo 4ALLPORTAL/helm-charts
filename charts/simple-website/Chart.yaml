@@ -1,0 +1,10 @@
+apiVersion: v2
+appVersion: "1.23.3"
+description: A simple Helm Chart to deploy a simple website
+name: simple-website
+version: 1.0.0
+
+home: https://4allportal.com
+maintainers:
+  - name: tasches
+    email: s.tasche@4allportal.com

@@ -10,12 +10,12 @@ spec:
   groups:
     - name: node-entropy
       rules:
-        - alert: MysqlClusterMemberMismatch
+        - alert: LowEntropyOnNode
           annotations:
             description: Node {{ "{{ $labels.node }}" }} has been low on entropy for longer than 10 minutes. Currently {{ "{{ $value }}" }} bits are remaining.
             summary: Node has been low on entropy.
           expr: |-
-            sum(label_replace(node_entropy_available_bits{job="node-exporter"}, "internal_ip", "$1", "instance", "(.*):.*") * on(internal_ip) group_left(node) kube_node_info) by (node) < 500
+            sum(label_replace(node_entropy_available_bits{job="node-exporter"}, "internal_ip", "$1", "instance", "(.*):.*") * on(internal_ip) group_left(node) kube_node_info) by (node) < 255
           for: 10m
           labels:
             severity: critical

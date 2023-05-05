@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 19.0.12](https://img.shields.io/badge/Version-19.0.12-informational?style=flat-square) ![AppVersion: 3.10.26](https://img.shields.io/badge/AppVersion-3.10.26-informational?style=flat-square)
+![Version: 19.0.31](https://img.shields.io/badge/Version-19.0.31-informational?style=flat-square) ![AppVersion: 3.10.30](https://img.shields.io/badge/AppVersion-3.10.30-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -16,8 +16,8 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://4allportal.github.io/helm-charts | maxscale | 4.0.5 |
-| https://charts.bitnami.com/bitnami | common | 2.2.2 |
+| https://4allportal.github.io/helm-charts | maxscale | 4.0.12 |
+| https://charts.bitnami.com/bitnami | common | 2.2.4 |
 
 ## Values
 
@@ -50,7 +50,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | backups.mysql.weeksToKeep | int | `4` |  |
 | backups.s3.image.registry | string | `"docker.io"` |  |
 | backups.s3.image.repository | string | `"jess/s3cmd"` |  |
-| backups.s3.image.tag | string | `"latest@sha256:75fd582906ccbbe8c90bb804c86be0d0f5f92a0dcfc7814d30cac638e991dffd"` |  |
+| backups.s3.image.tag | string | `"latest@sha256:d4b756aa4af49718bf03e78349987cf55c8028ad29e06bcb85522f47d4f67626"` |  |
 | backups.s3.resources.limits.cpu | int | `2` |  |
 | backups.s3.resources.limits.memory | string | `"1Gi"` |  |
 | backups.s3.resources.requests.cpu | string | `"100m"` |  |
@@ -243,7 +243,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | webdav.groups | object | `{}` |  |
 | webdav.image.registry | string | `"docker.io"` |  |
 | webdav.image.repository | string | `"httpd"` |  |
-| webdav.image.tag | string | `"2.4.54"` |  |
+| webdav.image.tag | string | `"2.4.57"` |  |
 | webdav.livenessProbe.enabled | bool | `true` |  |
 | webdav.livenessProbe.failureThreshold | int | `4` |  |
 | webdav.livenessProbe.initialDelaySeconds | int | `5` |  |

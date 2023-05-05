@@ -1,0 +1,3 @@
+include:
+  - project: 4allportal/ci/gitlab-ci
+    file: templates/helm.yaml

@@ -240,7 +240,7 @@ webdav:
   image:
     registry: docker.io
     repository: httpd
-    tag: 2.4.54
+    tag: 2.4.57
 
   livenessProbe:
     enabled: true
@@ -293,7 +293,7 @@ backups:
     image:
       registry: docker.io
       repository: jess/s3cmd
-      tag: latest@sha256:75fd582906ccbbe8c90bb804c86be0d0f5f92a0dcfc7814d30cac638e991dffd
+      tag: latest@sha256:d4b756aa4af49718bf03e78349987cf55c8028ad29e06bcb85522f47d4f67626
     resources:
       requests:
         cpu: 100m
