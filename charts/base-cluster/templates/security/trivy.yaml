@@ -1,0 +1,29 @@
+{{- if and .Values.monitoring.securityScanning.enabled .Values.monitoring.prometheus.enabled }}
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: trivy
+  namespace: security
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: trivy
+spec:
+  chart:
+    spec:
+      chart: trivy-operator
+      sourceRef:
+        kind: HelmRepository
+        name: aqua
+        namespace: {{ .Release.Namespace }}
+      version: 0.x.x
+  interval: 1m
+  values:
+    trivy:
+      {{- if .Values.global.imageRegistry }}
+      registry: "{{ $.Values.global.imageRegistry }}"
+      {{- end }}
+      ignoreUnfixed: true
+    {{- if .Values.monitoring.prometheus.enabled }}
+    serviceMonitor:
+      enabled: true
+  {{- end }}
+  {{- end }}
