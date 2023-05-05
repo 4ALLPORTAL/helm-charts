@@ -7,7 +7,7 @@
 {{- $helmRepositories = set $helmRepositories "jetstack" "https://charts.jetstack.io" -}}
 {{- $helmRepositories = set $helmRepositories "traefik" "https://helm.traefik.io/traefik" -}}
 {{- $helmRepositories = set $helmRepositories "grafana" "https://grafana.github.io/helm-charts" -}}
-{{- $helmRepositories = set $helmRepositories "estafette" "https://helm.estafette.io" -}}
+{{- $helmRepositories = set $helmRepositories "aqua" "https://aquasecurity.github.io/helm-charts" -}}
 {{- $helmRepositories = set $helmRepositories "stakater" "https://stakater.github.io/stakater-charts" -}}
 {{- $helmRepositories = set $helmRepositories "prometheus" "https://prometheus-community.github.io/helm-charts" -}}
 {{- $helmRepositories = set $helmRepositories "jaeger" "https://jaegertracing.github.io/helm-charts" -}}
