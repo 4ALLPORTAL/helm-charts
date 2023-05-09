@@ -90,6 +90,12 @@ grafana:
         <<: *dashboard
         gnetId: 4701
         revision: 9
+      {{ if .Values.monitoring.securityScanning.enabled }}
+      trivy:
+        <<: *dashboard
+        gnetId: 17813
+        revision: 2
+      {{ end }}
       {{ if .Values.monitoring.jaeger.enabled }}
       jaeger:
         <<: *dashboard
