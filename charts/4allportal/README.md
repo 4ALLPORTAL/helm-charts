@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 19.0.28](https://img.shields.io/badge/Version-19.0.28-informational?style=flat-square) ![AppVersion: 3.10.30](https://img.shields.io/badge/AppVersion-3.10.30-informational?style=flat-square)
+![Version: 19.0.33](https://img.shields.io/badge/Version-19.0.33-informational?style=flat-square) ![AppVersion: 3.10.30](https://img.shields.io/badge/AppVersion-3.10.30-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -16,8 +16,8 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://4allportal.github.io/helm-charts | maxscale | 4.0.10 |
-| https://charts.bitnami.com/bitnami | common | 2.2.3 |
+| https://4allportal.github.io/helm-charts | maxscale | 4.0.12 |
+| https://charts.bitnami.com/bitnami | common | 2.2.4 |
 
 ## Values
 
@@ -50,7 +50,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | backups.mysql.weeksToKeep | int | `4` |  |
 | backups.s3.image.registry | string | `"docker.io"` |  |
 | backups.s3.image.repository | string | `"jess/s3cmd"` |  |
-| backups.s3.image.tag | string | `"latest@sha256:96280e09b8e73e50139c26fb2477792484b81f022e01bc5ad1acdae9b4923642"` |  |
+| backups.s3.image.tag | string | `"latest@sha256:3e91ad182cb0de5373cd5fdf385598c43ccfa6dd67ede35fe4d18c8c5e7cd867"` |  |
 | backups.s3.resources.limits.cpu | int | `2` |  |
 | backups.s3.resources.limits.memory | string | `"1Gi"` |  |
 | backups.s3.resources.requests.cpu | string | `"100m"` |  |

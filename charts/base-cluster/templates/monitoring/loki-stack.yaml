@@ -17,9 +17,13 @@ spec:
       version: 2.x.x
   interval: 1m
   install:
+    timeout: 20m0s
+    crds: CreateReplace
     remediation:
       retries: -1
   upgrade:
+    timeout: 20m0s
+    crds: CreateReplace
     remediation:
       retries: -1
   values:
@@ -59,7 +63,8 @@ spec:
     promtail:
       {{- if .Values.global.imageRegistry }}
       image:
-        repository: "{{ $.Values.global.imageRegistry }}/grafana/promtail"
+        registry: "{{ $.Values.global.imageRegistry }}"
+        repository: "grafana/promtail"
       {{- end }}
       resources: {{- .Values.monitoring.loki.promtail.resources | toYaml | nindent 8 }}
       {{- if .Values.monitoring.prometheus.enabled }}

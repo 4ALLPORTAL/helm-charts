@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 35.0.9](https://img.shields.io/badge/Version-35.0.9-informational?style=flat-square)
+![Version: 36.0.1](https://img.shields.io/badge/Version-36.0.1-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -16,7 +16,7 @@ A generic, base cluster setup
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | common | 2.2.3 |
+| https://charts.bitnami.com/bitnami | common | 2.2.4 |
 
 This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/installation)
 
@@ -309,3 +309,7 @@ This concludes the migration, the following HelmReleases will be recreated by th
 - Jaeger
 
 You either need to reconnect the PVs with the new PVCs, or start fresh with no data.
+
+## To 36.0.0
+
+The update includes the upgrade of the prometheus chart to 45.x.x. In order for this upgrade to work, you need to delete the daemonset prometheus-operator-prometheus-node-exporter.
