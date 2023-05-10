@@ -17,10 +17,10 @@ spec:
       version: 0.x.x
   interval: 1m
   values:
+    {{- if .Values.global.imageRegistry }}
+    registry: "{{ $.Values.global.imageRegistry }}"
+    {{- end }}
     trivy:
-      {{- if .Values.global.imageRegistry }}
-      registry: "{{ $.Values.global.imageRegistry }}"
-      {{- end }}
       ignoreUnfixed: true
     {{- if .Values.monitoring.prometheus.enabled }}
     serviceMonitor:
