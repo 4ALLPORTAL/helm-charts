@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 36.0.1](https://img.shields.io/badge/Version-36.0.1-informational?style=flat-square)
+![Version: 37.0.0](https://img.shields.io/badge/Version-37.0.0-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -313,3 +313,7 @@ You either need to reconnect the PVs with the new PVCs, or start fresh with no d
 ## To 36.0.0
 
 The update includes the upgrade of the prometheus chart to 45.x.x. In order for this upgrade to work, you need to delete the daemonset prometheus-operator-prometheus-node-exporter.
+
+## To 37.0.0
+
+This update removes the old security scanner estafette and installs aquasecurities trivy with the corresponding grafana dashboard.
