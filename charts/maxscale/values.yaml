@@ -128,3 +128,5 @@ mariadb:
     create: false
   rbac:
     create: false
+mariadb-galera:
+  configurationConfigMap: "innodb_buffer_pool_size={{ mulf .Values.mariadb.resources.limits.memory 0.8 }}G" 
