@@ -10,7 +10,7 @@ spec:
   interval: 5m
   url: https://codeberg.org/hjacobs/kube-janitor
   ref:
-    tag: 20.10.0
+    tag: 23.2.0
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
@@ -39,7 +39,7 @@ spec:
       {{- if .Values.global.imageRegistry }}
       repository: "{{ $.Values.global.imageRegistry }}/hjacobs/kube-janitor"
       {{- end }}
-      tag: 20.10.0
+      tag: 23.2.0
     resources:
       limits:
         memory: 1Gi
