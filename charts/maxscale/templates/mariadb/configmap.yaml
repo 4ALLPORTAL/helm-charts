@@ -1,0 +1,19 @@
+{{- if .Values.mariadb.resources.limits.memory }}
+{{- $unit := regexSplit "([0-9]+(?:\".\"[0-9]+)?)" .Values.mariadb.resources.limits.memory -1 | last }}
+{{- $limit := round (mulf (trimSuffix $unit .Values.mariadb.resources.limits.memory) (0.8)) 3 | toString }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-configuration" (include "common.names.fullname" .) }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  {{- if .Values.commonLabels }}
+  {{- include "common.tplvalues.render" (dict "value" .Values.commonLabels "context" $) | nindent 4 }}
+  {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+  my.cnf: |
+{{ .Values.mariadb.mariadbConfiguration | replace "innodb_buffer_pool_size=2G" (printf "innodb_buffer_pool_size=%s%s" $limit $unit) | indent 4 }}
+{{- end }}
