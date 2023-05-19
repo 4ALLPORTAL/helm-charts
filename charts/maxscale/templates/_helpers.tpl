@@ -69,3 +69,7 @@ none
     {{- fail "Please insert the maxscale ressource limits in Gi or Mi" }}
 {{- end -}}
 {{- end -}}
+
+{{- define "mariadb.mariadb-galera.configurationCM" -}}
+{{ printf "%s-mariadb-configuration" (include "common.names.fullname" .) }}
+{{- end -}}
