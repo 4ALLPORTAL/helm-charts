@@ -1,0 +1,16 @@
+{{ $memoryBuffer := include "mariadb.buffer.limit" . }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ .Release.Name }}-mariadb-configuration"
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  {{- if .Values.commonLabels }}
+  {{- include "common.tplvalues.render" (dict "value" .Values.commonLabels "context" $) | nindent 4 }}
+  {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+  my.cnf: |
+{{ regexReplaceAll "(innodb_buffer_pool_size)=[0-9]+[MG]" .Values.mariadb.mariadbConfiguration (printf "${1}=%s" $memoryBuffer) | indent 4 }}
