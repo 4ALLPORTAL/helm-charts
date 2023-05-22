@@ -13,4 +13,4 @@ metadata:
   {{- end }}
 data:
   my.cnf: |
-{{ regexReplaceAll "(innodb_buffer_pool_size)=[0-9]+[MG]" .Values.mariadb.mariadbConfiguration (printf "${1}=%s" $memoryBuffer) | indent 4 }}
+{{ mustRegexReplaceAll "(innodb_buffer_pool_size=)[0-9]+[MG]?" .Values.mariadb.mariadbConfiguration (printf "${1}%s" $memoryBuffer) | indent 4 }}
