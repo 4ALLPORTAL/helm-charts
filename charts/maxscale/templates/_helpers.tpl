@@ -76,6 +76,6 @@ none
 {{- else if hasSuffix "Mi" .Values.mariadb.resources.limits.memory }}
     {{- div (mulf (trimSuffix "Mi" .Values.mariadb.resources.limits.memory) (8) ) (10) }}M
 {{- else }} 
-    {{- fail "Please insert the mariadb memory ressource limits in Gi" }} 
+    {{- fail "Please insert the mariadb memory ressource limits in Gi or Mi" }} 
 {{- end -}} 
 {{- end -}}
