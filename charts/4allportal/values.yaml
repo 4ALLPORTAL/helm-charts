@@ -91,7 +91,7 @@ fourAllPortal:
     runAsUser: 1000
     runAsGroup: 1000
     runAsNonRoot: true
-    fsGroupChangePolicy: OnRootMissmatch
+    fsGroupChangePolicy: OnRootMismatch
 
   securityOptions: &securityOptions
     hostIPC: false
