@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 19.0.33](https://img.shields.io/badge/Version-19.0.33-informational?style=flat-square) ![AppVersion: 3.10.30](https://img.shields.io/badge/AppVersion-3.10.30-informational?style=flat-square)
+![Version: 19.0.34](https://img.shields.io/badge/Version-19.0.34-informational?style=flat-square) ![AppVersion: 3.10.30](https://img.shields.io/badge/AppVersion-3.10.30-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -40,6 +40,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | backups.mysql.resources.requests.cpu | string | `"100m"` |  |
 | backups.mysql.resources.requests.memory | string | `"256Mi"` |  |
 | backups.mysql.securityContext.fsGroup | int | `1000` |  |
+| backups.mysql.securityContext.fsGroupChangePolicy | string | `"OnRootMissmatch"` |  |
 | backups.mysql.securityContext.runAsGroup | int | `1000` |  |
 | backups.mysql.securityContext.runAsNonRoot | bool | `true` |  |
 | backups.mysql.securityContext.runAsUser | int | `1000` |  |
@@ -99,6 +100,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | dreiDRenderer.resources.requests.cpu | string | `"10m"` |  |
 | dreiDRenderer.resources.requests.memory | string | `"128Mi"` |  |
 | dreiDRenderer.securityContext.fsGroup | int | `1000` |  |
+| dreiDRenderer.securityContext.fsGroupChangePolicy | string | `"OnRootMissmatch"` |  |
 | dreiDRenderer.securityContext.runAsGroup | int | `1000` |  |
 | dreiDRenderer.securityContext.runAsNonRoot | bool | `true` |  |
 | dreiDRenderer.securityContext.runAsUser | int | `1000` |  |
@@ -190,6 +192,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.resources.requests.cpu | string | `"500m"` |  |
 | fourAllPortal.resources.requests.memory | string | `"2Gi"` |  |
 | fourAllPortal.securityContext.fsGroup | int | `1000` |  |
+| fourAllPortal.securityContext.fsGroupChangePolicy | string | `"OnRootMissmatch"` |  |
 | fourAllPortal.securityContext.runAsGroup | int | `1000` |  |
 | fourAllPortal.securityContext.runAsNonRoot | bool | `true` |  |
 | fourAllPortal.securityContext.runAsUser | int | `1000` |  |
@@ -264,6 +267,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | webdav.resources.requests.cpu | string | `"10m"` |  |
 | webdav.resources.requests.memory | string | `"32Mi"` |  |
 | webdav.securityContext.fsGroup | int | `1000` |  |
+| webdav.securityContext.fsGroupChangePolicy | string | `"OnRootMissmatch"` |  |
 | webdav.securityContext.runAsGroup | int | `1000` |  |
 | webdav.securityContext.runAsNonRoot | bool | `true` |  |
 | webdav.securityContext.runAsUser | int | `1000` |  |
