@@ -128,3 +128,4 @@ mariadb:
     create: false
   rbac:
     create: false
+  configurationConfigMap: "{{ .Release.Name }}-mariadb-configuration"

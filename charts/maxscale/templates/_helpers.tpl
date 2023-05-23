@@ -69,3 +69,13 @@ none
     {{- fail "Please insert the maxscale ressource limits in Gi or Mi" }}
 {{- end -}}
 {{- end -}}
+
+{{- define "mariadb.buffer.limit" -}} 
+{{- if hasSuffix "Gi" .Values.mariadb.resources.limits.memory }} 
+    {{- div (mulf (mulf (trimSuffix "Gi" .Values.mariadb.resources.limits.memory) (1000) ) (8) ) (10) }}M
+{{- else if hasSuffix "Mi" .Values.mariadb.resources.limits.memory }}
+    {{- div (mulf (trimSuffix "Mi" .Values.mariadb.resources.limits.memory) (8) ) (10) }}M
+{{- else }} 
+    {{- fail "Please insert the mariadb memory ressource limits in Gi or Mi" }} 
+{{- end -}} 
+{{- end -}}

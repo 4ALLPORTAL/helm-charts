@@ -1,6 +1,6 @@
 # maxscale
 
-![Version: 4.0.12](https://img.shields.io/badge/Version-4.0.12-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 22.08.3](https://img.shields.io/badge/AppVersion-22.08.3-informational?style=flat-square)
+![Version: 5.0.0](https://img.shields.io/badge/Version-5.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 22.08.3](https://img.shields.io/badge/AppVersion-22.08.3-informational?style=flat-square)
 
 Deploys a maxscale mariadb-galera proxy including mariadb-galera
 
@@ -49,6 +49,7 @@ Deploys a maxscale mariadb-galera proxy including mariadb-galera
 | livenessProbe.periodSeconds | int | `10` |  |
 | livenessProbe.successThreshold | int | `1` |  |
 | livenessProbe.timeoutSeconds | int | `5` |  |
+| mariadb.configurationConfigMap | string | `"{{ .Release.Name }}-mariadb-configuration"` |  |
 | mariadb.containerSecurityContext.allowPrivilegeEscalation | bool | `false` |  |
 | mariadb.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | mariadb.containerSecurityContext.enabled | bool | `true` |  |
