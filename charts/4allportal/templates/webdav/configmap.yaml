@@ -48,9 +48,10 @@ data:
       Require all denied
     </Files>
 
-    <FilesMatch "^\._.*">
-      Require all denied
-    </FilesMatch>
+    # This would cause trouble with Indesign (It would not be possible to save a file)
+    #    <FilesMatch "^\._.*">
+    #      Require all denied
+    #    </FilesMatch>
 
     ErrorLog /proc/self/fd/2
     ErrorLogFormat "{\"ts\": \"%{cu}t\", \"module\": \"%-m\", \"level\": \"%l\", \"message\": \"%M\", \"clientIP\": \"%-a\"}"
