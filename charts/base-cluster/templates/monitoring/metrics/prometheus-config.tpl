@@ -148,27 +148,22 @@ alertmanager:
     route:
       {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.enabled }}
       receiver: pagerduty
-      {{- end }}
+      {{- end }} 
       routes:
-        {{- if .Values.monitoring.deadMansSwitch.enabled}}
-        - match:
-            alertname: Watchdog
-          receiver: healthchecks.io
-          group_interval: 1m
-          repeat_interval: 1m
-        {{- end }}
+      - receiver: 'email'
+        repeat_interval: 24h
+        group_by: [alertname]
+        matchers:
+        - alertname="HighStorageUsage"
     receivers:
       {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.enabled }}
       - name: pagerduty
         pagerduty_configs:
           - routing_key: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.routingKey }}
       {{- end }}
-      {{- if .Values.monitoring.deadMansSwitch.enabled}}
-      - name: healthchecks.io
-        webhook_configs:
-          - url: https://hc-ping.com/{{ .Values.monitoring.deadMansSwitch.pingKey }}/k8s-cluster-{{ .Values.global.baseDomain | replace "." "-" }}-{{ .Values.global.clusterName }}-monitoring
-            send_resolved: false
-      {{- end }}
+      - name: email
+        email_configs:
+          - to: 'm.blachnik@4allportal.com'
       - name: "null"
   podDisruptionBudget:
     enabled: true
