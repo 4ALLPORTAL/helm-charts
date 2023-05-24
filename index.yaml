@@ -3,6 +3,32 @@ entries:
   4allportal:
   - apiVersion: v2
     appVersion: 3.10.30
+    created: "2023-05-24T12:08:47.138019289Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.2.4
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://4allportal.github.io/helm-charts
+      version: 4.1.0
+    description: A Helm chart for 4ALLPORTAL version 3.10.0 and up
+    digest: bac93239a3d17f056b1340eb364a2571115385c490eb43e28a5186a6c1c863d3
+    home: https://4allportal.com
+    icon: https://4allportal.com/wp-content/uploads/2022/07/cropped-4ap_logo.png
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: s.tasche@4allportal.com
+      name: tasches
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-19.0.35/4allportal-19.0.35.tgz
+    version: 19.0.35
+  - apiVersion: v2
+    appVersion: 3.10.30
     created: "2023-05-24T07:56:11.32494836Z"
     dependencies:
     - name: common
@@ -5960,6 +5986,27 @@ entries:
   maxscale:
   - apiVersion: v2
     appVersion: 22.08.3
+    created: "2023-05-24T12:08:47.397893034Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.2.4
+    - alias: mariadb
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.5.5
+    description: Deploys a maxscale mariadb-galera proxy including mariadb-galera
+    digest: 567abe9f019b04bd3aaa4b2722ae67e1402d342d583785ebf02b6b319986ff9f
+    maintainers:
+    - email: s.tasche@4allportal.com
+      name: tasches
+    name: maxscale
+    type: application
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/maxscale-4.1.1/maxscale-4.1.1.tgz
+    version: 4.1.1
+  - apiVersion: v2
+    appVersion: 22.08.3
     created: "2023-05-23T15:05:20.123285662Z"
     dependencies:
     - name: common
@@ -7046,4 +7093,4 @@ entries:
     urls:
     - https://github.com/4ALLPORTAL/helm-charts/releases/download/simple-website-1.0.0/simple-website-1.0.0.tgz
     version: 1.0.0
-generated: "2023-05-24T07:56:11.54462345Z"
+generated: "2023-05-24T12:08:47.399016403Z"
