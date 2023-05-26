@@ -159,6 +159,8 @@ monitoring:
         enabled: false
         url: ""
         routingKey: ""
+      emailconfig: []
+
     authentication: {}
   loki:
     enabled: true
