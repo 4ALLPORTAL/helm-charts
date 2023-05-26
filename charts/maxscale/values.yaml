@@ -102,7 +102,7 @@ mariadb:
         memory: 32Mi
         cpu: 10m
       limits:
-        memory: 32Mi
+        memory: 64Mi
         cpu: 250m
   persistence:
     enabled: true
