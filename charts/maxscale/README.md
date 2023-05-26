@@ -1,6 +1,6 @@
 # maxscale
 
-![Version: 4.0.12](https://img.shields.io/badge/Version-4.0.12-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 22.08.3](https://img.shields.io/badge/AppVersion-22.08.3-informational?style=flat-square)
+![Version: 4.1.3](https://img.shields.io/badge/Version-4.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 22.08.3](https://img.shields.io/badge/AppVersion-22.08.3-informational?style=flat-square)
 
 Deploys a maxscale mariadb-galera proxy including mariadb-galera
 
@@ -14,7 +14,7 @@ Deploys a maxscale mariadb-galera proxy including mariadb-galera
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | common | 2.2.4 |
+| https://charts.bitnami.com/bitnami | common | 2.4.0 |
 | https://charts.bitnami.com/bitnami | mariadb(mariadb-galera) | 7.5.5 |
 
 ## Values
@@ -49,6 +49,7 @@ Deploys a maxscale mariadb-galera proxy including mariadb-galera
 | livenessProbe.periodSeconds | int | `10` |  |
 | livenessProbe.successThreshold | int | `1` |  |
 | livenessProbe.timeoutSeconds | int | `5` |  |
+| mariadb.configurationConfigMap | string | `"{{ .Release.Name }}-mariadb-configuration"` |  |
 | mariadb.containerSecurityContext.allowPrivilegeEscalation | bool | `false` |  |
 | mariadb.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | mariadb.containerSecurityContext.enabled | bool | `true` |  |
