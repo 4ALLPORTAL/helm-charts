@@ -1,6 +1,6 @@
 # maxscale
 
-![Version: 4.1.3](https://img.shields.io/badge/Version-4.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 22.08.3](https://img.shields.io/badge/AppVersion-22.08.3-informational?style=flat-square)
+![Version: 4.1.4](https://img.shields.io/badge/Version-4.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 22.08.3](https://img.shields.io/badge/AppVersion-22.08.3-informational?style=flat-square)
 
 Deploys a maxscale mariadb-galera proxy including mariadb-galera
 
@@ -63,7 +63,7 @@ Deploys a maxscale mariadb-galera proxy including mariadb-galera
 | mariadb.galera.mariabackup.password | string | `"CHANGEME"` |  |
 | mariadb.metrics.enabled | bool | `true` |  |
 | mariadb.metrics.resources.limits.cpu | string | `"250m"` |  |
-| mariadb.metrics.resources.limits.memory | string | `"32Mi"` |  |
+| mariadb.metrics.resources.limits.memory | string | `"64Mi"` |  |
 | mariadb.metrics.resources.requests.cpu | string | `"10m"` |  |
 | mariadb.metrics.resources.requests.memory | string | `"32Mi"` |  |
 | mariadb.metrics.serviceMonitor.enabled | bool | `true` |  |
