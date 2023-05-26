@@ -161,9 +161,10 @@ alertmanager:
         pagerduty_configs:
           - routing_key: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.routingKey }}
       {{- end }}
+      {{- with $.Values.monitoring.prometheus.alertmanager.emailconfig }}
       - name: email
-        email_configs:
-          - to: 'm.blachnik@4allportal.com'
+        email_configs: {{ . | toYaml | nindent 12 }}
+      {{- end }} 
       - name: "null"
   podDisruptionBudget:
     enabled: true
