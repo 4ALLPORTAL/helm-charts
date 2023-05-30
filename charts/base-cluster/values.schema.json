@@ -532,6 +532,9 @@
                     }
                   },
                   "additionalProperties": false
+                },
+                "emailconfig": {
+                  "type": "array"
                 }
               },
               "additionalProperties": false
