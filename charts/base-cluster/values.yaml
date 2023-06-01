@@ -161,7 +161,6 @@ monitoring:
         routingKey: ""
       emailconfig: []
       routes: []
-
     authentication: {}
   loki:
     enabled: true
