@@ -151,11 +151,9 @@ alertmanager:
       receiver: pagerduty
       {{- end }} 
       routes:
-      - receiver: 'email'
-        repeat_interval: 24h
-        group_by: [alertname]
-        matchers:
-        - alertname="HighStorageUsage"
+      {{- with $.Values.monitoring.prometheus.alertmanager.routes }}
+      {{ . | toYaml | nindent 6 }}
+      {{- end }}
     receivers:
       {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.enabled }}
       - name: pagerduty
