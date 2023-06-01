@@ -149,7 +149,7 @@ alertmanager:
     route:
       {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.enabled }}
       receiver: pagerduty
-      {{- end }} 
+      {{- end }}
       routes:
       {{- with $.Values.monitoring.prometheus.alertmanager.routes }}
       {{ . | toYaml | nindent 6 }}
