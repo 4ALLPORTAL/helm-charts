@@ -172,6 +172,7 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | monitoring.prometheus.alertmanager.pagerduty.enabled | bool | `false` |  |
 | monitoring.prometheus.alertmanager.pagerduty.routingKey | string | `""` |  |
 | monitoring.prometheus.alertmanager.pagerduty.url | string | `""` |  |
+| monitoring.prometheus.alertmanager.routes | list | `[]` |  |
 | monitoring.prometheus.alertmanager.storage.retention | string | `"120h"` |  |
 | monitoring.prometheus.alertmanager.storage.size | string | `"1Gi"` |  |
 | monitoring.prometheus.authentication | object | `{}` |  |
@@ -318,3 +319,7 @@ The update includes the upgrade of the prometheus chart to 45.x.x. In order for 
 ## To 37.0.0
 
 This update removes the old security scanner estafette and installs aquasecurities trivy with the corresponding grafana dashboard.
+
+### To 37.0.5
+
+You can now add an email configuration for the alertmanager. If your email server uses port 456 SMARTTLS will be disabled automaticaly. It is also possible to add custome routes for the alertmanager. For the syntax please refer to the alertmanager [documentation](https://prometheus.io/docs/alerting/latest/configuration/) or our values.schema.json.
