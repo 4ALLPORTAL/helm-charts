@@ -160,6 +160,7 @@ monitoring:
         url: ""
         routingKey: ""
       emailconfig: []
+      routes: []
 
     authentication: {}
   loki:

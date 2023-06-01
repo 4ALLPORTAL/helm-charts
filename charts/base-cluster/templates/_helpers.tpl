@@ -32,9 +32,12 @@ server:
 {{- define "base-cluster.alertmanager.email.tls" -}}
 {{- if not (empty .Values.monitoring.prometheus.alertmanager.emailconfig) -}}
 {{- with index .Values.monitoring.prometheus.alertmanager.emailconfig 0 }}
-{{- $port := (split ":" (get . "smarthost"))._1 -}}
+{{- $config := get . "email_configs" -}}
+{{- $port := (split ":" (get (index $config 0) "smarthost"))._1 -}}
 {{- ne $port "465" -}}
 {{- end -}}
+{{- else -}}
+true
 {{- end -}}
 {{- end -}}
 

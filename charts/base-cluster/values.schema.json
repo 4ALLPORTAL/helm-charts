@@ -534,8 +534,22 @@
                   "additionalProperties": false
                 },
                 "emailconfig": {
+                  "type": "array",
+		  "items": {
+                    "type": "object",
+		    "properties": {
+                      "name": {
+                        "type": "string"
+		      },
+		      "email_configs": {
+                        "type": "array"
+		      }
+		    }
+		  }
+                },
+		"routes": {
                   "type": "array"
-                }
+		}
               },
               "additionalProperties": false
             },
