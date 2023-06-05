@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 37.0.6](https://img.shields.io/badge/Version-37.0.6-informational?style=flat-square)
+![Version: 37.0.7](https://img.shields.io/badge/Version-37.0.7-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -104,9 +104,6 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | janitor.enabled | bool | `true` |  |
 | monitoring.costAnalysis.currency | string | `"currencyEUR"` |  |
 | monitoring.costAnalysis.storageClassMapping | object | `{}` |  |
-| monitoring.deadMansSwitch.apiKey | string | `""` |  |
-| monitoring.deadMansSwitch.enabled | bool | `false` |  |
-| monitoring.deadMansSwitch.pingKey | string | `""` |  |
 | monitoring.goldpinger.enabled | bool | `true` |  |
 | monitoring.goldpinger.host | string | `"pinger"` |  |
 | monitoring.goldpinger.pingHosts | list | `[]` |  |
