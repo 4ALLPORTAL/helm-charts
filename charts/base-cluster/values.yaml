@@ -236,10 +236,6 @@ monitoring:
         cpu: 250m
         memory: 64Mi
     pingHosts: []
-  deadMansSwitch:
-    enabled: false
-    apiKey: ""
-    pingKey: ""
 
 git:
   instances: {}

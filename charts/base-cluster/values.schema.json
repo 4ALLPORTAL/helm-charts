@@ -837,22 +837,7 @@
             }
           },
           "additionalProperties": false
-        },
-        "deadMansSwitch": {
-          "type": "object",
-          "properties": {
-            "enabled": {
-              "type": "boolean"
-            },
-            "apiKey": {
-              "type": "string"
-            },
-            "pingKey": {
-              "type": "string"
-            }
-          },
-          "additionalProperties": false
-        }
+        }, 
       },
       "additionalProperties": false
     },

@@ -148,28 +148,13 @@ alertmanager:
     route:
       {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.enabled }}
       receiver: pagerduty
-      {{- end }}
-      routes:
-        {{- if .Values.monitoring.deadMansSwitch.enabled}}
-        - match:
-            alertname: Watchdog
-          receiver: healthchecks.io
-          group_interval: 1m
-          repeat_interval: 1m
-        {{- end }}
+      {{- end }} 
     receivers:
       {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.enabled }}
       - name: pagerduty
         pagerduty_configs:
           - routing_key: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.routingKey }}
-      {{- end }}
-      {{- if .Values.monitoring.deadMansSwitch.enabled}}
-      - name: healthchecks.io
-        webhook_configs:
-          - url: https://hc-ping.com/{{ .Values.monitoring.deadMansSwitch.pingKey }}/k8s-cluster-{{ .Values.global.baseDomain | replace "." "-" }}-{{ .Values.global.clusterName }}-monitoring
-            send_resolved: false
-      {{- end }}
-      - name: "null"
+      {{- end }} 
   podDisruptionBudget:
     enabled: true
   {{- if not (empty $.Values.monitoring.prometheus.authentication.enabled | ternary $.Values.global.authentication.enabled $.Values.monitoring.prometheus.authentication.enabled) }}
