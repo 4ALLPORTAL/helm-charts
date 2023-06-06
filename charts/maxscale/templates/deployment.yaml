@@ -89,12 +89,12 @@ spec:
                   if timeout 2 nslookup {{ printf "%s-%d.%s-headless.%s.svc.%s" $fullName $INDEX $fullName ($.Release.Namespace) $.Values.mariadb.clusterDomain }} > /dev/null; then
                       ((reachableCount++))
                   fi
-                  {{ end }}
+                  {{- end }}
                   if ((reachableCount < 2)); then
                       exit 1
                   fi
                   exit 0
-                  {{ end }}
+                  {{- end }}
             failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
