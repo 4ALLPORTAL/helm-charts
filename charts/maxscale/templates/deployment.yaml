@@ -84,17 +84,17 @@ spec:
                 - |-
                   maxctrl show maxscale
                   {{ $fullName := include "common.names.dependency.fullname" (dict "chartName" "mariadb" "chartValues" $.Values.mariadb "context" $) -}}
-                  {{ $reachableCount := 0 }}
+                  {{ $reachableCount := 0 | int }}
                   {{ range $INDEX := until (.Values.mariadb.replicaCount | int) -}}
-                  if timeout 2 nslookup {{ printf "%s-%d.%s-headless.%s.svc.%s" $fullName $INDEX $fullName ($.Release.Namespace) $.Values.mariadb.clusterDomain }} > /dev/null; then
-                      ((reachableCount++))
-                  fi
-                  {{- end }}
-                  if ((reachableCount < 2)); then
-                      exit 1
-                  fi
+                  timeout 2 nslookup {{ printf "%s-%d.%s-headless.%s.svc.%s" $fullName $INDEX $fullName ($.Release.Namespace) $.Values.mariadb.clusterDomain }}
+                  {{ $reachableCount = add1 $reachableCount }}
+                  {{ printf "%d" $reachableCount }}
+                  {{ end }}
+                  {{ if lt $reachableCount 2 }}
+                  exit 1
+                  {{ else }}
                   exit 0
-                  {{- end }}
+                  {{ end }}
             failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
