@@ -36,7 +36,7 @@ spec:
   {{- range $backend := $backends}}
   {{- $host := $backend.host -}}
   {{- $port := $backend.port -}}
-  {{- $targetServiceName := printf "prometheus-operator-kube-p-%s" $host -}}
+  {{ $targetServiceName := printf "prometheus-operator-kube-p-%s" $host }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
