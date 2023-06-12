@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 37.0.6](https://img.shields.io/badge/Version-37.1.6-informational?style=flat-square)
+![Version: 37.1.6](https://img.shields.io/badge/Version-37.1.6-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -167,10 +167,12 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | monitoring.metricsServer.enabled | bool | `true` |  |
 | monitoring.metricsServer.resources.limits.cpu | string | `"100m"` |  |
 | monitoring.metricsServer.resources.limits.memory | string | `"64Mi"` |  |
+| monitoring.prometheus.alertmanager.emailconfig | list | `[]` |  |
 | monitoring.prometheus.alertmanager.host | string | `"alertmanager"` |  |
 | monitoring.prometheus.alertmanager.pagerduty.enabled | bool | `false` |  |
 | monitoring.prometheus.alertmanager.pagerduty.routingKey | string | `""` |  |
 | monitoring.prometheus.alertmanager.pagerduty.url | string | `""` |  |
+| monitoring.prometheus.alertmanager.routes | list | `[]` |  |
 | monitoring.prometheus.alertmanager.storage.retention | string | `"120h"` |  |
 | monitoring.prometheus.alertmanager.storage.size | string | `"1Gi"` |  |
 | monitoring.prometheus.authentication | object | `{}` |  |
