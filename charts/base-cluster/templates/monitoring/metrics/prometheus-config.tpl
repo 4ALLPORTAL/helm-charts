@@ -145,7 +145,9 @@ alertmanager:
     global:
       pagerduty_url: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.url  }}
   {{- end }}
-      smtp_require_tls: {{ include "base-cluster.alertmanager.email.tls" . }}
+  {{- if eq (include "base-cluster.alertmanager.email.tls" .) "false" }}
+      smtp_require_tls: false
+  {{- end }}
     route:
       {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.enabled }}
       receiver: pagerduty
