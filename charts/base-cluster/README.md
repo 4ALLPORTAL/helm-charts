@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 37.0.4](https://img.shields.io/badge/Version-37.0.4-informational?style=flat-square)
+![Version: 37.0.6](https://img.shields.io/badge/Version-37.1.6-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -16,7 +16,7 @@ A generic, base cluster setup
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | common | 2.2.4 |
+| https://charts.bitnami.com/bitnami | common | 2.4.0 |
 
 This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/installation)
 
@@ -78,7 +78,7 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | global.clusterName | string | `"eu-west-1"` |  |
 | global.helm.image.registry | string | `"docker.io"` |  |
 | global.helm.image.repository | string | `"alpine/helm"` |  |
-| global.helm.image.tag | string | `"3.11.3"` |  |
+| global.helm.image.tag | string | `"3.12.0"` |  |
 | global.imageCredentials | object | `{}` |  |
 | global.imageRegistry | string | `""` |  |
 | global.kubectl.image.registry | string | `"docker.io"` |  |
@@ -167,12 +167,10 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | monitoring.metricsServer.enabled | bool | `true` |  |
 | monitoring.metricsServer.resources.limits.cpu | string | `"100m"` |  |
 | monitoring.metricsServer.resources.limits.memory | string | `"64Mi"` |  |
-| monitoring.prometheus.alertmanager.emailconfig | list | `[]` |  |
 | monitoring.prometheus.alertmanager.host | string | `"alertmanager"` |  |
 | monitoring.prometheus.alertmanager.pagerduty.enabled | bool | `false` |  |
 | monitoring.prometheus.alertmanager.pagerduty.routingKey | string | `""` |  |
 | monitoring.prometheus.alertmanager.pagerduty.url | string | `""` |  |
-| monitoring.prometheus.alertmanager.routes | list | `[]` |  |
 | monitoring.prometheus.alertmanager.storage.retention | string | `"120h"` |  |
 | monitoring.prometheus.alertmanager.storage.size | string | `"1Gi"` |  |
 | monitoring.prometheus.authentication | object | `{}` |  |
