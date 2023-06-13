@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 19.0.42](https://img.shields.io/badge/Version-19.0.42-informational?style=flat-square) ![AppVersion: 3.10.35](https://img.shields.io/badge/AppVersion-3.10.35-informational?style=flat-square)
+![Version: 19.0.43](https://img.shields.io/badge/Version-19.0.43-informational?style=flat-square) ![AppVersion: 3.10.37](https://img.shields.io/badge/AppVersion-3.10.37-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -142,7 +142,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.hpa.minReplicas | int | `2` |  |
 | fourAllPortal.image.registry | string | `"registry.4allportal.net"` |  |
 | fourAllPortal.image.repository | string | `"4allportal"` |  |
-| fourAllPortal.image.tag | string | `"3.10.35"` |  |
+| fourAllPortal.image.tag | string | `"3.10.37"` |  |
 | fourAllPortal.ingress.additionalHosts | object | `{}` |  |
 | fourAllPortal.ingress.annotations | object | `{}` |  |
 | fourAllPortal.ingress.enabled | bool | `false` |  |
