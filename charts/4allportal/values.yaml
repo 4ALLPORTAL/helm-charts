@@ -29,7 +29,7 @@ fourAllPortal:
   image:
     registry: registry.4allportal.net
     repository: 4allportal
-    tag: 3.10.35
+    tag: 3.10.37
 
   replicas: 2
 
@@ -294,7 +294,7 @@ backups:
     image:
       registry: docker.io
       repository: jess/s3cmd
-      tag: latest@sha256:3e91ad182cb0de5373cd5fdf385598c43ccfa6dd67ede35fe4d18c8c5e7cd867
+      tag: latest@sha256:7e2eb958be3819293a81f4f97823beb0761e35c1b2f0ed1685eccd7ddd558d8e
     resources:
       requests:
         cpu: 100m
