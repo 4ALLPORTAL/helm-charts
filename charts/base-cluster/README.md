@@ -1,6 +1,5 @@
 # base-cluster
 
-
 ![Version: 38.0.0](https://img.shields.io/badge/Version-38.0.0-informational?style=flat-square)
 
 A generic, base cluster setup
@@ -321,7 +320,3 @@ This update removes the old security scanner estafette and installs aquasecuriti
 ### To 37.1.6
 
 You can now add an email configuration for the alertmanager. If your email server uses port 456 SMARTTLS will be disabled automaticaly. It is also possible to add custome routes for the alertmanager. For the syntax please refer to the alertmanager [documentation](https://prometheus.io/docs/alerting/latest/configuration/) or our values.schema.json.
-
-##ä To 38.0.0
-
-This release removes everything related to the deadMansSwitch function
