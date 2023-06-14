@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 19.0.42](https://img.shields.io/badge/Version-19.0.42-informational?style=flat-square) ![AppVersion: 3.10.35](https://img.shields.io/badge/AppVersion-3.10.35-informational?style=flat-square)
+![Version: 19.0.44](https://img.shields.io/badge/Version-19.0.44-informational?style=flat-square) ![AppVersion: 3.10.37](https://img.shields.io/badge/AppVersion-3.10.37-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -16,7 +16,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://4allportal.github.io/helm-charts | maxscale | 4.1.4 |
+| https://4allportal.github.io/helm-charts | maxscale | 4.1.5 |
 | https://charts.bitnami.com/bitnami | common | 2.4.0 |
 
 ## Values
@@ -51,7 +51,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | backups.mysql.weeksToKeep | int | `4` |  |
 | backups.s3.image.registry | string | `"docker.io"` |  |
 | backups.s3.image.repository | string | `"jess/s3cmd"` |  |
-| backups.s3.image.tag | string | `"latest@sha256:3e91ad182cb0de5373cd5fdf385598c43ccfa6dd67ede35fe4d18c8c5e7cd867"` |  |
+| backups.s3.image.tag | string | `"latest@sha256:7e2eb958be3819293a81f4f97823beb0761e35c1b2f0ed1685eccd7ddd558d8e"` |  |
 | backups.s3.resources.limits.cpu | int | `2` |  |
 | backups.s3.resources.limits.memory | string | `"1Gi"` |  |
 | backups.s3.resources.requests.cpu | string | `"100m"` |  |
@@ -142,7 +142,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.hpa.minReplicas | int | `2` |  |
 | fourAllPortal.image.registry | string | `"registry.4allportal.net"` |  |
 | fourAllPortal.image.repository | string | `"4allportal"` |  |
-| fourAllPortal.image.tag | string | `"3.10.35"` |  |
+| fourAllPortal.image.tag | string | `"3.10.37"` |  |
 | fourAllPortal.ingress.additionalHosts | object | `{}` |  |
 | fourAllPortal.ingress.annotations | object | `{}` |  |
 | fourAllPortal.ingress.enabled | bool | `false` |  |
