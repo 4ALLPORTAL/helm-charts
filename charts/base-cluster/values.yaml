@@ -50,7 +50,7 @@ global:
     image:
       registry: docker.io
       repository: bitnami/kubectl
-      tag: 1.27.1
+      tag: 1.27.2
   helm:
     image:
       registry: docker.io
@@ -159,6 +159,8 @@ monitoring:
         enabled: false
         url: ""
         routingKey: ""
+      emailconfig: []
+      routes: []
     authentication: {}
   loki:
     enabled: true

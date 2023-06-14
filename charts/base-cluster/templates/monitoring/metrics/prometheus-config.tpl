@@ -143,7 +143,10 @@ alertmanager:
   config:
   {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.enabled }}
     global:
-      pagerduty_url: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.url  }}
+      pagerduty_url: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.url }}
+  {{- end }}
+  {{- if eq (include "base-cluster.alertmanager.email.tls" .) "false" }}
+      smtp_require_tls: false
   {{- end }}
     route:
       {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.enabled }}
@@ -157,6 +160,9 @@ alertmanager:
           group_interval: 1m
           repeat_interval: 1m
         {{- end }}
+      {{- with $.Values.monitoring.prometheus.alertmanager.routes }}
+      {{ . | toYaml | nindent 6 }}
+      {{- end }}
     receivers:
       {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.enabled }}
       - name: pagerduty
@@ -168,6 +174,9 @@ alertmanager:
         webhook_configs:
           - url: https://hc-ping.com/{{ .Values.monitoring.deadMansSwitch.pingKey }}/k8s-cluster-{{ .Values.global.baseDomain | replace "." "-" }}-{{ .Values.global.clusterName }}-monitoring
             send_resolved: false
+      {{- end }}
+      {{- with $.Values.monitoring.prometheus.alertmanager.emailconfig }}
+      {{ . | toYaml | nindent 6 }}
       {{- end }}
       - name: "null"
   podDisruptionBudget:

@@ -29,6 +29,18 @@ server:
 {{- required "You must provide a host for the prometheus alertmanager server" .Values.monitoring.prometheus.alertmanager.host -}}.{{ include "base-cluster.domain" $ }}
 {{- end -}}
 
+{{- define "base-cluster.alertmanager.email.tls" -}}
+{{- if not (empty .Values.monitoring.prometheus.alertmanager.emailconfig) -}}
+{{- with index .Values.monitoring.prometheus.alertmanager.emailconfig 0 }}
+{{- $config := get . "email_configs" -}}
+{{- $port := (split ":" (get (index $config 0) "smarthost"))._1 -}}
+{{- ne $port "465" -}}
+{{- end -}}
+{{- else -}}
+true
+{{- end -}}
+{{- end -}}
+
 {{- define "base-cluster.goldpinger.host" -}}
 {{- required "You must provide a host for the goldpinger server" .Values.monitoring.goldpinger.host -}}.{{ include "base-cluster.domain" $ }}
 {{- end -}}
