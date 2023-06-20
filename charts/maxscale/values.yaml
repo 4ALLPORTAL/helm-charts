@@ -96,7 +96,7 @@ mariadb:
     enabled: true
     serviceMonitor:
       enabled: true
-      selector: false
+      selector: {}
     resources:
       requests:
         memory: 32Mi
