@@ -1,6 +1,6 @@
 # maxscale
 
-![Version: 4.1.5](https://img.shields.io/badge/Version-4.1.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 23.02.2](https://img.shields.io/badge/AppVersion-23.02.2-informational?style=flat-square)
+![Version: 4.1.6](https://img.shields.io/badge/Version-4.1.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 23.02.2](https://img.shields.io/badge/AppVersion-23.02.2-informational?style=flat-square)
 
 Deploys a maxscale mariadb-galera proxy including mariadb-galera
 
@@ -67,7 +67,7 @@ Deploys a maxscale mariadb-galera proxy including mariadb-galera
 | mariadb.metrics.resources.requests.cpu | string | `"10m"` |  |
 | mariadb.metrics.resources.requests.memory | string | `"32Mi"` |  |
 | mariadb.metrics.serviceMonitor.enabled | bool | `true` |  |
-| mariadb.metrics.serviceMonitor.selector | bool | `false` |  |
+| mariadb.metrics.serviceMonitor.selector | object | `{}` |  |
 | mariadb.persistence.enabled | bool | `true` |  |
 | mariadb.persistence.size | string | `"8Gi"` |  |
 | mariadb.podAntiAffinityPreset | string | `"hard"` |  |
