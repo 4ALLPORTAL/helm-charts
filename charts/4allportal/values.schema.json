@@ -365,8 +365,7 @@
         },
         "maxscale": {
           "type": "object",
-          "description": "Refer to https://raw.githubusercontent.com/4ALLPORTAL/helm-charts/main/charts/maxscale/values.schema.json",
-	  "$ref": "https://raw.githubusercontent.com/4ALLPORTAL/helm-charts/main/charts/maxscale/values.schema.json"
+          "description": "Refer to https://gitlab.4allportal.net/4allportal/helm-charts/maxscale/-/raw/3.1.1/values.schema.json"
         },
         "dreiDRenderer": {
           "type": "object",
