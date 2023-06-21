@@ -14,5 +14,5 @@ dependencies:
     version: 2.4.0
   - repository: https://charts.bitnami.com/bitnami
     name: mariadb-galera
-    version: 8.2.5
+    version: 7.5.5
     alias: mariadb

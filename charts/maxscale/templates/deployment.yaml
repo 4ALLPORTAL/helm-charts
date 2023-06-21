@@ -82,11 +82,13 @@ spec:
                 - -ex
                 - -c
                 - |-
-                  maxctrl show maxscale
-                  {{ $fullName := include "common.names.dependency.fullname" (dict "chartName" "mariadb" "chartValues" $.Values.mariadb "context" $) -}}
-                  {{ range $INDEX := until (.Values.mariadb.replicaCount | int) -}}
-                  timeout 2 nslookup {{ printf "%s-%d.%s-headless.%s.svc.%s" $fullName $INDEX $fullName ($.Release.Namespace) $.Values.mariadb.clusterDomain }}
-                  {{ end }}
+                  maxctrl show maxscale 
+                  state_ready_count=$(maxctrl list servers | grep "Running" | wc -l)
+                  if [ $state_ready_count -ge 2 ]; then
+                    exit 0
+                  else
+                    exit 1
+                  fi
             failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
