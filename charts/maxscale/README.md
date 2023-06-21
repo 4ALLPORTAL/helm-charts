@@ -67,7 +67,7 @@ Deploys a maxscale mariadb-galera proxy including mariadb-galera
 | mariadb.metrics.resources.requests.cpu | string | `"10m"` |  |
 | mariadb.metrics.resources.requests.memory | string | `"32Mi"` |  |
 | mariadb.metrics.serviceMonitor.enabled | bool | `true` |  |
-| mariadb.metrics.serviceMonitor.selector | bool | `false` |  |
+| mariadb.metrics.serviceMonitor.selector | object | `{}` |  |
 | mariadb.persistence.enabled | bool | `true` |  |
 | mariadb.persistence.size | string | `"8Gi"` |  |
 | mariadb.podAntiAffinityPreset | string | `"hard"` |  |
