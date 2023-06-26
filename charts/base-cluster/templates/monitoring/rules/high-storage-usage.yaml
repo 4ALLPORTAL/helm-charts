@@ -19,5 +19,5 @@ spec:
           for: 24h
           labels:
             severity: critical
-	    frequency: weekly
+            frequency: weekly
   {{- end }}
