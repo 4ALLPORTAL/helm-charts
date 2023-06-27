@@ -14,7 +14,7 @@ spec:
         kind: HelmRepository
         name: appscode
         namespace: {{ .Release.Namespace }}
-      version: v2022.09.29
+      version: v2023.05.31
   interval: 1m
   install:
     remediation:
