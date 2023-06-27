@@ -256,7 +256,10 @@
         },
         "host": {
           "type": "string"
-        }
+        },
+	"repository": {
+          "type" : "string"
+	}
       },
       "additionalProperties": false
     },

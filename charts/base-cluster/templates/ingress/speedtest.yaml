@@ -28,7 +28,7 @@ spec:
       {{- with .Values.global.imageRegistry }}
       registry: {{ . | quote }}
       {{- end }}
-      repository: "adolfintel/speedtest"
+      repository: {{ .Values.speedtest.repository | quote }}
       tag: "latest"
       pullPolicy: Always
     extraEnvVars:

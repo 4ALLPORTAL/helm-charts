@@ -75,6 +75,7 @@ traefik:
 speedtest:
   enabled: true
   host: speedtest
+  repository: adolfintel/speedtest
 
 janitor:
   enabled: true
