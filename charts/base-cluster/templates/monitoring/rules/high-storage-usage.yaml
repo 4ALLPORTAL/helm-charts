@@ -12,11 +12,12 @@ spec:
       rules:
         - alert: HighStorageUsage
           annotations:
-            description: The storage usage on node {{ "{{ $labels.node }}" }} is currently {{ "{{ $value }}" }}%, which is above the threshold of 80%.
-            summary: Over 80 % of storage usage on {{ "{{ $labels.node }}" }}
+            description: The storage usage on node {{ "{{ $labels.node }}" }} is currently {{ "{{ $value }}" }}%, which is above the threshold of 90%.
+            summary: Over 90 % of storage usage on {{ "{{ $labels.node }}" }}
           expr: |-
-            max by (persistentvolumeclaim,namespace) (ceil((kubelet_volume_stats_used_bytes{job="kubelet",metrics_path="/metrics",namespace!~"kube-system|monitoring"}/ kubelet_volume_stats_capacity_bytes{job="kubelet",metrics_path="/metrics",namespace=~".*"}) * 100) >= 80)
+            max by (persistentvolumeclaim,namespace) (ceil((kubelet_volume_stats_used_bytes{job="kubelet",metrics_path="/metrics",namespace!~"kube-system|monitoring"}/ kubelet_volume_stats_capacity_bytes{job="kubelet",metrics_path="/metrics",namespace=~".*"}) * 100) >= 90)
           for: 24h
           labels:
             severity: critical
+            frequency: weekly
   {{- end }}
