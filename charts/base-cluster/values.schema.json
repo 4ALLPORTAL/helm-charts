@@ -257,8 +257,19 @@
         "host": {
           "type": "string"
         },
-        "repository": {
-          "type" : "string"
+        "image": {
+          "type" : "object",
+          "properties": {
+            "registry": {
+              "type": "string"
+            },
+            "repository": {
+              "type": "string"
+            },
+            "tag": {
+              "type": "string"
+            }
+          }
         }
       },
       "additionalProperties": false
