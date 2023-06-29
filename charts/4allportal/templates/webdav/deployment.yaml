@@ -119,6 +119,10 @@ spec:
               readOnly: true
             - name: tmp
               mountPath: /dav
+            - name: scripts
+              subPath: log-handler.sh
+              mountPath: /usr/bin/log-handler.sh
+              readOnly: true
           {{- if $.Values.webdav.livenessProbe.enabled }}
           livenessProbe:
             exec:
@@ -145,6 +149,10 @@ spec:
           {{- end }}
           resources: {{- toYaml $.Values.webdav.resources | nindent 12 }}
       volumes:
+        - name: scripts
+          configMap:
+            name: "{{ include "common.names.fullname" $ }}-webdav"
+            defaultMode: 0555
         - name: assets
         {{- include "4allportal.fourallportal.persistence.assets.mount" $ | nindent 10 }}
         - name: config
