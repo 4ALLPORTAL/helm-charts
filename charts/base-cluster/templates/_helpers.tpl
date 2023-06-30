@@ -10,6 +10,16 @@
 {{- required "You must provide a host for the speedtest server" .Values.speedtest.host -}}.{{ include "base-cluster.domain" $ }}
 {{- end -}}
 
+{{- define "base-cluster.speedtest.registry" -}}
+{{- if .Values.speedtest.image.registry -}}
+{{ .Values.speedtest.image.registry }}
+{{- else -}}
+{{- with .Values.global.imageRegistry -}}
+{{ . }}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
 {{- define "base-cluster.grafana.config" -}}
 auth:
   signout_redirect_url: https://{{- include "base-cluster.grafana.host" . }}

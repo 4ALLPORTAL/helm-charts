@@ -256,6 +256,20 @@
         },
         "host": {
           "type": "string"
+        },
+        "image": {
+          "type" : "object",
+          "properties": {
+            "registry": {
+              "type": "string"
+            },
+            "repository": {
+              "type": "string"
+            },
+            "tag": {
+              "type": "string"
+            }
+          }
         }
       },
       "additionalProperties": false
@@ -535,21 +549,21 @@
                 },
                 "emailconfig": {
                   "type": "array",
-		  "items": {
+                  "items": {
                     "type": "object",
-		    "properties": {
+                    "properties": {
                       "name": {
                         "type": "string"
-		      },
-		      "email_configs": {
+                      },
+                      "email_configs": {
                         "type": "array"
-		      }
-		    }
-		  }
+                      }
+                    }
+                  }
                 },
-		"routes": {
+                "routes": {
                   "type": "array"
-		}
+                }
               },
               "additionalProperties": false
             },

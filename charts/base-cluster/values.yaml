@@ -75,6 +75,10 @@ traefik:
 speedtest:
   enabled: true
   host: speedtest
+  image:
+    registry: ""
+    repository: adolfintel/speedtest
+    tag: latest
 
 janitor:
   enabled: true
