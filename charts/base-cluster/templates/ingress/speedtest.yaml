@@ -25,11 +25,12 @@ spec:
   values:
     replicaCount: 2
     image:
-      {{- with .Values.global.imageRegistry }}
+      {{- $registry := include "base-cluster.speedtest.registry" . -}}
+      {{- with $registry  }}
       registry: {{ . | quote }}
       {{- end }}
-      repository: "adolfintel/speedtest"
-      tag: "latest"
+      repository: {{ .Values.speedtest.image.repository | quote }}
+      tag: {{ .Values.speedtest.image.tag | quote }}
       pullPolicy: Always
     extraEnvVars:
       - name: WEBPORT
