@@ -165,7 +165,9 @@ spec:
         - type: Resource
           resource:
             name: cpu
-            targetAverageUtilization: 90
+	    target:
+	      type: Utilization
+	      averageUtilization: 90
 ---
   {{- if .Values.monitoring.prometheus.enabled }}
 apiVersion: v1
