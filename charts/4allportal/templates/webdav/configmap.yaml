@@ -126,22 +126,44 @@ data:
     BrowserMatch "^gvfs" redirect-carefully
     BrowserMatch "WebDAVLib" redirect-carefully
   log-handler.sh: |
-    #!/bin/bash
+    #!/bin/ash
     ENDPOINT="{{ $.Values.webdav.portalNotificationEndpoint }}"
     while IFS= read -r line; do
-      read -a arr <<< $line
-      if [[ ("${arr[1]}" == "PUT" || "${arr[1]}" == "DELETE") && "${arr[2]}" =~ ^/webdav.* ]] then
+      status=""
+      type=""
+      path=""
+
+      for i in $line
+      do
+        if [ "${status}" == "" ]
+        then
+          status="${i}"
+        elif [ "${type}" == "" ]
+        then
+          type="${i}"
+        elif [ "${path}" == "" ]
+        then
+          path="${i}"
+        fi
+      done
+
+      matched=$(expr match "${path}" '/webdav.*')
+      if [ \( "${type}" == "PUT" -o "${type}" == "DELETE" \) -a ${matched} != 0 ]
+      then
         OP="Unknown"
-        if [[ "${arr[0]}" == "201" && "${arr[1]}" == "PUT" ]] then
+        if [ "${status}" == "201" -a "${type}" == "PUT" ]
+        then
           OP="Create"
-        elif [[ "${arr[0]}" == "204" && "${arr[1]}" == "PUT" ]] then
+        elif [ "${status}" == "204" -a "${type}" == "PUT" ]
+        then
           OP="Update"
-        elif [[ "${arr[0]}" == "204" && "${arr[1]}" == "DELETE" ]] then
+        elif [ "${status}" == "204" -a "${type}" == "DELETE" ]
+        then
           OP="Delete"
         fi
-        echo "Send notification to $ENDPOINT: $OP ${arr[2]}" > /proc/self/fd/1
-        #wget -S ${ENDPOINT} 2>&1 | grep "HTTP/" | awk '{print $2}'
-        #echo "Response status: $?"  > /proc/self/fd/1
+        echo "Send notification to $ENDPOINT: $OP ${path}" > /proc/self/fd/1
+        RES_CODE=$(curl -sw "%{http_code}\n" -o /dev/null ${ENDPOINT})
+        echo "Response status: ${RES_CODE}"  > /proc/self/fd/1
       fi
     done
 {{- end }}

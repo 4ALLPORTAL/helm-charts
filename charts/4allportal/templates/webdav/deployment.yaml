@@ -147,7 +147,7 @@ spec:
           {{- end }}
           resources: {{- toYaml $.Values.webdav.resources | nindent 12 }}
         - name: shared-dav
-          image: bash
+          image: quay.io/curl/curl
           volumeMounts:
             - name: shared-dav-events
               mountPath: /dav-events
@@ -156,7 +156,7 @@ spec:
               mountPath: /usr/bin/log-handler.sh
               readOnly: true
           command: [ "/bin/sh" ]
-          args: [ "-c", "tail -f /dav-events/logfile | bash /usr/bin/log-handler.sh" ]
+          args: [ "-c", "tail -f /dav-events/logfile | ash /usr/bin/log-handler.sh" ]
       volumes:
         - name: shared-dav-events
           emptyDir: { }
