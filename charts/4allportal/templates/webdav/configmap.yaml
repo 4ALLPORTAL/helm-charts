@@ -127,7 +127,7 @@ data:
     BrowserMatch "WebDAVLib" redirect-carefully
   log-handler.sh: |
     #!/bin/ash
-    ENDPOINT="https://{{ include "common.names.fullname" . }}-backend/dav_event_handler"
+    ENDPOINT="http://{{ include "common.names.fullname" . }}-backend/dav_event_handler"
     while IFS= read -r line; do
       status=""
       type=""
