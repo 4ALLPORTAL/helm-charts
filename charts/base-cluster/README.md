@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 37.1.12](https://img.shields.io/badge/Version-37.1.12-informational?style=flat-square)
+![Version: 38.0.0](https://img.shields.io/badge/Version-38.0.0-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -207,7 +207,9 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | rbac.view.users | list | `[]` |  |
 | speedtest.enabled | bool | `true` |  |
 | speedtest.host | string | `"speedtest"` |  |
-| speedtest.repository | string | `"adolfintel/speedtest"` |  |
+| speedtest.image.registry | string | `""` |  |
+| speedtest.image.repository | string | `"adolfintel/speedtest"` |  |
+| speedtest.image.tag | string | `"latest"` |  |
 | traefik.maxReplicas | int | `8` |  |
 | traefik.minReplicas | int | `2` |  |
 | traefik.resources.limits.cpu | string | `"4"` |  |
@@ -324,3 +326,7 @@ This update removes the old security scanner estafette and installs aquasecuriti
 ### To 37.1.6
 
 You can now add an email configuration for the alertmanager. If your email server uses port 456 SMARTTLS will be disabled automaticaly. It is also possible to add custome routes for the alertmanager. For the syntax please refer to the alertmanager [documentation](https://prometheus.io/docs/alerting/latest/configuration/) or our values.schema.json.
+
+### To 38.0.0
+
+This  update upgrades the ingress controller traefik with its helm chart to 23.x.x. There are a some that you need to be aware of. The clusterrole will be renamed and the PodPolicy will be delete because it is deprecated since k8s version 1.25. In order to perform this update you have to delete the traefik deployment manualy.
