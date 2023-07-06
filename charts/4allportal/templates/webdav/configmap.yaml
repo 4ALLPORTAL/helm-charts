@@ -59,6 +59,7 @@ data:
 
     <IfModule log_config_module>
       CustomLog /proc/self/fd/1 "{\"ts\": \"%{%FT%T}t.%{msec_frac}t%{%z}t\", \"requestID\": \"%L\", \"connectionID\": \"%{c}L\", \"user\": \"%u\", \"level\": \"%l\", \"status\": \"%s\", \"method\": \"%m\", \"path\": \"%U\", \"query\": \"%q\", \"clientIP\": \"%a\", \"userAgent\": \"%{User-Agent}i\", \"bytesSent\": \"%O\", \"bytesReceived\": \"%I\"}"
+      CustomLog "| /usr/local/apache2/bin/rotatelogs -t -f -c /dav-events/logfile 300" "%s %m %U"
     </IfModule>
 
     <IfModule mime_module>
@@ -124,4 +125,23 @@ data:
     BrowserMatch " Konqueror/4" redirect-carefully
     BrowserMatch "^gvfs" redirect-carefully
     BrowserMatch "WebDAVLib" redirect-carefully
+  log-handler.sh: |
+    #!/bin/bash
+    ENDPOINT="{{ $.Values.webdav.portalNotificationEndpoint }}"
+    while IFS= read -r line; do
+      read -a arr <<< $line
+      if [[ ("${arr[1]}" == "PUT" || "${arr[1]}" == "DELETE") && "${arr[2]}" =~ ^/webdav.* ]] then
+        OP="Unknown"
+        if [[ "${arr[0]}" == "201" && "${arr[1]}" == "PUT" ]] then
+          OP="Create"
+        elif [[ "${arr[0]}" == "204" && "${arr[1]}" == "PUT" ]] then
+          OP="Update"
+        elif [[ "${arr[0]}" == "204" && "${arr[1]}" == "DELETE" ]] then
+          OP="Delete"
+        fi
+        echo "Send notification to $ENDPOINT: $OP ${arr[2]}" > /proc/self/fd/1
+        #wget -S ${ENDPOINT} 2>&1 | grep "HTTP/" | awk '{print $2}'
+        #echo "Response status: $?"  > /proc/self/fd/1
+      fi
+    done
 {{- end }}

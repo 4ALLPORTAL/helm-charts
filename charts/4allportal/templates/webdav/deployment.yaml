@@ -93,6 +93,8 @@ spec:
               name: webdav
               protocol: TCP
           volumeMounts:
+            - name: shared-dav-events
+              mountPath: /dav-events
             - name: assets
               mountPath: /dav/data/webdav/assets
             - name: config
@@ -144,7 +146,24 @@ spec:
             timeoutSeconds: {{ $.Values.webdav.readinessProbe.timeoutSeconds }}
           {{- end }}
           resources: {{- toYaml $.Values.webdav.resources | nindent 12 }}
+        - name: shared-dav
+          image: bash
+          volumeMounts:
+            - name: shared-dav-events
+              mountPath: /dav-events
+            - name: scripts
+              subPath: log-handler.sh
+              mountPath: /usr/bin/log-handler.sh
+              readOnly: true
+          command: [ "/bin/sh" ]
+          args: [ "-c", "tail -f /dav-events/logfile | bash /usr/bin/log-handler.sh" ]
       volumes:
+        - name: shared-dav-events
+          emptyDir: { }
+        - name: scripts
+          configMap:
+            name: "{{ include "common.names.fullname" $ }}-webdav"
+            defaultMode: 0555
         - name: assets
         {{- include "4allportal.fourallportal.persistence.assets.mount" $ | nindent 10 }}
         - name: config
