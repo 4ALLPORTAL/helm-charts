@@ -127,7 +127,7 @@ data:
     BrowserMatch "WebDAVLib" redirect-carefully
   log-handler.sh: |
     #!/bin/ash
-    ENDPOINT="{{ $.Values.webdav.portalNotificationEndpoint }}"
+    ENDPOINT="https://{{ include "common.names.fullname" . }}-backend/dav_event_handler"
     while IFS= read -r line; do
       status=""
       type=""
@@ -162,7 +162,7 @@ data:
           OP="Delete"
         fi
         echo "Send notification to $ENDPOINT: $OP ${path}" > /proc/self/fd/1
-        RES_CODE=$(curl -sw "%{http_code}\n" -o /dev/null ${ENDPOINT})
+        RES_CODE=$(curl -sw "%{http_code}\n" --connect-timeout 1 -o /dev/null ${ENDPOINT})
         echo "Response status: ${RES_CODE}"  > /proc/self/fd/1
       fi
     done

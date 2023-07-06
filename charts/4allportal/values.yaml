@@ -280,7 +280,6 @@ webdav:
   tolerations: []
 
   podDisruptionBudget: true
-  portalNotificationEndpoint: https://4allportal.cloud
 
 users: []
 

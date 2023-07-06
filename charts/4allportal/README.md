@@ -256,7 +256,6 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | webdav.mounts | object | `{}` |  |
 | webdav.nodeSelector | object | `{}` |  |
 | webdav.podDisruptionBudget | bool | `true` |  |
-| webdav.portalNotificationEndpoint | string | `"https://4allportal.cloud"` |  |
 | webdav.readinessProbe.enabled | bool | `true` |  |
 | webdav.readinessProbe.failureThreshold | int | `3` |  |
 | webdav.readinessProbe.initialDelaySeconds | int | `0` |  |
