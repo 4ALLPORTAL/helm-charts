@@ -159,7 +159,9 @@ spec:
           args: [ "-c", "tail -f /dav-events/logfile | ash /usr/bin/log-handler.sh" ]
       volumes:
         - name: shared-dav-events
-          emptyDir: { }
+          emptyDir:
+            medium: Memory
+            sizeLimit: 10Mi
         - name: scripts
           configMap:
             name: "{{ include "common.names.fullname" $ }}-webdav"

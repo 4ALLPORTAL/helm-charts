@@ -59,7 +59,7 @@ data:
 
     <IfModule log_config_module>
       CustomLog /proc/self/fd/1 "{\"ts\": \"%{%FT%T}t.%{msec_frac}t%{%z}t\", \"requestID\": \"%L\", \"connectionID\": \"%{c}L\", \"user\": \"%u\", \"level\": \"%l\", \"status\": \"%s\", \"method\": \"%m\", \"path\": \"%U\", \"query\": \"%q\", \"clientIP\": \"%a\", \"userAgent\": \"%{User-Agent}i\", \"bytesSent\": \"%O\", \"bytesReceived\": \"%I\"}"
-      CustomLog "| /usr/local/apache2/bin/rotatelogs -t -f -c /dav-events/logfile 300" "%s %m %U"
+      CustomLog "| /usr/local/apache2/bin/rotatelogs -t -f -c /dav-events/logfile 1M" "%s %m %U \"%{Destination}i\""
     </IfModule>
 
     <IfModule mime_module>
@@ -132,6 +132,7 @@ data:
       status=""
       type=""
       path=""
+      dest=""
 
       for i in $line
       do
@@ -144,22 +145,34 @@ data:
         elif [ "${path}" == "" ]
         then
           path="${i}"
+        elif [ "${dest}" == "" ]
+        then
+          dest="${i}"
         fi
       done
 
       matched=$(expr match "${path}" '/webdav.*')
-      if [ \( "${type}" == "PUT" -o "${type}" == "DELETE" \) -a ${matched} != 0 ]
+      if [ \( "${type}" == "PUT" -o "${type}" == "DELETE" -o "${type}" == "MKCOL" -o "${type}" == "MOVE" -o "${type}" == "COPY" \) -a ${matched} != 0 ]
       then
         OP="Unknown"
         if [ "${status}" == "201" -a "${type}" == "PUT" ]
         then
-          OP="Create"
+          OP="NEW"
+        elif [ "${status}" == "201" -a "${type}" == "MKCOL" ]
+        then
+          OP="MKDIR"
+        elif [ "${status}" == "201" -a "${type}" == "MOVE" ]
+        then
+          OP="MOVE"
+        elif [ "${status}" == "201" -a "${type}" == "COPY" ]
+        then
+          OP="COPY"
         elif [ "${status}" == "204" -a "${type}" == "PUT" ]
         then
-          OP="Update"
+          OP="EDIT"
         elif [ "${status}" == "204" -a "${type}" == "DELETE" ]
         then
-          OP="Delete"
+          OP="DELETE"
         fi
         echo "Send notification to $ENDPOINT: $OP ${path}" > /proc/self/fd/1
         RES_CODE=$(curl -sw "%{http_code}\n" --connect-timeout 1 -o /dev/null ${ENDPOINT})
