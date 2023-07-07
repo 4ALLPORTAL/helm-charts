@@ -175,8 +175,8 @@ data:
           OP="DELETE"
         fi
         echo "Send notification to $ENDPOINT: $OP ${path}" > /proc/self/fd/1
-        RES_CODE=$(curl -sw "%{http_code}\n" --connect-timeout 1 -o /dev/null ${ENDPOINT})
-        echo "Response status: ${RES_CODE}"  > /proc/self/fd/1
+        #RES_CODE=$(curl -sw "%{http_code}\n" --connect-timeout 1 -o /dev/null ${ENDPOINT})
+        #echo "Response status: ${RES_CODE}"  > /proc/self/fd/1
       fi
     done
 {{- end }}
