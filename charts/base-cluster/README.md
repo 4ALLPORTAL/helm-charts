@@ -329,4 +329,5 @@ You can now add an email configuration for the alertmanager. If your email serve
 
 ### To 38.0.0
 
+Before executing the upgrade you have to modify the traefik helmrelease and disable the podsecuritypolicy yourself. After that proceed with the following instruction.
 This  update upgrades the ingress controller traefik with its helm chart to 23.x.x. There are a some that you need to be aware of. The clusterrole will be renamed and the PodPolicy will be delete because it is deprecated since k8s version 1.25. In order to perform this update you have to delete the traefik deployment manualy.
