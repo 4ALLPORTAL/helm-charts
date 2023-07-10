@@ -93,8 +93,10 @@ spec:
               name: webdav
               protocol: TCP
           volumeMounts:
+            {{- if .Values.webdavEvent.enabled }}
             - name: shared-dav-events
               mountPath: /dav-events
+            {{ end }}
             - name: assets
               mountPath: /dav/data/webdav/assets
             - name: config
@@ -146,8 +148,9 @@ spec:
             timeoutSeconds: {{ $.Values.webdav.readinessProbe.timeoutSeconds }}
           {{- end }}
           resources: {{- toYaml $.Values.webdav.resources | nindent 12 }}
+        {{- if .Values.webdavEvent.enabled }}
         - name: shared-dav
-          image: quay.io/curl/curl
+          image: "{{ $.Values.webdavEvent.image.registry }}/{{ $.Values.webdavEvent.image.repository }}:{{ $.Values.webdavEvent.image.tag }}"
           volumeMounts:
             - name: shared-dav-events
               mountPath: /dav-events
@@ -155,13 +158,17 @@ spec:
               subPath: log-handler.sh
               mountPath: /usr/bin/log-handler.sh
               readOnly: true
+          resources: {{- toYaml $.Values.webdavEvent.resources | nindent 12 }}
           command: [ "/bin/sh" ]
           args: [ "-c", "tail -f /dav-events/logfile | ash /usr/bin/log-handler.sh" ]
+        {{ end }}
       volumes:
+        {{- if .Values.webdavEvent.enabled }}
         - name: shared-dav-events
           emptyDir:
             medium: Memory
             sizeLimit: 10Mi
+        {{ end }}
         - name: scripts
           configMap:
             name: "{{ include "common.names.fullname" $ }}-webdav"

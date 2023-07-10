@@ -281,6 +281,18 @@ webdav:
 
   podDisruptionBudget: true
 
+webdavEvent:
+  enabled: false
+  image:
+    registry: quay.io
+    repository: curl/curl
+    tag: latest
+
+  resources:
+    limits:
+      cpu: 2
+      memory: 256Mi
+
 users: []
 
 backups:
