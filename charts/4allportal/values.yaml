@@ -243,6 +243,13 @@ webdav:
     repository: httpd
     tag: 2.4.57
 
+  events:
+    enabled: false
+    image:
+      registry: quay.io
+      repository: curl/curl
+      tag: latest
+
   livenessProbe:
     enabled: true
     failureThreshold: 4
@@ -280,18 +287,6 @@ webdav:
   tolerations: []
 
   podDisruptionBudget: true
-
-webdavEvent:
-  enabled: false
-  image:
-    registry: quay.io
-    repository: curl/curl
-    tag: latest
-
-  resources:
-    limits:
-      cpu: 2
-      memory: 256Mi
 
 users: []
 

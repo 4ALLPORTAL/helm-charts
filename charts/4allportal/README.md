@@ -276,12 +276,10 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | webdav.securityOptions.hostPID | bool | `false` |  |
 | webdav.tolerations | list | `[]` |  |
 | webdav.users | object | `{}` |  |
-| webdavEvent.enabled | bool | `false` |  |
-| webdavEvent.image.registry | string | `"quay.io"` |  |
-| webdavEvent.image.repository | string | `"curl/curl"` |  |
-| webdavEvent.image.tag | string | `"latest"` |  |
-| webdavEvent.resources.limits.cpu | int | `2` |  |
-| webdavEvent.resources.limits.memory | string | `"256Mi"` |  |
+| webdav.events.enabled | bool | `false` |  |
+| webdav.events.image.registry | string | `"quay.io"` |  |
+| webdav.events.image.repository | string | `"curl/curl"` |  |
+| webdav.events.image.tag | string | `"latest"` |  |
 
 # Upgrading
 

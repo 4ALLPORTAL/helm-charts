@@ -93,7 +93,7 @@ spec:
               name: webdav
               protocol: TCP
           volumeMounts:
-            {{- if .Values.webdavEvent.enabled }}
+            {{- if .Values.webdav.events.enabled }}
             - name: shared-dav-events
               mountPath: /dav-events
             {{ end }}
@@ -148,9 +148,9 @@ spec:
             timeoutSeconds: {{ $.Values.webdav.readinessProbe.timeoutSeconds }}
           {{- end }}
           resources: {{- toYaml $.Values.webdav.resources | nindent 12 }}
-        {{- if .Values.webdavEvent.enabled }}
+        {{- if .Values.webdav.events.enabled }}
         - name: shared-dav
-          image: "{{ $.Values.webdavEvent.image.registry }}/{{ $.Values.webdavEvent.image.repository }}:{{ $.Values.webdavEvent.image.tag }}"
+          image: "{{ $.Values.webdav.events.image.registry }}/{{ $.Values.webdav.events.image.repository }}:{{ $.Values.webdav.events.image.tag }}"
           volumeMounts:
             - name: shared-dav-events
               mountPath: /dav-events
@@ -158,12 +158,18 @@ spec:
               subPath: log-handler.sh
               mountPath: /usr/bin/log-handler.sh
               readOnly: true
-          resources: {{- toYaml $.Values.webdavEvent.resources | nindent 12 }}
+          resources:
+            requests:
+              cpu: "100m"
+              memory: 24Mi
+            limits:
+              cpu: "500m"
+              memory: 32Mi
           command: [ "/bin/sh" ]
           args: [ "-c", "tail -f /dav-events/logfile | ash /usr/bin/log-handler.sh" ]
         {{ end }}
       volumes:
-        {{- if .Values.webdavEvent.enabled }}
+        {{- if .Values.webdav.events.enabled }}
         - name: shared-dav-events
           emptyDir:
             medium: Memory
