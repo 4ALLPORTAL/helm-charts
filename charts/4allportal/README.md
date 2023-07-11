@@ -243,6 +243,10 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | webdav.containerSecurityContext.runAsNonRoot | bool | `true` |  |
 | webdav.containerSecurityContext.runAsUser | int | `1000` |  |
 | webdav.enabled | bool | `false` |  |
+| webdav.events.enabled | bool | `false` |  |
+| webdav.events.image.registry | string | `"quay.io"` |  |
+| webdav.events.image.repository | string | `"curl/curl"` |  |
+| webdav.events.image.tag | string | `"latest"` |  |
 | webdav.groups | object | `{}` |  |
 | webdav.image.registry | string | `"docker.io"` |  |
 | webdav.image.repository | string | `"httpd"` |  |
@@ -276,10 +280,6 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | webdav.securityOptions.hostPID | bool | `false` |  |
 | webdav.tolerations | list | `[]` |  |
 | webdav.users | object | `{}` |  |
-| webdav.events.enabled | bool | `false` |  |
-| webdav.events.image.registry | string | `"quay.io"` |  |
-| webdav.events.image.repository | string | `"curl/curl"` |  |
-| webdav.events.image.tag | string | `"latest"` |  |
 
 # Upgrading
 
