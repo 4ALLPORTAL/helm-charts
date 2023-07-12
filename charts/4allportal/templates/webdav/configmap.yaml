@@ -149,7 +149,7 @@ data:
           path="${i}"
         elif [ "${dest}" == "" ]
         then
-          dest="${i}"
+          dest=$(echo "${i}" | awk '{i = index($1,"/webdav/"); out = substr($1, i); print out}')
         fi
       done
 
@@ -176,7 +176,13 @@ data:
         then
           OP="DELETE"
         fi
-        echo "Send notification to $ENDPOINT: $OP ${path}" > /proc/self/fd/1
+
+        if [ "${dest}" == "-" ]
+        then
+          echo "Send notification to $ENDPOINT: $OP ${path}" > /proc/self/fd/1
+        else
+          echo "Send notification to $ENDPOINT: $OP ${path} -> ${dest}" > /proc/self/fd/1
+        fi
         #RES_CODE=$(curl -sw "%{http_code}\n" --connect-timeout 1 -o /dev/null ${ENDPOINT})
         #echo "Response status: ${RES_CODE}"  > /proc/self/fd/1
       fi
