@@ -7639,6 +7639,19 @@ entries:
   simple-website:
   - apiVersion: v2
     appVersion: 1.23.3
+    created: "2023-07-14T12:37:33.270717759Z"
+    description: A simple Helm Chart to deploy a simple website
+    digest: 08353e8439b527830fbb1e2497f182775872e1c5062bf9c3086c082b031aa151
+    home: https://4allportal.com
+    maintainers:
+    - email: s.tasche@4allportal.com
+      name: tasches
+    name: simple-website
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/simple-website-1.0.1/simple-website-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: 1.23.3
     created: "2023-02-07T16:20:33.307091261Z"
     description: A simple Helm Chart to deploy a simple website
     digest: 95a6d3a087fa060d2a938cec0a24ce01ec60a4be882e66de87ecccb11ced138d
@@ -7650,4 +7663,4 @@ entries:
     urls:
     - https://github.com/4ALLPORTAL/helm-charts/releases/download/simple-website-1.0.0/simple-website-1.0.0.tgz
     version: 1.0.0
-generated: "2023-07-10T20:54:10.805266487Z"
+generated: "2023-07-14T12:37:33.271280162Z"
