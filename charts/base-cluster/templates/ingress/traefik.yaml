@@ -25,12 +25,14 @@ spec:
         kind: HelmRepository
         name: traefik
         namespace: {{ .Release.Namespace }}
-      version: 10.x.x
+      version: 23.x.x
   interval: 1m
   install:
+    crds: CreateReplace
     remediation:
       retries: -1
   upgrade:
+    crds: CreateReplace
     remediation:
       retries: -1
   values:
@@ -115,8 +117,6 @@ spec:
         preferServerCipherSuites: true
         minVersion: VersionTLS12
 
-    podSecurityPolicy:
-      enabled: true
     podSecurityContext:
       runAsUser: 65532
       runAsGroup: 65532
@@ -167,7 +167,9 @@ spec:
         - type: Resource
           resource:
             name: cpu
-            targetAverageUtilization: 90
+            target:
+              type: Utilization
+              averageUtilization: 90
 ---
   {{- if .Values.monitoring.prometheus.enabled }}
 apiVersion: v1
