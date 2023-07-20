@@ -16,6 +16,7 @@ kind: Secret
 type: kubernetes.io/service-account-token
 metadata:
   name: {{ $name }}-token-{{ $randTokenKey }}
+  namespace: {{ $.Release.Namespace }}
   annotations:
     kubernetes.io/service-account.name: {{ $name }}
 ---
