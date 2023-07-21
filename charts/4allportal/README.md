@@ -170,6 +170,8 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.mail.user | string | `""` |  |
 | fourAllPortal.metrics.enabled | bool | `true` |  |
 | fourAllPortal.metrics.serviceMonitor.enabled | bool | `true` |  |
+| fourAllPortal.middleware.enabled | bool | `false` |  |
+| fourAllPortal.middleware.ipList | list | `[]` |  |
 | fourAllPortal.nodeSelector | object | `{}` |  |
 | fourAllPortal.persistence.assets.accessMode | string | `"ReadWriteMany"` |  |
 | fourAllPortal.persistence.assets.annotations | object | `{}` |  |
