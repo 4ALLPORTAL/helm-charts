@@ -261,6 +261,51 @@
                     }
                   ]
                 },
+                "middleware": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "properties": {
+                        "enabled": {
+                          "type": "boolean"
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "ipList": {
+                          "type": "array",
+                          "additionalItems": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "oneOf": [
+                        {
+                          "properties": {
+                            "enabled": {
+                              "type": "boolean",
+                              "const": false
+                            }
+                          }
+                        },
+                        {
+                          "properties": {
+                            "enabled": {
+                              "type": "boolean",
+                              "const": true
+                            }
+                          },
+                          "required": [
+                            "ipList"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
                 "initContainers": {
                   "oneOf": [
                     {
