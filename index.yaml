@@ -3,6 +3,32 @@ entries:
   4allportal:
   - apiVersion: v2
     appVersion: 3.10.37
+    created: "2023-07-21T07:02:54.907702516Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.6.0
+    - condition: maxscale.enabled
+      name: maxscale
+      repository: https://4allportal.github.io/helm-charts
+      version: 4.1.6
+    description: A Helm chart for 4ALLPORTAL version 3.10.0 and up
+    digest: ebe867ae67d724e4396ca26397fd64b542d109e93ba1ca6c50d974050468b632
+    home: https://4allportal.com
+    icon: https://4allportal.com/wp-content/uploads/2022/07/cropped-4ap_logo.png
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: s.tasche@4allportal.com
+      name: tasches
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-19.0.46/4allportal-19.0.46.tgz
+    version: 19.0.46
+  - apiVersion: v2
+    appVersion: 3.10.37
     created: "2023-06-22T11:09:08.082481908+02:00"
     dependencies:
     - name: common
@@ -5828,6 +5854,22 @@ entries:
     version: 1.0.5
   base-cluster:
   - apiVersion: v2
+    created: "2023-07-21T07:02:55.089220643Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.6.0
+    description: A generic, base cluster setup
+    digest: 527d135918d25590ef4820745672b3f07e265f495bf466abe367b18e7b49665b
+    home: https://4allportal.com
+    maintainers:
+    - email: s.tasche@4allportal.net
+      name: tasches
+    name: base-cluster
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/base-cluster-38.0.3/base-cluster-38.0.3.tgz
+    version: 38.0.3
+  - apiVersion: v2
     created: "2023-07-20T15:32:00.954851051Z"
     dependencies:
     - name: common
@@ -6452,6 +6494,27 @@ entries:
     - https://github.com/4ALLPORTAL/helm-charts/releases/download/base-cluster-34.8.1/base-cluster-34.8.1.tgz
     version: 34.8.1
   maxscale:
+  - apiVersion: v2
+    appVersion: 23.02.2
+    created: "2023-07-21T07:02:55.287127843Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.6.0
+    - alias: mariadb
+      name: mariadb-galera
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.5.5
+    description: Deploys a maxscale mariadb-galera proxy including mariadb-galera
+    digest: c2c0dd510b568209e28533efed3be601933e955f2b9955e7e5c6d5785ebad4c0
+    maintainers:
+    - email: s.tasche@4allportal.com
+      name: tasches
+    name: maxscale
+    type: application
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/maxscale-4.1.7/maxscale-4.1.7.tgz
+    version: 4.1.7
   - apiVersion: v2
     appVersion: 23.02.2
     created: "2023-06-21T09:02:00.317472852Z"
@@ -7679,4 +7742,4 @@ entries:
     urls:
     - https://github.com/4ALLPORTAL/helm-charts/releases/download/simple-website-1.0.0/simple-website-1.0.0.tgz
     version: 1.0.0
-generated: "2023-07-20T15:32:00.956534963Z"
+generated: "2023-07-21T07:02:55.288360354Z"
