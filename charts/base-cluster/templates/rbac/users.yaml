@@ -1,6 +1,6 @@
 {{- if .Values.rbac.create }}
   {{ range $name := .Values.rbac.users }}
-  {{ $randTokenKey := randAlphaNum 5 }}
+  {{ $randTokenKey := randAlphaNum 5 | lower }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
