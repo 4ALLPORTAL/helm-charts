@@ -59,8 +59,8 @@ data:
 
     <IfModule log_config_module>
       CustomLog /proc/self/fd/1 "{\"ts\": \"%{%FT%T}t.%{msec_frac}t%{%z}t\", \"requestID\": \"%L\", \"connectionID\": \"%{c}L\", \"user\": \"%u\", \"level\": \"%l\", \"status\": \"%s\", \"method\": \"%m\", \"path\": \"%U\", \"query\": \"%q\", \"clientIP\": \"%a\", \"userAgent\": \"%{User-Agent}i\", \"bytesSent\": \"%O\", \"bytesReceived\": \"%I\"}"
-      {{- if .Values.webdav.events.enabled }}
-      CustomLog "| /usr/local/apache2/bin/rotatelogs -t -f -c /dav-events/logfile 1M" "%s %m %U %{Destination}i"
+      {{- if and ($.Values.webdav.events.enabled) (gt (int $.Values.fourAllPortal.replicas) 0) }}
+      CustomLog "| /usr/local/apache2/bin/rotatelogs -t -f -c /dav-events/logfile 1M" "%s;%m;%U;%{Destination}i"
       {{ end }}
     </IfModule>
 
@@ -129,29 +129,23 @@ data:
     BrowserMatch "WebDAVLib" redirect-carefully
   log-handler.sh: |
     #!/bin/ash
-    ENDPOINT="http://{{ include "common.names.fullname" . }}-backend/dav_event_handler"
+    ENDPOINT="http://{{ include "common.names.fullname" . }}-backend/api/extensions/dam/fs-event"
     while IFS= read -r line; do
-      status=""
-      type=""
-      path=""
-      dest=""
-
-      for i in $line
-      do
-        if [ "${status}" == "" ]
-        then
-          status="${i}"
-        elif [ "${type}" == "" ]
-        then
-          type="${i}"
-        elif [ "${path}" == "" ]
-        then
-          path="${i}"
-        elif [ "${dest}" == "" ]
-        then
-          dest=$(echo "${i}" | awk '{i = index($1,"/webdav/"); out = substr($1, i); print out}')
-        fi
-      done
+      status=$(echo "$line" | cut -d';' -f1)
+      type=$(echo "$line" | cut -d';' -f2)
+      path=$(echo "$line" | cut -d';' -f3)
+      dest=$(echo "$line" | cut -d';' -f4 | awk '{
+        i = index($1,"/webdav/");
+        out = substr($1, i);
+        for (i = 0x20; i < 0x40; ++i) {
+          repl = sprintf("%c", i);
+          if ((repl == "&") || (repl == "\\")) {
+            repl = "\\" repl;
+          }
+          out = gensub(sprintf("%%%02X", i), repl, "g", out);
+          out = gensub(sprintf("%%%02x", i), repl, "g", out);
+        };
+        print out}')
 
       matched=$(expr match "${path}" '/webdav.*')
       if [ \( "${type}" == "PUT" -o "${type}" == "DELETE" -o "${type}" == "MKCOL" -o "${type}" == "MOVE" -o "${type}" == "COPY" \) -a ${matched} != 0 ]
@@ -159,31 +153,36 @@ data:
         OP="Unknown"
         if [ "${status}" == "201" -a "${type}" == "PUT" ]
         then
-          OP="NEW"
+          OP="CREATE"
         elif [ "${status}" == "201" -a "${type}" == "MKCOL" ]
         then
-          OP="MKDIR"
+          OP="CREATE"
         elif [ "${status}" == "201" -a "${type}" == "MOVE" ]
         then
           OP="MOVE"
         elif [ "${status}" == "201" -a "${type}" == "COPY" ]
         then
-          OP="COPY"
+          OP="CREATE"
         elif [ "${status}" == "204" -a "${type}" == "PUT" ]
         then
-          OP="EDIT"
+          OP="UPDATE"
         elif [ "${status}" == "204" -a "${type}" == "DELETE" ]
         then
           OP="DELETE"
         fi
-
+        BODY="{}"
         if [ "${dest}" == "-" ]
         then
-          echo "Send notification to $ENDPOINT: $OP ${path}" > /proc/self/fd/1
+          BODY="{\"mount\":\"mount\",\"operation\":\"$OP\",\"path\":\"$path\"}"
+          echo "Send notification to $ENDPOINT: $BODY" > /proc/self/fd/1
         else
-          echo "Send notification to $ENDPOINT: $OP ${path} -> ${dest}" > /proc/self/fd/1
+          BODY="{\"mount\":\"mount\",\"operation\":\"$OP\",\"path\":\"$path\",\"destination\":\"$dest\"}"
+          echo "Send notification to $ENDPOINT: $BODY" > /proc/self/fd/1
         fi
-        #RES_CODE=$(curl -sw "%{http_code}\n" --connect-timeout 1 -o /dev/null ${ENDPOINT})
+        #RES_CODE=$(curl -X POST -sw "%{http_code}\n" \
+        #  -H 'Content-Type: application/json' \
+        #  -d "$BODY" \
+        #  --connect-timeout 1 -o /dev/null ${ENDPOINT})
         #echo "Response status: ${RES_CODE}"  > /proc/self/fd/1
       fi
     done
