@@ -65,6 +65,37 @@
             }
           }
         },
+        "topologySpreadConstraints": {
+          "required": [
+            "zone",
+            "node"
+          ],
+          "type": "object",
+          "properties": {
+            "zone": {
+              "type": "object",
+              "required": [
+                "maxSkew"
+              ],
+              "properties": {
+                "maxSkew": {
+                  "type": "integer"
+                }
+              }
+            },
+            "node": {
+              "type": "object",
+              "required": [
+                "maxSkew"
+              ],
+              "properties": {
+                "maxSkew": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        },
         "mariadb": {
           "type": "object",
           "$ref": "https://raw.githubusercontent.com/bitnami/charts/master/bitnami/mariadb-galera/values.schema.json"
