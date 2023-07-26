@@ -1,6 +1,6 @@
 # maxscale
 
-![Version: 4.1.7](https://img.shields.io/badge/Version-4.1.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 23.02.2](https://img.shields.io/badge/AppVersion-23.02.2-informational?style=flat-square)
+![Version: 4.1.9](https://img.shields.io/badge/Version-4.1.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 23.02.2](https://img.shields.io/badge/AppVersion-23.02.2-informational?style=flat-square)
 
 Deploys a maxscale mariadb-galera proxy including mariadb-galera
 
@@ -102,6 +102,8 @@ Deploys a maxscale mariadb-galera proxy including mariadb-galera
 | securityOptions.hostIPC | bool | `false` |  |
 | securityOptions.hostNetwork | bool | `false` |  |
 | securityOptions.hostPID | bool | `false` |  |
+| topologySpreadConstraints.node.maxSkew | int | `1` |  |
+| topologySpreadConstraints.zone.maxSkew | int | `1` |  |
 
 # Upgrading
 
