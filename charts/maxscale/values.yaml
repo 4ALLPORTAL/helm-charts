@@ -20,6 +20,12 @@ image:
 replicas: 2
 enterpriseLicensed: false
 
+topologySpreadConstraints:
+  zone:
+    maxSkew: 1
+  node:
+    maxSkew: 1
+
 hpa:
   enabled: false
   minReplicas: 2

@@ -24,12 +24,12 @@ spec:
       affinity:
         podAffinity: {{- include "common.affinities.pods.soft" (dict "component" "" "extraMatchLabels" (dict) "context" (dict "Release" .Release "Chart" (dict "Name" "mariadb") "Values" .Values.mariadb)) | nindent 10 }}
       topologySpreadConstraints:
-        - maxSkew: 1
+        - maxSkew: {{ .Values.topologySpreadConstraints.zone.maxSkew }}
           topologyKey: topology.kubernetes.io/zone
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels: {{- include "common.labels.matchLabels" $ | nindent 14 }}
-        - maxSkew: 1
+        - maxSkew: {{ .Values.topologySpreadConstraints.node }}
           topologyKey: kubernetes.io/hostname
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
