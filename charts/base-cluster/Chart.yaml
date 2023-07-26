@@ -1,7 +1,7 @@
 apiVersion: v2
 description: A generic, base cluster setup
 name: base-cluster
-version: 38.0.3
+version: 38.0.4
 home: "https://4allportal.com"
 maintainers:
   - name: tasches
