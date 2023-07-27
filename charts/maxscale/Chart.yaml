@@ -2,7 +2,7 @@ apiVersion: v2
 name: maxscale
 description: Deploys a maxscale mariadb-galera proxy including mariadb-galera
 type: application
-version: 4.1.9
+version: 4.1.10
 appVersion: 23.02.2
 maintainers:
   - name: tasches
