@@ -1,6 +1,7 @@
 {{- if .Values.rbac.create }}
   {{ range $name := .Values.rbac.users }}
   {{ $randTokenKey := randAlphaNum 5 | lower }}
+  {{- if not (lookup "v1" "ServiceAccount" $.Release.Namespace $name).secrets }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -20,5 +21,6 @@ metadata:
   annotations:
     kubernetes.io/service-account.name: {{ $name }}
 ---
+{{ end }}
 {{ end }}
   {{- end }}
