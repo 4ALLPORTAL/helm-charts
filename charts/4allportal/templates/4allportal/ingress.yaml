@@ -12,7 +12,7 @@ metadata:
   annotations:
     ingress.kubernetes.io/ssl-redirect: "true"
     {{- if .Values.fourAllPortal.middleware.enabled }}
-    traefik.ingress.kubernetes.io/router.middlewares: {{ $.Release.Namespace }}-internal-access@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: {{ $.Release.Namespace }}-{{ $.Release.Name }}-internal-access@kubernetescrd
     {{- end }}
   {{- with .Values.fourAllPortal.ingress.annotations }}
   {{- toYaml . | nindent 4 }}
