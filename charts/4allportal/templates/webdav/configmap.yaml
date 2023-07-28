@@ -129,6 +129,9 @@ data:
     BrowserMatch "WebDAVLib" redirect-carefully
   log-handler.sh: |
     #!/bin/ash
+    MOUNT_POINT="{{ $.Values.webdav.events.mountPath }}"
+    MOUNT_POINT_LEN=$(echo "$MOUNT_POINT" | awk '{print length($1) + 1;}')
+
     ENDPOINT="http://{{ include "common.names.fullname" . }}-backend/api/extensions/dam/fs-event"
     while IFS= read -r line; do
       status=$(echo "$line" | cut -d';' -f1)
@@ -145,11 +148,18 @@ data:
           out = gensub(sprintf("%%%02X", i), repl, "g", out);
           out = gensub(sprintf("%%%02x", i), repl, "g", out);
         };
+        out = gensub(/\"/, "\\\"", "g", out);
         print out}')
 
-      matched=$(expr match "${path}" '/webdav.*')
+      matched=$(expr match "${path}" "$MOUNT_POINT.*")
       if [ \( "${type}" == "PUT" -o "${type}" == "DELETE" -o "${type}" == "MKCOL" -o "${type}" == "MOVE" -o "${type}" == "COPY" \) -a ${matched} != 0 ]
       then
+        path=$(echo "$path" | cut -c ${MOUNT_POINT_LEN}- )
+        if [ "${dest}" != "-" -a "${dest}" != "" ]
+        then
+          dest=$(echo "$dest" | cut -c ${MOUNT_POINT_LEN}- )
+        fi
+
         OP="Unknown"
         if [ "${status}" == "201" -a "${type}" == "PUT" ]
         then
@@ -171,13 +181,13 @@ data:
           OP="DELETE"
         fi
         BODY="{}"
-        if [ "${dest}" == "-" ]
+        if [ "${dest}" == "-" -o "${dest}" == "" ]
         then
-          BODY="{\"mount\":\"mount\",\"operation\":\"$OP\",\"path\":\"$path\"}"
-          echo "Send notification to $ENDPOINT: $BODY" > /proc/self/fd/1
+          BODY="{\"mount\":\"${MOUNT_POINT}\",\"operation\":\"$OP\",\"path\":\"${path}\"}"
+          echo "Send notification to ${ENDPOINT}: ${BODY}" > /proc/self/fd/1
         else
-          BODY="{\"mount\":\"mount\",\"operation\":\"$OP\",\"path\":\"$path\",\"destination\":\"$dest\"}"
-          echo "Send notification to $ENDPOINT: $BODY" > /proc/self/fd/1
+          BODY="{\"mount\":\"${MOUNT_POINT}\",\"operation\":\"$OP\",\"path\":\"${path}\",\"destination\":\"${dest}\"}"
+          echo "Send notification to ${ENDPOINT}: ${BODY}" > /proc/self/fd/1
         fi
         #RES_CODE=$(curl -X POST -sw "%{http_code}\n" \
         #  -H 'Content-Type: application/json' \
@@ -186,4 +196,4 @@ data:
         #echo "Response status: ${RES_CODE}"  > /proc/self/fd/1
       fi
     done
-{{- end }}
+    {{- end }}

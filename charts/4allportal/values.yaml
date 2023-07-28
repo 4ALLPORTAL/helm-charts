@@ -245,6 +245,7 @@ webdav:
 
   events:
     enabled: false
+    mountPath: /webdav/assets/
     image:
       registry: quay.io
       repository: curl/curl
