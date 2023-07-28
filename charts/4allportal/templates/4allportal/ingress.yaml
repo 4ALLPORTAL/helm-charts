@@ -11,7 +11,7 @@ metadata:
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
   annotations:
     ingress.kubernetes.io/ssl-redirect: "true"
-    {{- if .Values.fourAllPortal.middleware.enabled }}
+    {{- if .Values.fourAllPortal.ipWhitelist.enabled }}
     traefik.ingress.kubernetes.io/router.middlewares: {{ $.Release.Namespace }}-{{ $.Release.Name }}-internal-access@kubernetescrd
     {{- end }}
   {{- with .Values.fourAllPortal.ingress.annotations }}

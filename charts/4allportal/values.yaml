@@ -112,9 +112,10 @@ fourAllPortal:
   general:
     admin:
       username: administrator
-      firstName: ""
-      lastName: ""
-      password: ""
+      firstName: "a"
+      lastName: "a"
+      password: "a"
+      email: a@a.de
     defaultLanguage: en_US
 
   mail:
@@ -149,14 +150,15 @@ fourAllPortal:
     enabled: false
     existingCertificate: {}
     endpointMonitor:
-      enabled: false
+      enabled: true
     additionalHosts: {}
     host: ""
     annotations: {}
 
-  middleware:
-    enabled: false
-    ipList: []
+  ipWhitelist:
+    enabled: true
+    ipList:
+      - 1.2.3.4
 
   nodeSelector: {}
   hostAliases: []
@@ -339,7 +341,13 @@ maxscale:
   hpa:
     enabled: false
   mariadb:
+    rootUser:
+      password: a
+    galera:
+      mariabackup:
+        password: a
     db:
       name: 4allportal
       user: 4allportal
+      password: a
     podDisruptionBudget: {}

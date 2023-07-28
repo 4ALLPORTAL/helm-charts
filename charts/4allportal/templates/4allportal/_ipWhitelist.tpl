@@ -1,4 +1,4 @@
-{{- define "middleware.utr.main" -}}
+{{- define "ipWhitelist.utr.main" -}}
 - 69.162.124.224/28
 - 63.143.42.240/28
 - 216.245.221.80/28
@@ -6,7 +6,7 @@
 - 216.144.248.16/28
 {{- end -}}
 
-{{- define "middleware.utr.secondary" -}}
+{{- define "ipWhitelist.utr.secondary" -}}
 - 104.131.107.63
 - 122.248.234.23
 - 128.199.195.156

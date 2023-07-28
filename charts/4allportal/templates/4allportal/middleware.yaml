@@ -1,4 +1,4 @@
-{{- if and (.Values.fourAllPortal.middleware.enabled) (gt (.Values.fourAllPortal.middleware.ipList | len) 0) }}
+{{- if and (.Values.fourAllPortal.ipWhitelist.enabled) (gt (.Values.fourAllPortal.ipWhitelist.ipList | len) 0) }}
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
@@ -7,10 +7,10 @@ metadata:
 spec:
   ipWhiteList:
     sourceRange:
-      # List of IPs to whitelist {{- .Values.fourAllPortal.middleware.ipList | toYaml | nindent 6 }}
+      # List of IPs to whitelist {{- .Values.fourAllPortal.ipWhitelist.ipList | toYaml | nindent 6 }}
     {{ if .Values.fourAllPortal.ingress.endpointMonitor.enabled }}
-      # UptimeRobot Main Servers (USA only) {{- include "middleware.utr.main" . | nindent 6 }}
+      # UptimeRobot Main Servers (USA only) {{- include "ipWhitelist.utr.main" . | nindent 6 }}
 
-      # UptimeRobot Secondary Servers (World-Wide) {{- include "middleware.utr.secondary" . | nindent 6 }}
+      # UptimeRobot Secondary Servers (World-Wide) {{- include "ipWhitelist.utr.secondary" . | nindent 6 }}
     {{- end }}
 {{- end }}

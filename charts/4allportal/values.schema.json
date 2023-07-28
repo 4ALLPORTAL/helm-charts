@@ -261,7 +261,7 @@
                     }
                   ]
                 },
-                "middleware": {
+                "ipWhitelist": {
                   "type": "object",
                   "allOf": [
                     {
