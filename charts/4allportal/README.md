@@ -244,6 +244,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | webdav.containerSecurityContext.runAsUser | int | `1000` |  |
 | webdav.enabled | bool | `false` |  |
 | webdav.events.enabled | bool | `false` |  |
+| webdav.events.mountPath | string | `/webdav/assets/` |  |
 | webdav.events.image.registry | string | `"quay.io"` |  |
 | webdav.events.image.repository | string | `"curl/curl"` |  |
 | webdav.events.image.tag | string | `"latest"` |  |

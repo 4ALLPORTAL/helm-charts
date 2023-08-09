@@ -130,7 +130,7 @@ data:
   log-handler.sh: |
     #!/bin/ash
     MOUNT_POINT="{{ $.Values.webdav.events.mountPath }}"
-    MOUNT_POINT_LEN=$(echo "$MOUNT_POINT" | awk '{print length($1) + 1;}')
+    MOUNT_POINT_LEN=$(echo "$MOUNT_POINT" | awk '{print length($1);}')
 
     ENDPOINT="http://{{ include "common.names.fullname" . }}-backend/api/extensions/dam/fs-event"
     while IFS= read -r line; do
@@ -160,7 +160,7 @@ data:
           dest=$(echo "$dest" | cut -c ${MOUNT_POINT_LEN}- )
         fi
 
-        OP="Unknown"
+        OP="UNKNOWN"
         if [ "${status}" == "201" -a "${type}" == "PUT" ]
         then
           OP="CREATE"
