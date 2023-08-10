@@ -92,6 +92,7 @@ data:
       DavDepthInfinity On
       DavMinTimeout 600
       DirectorySlash Off
+      LimitRequestBody 4294967296
 
       Options Indexes FollowSymLinks MultiViews
 

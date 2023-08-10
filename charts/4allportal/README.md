@@ -16,8 +16,8 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://4allportal.github.io/helm-charts | maxscale | 4.1.6 |
-| https://charts.bitnami.com/bitnami | common | 2.4.0 |
+| https://4allportal.github.io/helm-charts | maxscale | 4.1.7 |
+| https://charts.bitnami.com/bitnami | common | 2.6.0 |
 
 ## Values
 

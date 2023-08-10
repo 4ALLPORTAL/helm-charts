@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: "1.23.3"
 description: A simple Helm Chart to deploy a simple website
 name: simple-website
-version: 1.0.0
+version: 1.0.1
 
 home: https://4allportal.com
 maintainers:
