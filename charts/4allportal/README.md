@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 19.0.48](https://img.shields.io/badge/Version-19.0.48-informational?style=flat-square) ![AppVersion: 3.10.37](https://img.shields.io/badge/AppVersion-3.10.37-informational?style=flat-square)
+![Version: 19.1.0](https://img.shields.io/badge/Version-19.1.0-informational?style=flat-square) ![AppVersion: 3.10.37](https://img.shields.io/badge/AppVersion-3.10.37-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -243,6 +243,11 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | webdav.containerSecurityContext.runAsNonRoot | bool | `true` |  |
 | webdav.containerSecurityContext.runAsUser | int | `1000` |  |
 | webdav.enabled | bool | `false` |  |
+| webdav.events.enabled | bool | `false` |  |
+| webdav.events.image.registry | string | `"quay.io"` |  |
+| webdav.events.image.repository | string | `"curl/curl"` |  |
+| webdav.events.image.tag | string | `"latest"` |  |
+| webdav.events.mountPath | string | `"/webdav/assets/"` |  |
 | webdav.groups | object | `{}` |  |
 | webdav.image.registry | string | `"docker.io"` |  |
 | webdav.image.repository | string | `"httpd"` |  |
