@@ -243,6 +243,14 @@ webdav:
     repository: httpd
     tag: 2.4.57
 
+  events:
+    enabled: false
+    mountPath: /webdav/assets/
+    image:
+      registry: quay.io
+      repository: curl/curl
+      tag: latest
+
   livenessProbe:
     enabled: true
     failureThreshold: 4

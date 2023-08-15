@@ -93,6 +93,10 @@ spec:
               name: webdav
               protocol: TCP
           volumeMounts:
+            {{- if and ($.Values.webdav.events.enabled) (gt (int $.Values.fourAllPortal.replicas) 0) }}
+            - name: shared-dav-events
+              mountPath: /dav-events
+            {{ end }}
             - name: assets
               mountPath: /dav/data/webdav/assets
             - name: config
@@ -144,7 +148,37 @@ spec:
             timeoutSeconds: {{ $.Values.webdav.readinessProbe.timeoutSeconds }}
           {{- end }}
           resources: {{- toYaml $.Values.webdav.resources | nindent 12 }}
+        {{- if and ($.Values.webdav.events.enabled) (gt (int $.Values.fourAllPortal.replicas) 0) }}
+        - name: shared-dav
+          image: "{{ $.Values.webdav.events.image.registry }}/{{ $.Values.webdav.events.image.repository }}:{{ $.Values.webdav.events.image.tag }}"
+          volumeMounts:
+            - name: shared-dav-events
+              mountPath: /dav-events
+            - name: scripts
+              subPath: log-handler.sh
+              mountPath: /usr/bin/log-handler.sh
+              readOnly: true
+          resources:
+            requests:
+              cpu: "100m"
+              memory: 24Mi
+            limits:
+              cpu: "500m"
+              memory: 32Mi
+          command: [ "/bin/sh" ]
+          args: [ "-c", "tail -f /dav-events/logfile | ash /usr/bin/log-handler.sh" ]
+        {{ end }}
       volumes:
+        {{- if and ($.Values.webdav.events.enabled) (gt (int $.Values.fourAllPortal.replicas) 0) }}
+        - name: shared-dav-events
+          emptyDir:
+            medium: Memory
+            sizeLimit: 10Mi
+        {{ end }}
+        - name: scripts
+          configMap:
+            name: "{{ include "common.names.fullname" $ }}-webdav"
+            defaultMode: 0555
         - name: assets
         {{- include "4allportal.fourallportal.persistence.assets.mount" $ | nindent 10 }}
         - name: config
