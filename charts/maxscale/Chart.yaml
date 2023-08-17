@@ -5,8 +5,8 @@ type: application
 version: 4.1.11
 appVersion: 23.02.2
 maintainers:
-  - name: tasches
-    email: s.tasche@4allportal.com
+  - name: jpkraemer-mg
+    email: j.kraemer@4allportal.com
 
 dependencies:
   - name: common

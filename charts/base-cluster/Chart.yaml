@@ -4,8 +4,8 @@ name: base-cluster
 version: 38.0.7
 home: "https://4allportal.com"
 maintainers:
-  - name: tasches
-    email: s.tasche@4allportal.net
+  - name: jpkraemer-mg
+    email: j.kraemer@4allportal.com
 dependencies:
   - name: common
     repository: https://charts.bitnami.com/bitnami

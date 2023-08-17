@@ -10,8 +10,8 @@ keywords:
   - MAM
 home: https://4allportal.com
 maintainers:
-  - name: tasches
-    email: s.tasche@4allportal.com
+  - name: jpkraemer-mg
+    email: j.kraemer@4allportal.com
 
 dependencies:
   - name: common
