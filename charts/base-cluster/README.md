@@ -10,7 +10,7 @@ A generic, base cluster setup
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| tasches | <s.tasche@4allportal.net> |  |
+| jpkraemer-mg | <j.kraemer@4allportal.com> |  |
 
 ## Requirements
 

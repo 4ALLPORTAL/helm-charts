@@ -8,7 +8,7 @@ Deploys a maxscale mariadb-galera proxy including mariadb-galera
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| tasches | <s.tasche@4allportal.com> |  |
+| jpkraemer-mg | <j.kraemer@4allportal.com> |  |
 
 ## Requirements
 

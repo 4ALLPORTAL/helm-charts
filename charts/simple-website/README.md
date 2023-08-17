@@ -10,7 +10,7 @@ A simple Helm Chart to deploy a simple website
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| tasches | <s.tasche@4allportal.com> |  |
+| jpkraemer-mg | <j.kraemer@4allportal.com> |  |
 
 ## Values
 

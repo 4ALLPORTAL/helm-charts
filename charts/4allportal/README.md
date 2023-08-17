@@ -10,7 +10,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| tasches | <s.tasche@4allportal.com> |  |
+| jpkraemer-mg | <j.kraemer@4allportal.com> |  |
 
 ## Requirements
 
