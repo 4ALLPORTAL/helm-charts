@@ -1,6 +1,6 @@
 # simple-website
 
-![Version: 1.0.1](https://img.shields.io/badge/Version-1.0.1-informational?style=flat-square) ![AppVersion: 1.23.3](https://img.shields.io/badge/AppVersion-1.23.3-informational?style=flat-square)
+![Version: 1.0.2](https://img.shields.io/badge/Version-1.0.2-informational?style=flat-square) ![AppVersion: 1.23.3](https://img.shields.io/badge/AppVersion-1.23.3-informational?style=flat-square)
 
 A simple Helm Chart to deploy a simple website
 
@@ -10,7 +10,7 @@ A simple Helm Chart to deploy a simple website
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| tasches | <s.tasche@4allportal.com> |  |
+| jpkraemer-mg | <j.kraemer@4allportal.com> |  |
 
 ## Values
 

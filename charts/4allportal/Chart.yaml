@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: "3.10.37"
 description: A Helm chart for 4ALLPORTAL version 3.10.0 and up
 name: 4allportal
-version: 19.1.1
+version: 19.1.2
 icon: https://4allportal.com/wp-content/uploads/2022/07/cropped-4ap_logo.png
 keywords:
   - 4ALLPORTAL
@@ -10,13 +10,13 @@ keywords:
   - MAM
 home: https://4allportal.com
 maintainers:
-  - name: tasches
-    email: s.tasche@4allportal.com
+  - name: jpkraemer-mg
+    email: j.kraemer@4allportal.com
 
 dependencies:
   - name: common
     repository: https://charts.bitnami.com/bitnami
-    version: 2.6.0
+    version: 2.8.0
   - repository: https://4allportal.github.io/helm-charts
     name: maxscale
     version: 4.1.10
