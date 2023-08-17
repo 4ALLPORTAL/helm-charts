@@ -1,7 +1,5 @@
 {{- if .Values.rbac.create }}
   {{ range $name := .Values.rbac.users }}
-  {{ $randTokenKey := randAlphaNum 5 | lower }}
-  {{- if not (lookup "v1" "ServiceAccount" $.Release.Namespace $name).secrets }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -9,8 +7,6 @@ metadata:
   namespace: {{ $.Release.Namespace }}
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
     user: {{ $name }}
-#secrets:
-#  - name: {{ $name }}-token-{{ $randTokenKey }}
 ---
 apiVersion: v1
 kind: Secret
