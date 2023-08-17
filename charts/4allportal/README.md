@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 19.1.2](https://img.shields.io/badge/Version-19.1.2-informational?style=flat-square) ![AppVersion: 3.10.37](https://img.shields.io/badge/AppVersion-3.10.37-informational?style=flat-square)
+![Version: 19.1.3](https://img.shields.io/badge/Version-19.1.3-informational?style=flat-square) ![AppVersion: 3.10.37](https://img.shields.io/badge/AppVersion-3.10.37-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -16,7 +16,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://4allportal.github.io/helm-charts | maxscale | 4.1.10 |
+| https://4allportal.github.io/helm-charts | maxscale | 4.1.11 |
 | https://charts.bitnami.com/bitnami | common | 2.8.0 |
 
 ## Values
