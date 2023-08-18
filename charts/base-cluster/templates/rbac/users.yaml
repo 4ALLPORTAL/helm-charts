@@ -8,7 +8,7 @@ metadata:
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
     user: {{ $name }}
 secrets:
-  - {{ $name }}
+  - name: {{ $name }}
 ---
 apiVersion: v1
 kind: Secret
