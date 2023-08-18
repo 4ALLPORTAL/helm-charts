@@ -1,6 +1,5 @@
 {{- if .Values.rbac.create }}
   {{ range $name := .Values.rbac.users }}
-  {{ $randTokenKey := randAlphaNum 5 | lower }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -9,13 +8,13 @@ metadata:
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
     user: {{ $name }}
 secrets:
-  - name: {{ $name }}-token-{{ $randTokenKey }}
+  - name: {{ $name }}
 ---
 apiVersion: v1
 kind: Secret
 type: kubernetes.io/service-account-token
 metadata:
-  name: {{ $name }}-token-{{ $randTokenKey }}
+  name: {{ $name }}
   namespace: {{ $.Release.Namespace }}
   annotations:
     kubernetes.io/service-account.name: {{ $name }}
