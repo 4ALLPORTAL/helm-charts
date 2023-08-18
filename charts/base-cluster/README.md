@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 38.0.6](https://img.shields.io/badge/Version-38.0.6-informational?style=flat-square)
+![Version: 38.0.7](https://img.shields.io/badge/Version-38.0.7-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -10,13 +10,13 @@ A generic, base cluster setup
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| tasches | <s.tasche@4allportal.net> |  |
+| jpkraemer-mg | <j.kraemer@4allportal.com> |  |
 
 ## Requirements
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | common | 2.6.0 |
+| https://charts.bitnami.com/bitnami | common | 2.8.0 |
 
 This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/installation)
 
@@ -78,7 +78,7 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | global.clusterName | string | `"eu-west-1"` |  |
 | global.helm.image.registry | string | `"docker.io"` |  |
 | global.helm.image.repository | string | `"alpine/helm"` |  |
-| global.helm.image.tag | string | `"3.12.1"` |  |
+| global.helm.image.tag | string | `"3.12.3"` |  |
 | global.imageCredentials | object | `{}` |  |
 | global.imageRegistry | string | `""` |  |
 | global.kubectl.image.registry | string | `"docker.io"` |  |

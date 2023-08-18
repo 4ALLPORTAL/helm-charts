@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 19.0.48](https://img.shields.io/badge/Version-19.0.48-informational?style=flat-square) ![AppVersion: 3.10.37](https://img.shields.io/badge/AppVersion-3.10.37-informational?style=flat-square)
+![Version: 19.1.3](https://img.shields.io/badge/Version-19.1.3-informational?style=flat-square) ![AppVersion: 3.10.37](https://img.shields.io/badge/AppVersion-3.10.37-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -10,14 +10,14 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| tasches | <s.tasche@4allportal.com> |  |
+| jpkraemer-mg | <j.kraemer@4allportal.com> |  |
 
 ## Requirements
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://4allportal.github.io/helm-charts | maxscale | 4.1.7 |
-| https://charts.bitnami.com/bitnami | common | 2.6.0 |
+| https://4allportal.github.io/helm-charts | maxscale | 4.1.11 |
+| https://charts.bitnami.com/bitnami | common | 2.8.0 |
 
 ## Values
 
@@ -243,6 +243,11 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | webdav.containerSecurityContext.runAsNonRoot | bool | `true` |  |
 | webdav.containerSecurityContext.runAsUser | int | `1000` |  |
 | webdav.enabled | bool | `false` |  |
+| webdav.events.enabled | bool | `false` |  |
+| webdav.events.image.registry | string | `"quay.io"` |  |
+| webdav.events.image.repository | string | `"curl/curl"` |  |
+| webdav.events.image.tag | string | `"latest"` |  |
+| webdav.events.mountPath | string | `"/webdav/assets/"` |  |
 | webdav.groups | object | `{}` |  |
 | webdav.image.registry | string | `"docker.io"` |  |
 | webdav.image.repository | string | `"httpd"` |  |

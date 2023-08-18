@@ -59,6 +59,9 @@ data:
 
     <IfModule log_config_module>
       CustomLog /proc/self/fd/1 "{\"ts\": \"%{%FT%T}t.%{msec_frac}t%{%z}t\", \"requestID\": \"%L\", \"connectionID\": \"%{c}L\", \"user\": \"%u\", \"level\": \"%l\", \"status\": \"%s\", \"method\": \"%m\", \"path\": \"%U\", \"query\": \"%q\", \"clientIP\": \"%a\", \"userAgent\": \"%{User-Agent}i\", \"bytesSent\": \"%O\", \"bytesReceived\": \"%I\"}"
+      {{- if and ($.Values.webdav.events.enabled) (gt (int $.Values.fourAllPortal.replicas) 0) }}
+      CustomLog "| /usr/local/apache2/bin/rotatelogs -t -f -c /dav-events/logfile 1M" "%s;%m;%U;%{Destination}i"
+      {{ end }}
     </IfModule>
 
     <IfModule mime_module>
@@ -125,4 +128,79 @@ data:
     BrowserMatch " Konqueror/4" redirect-carefully
     BrowserMatch "^gvfs" redirect-carefully
     BrowserMatch "WebDAVLib" redirect-carefully
-{{- end }}
+  log-handler.sh: |
+    #!/bin/ash
+    MOUNT_POINT="{{ $.Values.webdav.events.mountPath }}"
+    MOUNT_POINT_LEN=$(echo "$MOUNT_POINT" | awk '{print length($1) + 1;}')
+
+    ENDPOINT="http://{{ include "common.names.fullname" . }}-backend/api/extensions/dam/fs-event"
+    while IFS= read -r line; do
+      status=$(echo "$line" | cut -d';' -f1)
+      type=$(echo "$line" | cut -d';' -f2)
+      path=$(echo "$line" | cut -d';' -f3)
+      dest=$(echo "$line" | cut -d';' -f4 | awk '{
+        i = index($1,"/webdav/");
+        out = substr($1, i);
+        for (i = 0x20; i < 0x40; ++i) {
+          repl = sprintf("%c", i);
+          if ((repl == "&") || (repl == "\\")) {
+            repl = "\\" repl;
+          }
+          out = gensub(sprintf("%%%02X", i), repl, "g", out);
+          out = gensub(sprintf("%%%02x", i), repl, "g", out);
+        };
+        out = gensub(/\"/, "\\\"", "g", out);
+        print out}')
+
+      matched=$(expr match "${path}" "$MOUNT_POINT.*")
+      if [ \( "${type}" == "PUT" -o "${type}" == "DELETE" -o "${type}" == "MKCOL" -o "${type}" == "MOVE" -o "${type}" == "COPY" \) -a ${matched} != 0 ]
+      then
+        path=$(echo "$path" | cut -c ${MOUNT_POINT_LEN}- )
+        if [ "${dest}" != "-" -a "${dest}" != "" ]
+        then
+          dest=$(echo "$dest" | cut -c ${MOUNT_POINT_LEN}- )
+        fi
+
+        lastChar=$(echo "$path" | awk '{print substr($0,length,1)}')
+        if [ "$lastChar" = "/" ]
+        then
+          path=$(echo "$path" | awk '{print substr($0,0,length($0)-1)}')
+        fi
+
+        OP="UNKNOWN"
+        if [ "${status}" == "201" -a "${type}" == "PUT" ]
+        then
+          OP="CREATE"
+        elif [ "${status}" == "201" -a "${type}" == "MKCOL" ]
+        then
+          OP="CREATE"
+        elif [ "${status}" == "201" -a "${type}" == "MOVE" ]
+        then
+          OP="MOVE"
+        elif [ "${status}" == "201" -a "${type}" == "COPY" ]
+        then
+          OP="CREATE"
+        elif [ "${status}" == "204" -a "${type}" == "PUT" ]
+        then
+          OP="UPDATE"
+        elif [ "${status}" == "204" -a "${type}" == "DELETE" ]
+        then
+          OP="DELETE"
+        fi
+        BODY="{}"
+        if [ "${dest}" == "-" -o "${dest}" == "" ]
+        then
+          BODY="{\"mount\":\"${MOUNT_POINT}\",\"operation\":\"$OP\",\"path\":\"${path}\"}"
+          echo "Send notification to ${ENDPOINT}: ${BODY}" > /proc/self/fd/1
+        else
+          BODY="{\"mount\":\"${MOUNT_POINT}\",\"operation\":\"$OP\",\"path\":\"${path}\",\"destination\":\"${dest}\"}"
+          echo "Send notification to ${ENDPOINT}: ${BODY}" > /proc/self/fd/1
+        fi
+        #RES_CODE=$(curl -X POST -sw "%{http_code}\n" \
+        #  -H 'Content-Type: application/json' \
+        #  -d "$BODY" \
+        #  --connect-timeout 1 -o /dev/null ${ENDPOINT})
+        #echo "Response status: ${RES_CODE}"  > /proc/self/fd/1
+      fi
+    done
+    {{- end }}
