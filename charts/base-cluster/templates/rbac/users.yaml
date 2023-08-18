@@ -19,6 +19,5 @@ metadata:
   annotations:
     kubernetes.io/service-account.name: {{ $name }}
 ---
-{{ end }}
-{{ end }}
-  {{- end }}
+{{- end -}}
+{{- end -}}
