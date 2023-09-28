@@ -61,11 +61,6 @@ spec:
           {{- end }}
           env:
             {{- $apps := dict -}}
-            {{- if regexMatch "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$" .Values.fourAllPortal.image.tag }}
-            {{- if semverCompare ">=4.0.0-0" .Values.fourAllPortal.image.tag -}}
-            {{- $apps = set $apps "4allportal-k8s-cluster-restart" "1.0.0" -}}
-            {{- end -}}
-            {{- end -}}
             {{- if .Values.fourAllPortal.fourApps -}}
             {{- range $app, $version := .Values.fourAllPortal.fourApps -}}
             {{- $apps = set $apps $app $version -}}
