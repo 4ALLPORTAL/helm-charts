@@ -16,7 +16,7 @@
 {{- end -}}
 {{- end -}}
 
-{{- if eq .Values.fourAllPortal.database.operator.enabled -}}
+{{- if eq .Values.fourAllPortal.database.operator.enabled true -}}
 {{- if eq .Values.fourAllPortal.database.operator.user "CHANGEME" -}}
 {{- fail "You need to change fourAllPortal.database.operator.user" -}}
 {{- end -}}
