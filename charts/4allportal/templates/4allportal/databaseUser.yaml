@@ -1,13 +1,12 @@
-{{/*{{- if .Values.fourAllPortal.database.operator.enabled }}*/}}
-{{/*apiVersion: databaseuser.4allportal.cloud/v1alpha1*/}}
-{{/*kind: DatabaseUser*/}}
-{{/*metadata:*/}}
-{{/*  name: {{ include "common.names.fullname" . }}*/}}
-{{/*  labels: {{- include "common.labels.standard" $ | nindent 4 }}*/}}
-{{/*spec:*/}}
-{{/*  databaseRef:*/}}
-{{/*    name: {{ .Values.fourAllPortal.database.operator.name }}*/}}
-{{/*  user: {{ include "common.names.fullname" . }}*/}}
-{{/*  databaseName: {{ include "common.names.fullname" . }}*/}}
-{{/*  password: {{ .Values.fourAllPortal.database.operator.password }}*/}}
-{{/*  {{- end }}*/}}
+---
+{{- if .Values.fourAllPortal.database.operator.enabled -}}
+apiVersion: com.fourallportal.credentialsoperator/v1beta1
+kind: DatabaseUser
+metadata:
+  name: {{ .Release.Name }}-databaseuser
+  namespace: {{ .Release.Namespace }}
+spec:
+  database: {{ .Values.fourAllPortal.database.operator.databaseRef }}
+  databaseName: {{ .Values.fourAllPortal.database.operator.databaseName }}
+  secretName: {{ .Release.Name }}-databaseuser-secret
+{{ end }}
