@@ -15,3 +15,21 @@
 {{- fail "You need to change mariadb.galera.mariabackup.password" -}}
 {{- end -}}
 {{- end -}}
+
+{{- if eq .Values.fourAllPortal.database.operator.enabled true -}}
+{{- if eq .Values.fourAllPortal.database.operator.user "CHANGEME" -}}
+{{- fail "You need to change fourAllPortal.database.operator.user" -}}
+{{- end -}}
+
+{{- if eq .Values.fourAllPortal.database.operator.password "CHANGEME" -}}
+{{- fail "You need to change fourAllPortal.database.operator.password" -}}
+{{- end -}}
+
+{{- if eq .Values.fourAllPortal.database.operator.databaseName "CHANGEME" -}}
+{{- fail "You need to change fourAllPortal.database.operator.databaseName" -}}
+{{- end -}}
+
+{{- if eq .Values.fourAllPortal.database.operator.databaseRef "CHANGEME" -}}
+{{- fail "You need to change fourAllPortal.database.operator.databaseRef" -}}
+{{- end -}}
+{{- end -}}

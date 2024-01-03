@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 19.1.4](https://img.shields.io/badge/Version-19.1.4-informational?style=flat-square) ![AppVersion: 3.10.37](https://img.shields.io/badge/AppVersion-3.10.37-informational?style=flat-square)
+![Version: 19.2.0](https://img.shields.io/badge/Version-19.2.0-informational?style=flat-square) ![AppVersion: 3.10.37](https://img.shields.io/badge/AppVersion-3.10.37-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -128,6 +128,11 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.database.maxPoolSize | int | `90` |  |
 | fourAllPortal.database.minPoolSize | int | `5` |  |
 | fourAllPortal.database.numHelperThreads | int | `5` |  |
+| fourAllPortal.database.operator.databaseName | string | `"CHANGEME"` |  |
+| fourAllPortal.database.operator.databaseRef | string | `"CHANGEME"` |  |
+| fourAllPortal.database.operator.enabled | bool | `false` |  |
+| fourAllPortal.database.operator.password | string | `"CHANGEME"` |  |
+| fourAllPortal.database.operator.user | string | `"CHANGEME"` |  |
 | fourAllPortal.debug | bool | `false` |  |
 | fourAllPortal.env | object | `{}` |  |
 | fourAllPortal.fourApps | object | `{}` |  |
