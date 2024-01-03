@@ -256,7 +256,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | webdav.groups | object | `{}` |  |
 | webdav.image.registry | string | `"docker.io"` |  |
 | webdav.image.repository | string | `"httpd"` |  |
-| webdav.image.tag | string | `"2.4.57"` |  |
+| webdav.image.tag | string | `"2.4.58"` |  |
 | webdav.livenessProbe.enabled | bool | `true` |  |
 | webdav.livenessProbe.failureThreshold | int | `4` |  |
 | webdav.livenessProbe.initialDelaySeconds | int | `5` |  |
