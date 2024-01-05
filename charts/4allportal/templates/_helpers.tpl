@@ -1,5 +1,10 @@
 {{/* vim: set filetype=mustache: */}}
 
+{{- define "fourAllPortal.system.api.key " -}}
+{{ (printf "%s-%s-%s-%s-%s" (randAlphaNum 8) (randAlphaNum 4) (randAlphaNum 4) (randAlphaNum 4) (randAlphaNum 12)) | lower | quote}}
+{{- end -}}
+
+
 {{- define "4allportal.fourallportal.database.user" -}}
 {{- if .Values.maxscale.enabled -}}
 {{- .Values.maxscale.mariadb.db.user -}}

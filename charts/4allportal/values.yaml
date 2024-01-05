@@ -35,6 +35,10 @@ fourAllPortal:
 
   debug: false
 
+  system:
+    api:
+      key: ""
+
   fourApps: {}
 
   persistence:
