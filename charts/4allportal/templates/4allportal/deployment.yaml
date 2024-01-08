@@ -100,7 +100,7 @@ spec:
               value: {{ .Values.fourAllPortal.debug | quote }}
 
             - name: SYSTEMAPIKEY
-              value: {{ .Values.fourAllPortal.system.api.key  }}
+              value: {{ include "4allportal.fourAllPortal.system.api.key" . }}
 
             - name: MANAGED
               value: "true"
