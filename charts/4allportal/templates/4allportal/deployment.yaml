@@ -147,17 +147,17 @@ spec:
             - name: DATABASE_TYPE
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Values.fourAllPortal.database.operator.databaseRef }}-configmap
+                  name: {{ .Release.Namespace}}/{{ .Values.fourAllPortal.database.operator.databaseRef }}-configmap
                   key: "DATABASE_TYPE"
             - name: DATABASE_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Values.fourAllPortal.database.operator.databaseRef }}-configmap
+                  name: {{ .Release.Namespace}}/{{ .Values.fourAllPortal.database.operator.databaseRef }}-configmap
                   key: "DATABASE_HOST"
             - name: DATABASE_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Values.fourAllPortal.database.operator.databaseRef }}-configmap
+                  name: {{ .Release.Namespace}}/{{ .Values.fourAllPortal.database.operator.databaseRef }}-configmap
                   key: "DATABASE_PORT"
             - name: DATABASE_DATABASE_NAME
               value: {{ required "You must set a database name when using the operator." .Values.fourAllPortal.database.operator.databaseName | quote }}
