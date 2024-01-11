@@ -139,6 +139,29 @@ spec:
               value: {{ .Values.fourAllPortal.mail.security | quote }}
             {{- end }}
 
+            {{- if .Values.fourAllPortal.database.operator.enabled }}
+            - name: DATABASE_USER
+              value: {{ required "You must set a database user when using the operator." .Values.fourAllPortal.database.operator.user | quote }}
+            - name: DATABASE_PASSWORD
+              value: {{ required "You must set a user password when using the operator." .Values.fourAllPortal.database.operator.password | quote }}
+            - name: DATABASE_TYPE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.fourAllPortal.database.operator.databaseRef }}-configmap
+                  key: "DATABASE_TYPE"
+            - name: DATABASE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.fourAllPortal.database.operator.databaseRef }}-configmap
+                  key: "DATABASE_HOST"
+            - name: DATABASE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.fourAllPortal.database.operator.databaseRef }}-configmap
+                  key: "DATABASE_PORT"
+            - name: DATABASE_DATABASE_NAME
+              value: {{ required "You must set a database name when using the operator." .Values.fourAllPortal.database.operator.databaseName | quote }}
+            {{ else }}
             - name: DATABASE_USER
               value: {{ include "4allportal.fourallportal.database.user" . | quote }}
             - name: DATABASE_PASSWORD
@@ -154,6 +177,7 @@ spec:
               value: {{ include "4allportal.fourallportal.database.port" . | quote }}
             - name: DATABASE_DATABASE_NAME
               value: {{ include "4allportal.fourallportal.database.name" . | quote }}
+            {{- end }}
             - name: DATABASE_INITIAL_POOL_SIZE
               value: {{ .Values.fourAllPortal.database.initialPoolSize | quote }}
             - name: DATABASE_MAX_IDLE_TIME
