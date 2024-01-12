@@ -106,16 +106,36 @@
                           "$ref": "#/definitions/existingDatabase"
                         },
                         {
-                          "properties": {
-                            "operator": {
-                              "$ref": "#/definitions/operator"
-                            }
+                          "existing": {
+                            "type": "object"
                           }
                         }
                       ]
                     },
                     {
                       "properties": {
+                        "operator": {
+                          "type": "object",
+                          "description": "Options for the Credentials Operator",
+                          "properties": {
+                            "enabled": {
+                              "type": "boolean",
+                              "default": false
+                            },
+                            "user": {
+                              "type": "string"
+                            },
+                            "password": {
+                              "type": "string"
+                            },
+                            "databaseName": {
+                              "type": "string"
+                            },
+                            "databaseRef": {
+                              "type": "string"
+                            }
+                          }
+                        },
                         "acquireIncrement": {
                           "type": "integer"
                         },
@@ -1137,29 +1157,10 @@
             }
           ]
         }
-      }
-    },
-    "operator": {
-      "type": "object",
-      "description": "Options for the Credentials Operator",
-      "properties": {
-        "enabled": {
-          "type": "boolean",
-          "default": false
-        },
-        "user": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
-        },
-        "databaseName": {
-          "type": "string"
-        },
-        "databaseRef": {
-          "type": "string"
-        }
-      }
+      },
+      "required": [
+        "existing"
+      ]
     }
   }
 }
