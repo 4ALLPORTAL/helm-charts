@@ -1137,10 +1137,7 @@
             }
           ]
         }
-      },
-      "required": [
-        "existing"
-      ]
+      }
     },
     "operator": {
       "type": "object",
