@@ -112,7 +112,6 @@
                         },
                         {
                           "operator": {
-                          "type": "object",
                           "description": "Options for the Credentials Operator",
                           "properties": {
                             "enabled": {
