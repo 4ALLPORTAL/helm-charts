@@ -99,9 +99,9 @@
               "properties": {
                 "database": {
                   "type": "object",
-                  "anyOf": [
+                  "allOf": [
                     {
-                      "oneOf": [
+                      "anyOf": [
                         {
                           "$ref": "#/definitions/existingDatabase"
                         },
@@ -109,9 +109,13 @@
                           "existing": {
                             "type": "object"
                           }
-                        },
-                        {
-                          "operator": {
+                        }
+                      ]
+                    },
+                    {
+                      "properties": {
+                        "operator": {
+                          "type": "object",
                           "description": "Options for the Credentials Operator",
                           "properties": {
                             "enabled": {
@@ -131,9 +135,7 @@
                               "type": "string"
                             }
                           }
-                        }
-                        }
-                      ],
+                        },
                         "acquireIncrement": {
                           "type": "integer"
                         },
@@ -153,6 +155,7 @@
                           "type": "integer"
                         }
                       }
+                    }
                   ]
                 },
                 "debug": {
@@ -385,7 +388,7 @@
         "maxscale": {
           "type": "object",
           "description": "Refer to https://raw.githubusercontent.com/4ALLPORTAL/helm-charts/main/charts/maxscale/values.schema.json",
-	  "$ref": "https://raw.githubusercontent.com/4ALLPORTAL/helm-charts/main/charts/maxscale/values.schema.json"
+          "$ref": "https://raw.githubusercontent.com/4ALLPORTAL/helm-charts/main/charts/maxscale/values.schema.json"
         },
         "dreiDRenderer": {
           "type": "object",
