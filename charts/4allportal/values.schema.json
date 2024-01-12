@@ -101,7 +101,7 @@
                   "type": "object",
                   "allOf": [
                     {
-                      "anyOf": [
+                      "oneOf": [
                         {
                           "$ref": "#/definitions/existingDatabase"
                         },
