@@ -99,7 +99,7 @@
               "properties": {
                 "database": {
                   "type": "object",
-                  "allOf": [
+                  "oneOf": [
                     {
                       "anyOf": [
                         {
@@ -107,9 +107,6 @@
                         },
                         {
                           "existing": {
-                            "type": "object"
-                          },
-                          "operator": {
                             "type": "object"
                           }
                         }
