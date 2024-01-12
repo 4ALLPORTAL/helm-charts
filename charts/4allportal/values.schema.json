@@ -99,7 +99,7 @@
               "properties": {
                 "database": {
                   "type": "object",
-                  "allOf": [
+                  "anyOf": [
                     {
                       "oneOf": [
                         {
