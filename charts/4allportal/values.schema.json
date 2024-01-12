@@ -101,7 +101,7 @@
                   "type": "object",
                   "allOf": [
                     {
-                      "anyOf": [
+                      "oneOf": [
                         {
                           "$ref": "#/definitions/existingDatabase"
                         },
@@ -109,12 +109,9 @@
                           "existing": {
                             "type": "object"
                           }
-                        }
-                      ]
-                    },
-                    {
-                      "properties": {
-                        "operator": {
+                        },
+                        {
+                          "operator": {
                           "type": "object",
                           "description": "Options for the Credentials Operator",
                           "properties": {
@@ -135,7 +132,9 @@
                               "type": "string"
                             }
                           }
-                        },
+                        }
+                        }
+                      ],
                         "acquireIncrement": {
                           "type": "integer"
                         },
@@ -155,7 +154,6 @@
                           "type": "integer"
                         }
                       }
-                    }
                   ]
                 },
                 "debug": {
