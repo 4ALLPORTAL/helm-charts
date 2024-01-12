@@ -99,7 +99,7 @@
               "properties": {
                 "database": {
                   "type": "object",
-                  "oneOf": [
+                  "allOf": [
                     {
                       "anyOf": [
                         {
@@ -135,252 +135,252 @@
                               "type": "string"
                             }
                           }
+                        },
+                        "acquireIncrement": {
+                          "type": "integer"
+                        },
+                        "initialPoolSize": {
+                          "type": "integer"
+                        },
+                        "maxIdleTime": {
+                          "type": "integer"
+                        },
+                        "maxPoolSize": {
+                          "type": "integer"
+                        },
+                        "minPoolSize": {
+                          "type": "integer"
+                        },
+                        "numHelperThreads": {
+                          "type": "integer"
                         }
                       }
                     }
-                  ],
-                  "acquireIncrement": {
-                    "type": "integer"
-                  },
-                  "initialPoolSize": {
-                    "type": "integer"
-                  },
-                  "maxIdleTime": {
-                    "type": "integer"
-                  },
-                  "maxPoolSize": {
-                    "type": "integer"
-                  },
-                  "minPoolSize": {
-                    "type": "integer"
-                  },
-                  "numHelperThreads": {
-                    "type": "integer"
-                  }
-                }
-              },
-              "debug": {
-                "type": "boolean"
-              },
-              "env": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "string"
-                }
-              },
-              "fourApps": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "string",
-                  "pattern": "^[0-9A-Za-z\\-.+]+$"
-                }
-              },
-              "startupProbe": {
-                "$ref": "#/definitions/probe"
-              },
-              "general": {
-                "type": "object",
-                "properties": {
-                  "admin": {
-                    "type": "object",
-                    "properties": {
-                      "email": {
-                        "$ref": "#/definitions/email"
-                      },
-                      "firstName": {
-                        "type": "string"
-                      },
-                      "lastName": {
-                        "type": "string"
-                      },
-                      "password": {
-                        "type": "string"
-                      },
-                      "username": {
-                        "type": "string"
-                      }
-                    },
-                    "additionalProperties": false
-                  },
-                  "defaultLanguage": {
+                  ]
+                },
+                "debug": {
+                  "type": "boolean"
+                },
+                "env": {
+                  "type": "object",
+                  "additionalProperties": {
                     "type": "string"
                   }
                 },
-                "additionalProperties": false
-              },
-              "hostAliases": {
-                "type": "array",
-                "items": {
-                  "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.HostAlias"
-                }
-              },
-              "ingress": {
-                "type": "object",
-                "allOf": [
-                  {
-                    "properties": {
-                      "annotations": {
-                        "type": "object",
-                        "additionalProperties": {
+                "fourApps": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string",
+                    "pattern": "^[0-9A-Za-z\\-.+]+$"
+                  }
+                },
+                "startupProbe": {
+                  "$ref": "#/definitions/probe"
+                },
+                "general": {
+                  "type": "object",
+                  "properties": {
+                    "admin": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "$ref": "#/definitions/email"
+                        },
+                        "firstName": {
+                          "type": "string"
+                        },
+                        "lastName": {
+                          "type": "string"
+                        },
+                        "password": {
+                          "type": "string"
+                        },
+                        "username": {
                           "type": "string"
                         }
                       },
-                      "enabled": {
-                        "type": "boolean"
-                      },
-                      "host": {
-                        "type": "string"
-                      },
-                      "endpointMonitor": {
-                        "type": "object",
-                        "description": "See https://github.com/stakater/IngressMonitorController#add-endpointmonitor",
-                        "properties": {
-                          "enabled": {
-                            "type": "boolean"
-                          }
-                        }
-                      },
-                      "existingCertificate": {
-                        "$ref": "#/definitions/existingCertificate"
-                      },
-                      "additionalHosts": {
-                        "type": "object",
-                        "additionalProperties": {
+                      "additionalProperties": false
+                    },
+                    "defaultLanguage": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "hostAliases": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.HostAlias"
+                  }
+                },
+                "ingress": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "properties": {
+                        "annotations": {
                           "type": "object",
+                          "additionalProperties": {
+                            "type": "string"
+                          }
+                        },
+                        "enabled": {
+                          "type": "boolean"
+                        },
+                        "host": {
+                          "type": "string"
+                        },
+                        "endpointMonitor": {
+                          "type": "object",
+                          "description": "See https://github.com/stakater/IngressMonitorController#add-endpointmonitor",
                           "properties": {
-                            "host": {
-                              "type": "string"
-                            },
-                            "existingCertificate": {
-                              "$ref": "#/definitions/existingCertificate"
+                            "enabled": {
+                              "type": "boolean"
+                            }
+                          }
+                        },
+                        "existingCertificate": {
+                          "$ref": "#/definitions/existingCertificate"
+                        },
+                        "additionalHosts": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "object",
+                            "properties": {
+                              "host": {
+                                "type": "string"
+                              },
+                              "existingCertificate": {
+                                "$ref": "#/definitions/existingCertificate"
+                              }
                             }
                           }
                         }
                       }
-                    }
-                  },
-                  {
-                    "oneOf": [
-                      {
-                        "properties": {
-                          "enabled": {
-                            "type": "boolean",
-                            "const": false
-                          }
-                        }
-                      },
-                      {
-                        "properties": {
-                          "enabled": {
-                            "type": "boolean",
-                            "const": true
+                    },
+                    {
+                      "oneOf": [
+                        {
+                          "properties": {
+                            "enabled": {
+                              "type": "boolean",
+                              "const": false
+                            }
                           }
                         },
-                        "required": [
-                          "host"
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              "initContainers": {
-                "oneOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.Container"
-                    }
-                  },
-                  {
-                    "type": "string"
-                  }
-                ]
-              },
-              "mail": {
-                "type": "object",
-                "properties": {
-                  "enabled": {
-                    "type": "boolean"
-                  },
-                  "host": {
-                    "type": "string"
-                  },
-                  "password": {
-                    "type": "string"
-                  },
-                  "port": {
-                    "type": "integer"
-                  },
-                  "replyTo": {
-                    "type": "boolean"
-                  },
-                  "security": {
-                    "type": "string",
-                    "enum": [
-                      "NONE",
-                      "SSL",
-                      "STARTTLS"
-                    ]
-                  },
-                  "system": {
-                    "type": "object",
-                    "properties": {
-                      "from": {
-                        "type": "object",
-                        "properties": {
-                          "email": {
-                            "type": "string"
+                        {
+                          "properties": {
+                            "enabled": {
+                              "type": "boolean",
+                              "const": true
+                            }
                           },
-                          "name": {
-                            "type": "string"
-                          }
-                        },
-                        "additionalProperties": false
-                      },
-                      "sender": {
-                        "type": "string"
-                      },
-                      "replyTo": {
-                        "type": "object",
-                        "properties": {
-                          "email": {
-                            "oneOf": [
-                              {
-                                "type": "string",
-                                "maxLength": 0
-                              },
-                              {
-                                "$ref": "#/definitions/email"
-                              }
-                            ]
-                          }
-                        },
-                        "additionalProperties": false
+                          "required": [
+                            "host"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "initContainers": {
+                  "oneOf": [
+                    {
+                      "type": "array",
+                      "items": {
+                        "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.Container"
                       }
                     },
-                    "additionalProperties": false
-                  },
-                  "useAuthentication": {
-                    "type": "boolean"
-                  },
-                  "user": {
-                    "type": "string"
-                  }
+                    {
+                      "type": "string"
+                    }
+                  ]
                 },
-                "additionalProperties": false
-              },
-              "persistence": {
-                "type": "object",
-                "properties": {
-                  "assets": {
-                    "$ref": "#/definitions/volume"
+                "mail": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "host": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    },
+                    "port": {
+                      "type": "integer"
+                    },
+                    "replyTo": {
+                      "type": "boolean"
+                    },
+                    "security": {
+                      "type": "string",
+                      "enum": [
+                        "NONE",
+                        "SSL",
+                        "STARTTLS"
+                      ]
+                    },
+                    "system": {
+                      "type": "object",
+                      "properties": {
+                        "from": {
+                          "type": "object",
+                          "properties": {
+                            "email": {
+                              "type": "string"
+                            },
+                            "name": {
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false
+                        },
+                        "sender": {
+                          "type": "string"
+                        },
+                        "replyTo": {
+                          "type": "object",
+                          "properties": {
+                            "email": {
+                              "oneOf": [
+                                {
+                                  "type": "string",
+                                  "maxLength": 0
+                                },
+                                {
+                                  "$ref": "#/definitions/email"
+                                }
+                              ]
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "useAuthentication": {
+                      "type": "boolean"
+                    },
+                    "user": {
+                      "type": "string"
+                    }
                   },
-                  "config": {
-                    "$ref": "#/definitions/volume"
-                  }
+                  "additionalProperties": false
                 },
-                "additionalProperties": false
+                "persistence": {
+                  "type": "object",
+                  "properties": {
+                    "assets": {
+                      "$ref": "#/definitions/volume"
+                    },
+                    "config": {
+                      "$ref": "#/definitions/volume"
+                    }
+                  },
+                  "additionalProperties": false
+                }
               }
             }
           ]
