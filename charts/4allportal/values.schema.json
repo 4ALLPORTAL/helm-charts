@@ -106,11 +106,6 @@
                           "$ref": "#/definitions/existingDatabase"
                         },
                         {
-                          "existing": {
-                            "type": "object"
-                          }
-                        },
-                        {
                           "$ref": "#/definitions/operator"
                         }
                       ]
