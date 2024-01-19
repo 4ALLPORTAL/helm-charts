@@ -35,9 +35,7 @@ fourAllPortal:
 
   debug: false
 
-  system:
-    api:
-      key: ""
+  systemApiKey: ""
 
   fourApps: {}
 

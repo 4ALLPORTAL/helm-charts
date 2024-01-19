@@ -135,7 +135,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.database.operator.user                                 | string | `"CHANGEME"` |  |
 | fourAllPortal.debug                                                  | bool   | `false` |  |
 | fourAllPortal.env                                                    | object | `{}` |  |
-| fourAllPortal.system.api.key                                         | string | `""` |  |
+| fourAllPortal.systemApiKey                                         | string | `""` |  |
 | fourAllPortal.fourApps                                               | object | `{}` |  |
 | fourAllPortal.general.admin.firstName                                | string | `""` |  |
 | fourAllPortal.general.admin.lastName                                 | string | `""` |  |

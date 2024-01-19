@@ -1,11 +1,11 @@
 {{/* vim: set filetype=mustache: */}}
 
 
-{{- define "4allportal.fourAllPortal.system.api.key" -}}
-{{- if (eq "" .Values.fourAllPortal.system.api.key) -}}
+{{- define "4allportal.fourAllPortal.systemApiKey" -}}
+{{- if (eq "" .Values.fourAllPortal.systemApiKey) -}}
 {{ (printf "%s-%s-%s-%s-%s" (randAlphaNum 8) (randAlphaNum 4) (randAlphaNum 4) (randAlphaNum 4) (randAlphaNum 12)) | lower | quote}}
 {{- else -}}
-{{ printf .Values.fourAllPortal.system.api.key }}
+{{ printf .Values.fourAllPortal.systemApiKey }}
 {{- end -}}
 {{- end -}}
 

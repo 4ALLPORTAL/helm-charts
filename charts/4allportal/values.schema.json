@@ -369,14 +369,8 @@
                   },
                   "additionalProperties": false
                 },
-                "system": {
-                  "type": "object",
-                  "api":{
-                    "type": "object",
-                    "key": {
-                      "type": "string"
-                    }
-                  }
+                "systemApiKey": {
+                  "type": "string"
                 },
                 "persistence": {
                   "type": "object",

@@ -134,7 +134,6 @@ data:
     MOUNT_POINT="{{ $.Values.webdav.events.mountPath }}"
     MOUNT_POINT_LEN=$(echo "$MOUNT_POINT" | awk '{print length($1) + 1;}')
 
-    # ENDPOINT="http://{{ include "common.names.fullname" . }}-backend/api/extensions/dam/fs-event"
     while IFS= read -r line; do
       status=$(echo "$line" | cut -d';' -f1)
       type=$(echo "$line" | cut -d';' -f2)
@@ -200,7 +199,7 @@ data:
         fi
         RES_CODE=$(curl -X POST -sw "%{http_code}\n" \
           -H 'Content-Type: application/json' \
-          -H "Authorization: Bearer { {{ include "4allportal.fourAllPortal.system.api.key" . }} }"
+          -H "Authorization: Bearer { {{ include "4allportal.fourAllPortal.systemApiKey" . }} }"
           -d "$BODY" \
           --connect-timeout 1 -o /dev/null ${ENDPOINT})
         echo "Response status: ${RES_CODE}"  > /proc/self/fd/1
