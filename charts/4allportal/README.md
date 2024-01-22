@@ -210,7 +210,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.startupProbe.periodSeconds | int | `10` |  |
 | fourAllPortal.startupProbe.successThreshold | int | `1` |  |
 | fourAllPortal.startupProbe.timeoutSeconds | int | `5` |  |
-| fourAllPortal.system.api.key | string | `""` |  |
+| fourAllPortal.systemApiKey | string | `""` |  |
 | fourAllPortal.tolerations | list | `[]` |  |
 | fourAllPortal.tracing.enabled | bool | `false` |  |
 | fourAllPortal.tracing.jaeger.agent.useDaemonSet | bool | `true` |  |
