@@ -21,3 +21,4 @@ You can then run `helm search repo 4allportal` to see the charts.
 ## License
 
 [Apache 2.0 License](https://github.com/4allportal/helm-charts/blob/main/LICENSE).
+
