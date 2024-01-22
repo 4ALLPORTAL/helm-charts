@@ -35,6 +35,8 @@ fourAllPortal:
 
   debug: false
 
+  systemApiKey: ""
+
   fourApps: {}
 
   persistence:
