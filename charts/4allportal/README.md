@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 19.2.0](https://img.shields.io/badge/Version-19.2.0-informational?style=flat-square) ![AppVersion: 3.10.37](https://img.shields.io/badge/AppVersion-3.10.37-informational?style=flat-square)
+![Version: 19.3.0](https://img.shields.io/badge/Version-19.2.0-informational?style=flat-square) ![AppVersion: 3.10.37](https://img.shields.io/badge/AppVersion-3.10.37-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -210,6 +210,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.startupProbe.periodSeconds | int | `10` |  |
 | fourAllPortal.startupProbe.successThreshold | int | `1` |  |
 | fourAllPortal.startupProbe.timeoutSeconds | int | `5` |  |
+| fourAllPortal.systemApiKey | string | `""` |  |
 | fourAllPortal.tolerations | list | `[]` |  |
 | fourAllPortal.tracing.enabled | bool | `false` |  |
 | fourAllPortal.tracing.jaeger.agent.useDaemonSet | bool | `true` |  |
