@@ -99,6 +99,9 @@ spec:
             - name: DEBUG
               value: {{ .Values.fourAllPortal.debug | quote }}
 
+            - name: SYSTEM_API_KEY
+              value: {{ include "4allportal.fourAllPortal.systemApiKey" . }}
+
             - name: MANAGED
               value: "true"
 
