@@ -2,7 +2,7 @@
 
 {{- define "4allportal.fourAllPortal.systemApiKey" -}}
 {{- if (eq "" .Values.fourAllPortal.systemApiKey) -}}
-{{ (printf "%s-%s-%s-%s-%s" (randAlphaNum 8) (randAlphaNum 4) (randAlphaNum 4) (randAlphaNum 4) (randAlphaNum 12)) | lower | quote}}
+{{ printf uuidv4 | quote}}
 {{- else -}}
 {{ printf .Values.fourAllPortal.systemApiKey }}
 {{- end -}}
