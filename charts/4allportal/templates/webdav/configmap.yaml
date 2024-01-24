@@ -129,81 +129,81 @@ data:
     BrowserMatch "^gvfs" redirect-carefully
     BrowserMatch "WebDAVLib" redirect-carefully
   {{- if $.Values.webdav.events.enabled }}
-log-handler.sh: |
-  #!/bin/ash
-  MOUNT_POINT="{{ $.Values.webdav.events.mountPath }}"
-  MOUNT_POINT_LEN=$(echo "$MOUNT_POINT" | awk '{print length($1) + 1;}')
-  
-  while IFS= read -r line; do
-    status=$(echo "$line" | cut -d';' -f1)
-    type=$(echo "$line" | cut -d';' -f2)
-    path=$(echo "$line" | cut -d';' -f3)
-    dest=$(echo "$line" | cut -d';' -f4 | awk '{
-      i = index($1,"/webdav/");
-      out = substr($1, i);
-      for (i = 0x20; i < 0x40; ++i) {
-        repl = sprintf("%c", i);
-        if ((repl == "&") || (repl == "\\")) {
-          repl = "\\" repl;
-        }
-        out = gensub(sprintf("%%%02X", i), repl, "g", out);
-        out = gensub(sprintf("%%%02x", i), repl, "g", out);
-      };
-      out = gensub(/\"/, "\\\"", "g", out);
-      print out}')
-  
-    matched=$(expr match "${path}" "$MOUNT_POINT.*")
-    if [ \( "${type}" == "PUT" -o "${type}" == "DELETE" -o "${type}" == "MKCOL" -o "${type}" == "MOVE" -o "${type}" == "COPY" \) -a ${matched} != 0 ]
-    then
-      path=$(echo "$path" | cut -c ${MOUNT_POINT_LEN}- )
-      if [ "${dest}" != "-" -a "${dest}" != "" ]
+  log-handler.sh: |
+    #!/bin/ash
+    MOUNT_POINT="{{ $.Values.webdav.events.mountPath }}"
+    MOUNT_POINT_LEN=$(echo "$MOUNT_POINT" | awk '{print length($1) + 1;}')
+
+    while IFS= read -r line; do
+      status=$(echo "$line" | cut -d';' -f1)
+      type=$(echo "$line" | cut -d';' -f2)
+      path=$(echo "$line" | cut -d';' -f3)
+      dest=$(echo "$line" | cut -d';' -f4 | awk '{
+        i = index($1,"/webdav/");
+        out = substr($1, i);
+        for (i = 0x20; i < 0x40; ++i) {
+          repl = sprintf("%c", i);
+          if ((repl == "&") || (repl == "\\")) {
+            repl = "\\" repl;
+          }
+          out = gensub(sprintf("%%%02X", i), repl, "g", out);
+          out = gensub(sprintf("%%%02x", i), repl, "g", out);
+        };
+        out = gensub(/\"/, "\\\"", "g", out);
+        print out}')
+
+      matched=$(expr match "${path}" "$MOUNT_POINT.*")
+      if [ \( "${type}" == "PUT" -o "${type}" == "DELETE" -o "${type}" == "MKCOL" -o "${type}" == "MOVE" -o "${type}" == "COPY" \) -a ${matched} != 0 ]
       then
-        dest=$(echo "$dest" | cut -c ${MOUNT_POINT_LEN}- )
+        path=$(echo "$path" | cut -c ${MOUNT_POINT_LEN}- )
+        if [ "${dest}" != "-" -a "${dest}" != "" ]
+        then
+          dest=$(echo "$dest" | cut -c ${MOUNT_POINT_LEN}- )
+        fi
+
+        lastChar=$(echo "$path" | awk '{print substr($0,length,1)}')
+        if [ "$lastChar" = "/" ]
+        then
+          path=$(echo "$path" | awk '{print substr($0,0,length($0)-1)}')
+        fi
+
+        OP="UNKNOWN"
+        if [ "${status}" == "201" -a "${type}" == "PUT" ]
+        then
+          OP="CREATE"
+        elif [ "${status}" == "201" -a "${type}" == "MKCOL" ]
+        then
+          OP="CREATE"
+        elif [ "${status}" == "201" -a "${type}" == "MOVE" ]
+        then
+          OP="MOVE"
+        elif [ "${status}" == "201" -a "${type}" == "COPY" ]
+        then
+          OP="CREATE"
+        elif [ "${status}" == "204" -a "${type}" == "PUT" ]
+        then
+          OP="UPDATE"
+        elif [ "${status}" == "204" -a "${type}" == "DELETE" ]
+        then
+          OP="DELETE"
+        fi
+        BODY="{}"
+        ENDPOINT="http://{{ include "common.names.fullname" . }}-backend/api/extensions/dam/mounts/${MOUNT_POINT}/events/${type}"
+        if [ "${dest}" == "-" -o "${dest}" == "" ]
+        then
+          BODY="{\"path\":\"${path}\"}"
+          echo "Send notification to ${ENDPOINT}: ${BODY}" > /proc/self/fd/1
+        else
+          BODY="{\"path\":\"${path}\",\"destination\":\"${dest}\"}"
+          echo "Send notification to ${ENDPOINT}: ${BODY}" > /proc/self/fd/1
+        fi
+        RES_CODE=$(curl -X POST -sw "%{http_code}\n" \
+          -H 'Content-Type: application/json' \
+          -H "Authorization: Bearer { {{ include "4allportal.fourAllPortal.systemApiKey" . }} }"
+          -d "$BODY" \
+          --connect-timeout 1 -o /dev/null ${ENDPOINT})
+        echo "Response status: ${RES_CODE}"  > /proc/self/fd/1
       fi
-  
-      lastChar=$(echo "$path" | awk '{print substr($0,length,1)}')
-      if [ "$lastChar" = "/" ]
-      then
-        path=$(echo "$path" | awk '{print substr($0,0,length($0)-1)}')
-      fi
-  
-      OP="UNKNOWN"
-      if [ "${status}" == "201" -a "${type}" == "PUT" ]
-      then
-        OP="CREATE"
-      elif [ "${status}" == "201" -a "${type}" == "MKCOL" ]
-      then
-        OP="CREATE"
-      elif [ "${status}" == "201" -a "${type}" == "MOVE" ]
-      then
-        OP="MOVE"
-      elif [ "${status}" == "201" -a "${type}" == "COPY" ]
-      then
-        OP="CREATE"
-      elif [ "${status}" == "204" -a "${type}" == "PUT" ]
-      then
-        OP="UPDATE"
-      elif [ "${status}" == "204" -a "${type}" == "DELETE" ]
-      then
-        OP="DELETE"
-      fi
-      BODY="{}"
-      ENDPOINT="http://{{ include "common.names.fullname" . }}-backend/api/extensions/dam/mounts/${MOUNT_POINT}/events/${type}"
-      if [ "${dest}" == "-" -o "${dest}" == "" ]
-      then
-        BODY="{\"path\":\"${path}\"}"
-        echo "Send notification to ${ENDPOINT}: ${BODY}" > /proc/self/fd/1
-      else
-        BODY="{\"path\":\"${path}\",\"destination\":\"${dest}\"}"
-        echo "Send notification to ${ENDPOINT}: ${BODY}" > /proc/self/fd/1
-      fi
-      RES_CODE=$(curl -X POST -sw "%{http_code}\n" \
-        -H 'Content-Type: application/json' \
-        -H "Authorization: Bearer { {{ include "4allportal.fourAllPortal.systemApiKey" . }} }"
-        -d "$BODY" \
-        --connect-timeout 1 -o /dev/null ${ENDPOINT})
-      echo "Response status: ${RES_CODE}"  > /proc/self/fd/1
-    fi
-  done
+    done
   {{- end }}
   {{- end }}
