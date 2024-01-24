@@ -109,33 +109,35 @@
                           "existing": {
                             "type": "object"
                           }
+                        },
+                        {
+                          "operator": {
+                            "type": "object",
+                            "description": "Options for the Credentials Operator",
+                            "properties": {
+                              "enabled": {
+                                "type": "boolean",
+                                "default": false
+                              },
+                              "user": {
+                                "type": "string"
+                              },
+                              "password": {
+                                "type": "string"
+                              },
+                              "databaseName": {
+                                "type": "string"
+                              },
+                              "databaseRef": {
+                                "type": "string"
+                              }
+                            }
+                          }
                         }
                       ]
                     },
                     {
                       "properties": {
-                        "operator": {
-                          "type": "object",
-                          "description": "Options for the Credentials Operator",
-                          "properties": {
-                            "enabled": {
-                              "type": "boolean",
-                              "default": false
-                            },
-                            "user": {
-                              "type": "string"
-                            },
-                            "password": {
-                              "type": "string"
-                            },
-                            "databaseName": {
-                              "type": "string"
-                            },
-                            "databaseRef": {
-                              "type": "string"
-                            }
-                          }
-                        },
                         "acquireIncrement": {
                           "type": "integer"
                         },
@@ -369,9 +371,6 @@
                   },
                   "additionalProperties": false
                 },
-                "systemApiKey": {
-                  "type": "string"
-                },
                 "persistence": {
                   "type": "object",
                   "properties": {
@@ -391,7 +390,7 @@
         "maxscale": {
           "type": "object",
           "description": "Refer to https://raw.githubusercontent.com/4ALLPORTAL/helm-charts/main/charts/maxscale/values.schema.json",
-	  "$ref": "https://raw.githubusercontent.com/4ALLPORTAL/helm-charts/main/charts/maxscale/values.schema.json"
+          "$ref": "https://raw.githubusercontent.com/4ALLPORTAL/helm-charts/main/charts/maxscale/values.schema.json"
         },
         "dreiDRenderer": {
           "type": "object",
