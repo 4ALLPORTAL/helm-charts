@@ -33,3 +33,9 @@
 {{- fail "You need to change fourAllPortal.database.operator.databaseRef" -}}
 {{- end -}}
 {{- end -}}
+
+{{- if (ne "" .Values.fourAllPortal.systemApiKey) -}}
+{{- if not (regexMatch "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$" .Values.fourAllPortal.systemApiKey) -}}
+{{- fail "You need to set fourAllPortal.systemApiKey in uuidv4 format or leave blank" -}}
+{{- end -}}
+{{- end -}}
