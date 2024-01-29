@@ -12,7 +12,11 @@
 {{- if .Values.maxscale.enabled -}}
 {{- .Values.maxscale.mariadb.db.user -}}
 {{- else -}}
-{{- required "MySQL deployment is disabled, please provide a user for the existing database" .Values.fourAllPortal.database.existing.user -}}
+{{- if .Values.fourAllPortal.database.operator.enabled -}}
+{{- required "MariaDB deployment is disabled and operator is enabled, please provide a username." .Values.fourAllPortal.database.operator.user -}}
+{{- else -}}
+{{- required "MariaDB deployment is disabled, please provide a user for the existing database" .Values.fourAllPortal.database.existing.user -}}
+{{- end -}}
 {{- end -}}
 {{- end -}}
 
@@ -20,7 +24,11 @@
 {{- if .Values.maxscale.enabled -}}
 {{- required "You must provide a password for the bundled MariaDB deployment" .Values.maxscale.mariadb.db.password -}}
 {{- else -}}
+{{- if .Values.fourAllPortal.database.operator.enabled -}}
+{{- required "You must provide a password for the database user to be created" .Values.fourAllPortal.database.operator.password }}
+{{- else -}}
 {{- required "You must provide a password for the existing database" .Values.fourAllPortal.database.existing.password -}}
+{{- end -}}
 {{- end -}}
 {{- end -}}
 
@@ -28,7 +36,10 @@
 {{- if .Values.maxscale.enabled -}}
 mariadb
 {{- else -}}
+{{- if .Values.fourAllPortal.database.operator.enabled }}
+{{- else -}}
 {{- required "You must provide a type for the existing database" .Values.fourAllPortal.database.existing.type -}}
+{{- end -}}
 {{- end -}}
 {{- end -}}
 
@@ -36,15 +47,21 @@ mariadb
 {{- if and .Values.maxscale.enabled -}}
 {{- include "common.names.dependency.fullname" (dict "chartName" "maxscale" "chartValues" .Values.maxscale "context" $) -}}
 {{- else -}}
+{{- if .Values.fourAllPortal.database.operator.enabled }}
+{{- else -}}
 {{- required "Bundled DB deployment is disabled, please provide a host for the existing database" (tpl .Values.fourAllPortal.database.existing.host .) -}}
+{{- end -}}
 {{- end -}}
 {{- end -}}
 
 {{- define  "4allportal.fourallportal.database.port" -}}
-{{- if or .Values.maxscale.enabled (and (not .Values.fourAllPortal.database.existing.port) ((list "mysql" "mariadb") | has (include "4allportal.fourallportal.database.type" .))) -}}
+{{- if or .Values.maxscale.enabled (not .Values.fourAllPortal.database.operator.enabled) (and (not .Values.fourAllPortal.database.existing.port) ((list "mysql" "mariadb") | has (include "4allportal.fourallportal.database.type" .))) -}}
 3306
 {{- else -}}
+{{- if .Values.fourAllPortal.database.operator.enabled }}
+{{- else -}}
 {{- required "Bundled DB deployment is disabled, please provide a port for the existing database" .Values.fourAllPortal.database.existing.port -}}
+{{- end -}}
 {{- end -}}
 {{- end -}}
 
@@ -52,7 +69,11 @@ mariadb
 {{- if .Values.maxscale.enabled -}}
 {{- .Values.maxscale.mariadb.db.name -}}
 {{- else -}}
-{{- required "MySQL deployment is disabled, please provide a name for the existing database" .Values.fourAllPortal.database.existing.name -}}
+{{- if .Values.fourAllPortal.database.operator.enabled }}
+{{- required "MariaDB deployment is disabled and operator is enabled, please provide a name for the database" .Values.fourAllPortal.database.operator.databaseName -}}
+{{- else -}}
+{{- required "MariaDB deployment is disabled, please provide a name for the existing database" .Values.fourAllPortal.database.existing.name -}}
+{{- end -}}
 {{- end -}}
 {{- end -}}
 
