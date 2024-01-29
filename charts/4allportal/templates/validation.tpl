@@ -1,5 +1,5 @@
-{{- if not (eq (without (list .Values.maxscale.enabled (not (empty .Values.fourAllPortal.database.existing.host))) false | len) 1) -}}
-{{- fail "Need to use either mariadb or an existing database" -}}
+{{- if not (eq (without (list .Values.maxscale.enabled .Values.fourAllPortal.database.operator.enabled (not (empty .Values.fourAllPortal.database.existing.host))) false | len) 1) -}}
+{{- fail "Need to use MariaDB, existing database or database creation via operator" -}}
 {{- end -}}
 
 {{- if and .Release.IsInstall .Values.maxscale.enabled -}}
