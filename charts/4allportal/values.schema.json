@@ -101,38 +101,12 @@
                   "type": "object",
                   "allOf": [
                     {
-                      "anyOf": [
+                      "oneOf": [
+                        {
+                          "$ref": "#/definitions/operator"
+                        },
                         {
                           "$ref": "#/definitions/existingDatabase"
-                        },
-                        {
-                          "existing": {
-                            "type": "object"
-                          }
-                        },
-                        {
-                          "operator": {
-                            "type": "object",
-                            "description": "Options for the Credentials Operator",
-                            "properties": {
-                              "enabled": {
-                                "type": "boolean",
-                                "default": false
-                              },
-                              "user": {
-                                "type": "string"
-                              },
-                              "password": {
-                                "type": "string"
-                              },
-                              "databaseName": {
-                                "type": "string"
-                              },
-                              "databaseRef": {
-                                "type": "string"
-                              }
-                            }
-                          }
                         }
                       ]
                     },
@@ -674,7 +648,14 @@
               "type": "object",
               "properties": {
                 "database": {
-                  "$ref": "#/definitions/existingDatabase"
+                  "oneOf": [
+                    {
+                      "$ref": "#/definitions/existingDatabase"
+                    },
+                    {
+                      "$ref": "#/definitions/operator"
+                    }
+                  ]
                 }
               }
             }
@@ -1166,6 +1147,43 @@
       "required": [
         "existing"
       ]
+    },
+    "operator": {
+      "type": "object",
+      "description": "Options for the Credentials Operator",
+      "properties": {
+        "operator": {
+          "type": "object",
+          "allOf": [
+            {
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "user": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "databaseName": {
+                  "type": "string"
+                },
+                "databaseRef": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "databaseRef",
+                "databaseName",
+                "password",
+                "user"
+              ]
+            }
+          ]
+        }
+      }
     }
   }
 }
