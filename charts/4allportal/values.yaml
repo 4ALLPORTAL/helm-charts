@@ -137,12 +137,7 @@ fourAllPortal:
         name: ""
 
   database:
-    operator:
-      enabled: false
-      user: "CHANGEME"
-      password: "CHANGEME"
-      databaseName: "CHANGEME"
-      databaseRef: "CHANGEME"
+    operator: {}
     initialPoolSize: 5
     maxIdleTime: 180
     minPoolSize: 5

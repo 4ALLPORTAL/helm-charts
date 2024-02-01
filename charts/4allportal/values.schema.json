@@ -658,7 +658,7 @@
               "type": "object",
               "properties": {
                 "database": {
-                  "anyOf": [
+                  "oneOf": [
                     {
                       "$ref": "#/definitions/existingDatabase"
                     },
