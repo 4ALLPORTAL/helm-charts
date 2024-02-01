@@ -651,7 +651,7 @@
       ]
     },
     {
-      "oneOf": [
+      "anyOf": [
         {
           "properties": {
             "fourAllPortal": {
