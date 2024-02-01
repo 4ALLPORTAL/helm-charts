@@ -143,6 +143,8 @@ fourAllPortal:
     maxPoolSize: 90
     numHelperThreads: 5
     acquireIncrement: 5
+    existing: {}
+    operator: {}
 
 
   env: {}
