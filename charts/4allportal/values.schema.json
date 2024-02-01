@@ -103,13 +103,18 @@
                     {
                       "anyOf": [
                         {
-                          "$ref": "#/definitions/operator"
+                          "$ref": "#/definitions/credentialsOperator"
                         },
                         {
                           "$ref": "#/definitions/existingDatabase"
                         },
                         {
                           "existing": {
+                            "type": "object"
+                          }
+                        },
+                        {
+                          "operator": {
                             "type": "object"
                           }
                         }
@@ -658,7 +663,7 @@
                       "$ref": "#/definitions/existingDatabase"
                     },
                     {
-                      "$ref": "#/definitions/operator"
+                      "$ref": "#/definitions/credentialsOperator"
                     }
                   ]
                 }
@@ -1153,40 +1158,30 @@
         "existing"
       ]
     },
-    "operator": {
+    "credentialsOperator": {
       "type": "object",
       "description": "Options for the Credentials Operator",
       "properties": {
         "operator": {
           "type": "object",
-          "allOf": [
-            {
-              "properties": {
-                "enabled": {
-                  "type": "boolean",
-                  "default": false
-                },
-                "user": {
-                  "type": "string"
-                },
-                "password": {
-                  "type": "string"
-                },
-                "databaseName": {
-                  "type": "string"
-                },
-                "databaseRef": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "databaseRef",
-                "databaseName",
-                "password",
-                "user"
-              ]
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "user": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            },
+            "databaseName": {
+              "type": "string"
+            },
+            "databaseRef": {
+              "type": "string"
             }
-          ]
+          }
         }
       }
     }
