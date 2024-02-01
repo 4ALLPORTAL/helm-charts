@@ -1166,8 +1166,7 @@
           "type": "object",
           "properties": {
             "enabled": {
-              "type": "boolean",
-              "default": false
+              "type": "boolean"
             },
             "user": {
               "type": "string"
