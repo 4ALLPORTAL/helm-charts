@@ -101,22 +101,12 @@
                   "type": "object",
                   "allOf": [
                     {
-                      "anyOf": [
+                      "oneOf": [
                         {
                           "$ref": "#/definitions/credentialsOperator"
                         },
                         {
                           "$ref": "#/definitions/existingDatabase"
-                        },
-                        {
-                          "existing": {
-                            "type": "object"
-                          }
-                        },
-                        {
-                          "operator": {
-                            "type": "object"
-                          }
                         }
                       ]
                     },
@@ -658,7 +648,7 @@
               "type": "object",
               "properties": {
                 "database": {
-                  "anyOf": [
+                  "oneOf": [
                     {
                       "$ref": "#/definitions/existingDatabase"
                     },
