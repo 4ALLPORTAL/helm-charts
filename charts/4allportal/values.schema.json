@@ -668,6 +668,15 @@
                   ]
                 }
               }
+            },
+            "maxscale": {
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "const": false
+                }
+              },
+              "required": ["enabled"]
             }
           }
         },
