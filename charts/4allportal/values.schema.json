@@ -112,6 +112,11 @@
                           "existing": {
                             "type": "object"
                           }
+                        },
+                        {
+                          "operator": {
+                            "type": "object"
+                          }
                         }
                       ]
                     },
@@ -653,7 +658,7 @@
               "type": "object",
               "properties": {
                 "database": {
-                  "anyOf": [
+                  "oneOf": [
                     {
                       "$ref": "#/definitions/existingDatabase"
                     },
@@ -1178,13 +1183,7 @@
                 "databaseRef": {
                   "type": "string"
                 }
-              },
-              "required": [
-                "databaseRef",
-                "databaseName",
-                "password",
-                "user"
-              ]
+              }
             }
           ]
         }
