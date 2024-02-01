@@ -112,11 +112,6 @@
                           "existing": {
                             "type": "object"
                           }
-                        },
-                        {
-                          "operator": {
-                            "type": "object"
-                          }
                         }
                       ]
                     },
@@ -658,7 +653,7 @@
               "type": "object",
               "properties": {
                 "database": {
-                  "oneOf": [
+                  "anyOf": [
                     {
                       "$ref": "#/definitions/existingDatabase"
                     },
@@ -668,15 +663,6 @@
                   ]
                 }
               }
-            },
-            "maxscale": {
-              "properties": {
-                "enabled": {
-                  "type": "boolean",
-                  "const": false
-                }
-              },
-              "required": ["enabled"]
             }
           }
         },
@@ -1192,7 +1178,13 @@
                 "databaseRef": {
                   "type": "string"
                 }
-              }
+              },
+              "required": [
+                "databaseRef",
+                "databaseName",
+                "password",
+                "user"
+              ]
             }
           ]
         }
