@@ -112,11 +112,6 @@
                           "existing": {
                             "type": "object"
                           }
-                        },
-                        {
-                          "operator": {
-                            "type": "object"
-                          }
                         }
                       ]
                     },
@@ -1183,7 +1178,13 @@
                 "databaseRef": {
                   "type": "string"
                 }
-              }
+              },
+              "required": [
+                "databaseRef",
+                "databaseName",
+                "password",
+                "user"
+              ]
             }
           ]
         }
