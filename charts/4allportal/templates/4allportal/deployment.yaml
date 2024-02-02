@@ -142,7 +142,7 @@ spec:
               value: {{ .Values.fourAllPortal.mail.security | quote }}
             {{- end }}
 
-            {{- if .Values.fourAllPortal.database.operator.enabled }}
+            {{- if and .Values.fourAllPortal.database.operator.enabled (not .Values.maxscale.enabled) }}
             - name: DATABASE_USER
               value: {{ required "You must set a database user when using the operator." .Values.fourAllPortal.database.operator.user | quote }}
             - name: DATABASE_PASSWORD
