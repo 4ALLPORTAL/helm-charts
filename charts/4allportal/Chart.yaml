@@ -1,8 +1,8 @@
 apiVersion: v2
-appVersion: "3.10.37"
+appVersion: "3.10.38"
 description: A Helm chart for 4ALLPORTAL version 3.10.0 and up
 name: 4allportal
-version: 19.3.2
+version: 20.0.0
 icon: https://4allportal.com/wp-content/uploads/2022/07/cropped-4ap_logo.png
 keywords:
   - 4ALLPORTAL
