@@ -320,4 +320,10 @@ During the upgrade, it deletes the mariadb statefulSet with `--cascade orphan`.
 
 ## To 19.0.0
 
-The maxscale chart sets the innodb_buffer_pool_size to 80% from requested mariadb.memory.limit. If you upgrade an existing instanz to 19.0.35 you have to restart the statefulset manualy in order for the changes to take effect.
+The maxscale chart sets the innodb_buffer_pool_size to 80% of requested mariadb.memory.limit. If you upgrade an existing instance to 19.0.35 you have to restart the statefulset manually in order for the changes to take effect.
+
+## To 20.0.0
+
+This release no longer permits fourAllPortal.database.operator.enabled and fourAllPortal.database.enabled to be used at the same time.
+
+Upgrading to this version of the HelmChart requires you to set fourAllPortal.database.operator.enabled to false or remove fourAllPortal.database.existing
