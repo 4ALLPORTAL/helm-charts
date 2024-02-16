@@ -188,7 +188,7 @@ data:
           OP="DELETE"
         fi
         BODY="{}"
-        ENDPOINT="http://{{ include "common.names.fullname" . }}-backend/api/extensions/dam/mounts/${MOUNT_POINT}/events/${type}"
+        ENDPOINT="http://{{ include "common.names.fullname" . }}-backend.{{ .Release.Namespace }}.svc.cluster.local/api/extensions/dam/mounts/${MOUNT_POINT}/events/${type}"
         if [ "${dest}" == "-" -o "${dest}" == "" ]
         then
           BODY="{\"path\":\"${path}\"}"
