@@ -131,7 +131,7 @@ data:
   {{- if $.Values.webdav.events.enabled }}
   log-handler.sh: |
     #!/bin/ash
-    MOUNT_POINT="data"
+    MOUNT_POINT="{{ $.Values.webdav.events.mountPath }}"
     MOUNT_POINT_LEN=$(echo "$MOUNT_POINT" | awk '{print length($1) + 1;}')
 
     while IFS= read -r line; do
@@ -188,21 +188,21 @@ data:
           OP="DELETE"
         fi
         BODY="{}"
-        ENDPOINT="http://{{ include "common.names.fullname" . }}-backend/api/extensions/dam/mounts/${MOUNT_POINT}/events/${type}"
+        ENDPOINT="http://{{ include "common.names.fullname" . }}-backend/api/extensions/dam/mounts/data/events/${type}"
         if [ "${dest}" == "-" -o "${dest}" == "" ]
         then
           BODY="{\"path\":\"${path}\"}"
-          echo "Send notification to ${ENDPOINT}: ${BODY}" >> /proc/self/fd/1
+          echo "Send notification to ${ENDPOINT}: ${BODY}" > /proc/self/fd/1
         else
           BODY="{\"path\":\"${path}\",\"destination\":\"${dest}\"}"
-          echo "Send notification to ${ENDPOINT}: ${BODY}" >> /proc/self/fd/1
+          echo "Send notification to ${ENDPOINT}: ${BODY}" > /proc/self/fd/1
         fi
         RES_CODE=$(curl -X POST -sw "%{http_code}\n" \
           -H 'Content-Type: application/json' \
           -H "Authorization: Bearer { {{ include "4allportal.fourAllPortal.systemApiKey" . }} }" \
           -d "$BODY" \
           --connect-timeout 1 -o /dev/null ${ENDPOINT})
-        echo "Response status: ${RES_CODE}"  >> /proc/self/fd/1
+        echo "Response status: ${RES_CODE}"  > /proc/self/fd/1
       fi
     done
   {{- end }}
