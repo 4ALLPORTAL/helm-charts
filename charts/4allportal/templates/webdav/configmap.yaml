@@ -192,17 +192,17 @@ data:
         if [ "${dest}" == "-" -o "${dest}" == "" ]
         then
           BODY="{\"path\":\"${path}\"}"
-          echo "Send notification to ${ENDPOINT}: ${BODY}" > /proc/1/fd/1
+          echo "Send notification to ${ENDPOINT}: ${BODY}" >> /proc/self/fd/1
         else
           BODY="{\"path\":\"${path}\",\"destination\":\"${dest}\"}"
-          echo "Send notification to ${ENDPOINT}: ${BODY}" > /proc/1/fd/1
+          echo "Send notification to ${ENDPOINT}: ${BODY}" >> /proc/self/fd/1
         fi
         RES_CODE=$(curl -X POST -sw "%{http_code}\n" \
           -H 'Content-Type: application/json' \
           -H "Authorization: Bearer { {{ include "4allportal.fourAllPortal.systemApiKey" . }} }" \
           -d "$BODY" \
           --connect-timeout 1 -o /dev/null ${ENDPOINT})
-        echo "Response status: ${RES_CODE}"  > /proc/1/fd/1
+        echo "Response status: ${RES_CODE}"  >> /proc/self/fd/1
       fi
     done
   {{- end }}
