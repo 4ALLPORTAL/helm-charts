@@ -253,6 +253,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | webdav.events.image.registry | string | `"quay.io"` |  |
 | webdav.events.image.repository | string | `"curl/curl"` |  |
 | webdav.events.image.tag | string | `"latest"` |  |
+| webdav.events.mountPath | string | `"/webdav/assets/"` |  |
 | webdav.groups | object | `{}` |  |
 | webdav.image.registry | string | `"docker.io"` |  |
 | webdav.image.repository | string | `"httpd"` |  |
