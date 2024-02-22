@@ -131,7 +131,7 @@ data:
   {{- if $.Values.webdav.events.enabled }}
   log-handler.sh: |
     #!/bin/ash
-    MOUNT_POINT="{{ $.Values.webdav.events.mountPath }}"
+    MOUNT_POINT="/webdav/assets/"
     MOUNT_POINT_LEN=$(echo "$MOUNT_POINT" | awk '{print length($1) + 1;}')
 
     while IFS= read -r line; do
