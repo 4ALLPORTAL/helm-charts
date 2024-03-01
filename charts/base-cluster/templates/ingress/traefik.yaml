@@ -25,7 +25,7 @@ spec:
         kind: HelmRepository
         name: traefik
         namespace: {{ .Release.Namespace }}
-      version: 24.x.x
+      version: 25.x.x
   interval: 1m
   install:
     crds: CreateReplace
