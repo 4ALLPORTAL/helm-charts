@@ -35,6 +35,10 @@ spec:
     {{ required "You need to provide a license for stash 😡" .Values.backup.license | nindent 8 }}
     features:
       community: true
+    security:
+      createPSPs:
+        privileged: false
+        baseline: false
     stash-community:
       criticalAddon: true
       enableAnalytics: false
