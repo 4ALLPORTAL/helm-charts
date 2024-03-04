@@ -334,4 +334,4 @@ This  update upgrades the ingress controller traefik with its helm chart to 23.x
 
 ### To 39.0.0
 
-This update ensures compatibility with k8s v1.25.x, which no longer supports several api versions. It also upgrades the traefik chart to 24.x.x, so check the [traefik release notes](https://github.com/traefik/traefik-helm-chart/releases/tag/v24.0.0) and the [k8s upgrade notes](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.25.md#urgent-upgrade-notes)
+This update ensures compatibility with k8s v1.25.x, which no longer supports several api versions. It also upgrades the traefik chart to 25.x.x, so check the [traefik release notes](https://github.com/traefik/traefik-helm-chart/releases/tag/v24.0.0) and the [k8s upgrade notes](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.25.md#urgent-upgrade-notes)
