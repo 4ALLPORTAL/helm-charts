@@ -78,12 +78,12 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | global.clusterName | string | `"eu-west-1"` |  |
 | global.helm.image.registry | string | `"docker.io"` |  |
 | global.helm.image.repository | string | `"alpine/helm"` |  |
-| global.helm.image.tag | string | `"3.12.3"` |  |
+| global.helm.image.tag | string | `"3.14.2"` |  |
 | global.imageCredentials | object | `{}` |  |
 | global.imageRegistry | string | `""` |  |
 | global.kubectl.image.registry | string | `"docker.io"` |  |
 | global.kubectl.image.repository | string | `"bitnami/kubectl"` |  |
-| global.kubectl.image.tag | string | `"1.27.3"` |  |
+| global.kubectl.image.tag | string | `"1.29.2"` |  |
 | global.networkPolicy.dnsLabels."io.kubernetes.pod.namespace" | string | `"kube-system"` |  |
 | global.networkPolicy.dnsLabels.k8s-app | string | `"kube-dns"` |  |
 | global.networkPolicy.metricsLabels."app.kubernetes.io/name" | string | `"prometheus"` |  |
@@ -334,4 +334,5 @@ This  update upgrades the ingress controller traefik with its helm chart to 23.x
 
 ### To 39.0.0
 
-This update ensures compatibility with k8s v1.25.x, which no longer supports several api versions. It also upgrades the traefik chart to 25.x.x, so check the [traefik release notes](https://github.com/traefik/traefik-helm-chart/releases/tag/v24.0.0) and the [k8s upgrade notes](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.25.md#urgent-upgrade-notes)
+This update ensures compatibility with k8s v1.25.x, which no longer supports several api versions. It also upgrades the traefik chart to 25.x.x, as well as the oauth2-proxy chart to v3.x.x.
+Please check the [traefik release notes](https://github.com/traefik/traefik-helm-chart/releases/tag/v24.0.0), the [k8s upgrade notes](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.25.md#urgent-upgrade-notes) as well as the [redis 7.0 release notes](https://raw.githubusercontent.com/redis/redis/7.0/00-RELEASENOTES) before upgrading.
