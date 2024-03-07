@@ -2,7 +2,7 @@
 
 {{- define "4allportal.fourAllPortal.systemApiKey" -}}
 {{- if (eq "" .Values.fourAllPortal.systemApiKey) -}}
-{{ printf uuidv4 | squote }}
+{{ printf uuidv4 }}
 {{- else -}}
 {{ printf .Values.fourAllPortal.systemApiKey }}
 {{- end -}}
