@@ -337,6 +337,7 @@ This  update upgrades the ingress controller traefik with its helm chart to 23.x
 This update ensures compatibility with k8s v1.27.x, which no longer supports several api versions. It also upgrades the traefik chart to 25.x.x, as well as the oauth2-proxy chart to v3.x.x.
 The upgrade to k8s v1.27.x also removes the in-tree AWS storage drivers.
 Please check the following (urgent) upgrade notes before upgrading:
+
 [traefik release notes](https://github.com/traefik/traefik-helm-chart/releases/tag/v24.0.0)
 
 [k8s upgrade notes v1.24](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.24.md#urgent-upgrade-notes)
