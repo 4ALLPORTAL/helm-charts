@@ -338,7 +338,7 @@ This update ensures compatibility with k8s v1.27.x, which no longer supports sev
 The upgrade to k8s v1.27.x also removes the in-tree AWS storage drivers.
 Please check the following (urgent) upgrade notes before upgrading:
 
-[traefik release notes](https://github.com/traefik/traefik-helm-chart/releases/tag/v24.0.0)
+[traefik release notes](https://github.com/traefik/traefik-helm-chart/releases/tag/v25.0.0)
 
 [k8s upgrade notes v1.24](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.24.md#urgent-upgrade-notes)
 
