@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 38.0.9](https://img.shields.io/badge/Version-38.0.9-informational?style=flat-square)
+![Version: 39.0.0](https://img.shields.io/badge/Version-39.0.0-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -78,12 +78,12 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | global.clusterName | string | `"eu-west-1"` |  |
 | global.helm.image.registry | string | `"docker.io"` |  |
 | global.helm.image.repository | string | `"alpine/helm"` |  |
-| global.helm.image.tag | string | `"3.12.3"` |  |
+| global.helm.image.tag | string | `"3.14.2"` |  |
 | global.imageCredentials | object | `{}` |  |
 | global.imageRegistry | string | `""` |  |
 | global.kubectl.image.registry | string | `"docker.io"` |  |
 | global.kubectl.image.repository | string | `"bitnami/kubectl"` |  |
-| global.kubectl.image.tag | string | `"1.27.3"` |  |
+| global.kubectl.image.tag | string | `"1.29.2"` |  |
 | global.networkPolicy.dnsLabels."io.kubernetes.pod.namespace" | string | `"kube-system"` |  |
 | global.networkPolicy.dnsLabels.k8s-app | string | `"kube-dns"` |  |
 | global.networkPolicy.metricsLabels."app.kubernetes.io/name" | string | `"prometheus"` |  |
@@ -325,9 +325,27 @@ This update removes the old security scanner estafette and installs aquasecuriti
 
 ### To 37.1.6
 
-You can now add an email configuration for the alertmanager. If your email server uses port 456 SMARTTLS will be disabled automaticaly. It is also possible to add custome routes for the alertmanager. For the syntax please refer to the alertmanager [documentation](https://prometheus.io/docs/alerting/latest/configuration/) or our values.schema.json.
+You can now add an email configuration for the alertmanager. If your email server uses port 456 SMARTTLS will be disabled automatically. It is also possible to add custom routes for the alertmanager. For the syntax please refer to the alertmanager [documentation](https://prometheus.io/docs/alerting/latest/configuration/) or our values.schema.json.
 
 ### To 38.0.0
 
-Before executing the upgrade you have to modify the traefik helmrelease and disable the podsecuritypolicy yourself. After that proceed with the following instruction.
-This  update upgrades the ingress controller traefik with its helm chart to 23.x.x. There are a some that you need to be aware of. The clusterrole will be renamed and the PodPolicy will be delete because it is deprecated since k8s version 1.25. In order to perform this update you have to delete the traefik deployment manualy.
+Before executing the upgrade you have to modify the traefik helmrelease and disable the PodSecurityPolicy yourself. After that proceed with the following instruction.
+This  update upgrades the ingress controller traefik with its helm chart to 23.x.x. There are some required changes that you need to be aware of. The clusterrole will be renamed and the PodPolicy will be delete because it is deprecated since k8s version 1.25. In order to perform this update you have to delete the traefik deployment manually.
+
+### To 39.0.0
+
+This update ensures compatibility with k8s v1.27.x, which no longer supports several api versions. It also upgrades the traefik chart to 25.x.x, as well as the oauth2-proxy chart to v3.x.x.
+The upgrade to k8s v1.27.x also removes the in-tree AWS storage drivers.
+Please check the following (urgent) upgrade notes before upgrading:
+
+[traefik release notes](https://github.com/traefik/traefik-helm-chart/releases/tag/v25.0.0)
+
+[k8s upgrade notes v1.24](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.24.md#urgent-upgrade-notes)
+
+[k8s upgrade notes v1.25](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.25.md#urgent-upgrade-notes)
+
+[k8s upgrade notes v1.26](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.26.md#urgent-upgrade-notes)
+
+[k8s upgrade notes v1.27](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.27.md#urgent-upgrade-notes)
+
+[redis 7.0 release notes](https://raw.githubusercontent.com/redis/redis/7.0/00-RELEASENOTES) before upgrading.

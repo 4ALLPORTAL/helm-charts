@@ -428,8 +428,7 @@
             "enabled",
             "servingCerts",
             "license"
-          ],
-          "additionalProperties": false
+          ]
         },
         {
           "properties": {

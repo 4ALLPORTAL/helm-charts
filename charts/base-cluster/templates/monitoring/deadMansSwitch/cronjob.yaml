@@ -1,6 +1,6 @@
 {{- if .Values.monitoring.deadMansSwitch.enabled }}
 {{- if false }}
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 {{- else }}
 apiVersion: {{ include "common.capabilities.cronjob.apiVersion" . }}
 {{- end }}

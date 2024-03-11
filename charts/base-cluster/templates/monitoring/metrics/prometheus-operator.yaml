@@ -53,7 +53,7 @@ spec:
         kind: HelmRepository
         name: bitnami
         namespace: {{ $.Release.Namespace }}
-      version: 2.x.x
+      version: 3.x.x
   interval: 1m
   install:
     crds: CreateReplace
