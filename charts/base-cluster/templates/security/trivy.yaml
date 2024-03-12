@@ -28,8 +28,21 @@ spec:
     {{- if .Values.global.imageRegistry }}
     registry: "{{ $.Values.global.imageRegistry }}"
     {{- end }}
+    operator:
+      scanJobsConcurrentLimit: 10
+      scanNodeCollectorLimit: 1
+    trivyOperator:
+      scanJobTolerations: []
     trivy:
       ignoreUnfixed: true
+      severity: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
+      resources:
+        requests:
+          cpu: 100m
+          memory: 100M
+        limits:
+          cpu: 500m
+          memory: 500M
     {{- if .Values.monitoring.prometheus.enabled }}
     serviceMonitor:
       enabled: true
