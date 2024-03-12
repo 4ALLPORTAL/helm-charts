@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 39.0.0](https://img.shields.io/badge/Version-39.0.0-informational?style=flat-square)
+![Version: 39.0.1](https://img.shields.io/badge/Version-39.0.1-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -11,6 +11,7 @@ A generic, base cluster setup
 | Name | Email | Url |
 | ---- | ------ | --- |
 | jpkraemer-mg | <j.kraemer@4allportal.com> |  |
+| Dominic-Beer | <d.beer@4allportal.com> |  |
 
 ## Requirements
 
@@ -198,6 +199,7 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | monitoring.prometheus.storage.retention | string | `"4w"` |  |
 | monitoring.prometheus.storage.size | string | `"100Gi"` |  |
 | monitoring.securityScanning.enabled | bool | `true` |  |
+| monitoring.securityScanning.scanJobTolerations | list | `[]` |  |
 | rbac.admin.groups | list | `[]` |  |
 | rbac.admin.users | list | `[]` |  |
 | rbac.create | bool | `true` |  |
