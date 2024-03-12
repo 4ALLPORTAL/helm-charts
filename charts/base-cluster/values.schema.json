@@ -864,6 +864,21 @@
           "properties": {
             "enabled": {
               "type": "boolean"
+            },
+            "scanJobTolerations": {
+              "type": "array"
+            },
+            "resources": {
+              "type": "object"
+            },
+            "severity": {
+              "type": "string"
+            },
+            "scanJobsConcurrentLimit": {
+              "type": "number"
+            },
+            "nodeCollectorLimit": {
+              "type": "number"
             }
           },
           "additionalProperties": false
