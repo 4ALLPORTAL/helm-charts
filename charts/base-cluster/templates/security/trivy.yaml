@@ -29,20 +29,20 @@ spec:
     registry: "{{ $.Values.global.imageRegistry }}"
     {{- end }}
     operator:
-      scanJobsConcurrentLimit: 10
-      scanNodeCollectorLimit: 1
+      scanJobsConcurrentLimit: {{ .Values.securityScanning.scanJobsConcurrentLimit | default 10 }}
+      scanNodeCollectorLimit: {{ .Values.securityScanning.nodeCollectorLimit | default 1 }}
     trivyOperator:
-      scanJobTolerations: []
+      scanJobTolerations: {{ .Values.securityScanning.scanJobTolerations }}
     trivy:
       ignoreUnfixed: true
-      severity: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
+      severity: {{ .Values.securityScanning.severity | default "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL" }}
       resources:
         requests:
-          cpu: 100m
-          memory: 100M
+          cpu: {{ .Values.securityScanning.resources.requests.cpu | default "100m" }}
+          memory: {{ .Values.securityScanning.resources.requests.memory | default "100M" }}
         limits:
-          cpu: 500m
-          memory: 500M
+          cpu: {{ .Values.securityScanning.resources.limits.cpu | default "500m" }}
+          memory: {{ .Values.securityScanning.resources.limits.memory | default "500M" }}
     {{- if .Values.monitoring.prometheus.enabled }}
     serviceMonitor:
       enabled: true

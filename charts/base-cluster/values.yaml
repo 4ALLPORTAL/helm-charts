@@ -193,6 +193,7 @@ monitoring:
         memory: 64Mi
   securityScanning:
     enabled: true
+    scanJobTolerations: []
   jaeger:
     enabled: true
     host: jaeger
