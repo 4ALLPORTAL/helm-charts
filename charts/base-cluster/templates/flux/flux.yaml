@@ -10,7 +10,7 @@ metadata:
     app.kubernetes.io/part-of: flux
 stringData:
   username: {{ $instance.user | quote }}
-  password: {{ $instance.key  | quote }}
+  password: {{ $instance.key | quote }}
 ---
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: GitRepository

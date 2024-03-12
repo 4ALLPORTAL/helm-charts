@@ -6,6 +6,8 @@ home: "https://4allportal.com"
 maintainers:
   - name: jpkraemer-mg
     email: j.kraemer@4allportal.com
+  - name: Dominic-Beer
+    email: d.beer@4allportal.com
 dependencies:
   - name: common
     repository: https://charts.bitnami.com/bitnami
