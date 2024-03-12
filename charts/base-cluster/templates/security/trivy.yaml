@@ -29,20 +29,20 @@ spec:
     registry: "{{ $.Values.global.imageRegistry }}"
     {{- end }}
     operator:
-      scanJobsConcurrentLimit: {{ .Values.securityScanning.scanJobsConcurrentLimit | default 10 }}
-      scanNodeCollectorLimit: {{ .Values.securityScanning.nodeCollectorLimit | default 1 }}
+      scanJobsConcurrentLimit: {{ .Values.monitoring.securityScanning.scanJobsConcurrentLimit | default 10 }}
+      scanNodeCollectorLimit: {{ .Values.monitoring.securityScanning.nodeCollectorLimit | default 1 }}
     trivyOperator:
-      scanJobTolerations: {{ .Values.securityScanning.scanJobTolerations }}
+      scanJobTolerations: {{ .Values.monitoring.securityScanning.scanJobTolerations }}
     trivy:
       ignoreUnfixed: true
-      severity: {{ .Values.securityScanning.severity | default "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL" }}
+      severity: {{ .Values.monitoring.securityScanning.severity | default "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL" }}
       resources:
         requests:
-          cpu: {{ .Values.securityScanning.resources.requests.cpu | default "100m" }}
-          memory: {{ .Values.securityScanning.resources.requests.memory | default "100M" }}
+          cpu: {{ .Values.monitoring.securityScanning.resources.requests.cpu | default "100m" }}
+          memory: {{ .Values.monitoring.securityScanning.resources.requests.memory | default "100M" }}
         limits:
-          cpu: {{ .Values.securityScanning.resources.limits.cpu | default "500m" }}
-          memory: {{ .Values.securityScanning.resources.limits.memory | default "500M" }}
+          cpu: {{ .Values.monitoring.securityScanning.resources.limits.cpu | default "500m" }}
+          memory: {{ .Values.monitoring.securityScanning.resources.limits.memory | default "500M" }}
     {{- if .Values.monitoring.prometheus.enabled }}
     serviceMonitor:
       enabled: true
