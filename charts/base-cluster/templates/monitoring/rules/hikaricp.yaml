@@ -1,0 +1,38 @@
+{{- if .Values.monitoring.prometheus.enabled }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: hikaricp-alerting
+  namespace: monitoring
+spec:
+  groups:
+    - name: hikari-cp
+      rules:
+        - alert: HikariCPFilling
+          annotations:
+            description: Hikari Connection Pool for {{ "{{ $labels.node }}" }} in namespace {{ "{{ $labels.namespace }}" }} is above 35% longer than 15 minutes.
+            summary: HikariCP filled halfway for 15 minutes in {{ "{{ $labels.namespace }}" }} / {{ "{{ $labels.node }}" }}
+          expr: max by (job, namespace) (ceil((hikaricp_connections{job=~".*-backend", namespace!="demo-4ap"}/ hikaricp_connections_max{job=~".*-backend", namespace!="demo-4ap"}) * 100)) > 35
+          for: 15m
+          labels:
+            severity: info
+
+        - alert: HikariCPHalf
+          annotations:
+            description: Hikari Connection Pool for {{ "{{ $labels.node }}" }} in namespace {{ "{{ $labels.namespace }}" }} is above 50% longer than 15 minutes.
+            summary: HikariCP filled halfway for 15 minutes in {{ "{{ $labels.namespace }}" }} / {{ "{{ $labels.node }}" }}
+          expr: max by (job, namespace) (ceil((hikaricp_connections{job=~".*-backend", namespace!="demo-4ap"}/ hikaricp_connections_max{job=~".*-backend", namespace!="demo-4ap"}) * 100)) > 50
+          for: 15m
+          labels:
+            severity: warning
+
+        - alert: HikariCPAlmostFull
+          annotations:
+            description: Hikari Connection Pool for {{ "{{ $labels.node }}" }} in namespace {{ "{{ $labels.namespace }}" }} is above 90% longer than 5 minutes.
+            summary: HikariCP filled halfway for 5 minutes in {{ "{{ $labels.namespace }}" }} / {{ "{{ $labels.node }}" }}
+          expr: max by (job, namespace) (ceil((hikaricp_connections{job=~".*-backend", namespace!="demo-4ap"}/ hikaricp_connections_max{job=~".*-backend", namespace!="demo-4ap"}) * 100)) > 90
+          for: 5m
+          labels:
+            severity: critical
+{{- end -}}
