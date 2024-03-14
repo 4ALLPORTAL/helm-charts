@@ -194,6 +194,9 @@ monitoring:
   securityScanning:
     enabled: true
     scanJobTolerations: []
+    resources:
+      requests: {}
+      limits: {}
   jaeger:
     enabled: true
     host: jaeger
