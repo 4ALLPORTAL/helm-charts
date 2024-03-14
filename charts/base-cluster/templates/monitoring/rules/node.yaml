@@ -1,0 +1,50 @@
+{{- if .Values.monitoring.prometheus.enabled }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: node-alerting
+  namespace: monitoring
+spec:
+  groups:
+    - name: node-memory
+      rules:
+        - alert: NodeMemoryWarning
+          expr: (1 - (node_memory_MemAvailable_bytes{job="node-exporter", namespace="monitoring"} / node_memory_MemTotal_bytes{job="node-exporter", namespace="monitoring"})) * 100 > 75
+          for: 5m
+          labels:
+            severity: warning
+            frequency: weekly
+          annotations:
+            description: The node {{ "{{ $labels.node }}" }} currently uses {{ "{{ $value }}" }}% of their memory, which is above the threshold of 75%
+            summary: High memory usage on {{ "{{ $labels.node }}" }} in namespace {{ "{{ $labels.namespace }}" }}
+        - alert: NodeMemoryCritical
+          expr: (1 - (node_memory_MemAvailable_bytes{job="node-exporter", namespace="monitoring"} / node_memory_MemTotal_bytes{job="node-exporter", namespace="monitoring"})) * 100 > 90
+          for: 5m
+          labels:
+            severity: critical
+            frequency: daily
+          annotations:
+            description: The node {{ "{{ $labels.node }}" }} currently uses {{ "{{ $value }}" }}% of their memory, which is above the threshold of 90%
+            summary: High memory usage on {{ "{{ $labels.node }}" }} in namespace {{ "{{ $labels.namespace }}" }}
+    - name: node-cpu
+      rules:
+        - alert: NodeCPUWarning
+          expr: ((1 - sum without (mode, cpu) (rate(node_cpu_seconds_total{job="node-exporter", mode=~"idle|iowait|steal"}[5m])) / ignoring(cpu) group_left count without (cpu, mode) (node_cpu_seconds_total{job="node-exporter", mode="idle"}))) * 100 > 75
+          for: 5m
+          labels:
+            severity: warning
+            frequency: weekly
+          annotations:
+            description: The node {{ "{{ $labels.node }}" }} currently uses {{ "{{ $value }}" }}% of their memory, which is above the threshold of 75%
+            summary: High CPU usage on {{ "{{ $labels.node }}" }} in namespace {{ "{{ $labels.namespace }}" }}
+        - alert: NodeCPUCritical
+          expr: ((1 - sum without (mode, cpu) (rate(node_cpu_seconds_total{job="node-exporter", mode=~"idle|iowait|steal"}[5m])) / ignoring(cpu) group_left count without (cpu, mode) (node_cpu_seconds_total{job="node-exporter", mode="idle"}))) * 100 > 90
+          for: 5m
+          labels:
+            severity: critical
+            frequency: daily
+          annotations:
+            description: The node {{ "{{ $labels.node }}" }} currently uses {{ "{{ $value }}" }}% of their CPU, which is above the threshold of 90%
+            summary: High CPU usage on {{ "{{ $labels.node }}" }} in namespace {{ "{{ $labels.namespace }}" }}
+  {{- end -}}
