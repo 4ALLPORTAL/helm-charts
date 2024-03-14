@@ -351,3 +351,7 @@ Please check the following (urgent) upgrade notes before upgrading:
 [k8s upgrade notes v1.27](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.27.md#urgent-upgrade-notes)
 
 [redis 7.0 release notes](https://raw.githubusercontent.com/redis/redis/7.0/00-RELEASENOTES) before upgrading.
+
+### To 39.0.1
+
+You can now add extra configurations for Trivy, allowing for more efficient resource usage and schedulable pods.
