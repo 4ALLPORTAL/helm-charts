@@ -50,7 +50,7 @@ global:
     image:
       registry: docker.io
       repository: bitnami/kubectl
-      tag: "1.29.2"
+      tag: "1.29.3"
   helm:
     image:
       registry: docker.io
