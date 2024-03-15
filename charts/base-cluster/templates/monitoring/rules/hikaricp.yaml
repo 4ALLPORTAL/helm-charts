@@ -23,7 +23,7 @@ spec:
             description: Hikari Connection Pool for {{ "{{ $labels.node }}" }} in namespace {{ "{{ $labels.namespace }}" }} is above 50% longer than 15 minutes.
             summary: HikariCP filled halfway for 15 minutes in {{ "{{ $labels.namespace }}" }} / {{ "{{ $labels.node }}" }}
           expr: max by (job, namespace) (ceil((hikaricp_connections{job=~".*-backend", namespace!="monitoring"}/ hikaricp_connections_max{job=~".*-backend", namespace!="monitoring"}) * 100)) > 50
-          for: 15m
+          for: 5m
           labels:
             severity: warning
 
@@ -32,7 +32,7 @@ spec:
             description: Hikari Connection Pool for {{ "{{ $labels.node }}" }} in namespace {{ "{{ $labels.namespace }}" }} is above 90% longer than 5 minutes.
             summary: HikariCP filled halfway for 5 minutes in {{ "{{ $labels.namespace }}" }} / {{ "{{ $labels.node }}" }}
           expr: max by (job, namespace) (ceil((hikaricp_connections{job=~".*-backend", namespace!="monitoring"}/ hikaricp_connections_max{job=~".*-backend", namespace!="monitoring"}) * 100)) > 90
-          for: 5m
+          for: 30s
           labels:
             severity: critical
 {{- end -}}
