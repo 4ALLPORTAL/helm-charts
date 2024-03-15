@@ -31,7 +31,7 @@ spec:
       rules:
         - alert: NodeCPUWarning
           expr: ((1 - sum without (mode, cpu) (rate(node_cpu_seconds_total{job="node-exporter", mode=~"idle|iowait|steal"}[5m])) / ignoring(cpu) group_left count without (cpu, mode) (node_cpu_seconds_total{job="node-exporter", mode="idle"}))) * 100 > 75
-          for: 5m
+          for: 15m
           labels:
             severity: warning
             frequency: weekly
