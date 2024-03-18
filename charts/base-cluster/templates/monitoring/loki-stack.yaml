@@ -28,8 +28,7 @@ spec:
       retries: -1
   values:
     loki:
-      rbac:
-        pspEnabled: {{ .Values.monitoring.loki.pspEnabled }}
+      pspEnabled: {{ .Values.monitoring.loki.pspEnabled }}
       isDefault: false
       {{- if .Values.global.imageRegistry }}
       image:
