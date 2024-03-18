@@ -29,7 +29,7 @@ spec:
   values:
     loki:
       rbac:
-        pspEnabled: {{ .Values.monitoring.loki.rbac.psp }}
+        pspEnabled: {{ .Values.monitoring.loki.pspEnabled }}
       isDefault: false
       {{- if .Values.global.imageRegistry }}
       image:

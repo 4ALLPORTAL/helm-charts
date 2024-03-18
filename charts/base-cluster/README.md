@@ -159,6 +159,7 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | monitoring.loki.promtail.resources.limits.memory | string | `"128Mi"` |  |
 | monitoring.loki.promtail.resources.requests.cpu | string | `"100m"` |  |
 | monitoring.loki.promtail.resources.requests.memory | string | `"64Mi"` |  |
+| monitoring.loki.pspEnabled | bool | `false` |  |
 | monitoring.loki.replicas | int | `1` |  |
 | monitoring.loki.resources.limits.cpu | int | `1` |  |
 | monitoring.loki.resources.limits.memory | string | `"1Gi"` |  |

@@ -168,8 +168,7 @@ monitoring:
     authentication: {}
   loki:
     enabled: true
-    rbac:
-      psp: false
+    pspEnabled: false
     storageSize: 10Gi
     replicas: 1
     resources:

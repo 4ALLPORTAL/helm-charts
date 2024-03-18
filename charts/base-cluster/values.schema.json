@@ -695,7 +695,7 @@
             "enabled": {
               "type": "boolean"
             },
-            "psp": {
+            "pspEnabled": {
               "type": "boolean",
               "default": false
             },
