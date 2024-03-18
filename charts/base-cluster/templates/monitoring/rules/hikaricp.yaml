@@ -20,7 +20,7 @@ spec:
 
         - alert: HikariCPHalf
           annotations:
-            description: Hikari Connection Pool for {{ "{{ $labels.node }}" }} in namespace {{ "{{ $labels.namespace }}" }} is above 50% longer than 15 minutes.
+            description: Hikari Connection Pool for {{ "{{ $labels.node }}" }} in namespace {{ "{{ $labels.namespace }}" }} is above 50% longer than 5 minutes.
             summary: HikariCP filled halfway for 15 minutes in {{ "{{ $labels.namespace }}" }} / {{ "{{ $labels.node }}" }}
           expr: max by (job, namespace) (ceil((hikaricp_connections{job=~".*-backend", namespace!="monitoring"}/ hikaricp_connections_max{job=~".*-backend", namespace!="monitoring"}) * 100)) > 50
           for: 5m
@@ -29,10 +29,19 @@ spec:
 
         - alert: HikariCPAlmostFull
           annotations:
-            description: Hikari Connection Pool for {{ "{{ $labels.node }}" }} in namespace {{ "{{ $labels.namespace }}" }} is above 90% longer than 5 minutes.
+            description: Hikari Connection Pool for {{ "{{ $labels.node }}" }} in namespace {{ "{{ $labels.namespace }}" }} is above 90% longer than 30 seconds.
             summary: HikariCP filled halfway for 5 minutes in {{ "{{ $labels.namespace }}" }} / {{ "{{ $labels.node }}" }}
           expr: max by (job, namespace) (ceil((hikaricp_connections{job=~".*-backend", namespace!="monitoring"}/ hikaricp_connections_max{job=~".*-backend", namespace!="monitoring"}) * 100)) > 90
           for: 30s
+          labels:
+            severity: critical
+
+        - alert: HikariCPFull
+          annotations:
+            description: Hikari Connection Pool for {{ "{{ $labels.node }}" }} in namespace {{ "{{ $labels.namespace }}" }} is at or above 100%.
+            summary: HikariCP filled halfway for 5 minutes in {{ "{{ $labels.namespace }}" }} / {{ "{{ $labels.node }}" }}
+          expr: max by (job, namespace) (ceil((hikaricp_connections{job=~".*-backend", namespace!="monitoring"}/ hikaricp_connections_max{job=~".*-backend", namespace!="monitoring"}) * 100)) >= 100
+          for: 1s
           labels:
             severity: critical
 {{- end -}}
