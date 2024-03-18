@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 20.0.2](https://img.shields.io/badge/Version-20.0.2-informational?style=flat-square) ![AppVersion: 3.10.38](https://img.shields.io/badge/AppVersion-3.10.38-informational?style=flat-square)
+![Version: 20.0.3](https://img.shields.io/badge/Version-20.0.3-informational?style=flat-square) ![AppVersion: 3.10.38](https://img.shields.io/badge/AppVersion-3.10.38-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -256,7 +256,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | webdav.groups | object | `{}` |  |
 | webdav.image.registry | string | `"docker.io"` |  |
 | webdav.image.repository | string | `"httpd"` |  |
-| webdav.image.tag | string | `"2.4.57"` |  |
+| webdav.image.tag | string | `"2.4.58"` |  |
 | webdav.livenessProbe.enabled | bool | `true` |  |
 | webdav.livenessProbe.failureThreshold | int | `4` |  |
 | webdav.livenessProbe.initialDelaySeconds | int | `5` |  |
@@ -319,4 +319,10 @@ During the upgrade, it deletes the mariadb statefulSet with `--cascade orphan`.
 
 ## To 19.0.0
 
-The maxscale chart sets the innodb_buffer_pool_size to 80% from requested mariadb.memory.limit. If you upgrade an existing instanz to 19.0.35 you have to restart the statefulset manualy in order for the changes to take effect.
+The maxscale chart sets the innodb_buffer_pool_size to 80% from requested mariadb.memory.limit. If you upgrade an existing instance to 19.0.35 you have to restart the statefulset manually in order for the changes to take effect.
+
+## To 20.0.0
+
+This release fixes a bug with the last Chart version for database creation, using either fourAllPortal.database.existing, fourAllPortal.database.operator or maxscale.galera.
+
+You are no longer required or capable of using fourAllPortal.database.existing values when using *.operator. If you currently do, please remove either fourAllPortal.database.existing or fourAllPortal.database.operator before upgrading.

@@ -11,7 +11,6 @@ A generic, base cluster setup
 | Name | Email | Url |
 | ---- | ------ | --- |
 | jpkraemer-mg | <j.kraemer@4allportal.com> |  |
-| Dominic-Beer | <d.beer@4allportal.com> |  |
 
 ## Requirements
 
@@ -199,7 +198,6 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | monitoring.prometheus.storage.retention | string | `"4w"` |  |
 | monitoring.prometheus.storage.size | string | `"100Gi"` |  |
 | monitoring.securityScanning.enabled | bool | `true` |  |
-| monitoring.securityScanning.scanJobTolerations | list | `[]` |  |
 | rbac.admin.groups | list | `[]` |  |
 | rbac.admin.users | list | `[]` |  |
 | rbac.create | bool | `true` |  |
@@ -354,4 +352,4 @@ Please check the following (urgent) upgrade notes before upgrading:
 
 ### To 39.0.1
 
-You can now add extra configurations for Trivy, allowing for more efficient resource usage and schedulable pods.
+Prometheus will now send alerts for levels where human interference might be necessary in regards to Node CPU / Memory usage as well as HikariCP.
