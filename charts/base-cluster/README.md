@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 39.0.0](https://img.shields.io/badge/Version-39.0.0-informational?style=flat-square)
+![Version: 39.0.1](https://img.shields.io/badge/Version-39.0.1-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -349,3 +349,7 @@ Please check the following (urgent) upgrade notes before upgrading:
 [k8s upgrade notes v1.27](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.27.md#urgent-upgrade-notes)
 
 [redis 7.0 release notes](https://raw.githubusercontent.com/redis/redis/7.0/00-RELEASENOTES) before upgrading.
+
+### To 39.0.1
+
+Prometheus will now send alerts for levels where human interference might be necessary in regards to Node CPU / Memory usage as well as HikariCP.
