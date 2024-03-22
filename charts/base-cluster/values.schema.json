@@ -893,10 +893,7 @@
             "enabled": {
               "type": "boolean"
             },
-            "apiKey": {
-              "type": "string"
-            },
-            "pingKey": {
+            "webhookUrl": {
               "type": "string"
             }
           },
