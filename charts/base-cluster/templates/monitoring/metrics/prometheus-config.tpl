@@ -154,11 +154,11 @@ alertmanager:
       {{- end }}
       routes:
         {{- if .Values.monitoring.deadMansSwitch.enabled}}
-        - match:
-            alertname: Watchdog
-          receiver: uptimerobot
-          group_interval: 1m
-          repeat_interval: 1m
+      - match:
+          alertname: Watchdog
+        receiver: uptimerobot
+        group_interval: 1m
+        repeat_interval: 1m
         {{- end }}
       {{- with $.Values.monitoring.prometheus.alertmanager.routes }}
       {{ . | toYaml | nindent 6 }}
