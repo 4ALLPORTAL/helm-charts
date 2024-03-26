@@ -2,7 +2,7 @@ global:
   persistence:
     enabled: true
   tracing:
-    enabled: true
+    enabled: false
     jaeger:
       agent:
         useDaemonSet: true
