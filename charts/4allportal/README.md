@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 20.0.3](https://img.shields.io/badge/Version-20.0.3-informational?style=flat-square) ![AppVersion: 3.10.38](https://img.shields.io/badge/AppVersion-3.10.38-informational?style=flat-square)
+![Version: 20.0.4](https://img.shields.io/badge/Version-20.0.4-informational?style=flat-square) ![AppVersion: 3.10.38](https://img.shields.io/badge/AppVersion-3.10.38-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -227,7 +227,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | global.networkPolicy.metricsLabels."io.kubernetes.pod.namespace" | string | `"monitoring"` |  |
 | global.networkPolicy.type | string | `"auto"` |  |
 | global.persistence.enabled | bool | `true` |  |
-| global.tracing.enabled | bool | `true` |  |
+| global.tracing.enabled | bool | `false` |  |
 | global.tracing.jaeger.agent.port | int | `6831` |  |
 | global.tracing.jaeger.agent.useDaemonSet | bool | `true` |  |
 | global.tracing.jaeger.sampler.param | int | `1` |  |
