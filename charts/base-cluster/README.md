@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 39.0.2](https://img.shields.io/badge/Version-39.0.2-informational?style=flat-square)
+![Version: 40.0.0](https://img.shields.io/badge/Version-39.0.2-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -355,3 +355,7 @@ Prometheus will now send alerts for levels where human interference might be nec
 ### To 39.0.2
 
 You can now add extra configurations for Trivy, allowing for more efficient resource usage and schedulable pods.
+
+### To 40.0.0
+
+Removed old DeadMansSwitch implementation and added WebhookUrl for Watchdog to fire at heartbeat service
