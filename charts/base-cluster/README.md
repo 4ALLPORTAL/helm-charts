@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 39.0.2](https://img.shields.io/badge/Version-39.0.2-informational?style=flat-square)
+![Version: 40.0.0](https://img.shields.io/badge/Version-39.0.2-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -352,3 +352,7 @@ Please check the following (urgent) upgrade notes before upgrading:
 ### To 39.0.1
 
 Prometheus will now send alerts for levels where human interference might be necessary in regards to Node CPU / Memory usage as well as HikariCP.
+
+### To 40.0.0
+
+Removed old DeadMansSwitch implementation and added WebhookUrl for Watchdog to fire at heartbeat service
