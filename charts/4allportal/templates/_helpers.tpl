@@ -55,13 +55,13 @@ mariadb
 {{- end -}}
 
 {{- define  "4allportal.fourallportal.database.port" -}}
-{{- if or .Values.maxscale.enabled (not .Values.fourAllPortal.database.operator.enabled) (and (not .Values.fourAllPortal.database.existing.port) ((list "mysql" "mariadb") | has (include "4allportal.fourallportal.database.type" .))) -}}
-3306
-{{- else -}}
 {{- if .Values.fourAllPortal.database.operator.enabled }}
-{{- else -}}
+{{- else if or .Values.maxscale.enabled (and (not .Values.fourAllPortal.database.existing.port) ((list "mysql" "mariadb") | has (include "4allportal.fourallportal.database.type" .))) -}}
+3306
+{{- else if .Values.fourAllPortal.database.existing.port }}
+{{- .Values.fourAllPortal.database.existing.port -}}
+{{- else }}
 {{- required "Bundled DB deployment is disabled, please provide a port for the existing database" .Values.fourAllPortal.database.existing.port -}}
-{{- end -}}
 {{- end -}}
 {{- end -}}
 
