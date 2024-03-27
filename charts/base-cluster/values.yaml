@@ -244,8 +244,7 @@ monitoring:
     pingHosts: []
   deadMansSwitch:
     enabled: false
-    apiKey: ""
-    pingKey: ""
+    webhookUrl: ""
 
 git:
   instances: {}
