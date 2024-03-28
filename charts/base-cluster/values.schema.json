@@ -887,7 +887,7 @@
           },
           "additionalProperties": false
         },
-        "deadMansSwitch": {
+        "deadMansSnitch": {
           "type": "object",
           "properties": {
             "enabled": {

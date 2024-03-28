@@ -153,7 +153,7 @@ alertmanager:
       receiver: pagerduty
       {{- end }}
       routes:
-        {{- if .Values.monitoring.deadMansSwitch.enabled}}
+        {{- if .Values.monitoring.deadMansSnitch.enabled}}
       - match:
           alertname: Watchdog
         receiver: uptimerobot
@@ -169,10 +169,10 @@ alertmanager:
         pagerduty_configs:
           - routing_key: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.routingKey }}
       {{- end }}
-      {{- if .Values.monitoring.deadMansSwitch.enabled}}
+      {{- if .Values.monitoring.deadMansSnitch.enabled}}
       - name: uptimerobot
         webhook_configs:
-          - url: {{ .Values.monitoring.deadMansSwitch.webhookUrl }}
+          - url: {{ .Values.monitoring.deadMansSnitch.webhookUrl }}
       {{- end }}
       {{- with $.Values.monitoring.prometheus.alertmanager.emailconfig }}
       {{ . | toYaml | nindent 6 }}
