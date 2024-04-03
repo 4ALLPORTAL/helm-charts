@@ -168,6 +168,7 @@ monitoring:
     authentication: {}
   loki:
     enabled: true
+    pspEnabled: false
     storageSize: 10Gi
     replicas: 1
     resources:
@@ -193,6 +194,10 @@ monitoring:
         memory: 64Mi
   securityScanning:
     enabled: true
+    scanJobTolerations: []
+    resources:
+      requests: {}
+      limits: {}
   jaeger:
     enabled: true
     host: jaeger
