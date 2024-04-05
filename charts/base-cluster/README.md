@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 39.0.1](https://img.shields.io/badge/Version-39.0.1-informational?style=flat-square)
+![Version: 39.0.3](https://img.shields.io/badge/Version-39.0.3-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -11,6 +11,7 @@ A generic, base cluster setup
 | Name | Email | Url |
 | ---- | ------ | --- |
 | jpkraemer-mg | <j.kraemer@4allportal.com> |  |
+| Dominic-Beer | <d.beer@4allportal.com> |  |
 
 ## Requirements
 
@@ -78,12 +79,12 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | global.clusterName | string | `"eu-west-1"` |  |
 | global.helm.image.registry | string | `"docker.io"` |  |
 | global.helm.image.repository | string | `"alpine/helm"` |  |
-| global.helm.image.tag | string | `"3.14.2"` |  |
+| global.helm.image.tag | string | `"3.14.3"` |  |
 | global.imageCredentials | object | `{}` |  |
 | global.imageRegistry | string | `""` |  |
 | global.kubectl.image.registry | string | `"docker.io"` |  |
 | global.kubectl.image.repository | string | `"bitnami/kubectl"` |  |
-| global.kubectl.image.tag | string | `"1.29.2"` |  |
+| global.kubectl.image.tag | string | `"1.29.3"` |  |
 | global.networkPolicy.dnsLabels."io.kubernetes.pod.namespace" | string | `"kube-system"` |  |
 | global.networkPolicy.dnsLabels.k8s-app | string | `"kube-dns"` |  |
 | global.networkPolicy.metricsLabels."app.kubernetes.io/name" | string | `"prometheus"` |  |
@@ -158,6 +159,7 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | monitoring.loki.promtail.resources.limits.memory | string | `"128Mi"` |  |
 | monitoring.loki.promtail.resources.requests.cpu | string | `"100m"` |  |
 | monitoring.loki.promtail.resources.requests.memory | string | `"64Mi"` |  |
+| monitoring.loki.pspEnabled | bool | `false` |  |
 | monitoring.loki.replicas | int | `1` |  |
 | monitoring.loki.resources.limits.cpu | int | `1` |  |
 | monitoring.loki.resources.limits.memory | string | `"1Gi"` |  |
@@ -198,6 +200,9 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | monitoring.prometheus.storage.retention | string | `"4w"` |  |
 | monitoring.prometheus.storage.size | string | `"100Gi"` |  |
 | monitoring.securityScanning.enabled | bool | `true` |  |
+| monitoring.securityScanning.resources.limits | object | `{}` |  |
+| monitoring.securityScanning.resources.requests | object | `{}` |  |
+| monitoring.securityScanning.scanJobTolerations | list | `[]` |  |
 | rbac.admin.groups | list | `[]` |  |
 | rbac.admin.users | list | `[]` |  |
 | rbac.create | bool | `true` |  |
@@ -353,3 +358,7 @@ Please check the following (urgent) upgrade notes before upgrading:
 ### To 39.0.1
 
 Prometheus will now send alerts for levels where human interference might be necessary in regards to Node CPU / Memory usage as well as HikariCP.
+
+### To 39.0.2
+
+You can now add extra configurations for Trivy, allowing for more efficient resource usage and schedulable pods.

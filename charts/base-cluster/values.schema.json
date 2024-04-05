@@ -695,6 +695,10 @@
             "enabled": {
               "type": "boolean"
             },
+            "pspEnabled": {
+              "type": "boolean",
+              "default": false
+            },
             "storageSize": {
               "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
             },
@@ -864,6 +868,21 @@
           "properties": {
             "enabled": {
               "type": "boolean"
+            },
+            "scanJobTolerations": {
+              "type": "array"
+            },
+            "resources": {
+              "type": "object"
+            },
+            "severity": {
+              "type": "string"
+            },
+            "scanJobsConcurrentLimit": {
+              "type": "number"
+            },
+            "nodeCollectorLimit": {
+              "type": "number"
             }
           },
           "additionalProperties": false
