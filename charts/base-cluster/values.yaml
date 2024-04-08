@@ -247,10 +247,9 @@ monitoring:
         cpu: 250m
         memory: 64Mi
     pingHosts: []
-  deadMansSwitch:
+  deadMansSnitch:
     enabled: false
-    apiKey: ""
-    pingKey: ""
+    webhookUrl: ""
 
 git:
   instances: {}
