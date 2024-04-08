@@ -887,16 +887,13 @@
           },
           "additionalProperties": false
         },
-        "deadMansSwitch": {
+        "deadMansSnitch": {
           "type": "object",
           "properties": {
             "enabled": {
               "type": "boolean"
             },
-            "apiKey": {
-              "type": "string"
-            },
-            "pingKey": {
+            "webhookUrl": {
               "type": "string"
             }
           },

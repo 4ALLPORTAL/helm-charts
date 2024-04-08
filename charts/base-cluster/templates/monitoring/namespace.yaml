@@ -1,4 +1,4 @@
-{{- if or .Values.monitoring.jaeger.enabled .Values.monitoring.metricsServer.enabled .Values.monitoring.prometheus.enabled .Values.monitoring.ingress.enabled .Values.monitoring.goldpinger.enabled .Values.monitoring.deadMansSwitch.enabled }}
+{{- if or .Values.monitoring.jaeger.enabled .Values.monitoring.metricsServer.enabled .Values.monitoring.prometheus.enabled .Values.monitoring.ingress.enabled .Values.monitoring.goldpinger.enabled .Values.monitoring.deadMansSnitch.enabled }}
 apiVersion: v1
 kind: Namespace
 metadata:

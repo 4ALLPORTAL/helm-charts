@@ -153,10 +153,10 @@ alertmanager:
       receiver: pagerduty
       {{- end }}
       routes:
-        {{- if .Values.monitoring.deadMansSwitch.enabled}}
+        {{- if .Values.monitoring.deadMansSnitch.enabled}}
         - match:
             alertname: Watchdog
-          receiver: healthchecks.io
+          receiver: uptimerobot
           group_interval: 1m
           repeat_interval: 1m
         {{- end }}
@@ -169,11 +169,10 @@ alertmanager:
         pagerduty_configs:
           - routing_key: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.routingKey }}
       {{- end }}
-      {{- if .Values.monitoring.deadMansSwitch.enabled}}
-      - name: healthchecks.io
+      {{- if .Values.monitoring.deadMansSnitch.enabled}}
+      - name: uptimerobot
         webhook_configs:
-          - url: https://hc-ping.com/{{ .Values.monitoring.deadMansSwitch.pingKey }}/k8s-cluster-{{ .Values.global.baseDomain | replace "." "-" }}-{{ .Values.global.clusterName }}-monitoring
-            send_resolved: false
+          - url: {{ .Values.monitoring.deadMansSnitch.webhookUrl }}
       {{- end }}
       {{- with $.Values.monitoring.prometheus.alertmanager.emailconfig }}
       {{ . | toYaml | nindent 6 }}
