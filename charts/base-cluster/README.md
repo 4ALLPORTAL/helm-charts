@@ -23,6 +23,8 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 
 ## Values
 
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
 | backup.enabled | bool | `false` |  |
 | certManager.caInjector.resources.limits.cpu | string | `"250m"` |  |
 | certManager.caInjector.resources.limits.memory | string | `"512Mi"` |  |
@@ -156,6 +158,7 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | monitoring.loki.promtail.resources.limits.memory | string | `"128Mi"` |  |
 | monitoring.loki.promtail.resources.requests.cpu | string | `"100m"` |  |
 | monitoring.loki.promtail.resources.requests.memory | string | `"64Mi"` |  |
+| monitoring.loki.pspEnabled | bool | `false` |  |
 | monitoring.loki.replicas | int | `1` |  |
 | monitoring.loki.resources.limits.cpu | int | `1` |  |
 | monitoring.loki.resources.limits.memory | string | `"1Gi"` |  |
@@ -196,6 +199,9 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | monitoring.prometheus.storage.retention | string | `"4w"` |  |
 | monitoring.prometheus.storage.size | string | `"100Gi"` |  |
 | monitoring.securityScanning.enabled | bool | `true` |  |
+| monitoring.securityScanning.resources.limits | object | `{}` |  |
+| monitoring.securityScanning.resources.requests | object | `{}` |  |
+| monitoring.securityScanning.scanJobTolerations | list | `[]` |  |
 | rbac.admin.groups | list | `[]` |  |
 | rbac.admin.users | list | `[]` |  |
 | rbac.create | bool | `true` |  |
@@ -355,7 +361,3 @@ Prometheus will now send alerts for levels where human interference might be nec
 ### To 39.0.2
 
 You can now add extra configurations for Trivy, allowing for more efficient resource usage and schedulable pods.
-
-### To 40.0.0
-
-Removed old DeadMansSwitch implementation and added WebhookUrl for Watchdog to fire at heartbeat service
