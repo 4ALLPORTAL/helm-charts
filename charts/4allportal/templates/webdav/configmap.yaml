@@ -12,7 +12,9 @@ data:
     {{- end }}
   httpd.conf: |
     ServerRoot "/usr/local/apache2"
+    {{- if .Values.fourAllPortal.ingress.enabled -}}
     ServerName {{ .Values.fourAllPortal.ingress.host }}
+    {{- end -}}
     Listen 8080
     LoadModule auth_digest_module modules/mod_auth_digest.so
     LoadModule authn_core_module modules/mod_authn_core.so
