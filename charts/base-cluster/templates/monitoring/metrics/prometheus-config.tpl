@@ -153,13 +153,27 @@ alertmanager:
       receiver: pagerduty
       {{- end }}
       routes:
-        {{- if .Values.monitoring.deadMansSnitch.enabled}}
-        - match:
-            alertname: Watchdog
-          receiver: uptimerobot
-          group_interval: 1m
-          repeat_interval: 1m
-        {{- end }}
+      {{- if .Values.monitoring.deadMansSnitch.enabled}}
+      - match:
+          alertname: Watchdog
+        receiver: uptimerobot
+        group_interval: 1m
+        repeat_interval: 1m
+      {{- end }}
+      {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.enabled }}
+      - match:
+          severity: Critical
+        receiver: pagerduty-critical
+      - match:
+          severity: High
+        receiver: pagerduty-high
+      - match:
+          severity: Medium
+        receiver: pagerduty-medium
+      - match:
+          severity: Low
+        receiver: pagerduty-low
+      {{- end }}
       {{- with $.Values.monitoring.prometheus.alertmanager.routes }}
       {{ . | toYaml | nindent 6 }}
       {{- end }}
@@ -168,6 +182,22 @@ alertmanager:
       - name: pagerduty
         pagerduty_configs:
           - routing_key: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.routingKey }}
+      - name: pagerduty-critical
+        pagerduty_configs:
+          - routing_key: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.routingKey }}
+            severity: 'Critical'
+      - name: pagerduty-high
+        pagerduty_configs:
+          - routing_key: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.routingKey }}
+            severity: 'Error'
+      - name: pagerduty-medium
+        pagerduty_configs:
+          - routing_key: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.routingKey }}
+            severity: 'Warning'
+      - name: pagerduty-low
+        pagerduty_configs:
+          - routing_key: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.routingKey }}
+            severity: 'Info'
       {{- end }}
       {{- if .Values.monitoring.deadMansSnitch.enabled}}
       - name: uptimerobot
