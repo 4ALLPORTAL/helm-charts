@@ -96,6 +96,7 @@ data:
       DirectorySlash Off
       LimitRequestBody 4294967296
 
+      IndexOptions +Charset=UTF-8
       Options Indexes FollowSymLinks MultiViews
 
       LimitXMLRequestBody 0
