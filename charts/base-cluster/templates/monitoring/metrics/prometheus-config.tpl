@@ -153,13 +153,13 @@ alertmanager:
       receiver: pagerduty
       {{- end }}
       routes:
-        {{- if .Values.monitoring.deadMansSnitch.enabled}}
-        - match:
-            alertname: Watchdog
-          receiver: uptimerobot
-          group_interval: 1m
-          repeat_interval: 1m
-        {{- end }}
+      {{- if .Values.monitoring.deadMansSnitch.enabled}}
+      - match:
+          alertname: Watchdog
+        receiver: uptimerobot
+        group_interval: 1m
+        repeat_interval: 1m
+      {{- end }}
       {{- with $.Values.monitoring.prometheus.alertmanager.routes }}
       {{ . | toYaml | nindent 6 }}
       {{- end }}
@@ -168,6 +168,7 @@ alertmanager:
       - name: pagerduty
         pagerduty_configs:
           - routing_key: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.routingKey }}
+            severity: '{{ "{{ if (index .Alerts 0).Labels.severity }}{{ (index .Alerts 0).Labels.severity }}{{ else }}critical{{ end }}" }}'
       {{- end }}
       {{- if .Values.monitoring.deadMansSnitch.enabled}}
       - name: uptimerobot
