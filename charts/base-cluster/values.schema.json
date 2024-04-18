@@ -244,6 +244,26 @@
             "NodePort",
             "LoadBalancer"
           ]
+        },
+        "log": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "level": {
+              "type": "string"
+            }
+          }
+        },
+        "image": {
+          "type": "object",
+          "properties": {
+            "tag": {
+              "type": "string"
+            }
+          }
         }
       },
       "additionalProperties": false
