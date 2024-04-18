@@ -80,7 +80,7 @@ spec:
       - "--log.level={{ .Values.traefik.log.level }}"
       {{- end }}
       {{- if .Values.traefik.debug.enabled }}
-      - "--debug"
+      - "--api.debug=true"
       {{- end }}
       - "--entryPoints.web.http.redirections.entryPoint.permanent=true"
       {{- if .Values.monitoring.jaeger.enabled }}
