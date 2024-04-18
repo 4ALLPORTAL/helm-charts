@@ -71,6 +71,11 @@ traefik:
       memory: 500Mi
   minReplicas: 2
   maxReplicas: 8
+  image:
+    tag: v2.11.2
+  log:
+    enabled: false
+    level: error
 
 speedtest:
   enabled: true
