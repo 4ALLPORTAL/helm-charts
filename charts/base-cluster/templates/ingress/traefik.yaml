@@ -79,6 +79,9 @@ spec:
       - "--log=true"
       - "--log.level={{ .Values.traefik.log.level }}"
       {{- end }}
+      {{- if .Values.traefik.debug.enabled }}
+      - "--debug"
+      {{- end }}
       - "--entryPoints.web.http.redirections.entryPoint.permanent=true"
       {{- if .Values.monitoring.jaeger.enabled }}
       - "--tracing.jaeger=true"

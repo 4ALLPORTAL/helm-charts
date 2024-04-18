@@ -76,6 +76,8 @@ traefik:
   log:
     enabled: false
     level: error
+  debug:
+    enabled: true
 
 speedtest:
   enabled: true

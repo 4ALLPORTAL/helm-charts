@@ -264,6 +264,15 @@
               "type": "string"
             }
           }
+        },
+        "debug": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            }
+          }
         }
       },
       "additionalProperties": false
