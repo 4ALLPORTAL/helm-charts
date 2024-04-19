@@ -62,6 +62,14 @@ flux:
   resources: {}
 
 traefik:
+  image:
+    tag: v2.11.2
+  log:
+    enabled: false
+    level: ERROR
+  debug:
+    enabled: true
+  throttleDuration: 2s
   resources:
     requests:
       cpu: "1"

@@ -39,6 +39,7 @@ spec:
     {{- if .Values.global.imageRegistry }}
     image:
       name: "{{ $.Values.global.imageRegistry }}/traefik"
+      tag: {{ .Values.traefik.image.tag | quote }}
     {{- end }}
     providers:
       kubernetesCRD:
@@ -75,16 +76,24 @@ spec:
       - "--providers.kubernetesIngress.ingressEndpoint.ip={{ .Values.traefik.ingressIP }}"
       {{- end }}
       - "--entryPoints.web.http.redirections.entryPoint.permanent=true"
+      {{- if .Values.traefik.debug.enabled }}
+      - "--api.debug=true"
+      {{- end }}
+      {{- if .Values.traefik.log.enabled }}
+      - "--log=true"
+      - "--log.level={{ .Values.traefik.log.level }}"
+      {{- end }}
       {{- if .Values.monitoring.jaeger.enabled }}
       - "--tracing.jaeger=true"
       - "--tracing.jaeger.localAgentHostPort=$(JAEGER_AGENT_HOST):$(JAEGER_AGENT_PORT)"
-    {{- end }}
+      {{- end }}
       - "--providers.file.filename=/config/config.toml"
       - "--entrypoints.websecure.http.middlewares=compress@file"
       - "--providers.kubernetesingress.allowexternalnameservices=true"
       - "--providers.kubernetesingress.allowEmptyServices=true"
       - "--providers.kubernetescrd.allowexternalnameservices=true"
-
+      - "--providers.kubernetescrd.throttleDuration={{ .Values.traefik.throttleDuration }}"
+      - "--providers.kubernetesingress.throttleDuration={{ .Values.traefik.throttleDuration }}"
     volumes:
       - name: ingress-traefik-config
         mountPath: /config
