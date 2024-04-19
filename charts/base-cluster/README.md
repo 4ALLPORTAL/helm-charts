@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 40.0.3](https://img.shields.io/badge/Version-40.0.3-informational?style=flat-square)
+![Version: 40.1.0](https://img.shields.io/badge/Version-40.1.0-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -214,12 +214,17 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | speedtest.image.registry | string | `""` |  |
 | speedtest.image.repository | string | `"adolfintel/speedtest"` |  |
 | speedtest.image.tag | string | `"latest"` |  |
+| traefik.debug.enabled | bool | `true` |  |
+| traefik.image.tag | string | `"v2.11.2"` |  |
+| traefik.log.enabled | bool | `false` |  |
+| traefik.log.level | string | `"ERROR"` |  |
 | traefik.maxReplicas | int | `8` |  |
 | traefik.minReplicas | int | `2` |  |
 | traefik.resources.limits.cpu | string | `"4"` |  |
 | traefik.resources.limits.memory | string | `"500Mi"` |  |
 | traefik.resources.requests.cpu | string | `"1"` |  |
 | traefik.resources.requests.memory | string | `"250Mi"` |  |
+| traefik.throttleDuration | string | `"2s"` |  |
 
 # Upgrading
 
