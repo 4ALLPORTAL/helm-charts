@@ -92,8 +92,8 @@ spec:
       - "--providers.kubernetesingress.allowexternalnameservices=true"
       - "--providers.kubernetesingress.allowEmptyServices=true"
       - "--providers.kubernetescrd.allowexternalnameservices=true"
-      - "--providers.kubernetescrd.throttleDuration={{ .Values.traefik.throttleDuration }}"
-      - "--providers.kubernetesingress.throttleDuration={{ .Values.traefik.throttleDuration }}"
+      - "--providers.kubernetescrd.throttleDuration=10s"
+      - "--providers.kubernetesingress.throttleDuration=10s"
     volumes:
       - name: ingress-traefik-config
         mountPath: /config

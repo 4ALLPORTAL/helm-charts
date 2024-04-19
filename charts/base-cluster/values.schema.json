@@ -273,9 +273,6 @@
               "type": "string"
             }
           }
-        },
-        "throttleDuration": {
-          "type": "string"
         }
       },
       "additionalProperties": false

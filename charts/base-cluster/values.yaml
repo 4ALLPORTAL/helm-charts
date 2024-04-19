@@ -69,7 +69,6 @@ traefik:
     level: ERROR
   debug:
     enabled: true
-  throttleDuration: 2s
   resources:
     requests:
       cpu: "1"
