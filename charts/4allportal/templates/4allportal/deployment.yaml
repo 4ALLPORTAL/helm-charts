@@ -1,4 +1,4 @@
-{{ $apiKey := "4allportal.fourAllPortal.systemApiKey" }}
+{{ $apiKey := include "4allportal.fourAllPortal.systemApiKey" . }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
