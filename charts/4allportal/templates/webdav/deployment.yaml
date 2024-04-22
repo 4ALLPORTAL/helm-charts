@@ -22,7 +22,6 @@ spec:
         app.kubernetes.io/component: webdav
       annotations:
         checksum/secret: {{ include (print $.Template.BasePath "/webdav/secret.yaml") $ | sha256sum }}
-        checksum/configmap: {{ include (print $.Template.BasePath "/webdav/configmap.yaml") $ | sha256sum }}
     spec:
       {{- include "4allportal.webdav.priorityClassName" $ | nindent 6 }}
       {{- $securityOptions | nindent 6 }}
