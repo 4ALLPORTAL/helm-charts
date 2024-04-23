@@ -8,6 +8,6 @@ data:
   {{- if .Release.IsInstall }}
   key: {{ include "4allportal.fourAllPortal.systemApiKey" . }}
   {{- else }}
-  key: {{ index (lookup "v1" "Secret" .Release.Namespace "apikey").data "key" }}
+  key: {{ index (lookup "v1" "Secret" .Release.Namespace "apikey-".Release.Name).data "key" }}
   {{- end }}
 {{- end -}}
