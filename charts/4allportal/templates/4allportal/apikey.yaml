@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: apikey
+  name: apikey-{{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
 data:
   {{- if .Release.IsInstall }}
