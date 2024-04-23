@@ -162,7 +162,7 @@ spec:
             - name: FOURALLPORTAL_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: apikey
+                  name: apikey-{{ .Release.Name }}
                   key: key
           resources:
             requests:
