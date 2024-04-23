@@ -158,6 +158,12 @@ spec:
               subPath: log-handler.sh
               mountPath: /usr/bin/log-handler.sh
               readOnly: true
+          env:
+            - name: FOURALLPORTAL_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: apikey
+                  key: key
           resources:
             requests:
               cpu: "100m"
