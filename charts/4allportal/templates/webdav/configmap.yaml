@@ -202,7 +202,7 @@ data:
         fi
         RES_CODE=$(curl -X POST -sw "%{http_code}\n" \
           -H 'Content-Type: application/json' \
-          -H "Authorization: Bearer ${FOURALLPORTAL_SYSTEM_APIKEY}" \
+          -H "Authorization: Bearer ${FOURALLPORTAL_API_KEY}" \
           -d "$BODY" \
           --connect-timeout 1 -o /dev/null ${ENDPOINT})
         echo "Response status: ${RES_CODE}"  > /proc/self/fd/1
