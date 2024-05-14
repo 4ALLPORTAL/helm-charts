@@ -1,7 +1,7 @@
 apiVersion: v2
 description: A generic, base cluster setup
 name: base-cluster
-version: 40.1.3
+version: 40.0.4
 home: "https://4allportal.com"
 maintainers:
   - name: jpkraemer-mg
