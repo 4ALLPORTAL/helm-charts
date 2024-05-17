@@ -1,0 +1,13 @@
+{{- if .Values.webdav.enabled }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: apikey-{{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+data:
+  {{- if .Release.IsInstall }}
+  key: {{ include "4allportal.fourAllPortal.systemApiKey" . | b64enc }}
+  {{- else }}
+  key: {{ index (lookup "v1" "Secret" .Release.Namespace (printf "apikey-%s" .Release.Name)).data "key" }}
+  {{- end }}
+{{- end -}}
