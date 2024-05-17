@@ -39,7 +39,6 @@ spec:
     {{- if .Values.global.imageRegistry }}
     image:
       name: "{{ $.Values.global.imageRegistry }}/traefik"
-      tag: {{ .Values.traefik.image.tag | quote }}
     {{- end }}
     providers:
       kubernetesCRD:

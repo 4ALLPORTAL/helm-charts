@@ -265,14 +265,6 @@
               "default": false
             }
           }
-        },
-        "image": {
-          "type": "object",
-          "properties": {
-            "tag": {
-              "type": "string"
-            }
-          }
         }
       },
       "additionalProperties": false
