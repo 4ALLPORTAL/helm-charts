@@ -155,10 +155,12 @@ data:
         out = gensub(/\"/, "\\\"", "g", out);
         print out}')
 
+      dest=$(echo -e $(echo "$dest" | sed 's/%/\\x/g'))
+
       matched=$(expr match "${path}" "$MOUNT_POINT.*")
       if [ \( "${type}" == "PUT" -o "${type}" == "DELETE" -o "${type}" == "MKCOL" -o "${type}" == "MOVE" -o "${type}" == "COPY" \) -a ${matched} != 0 ]
       then
-        path=$(echo "$path" | cut -c ${MOUNT_POINT_LEN}- )
+        path=$(echo -e "$path" | cut -c ${MOUNT_POINT_LEN}- )
         if [ "${dest}" != "-" -a "${dest}" != "" ]
         then
           dest=$(echo "$dest" | cut -c ${MOUNT_POINT_LEN}- )
