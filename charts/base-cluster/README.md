@@ -224,7 +224,6 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | traefik.resources.limits.memory | string | `"500Mi"` |  |
 | traefik.resources.requests.cpu | string | `"1"` |  |
 | traefik.resources.requests.memory | string | `"250Mi"` |  |
-| traefik.throttleDuration | string | `"2s"` |  |
 
 # Upgrading
 
