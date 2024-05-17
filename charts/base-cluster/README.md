@@ -215,7 +215,6 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | speedtest.image.repository | string | `"adolfintel/speedtest"` |  |
 | speedtest.image.tag | string | `"latest"` |  |
 | traefik.debug.enabled | bool | `true` |  |
-| traefik.image.tag | string | `"v2.11.2"` |  |
 | traefik.log.enabled | bool | `false` |  |
 | traefik.log.level | string | `"ERROR"` |  |
 | traefik.maxReplicas | int | `8` |  |
