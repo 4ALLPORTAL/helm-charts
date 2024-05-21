@@ -75,6 +75,11 @@ spec:
       - "--providers.kubernetesIngress.ingressEndpoint.ip={{ .Values.traefik.ingressIP }}"
       {{- end }}
       - "--entryPoints.web.http.redirections.entryPoint.permanent=true"
+      {{- if .Values.traefik.debug.enabled }}
+      - "--api.debug=true"
+      {{- end }}
+      - "--log=true"
+      - "--log.level={{ .Values.traefik.log.level }}"
       {{- if .Values.monitoring.jaeger.enabled }}
       - "--tracing.jaeger=true"
       - "--tracing.jaeger.localAgentHostPort=$(JAEGER_AGENT_HOST):$(JAEGER_AGENT_PORT)"
@@ -84,7 +89,8 @@ spec:
       - "--providers.kubernetesingress.allowexternalnameservices=true"
       - "--providers.kubernetesingress.allowEmptyServices=true"
       - "--providers.kubernetescrd.allowexternalnameservices=true"
-
+      - "--providers.kubernetescrd.throttleDuration=10s"
+      - "--providers.kubernetesingress.throttleDuration=10s"
     volumes:
       - name: ingress-traefik-config
         mountPath: /config
