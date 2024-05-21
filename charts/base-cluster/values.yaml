@@ -62,6 +62,10 @@ flux:
   resources: {}
 
 traefik:
+  log:
+    level: ERROR
+  debug:
+    enabled: false
   resources:
     requests:
       cpu: "1"
