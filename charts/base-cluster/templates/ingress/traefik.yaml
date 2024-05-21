@@ -78,10 +78,8 @@ spec:
       {{- if .Values.traefik.debug.enabled }}
       - "--api.debug=true"
       {{- end }}
-      {{- if .Values.traefik.log.enabled }}
       - "--log=true"
       - "--log.level={{ .Values.traefik.log.level }}"
-      {{- end }}
       {{- if .Values.monitoring.jaeger.enabled }}
       - "--tracing.jaeger=true"
       - "--tracing.jaeger.localAgentHostPort=$(JAEGER_AGENT_HOST):$(JAEGER_AGENT_PORT)"

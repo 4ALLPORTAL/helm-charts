@@ -63,7 +63,6 @@ flux:
 
 traefik:
   log:
-    enabled: false
     level: ERROR
   debug:
     enabled: false
