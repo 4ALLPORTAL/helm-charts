@@ -147,9 +147,15 @@ spec:
 
             {{- if and .Values.fourAllPortal.database.operator.enabled (not .Values.maxscale.enabled) }}
             - name: DATABASE_USER
-              value: {{ required "You must set a database user when using the operator." .Values.fourAllPortal.database.operator.user | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-databaseuser-secret
+                  key: user
             - name: DATABASE_PASSWORD
-              value: {{ required "You must set a user password when using the operator." .Values.fourAllPortal.database.operator.password | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-databaseuser-secret
+                  key: password
             - name: DATABASE_TYPE
               valueFrom:
                 configMapKeyRef:
@@ -166,7 +172,10 @@ spec:
                   name: {{ .Values.fourAllPortal.database.operator.databaseRef }}-configmap
                   key: "DATABASE_PORT"
             - name: DATABASE_DATABASE_NAME
-              value: {{ required "You must set a database name when using the operator." .Values.fourAllPortal.database.operator.databaseName | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-databaseuser-secret
+                  key: database
             {{ else }}
             - name: DATABASE_USER
               value: {{ include "4allportal.fourallportal.database.user" . | quote }}
