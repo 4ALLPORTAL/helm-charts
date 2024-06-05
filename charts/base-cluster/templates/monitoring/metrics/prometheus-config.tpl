@@ -169,7 +169,7 @@ alertmanager:
         pagerduty_configs:
           - routing_key: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.routingKey }}
             severity: '{{ "{{ if GroupLabels.severity }}{{ GroupLabels.severity }}{{ else }}critical{{ end }}" }}'
-            description: '{{ "[{{ .Status | toUpper }}:{{ len .Alerts }}] {{ if .GroupLabels.alertname }}{{ .GroupLabels.alertname - }}{{ else if .CommonLabels.alertname }}{{ .CommonLabels.alertname - }}{{ else }}{{ (index .Alerts 0).Labels.alertname - }}{{ end }} NS:{{ if .GroupLabels.namespace }}{{ .GroupLabels.namespace - }}{{ else if .CommonLabels.namespace }}{{ .CommonLabels.namespace - }}{{ else }}{{ (index .Alerts 0).Labels.namespace - }}{{ end }} JOB: {{ if .GroupLabels.job_name }}{{ .GroupLabels.job - }}{{ else if .CommonLabels.job_name }}{{ .CommonLabels.job_name - }}{{ else }}{{ (index .Alerts 0).Labels.job_name - }}{{ end }}" }}'
+            description: '{{ "[{{ .Status | toUpper }}:{{ len .Alerts }}] {{ if .GroupLabels.alertname }}{{ .GroupLabels.alertname }}{{ else if .CommonLabels.alertname }}{{ .CommonLabels.alertname }}{{ else }}{{ (index .Alerts 0).Labels.alertname }}{{ end }} | NS:{{ if .GroupLabels.namespace }}{{ .GroupLabels.namespace }}{{ else if .CommonLabels.namespace }}{{ .CommonLabels.namespace }}{{ else }}{{ (index .Alerts 0).Labels.namespace }}{{ end }} | JOB: {{ if .GroupLabels.job_name }}{{ .GroupLabels.job }}{{ else if .CommonLabels.job_name }}{{ .CommonLabels.job_name }}{{ else }}{{ (index .Alerts 0).Labels.job_name }}{{ end }}" }}'
       {{- end }}
       {{- if .Values.monitoring.deadMansSnitch.enabled}}
       - name: uptimerobot
