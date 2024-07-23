@@ -6530,6 +6530,24 @@ entries:
     version: 1.0.5
   base-cluster:
   - apiVersion: v2
+    created: "2024-07-23T14:20:52.31543631Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.19.3
+    description: A generic, base cluster setup
+    digest: 2f6464af2b08399d02d8292135fd1e847c88f8c29b9a92f4cb19a6bf31d21d27
+    home: https://4allportal.com
+    maintainers:
+    - email: j.kraemer@4allportal.com
+      name: jpkraemer-mg
+    - email: d.beer@4allportal.com
+      name: Dominic-Beer
+    name: base-cluster
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/base-cluster-40.1.2/base-cluster-40.1.2.tgz
+    version: 40.1.2
+  - apiVersion: v2
     created: "2024-05-21T14:31:08.382551557Z"
     dependencies:
     - name: common
@@ -8826,4 +8844,4 @@ entries:
     urls:
     - https://github.com/4ALLPORTAL/helm-charts/releases/download/simple-website-1.0.0/simple-website-1.0.0.tgz
     version: 1.0.0
-generated: "2024-07-23T14:16:01.170883375Z"
+generated: "2024-07-23T14:20:52.316555947Z"
