@@ -141,6 +141,7 @@ prometheus-node-exporter:
 alertmanager:
   enabled: true
   config:
+    enabled: true
     templates:
     - /etc/alertmanager/config/template*.tmpl
   {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.enabled }}
