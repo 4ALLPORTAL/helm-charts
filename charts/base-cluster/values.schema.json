@@ -546,6 +546,9 @@
                   },
                   "additionalProperties": false
                 },
+                "templateFiles": {
+                  "type": "object"
+                },
                 "emailconfig": {
                   "type": "array",
                   "items": {
