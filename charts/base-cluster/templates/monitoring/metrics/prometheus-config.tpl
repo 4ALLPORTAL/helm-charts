@@ -172,7 +172,6 @@ alertmanager:
           - routing_key: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.routingKey }}
             severity: '{{ "{{ if (index .Alerts 0).Labels.severity }}{{ (index .Alerts 0).Labels.severity }}{{ else }}critical{{ end }}" }}'
             description: '{{ "{{ template \"pagerduty.description\" . }}" }}'
-{{/*            description: '{{ "[{{ .Status | toUpper }}:{{ len .Alerts }}] {{ if .GroupLabels.alertname }}{{ .GroupLabels.alertname }}{{ else if .CommonLabels.alertname }}{{ .CommonLabels.alertname }}{{ else }}{{ (index .Alerts 0).Labels.alertname }}{{ end }} | NS:{{ if .GroupLabels.namespace }}{{ .GroupLabels.namespace }}{{ else if .CommonLabels.namespace }}{{ .CommonLabels.namespace }}{{ else }}{{ (index .Alerts 0).Labels.namespace }}{{ end }} | JOB: {{ if .GroupLabels.job_name }}{{ .GroupLabels.job }}{{ else if .CommonLabels.job_name }}{{ .CommonLabels.job_name }}{{ else }}{{ (index .Alerts 0).Labels.job_name }}{{ end }}" }}'*/}}
       {{- end }}
       {{- if .Values.monitoring.deadMansSnitch.enabled}}
       - name: uptimerobot
@@ -185,16 +184,16 @@ alertmanager:
       - name: "null"
   podDisruptionBudget:
     enabled: true
-  templates: |
-    {{- range $key, $value := .Values.monitoring.prometheus.alertmanager.templateFiles }}
-    {{ $key }}: |-
-      {{- $value | nindent 4 }}
-    {{- end }}
-  templateFiles: |
-    {{- range $key, $value := .Values.monitoring.prometheus.alertmanager.templateFiles }}
-    {{ $key }}: |-
-      {{- $value | nindent 4 }}
-    {{- end }}
+  templates:
+  {{- range $key, $value := .Values.monitoring.prometheus.alertmanager.templateFiles }}
+    {{ $key }}: |
+    {{ $value | indent 8 }}
+  {{- end }}
+  templateFiles:
+  {{- range $key, $value := .Values.monitoring.prometheus.alertmanager.templateFiles }}
+    {{ $key }}: |
+    {{ $value | indent 8 }}
+  {{- end }}
   {{- if not (empty $.Values.monitoring.prometheus.authentication.enabled | ternary $.Values.global.authentication.enabled $.Values.monitoring.prometheus.authentication.enabled) }}
   ingress:
     enabled: true
