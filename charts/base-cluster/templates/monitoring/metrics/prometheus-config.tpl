@@ -142,8 +142,7 @@ alertmanager:
   enabled: true
   config:
     enabled: true
-    templates:
-    - /etc/alertmanager/config/template*.tmpl
+    templates: ["*.tmpl"]
   {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.enabled }}
     global:
       pagerduty_url: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.url }}
@@ -187,6 +186,11 @@ alertmanager:
   podDisruptionBudget:
     enabled: true
   templates: |
+    {{- range $key, $value := .Values.monitoring.prometheus.alertmanager.templateFiles }}
+    {{ $key }}: |-
+      {{- $value | nindent 4 }}
+    {{- end }}
+  templateFiles: |
     {{- range $key, $value := .Values.monitoring.prometheus.alertmanager.templateFiles }}
     {{ $key }}: |-
       {{- $value | nindent 4 }}
