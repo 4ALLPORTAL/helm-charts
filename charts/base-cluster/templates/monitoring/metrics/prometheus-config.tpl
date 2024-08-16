@@ -189,11 +189,6 @@ alertmanager:
     {{ $key }}: |
     {{ $value | indent 8 }}
   {{- end }}
-  templateFiles:
-  {{- range $key, $value := .Values.monitoring.prometheus.alertmanager.templateFiles }}
-    {{ $key }}: |
-    {{ $value | indent 8 }}
-  {{- end }}
   {{- if not (empty $.Values.monitoring.prometheus.authentication.enabled | ternary $.Values.global.authentication.enabled $.Values.monitoring.prometheus.authentication.enabled) }}
   ingress:
     enabled: true
