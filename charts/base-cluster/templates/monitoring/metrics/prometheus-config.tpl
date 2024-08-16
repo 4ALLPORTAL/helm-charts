@@ -184,7 +184,7 @@ alertmanager:
       - name: "null"
   podDisruptionBudget:
     enabled: true
-  templates:
+  templateFiles:
   {{- range $key, $value := .Values.monitoring.prometheus.alertmanager.templateFiles }}
     {{ $key }}: |
     {{ $value | indent 8 }}
