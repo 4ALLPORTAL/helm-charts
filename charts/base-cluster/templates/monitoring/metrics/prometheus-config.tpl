@@ -141,7 +141,6 @@ prometheus-node-exporter:
 alertmanager:
   enabled: true
   config:
-    templates: ["*.tmpl"]
   {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.enabled }}
     global:
       pagerduty_url: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.url }}
