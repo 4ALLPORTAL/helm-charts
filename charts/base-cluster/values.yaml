@@ -163,6 +163,7 @@ monitoring:
         enabled: false
         url: ""
         routingKey: ""
+        description:
       emailconfig: []
       routes: []
       templateFiles: {}
