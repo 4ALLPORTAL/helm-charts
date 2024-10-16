@@ -169,7 +169,9 @@ alertmanager:
         pagerduty_configs:
           - routing_key: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.routingKey }}
             severity: '{{ "{{ if (index .Alerts 0).Labels.severity }}{{ (index .Alerts 0).Labels.severity }}{{ else }}critical{{ end }}" }}'
-            description: '{{ "{{ template \"pagerduty.description\" . }}" }}'
+            {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.description }}
+            description: '{{ .Values.monitoring.prometheus.alertmanager.pagerduty.description }}'
+            {{- end }}
       {{- end }}
       {{- if .Values.monitoring.deadMansSnitch.enabled}}
       - name: uptimerobot

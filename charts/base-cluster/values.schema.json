@@ -563,6 +563,9 @@
                     },
                     "routingKey": {
                       "type": "string"
+                    },
+                    "description": {
+                      "type": ["string","null"]
                     }
                   },
                   "additionalProperties": false
