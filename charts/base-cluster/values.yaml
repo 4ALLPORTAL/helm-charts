@@ -167,6 +167,7 @@ monitoring:
         enabled: false
         url: ""
         routingKey: ""
+        severity:
         description:
       emailconfig: []
       routes: []

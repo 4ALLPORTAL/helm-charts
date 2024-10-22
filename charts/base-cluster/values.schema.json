@@ -564,6 +564,9 @@
                     "routingKey": {
                       "type": "string"
                     },
+                    "severity": {
+                      "type": ["string","null"]
+                    },
                     "description": {
                       "type": ["string","null"]
                     }

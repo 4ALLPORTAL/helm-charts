@@ -168,7 +168,9 @@ alertmanager:
       - name: pagerduty
         pagerduty_configs:
           - routing_key: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.routingKey }}
-            severity: '{{ "{{ if (index .Alerts 0).Labels.severity }}{{ (index .Alerts 0).Labels.severity }}{{ else }}critical{{ end }}" }}'
+            {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.severity }}
+            severity: '{{ .Values.monitoring.prometheus.alertmanager.pagerduty.severity }}'
+            {{- end }}
             {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.description }}
             description: '{{ .Values.monitoring.prometheus.alertmanager.pagerduty.description }}'
             {{- end }}
