@@ -365,5 +365,3 @@ Prometheus will now send alerts for levels where human interference might be nec
 ### To 39.0.2
 
 You can now add extra configurations for Trivy, allowing for more efficient resource usage and schedulable pods.
-
-
