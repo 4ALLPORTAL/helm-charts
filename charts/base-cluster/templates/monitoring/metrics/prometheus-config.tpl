@@ -168,7 +168,12 @@ alertmanager:
       - name: pagerduty
         pagerduty_configs:
           - routing_key: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.routingKey }}
-            severity: '{{ "{{ if (index .Alerts 0).Labels.severity }}{{ (index .Alerts 0).Labels.severity }}{{ else }}critical{{ end }}" }}'
+            {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.severity }}
+            severity: '{{ .Values.monitoring.prometheus.alertmanager.pagerduty.severity }}'
+            {{- end }}
+            {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.description }}
+            description: '{{ .Values.monitoring.prometheus.alertmanager.pagerduty.description }}'
+            {{- end }}
       {{- end }}
       {{- if .Values.monitoring.deadMansSnitch.enabled}}
       - name: uptimerobot
@@ -181,6 +186,11 @@ alertmanager:
       - name: "null"
   podDisruptionBudget:
     enabled: true
+  templateFiles:
+  {{- range $key, $value := .Values.monitoring.prometheus.alertmanager.templateFiles }}
+    {{ $key }}: |
+    {{ $value | indent 8 }}
+  {{- end }}
   {{- if not (empty $.Values.monitoring.prometheus.authentication.enabled | ternary $.Values.global.authentication.enabled $.Values.monitoring.prometheus.authentication.enabled) }}
   ingress:
     enabled: true

@@ -563,9 +563,18 @@
                     },
                     "routingKey": {
                       "type": "string"
+                    },
+                    "severity": {
+                      "type": ["string","null"]
+                    },
+                    "description": {
+                      "type": ["string","null"]
                     }
                   },
                   "additionalProperties": false
+                },
+                "templateFiles": {
+                  "type": "object"
                 },
                 "emailconfig": {
                   "type": "array",
