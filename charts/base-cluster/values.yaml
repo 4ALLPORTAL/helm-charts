@@ -167,8 +167,11 @@ monitoring:
         enabled: false
         url: ""
         routingKey: ""
+        severity:
+        description:
       emailconfig: []
       routes: []
+      templateFiles: {}
     authentication: {}
   loki:
     enabled: true
