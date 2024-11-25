@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 20.0.15](https://img.shields.io/badge/Version-20.0.15-informational?style=flat-square) ![AppVersion: 3.10.38](https://img.shields.io/badge/AppVersion-3.10.38-informational?style=flat-square)
+![Version: 20.1.0](https://img.shields.io/badge/Version-20.1.0-informational?style=flat-square) ![AppVersion: 3.10.38](https://img.shields.io/badge/AppVersion-3.10.38-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -239,6 +239,38 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | maxscale.mariadb.db.user | string | `"4allportal"` |  |
 | maxscale.mariadb.podDisruptionBudget | object | `{}` |  |
 | maxscale.replicas | int | `2` |  |
+| samba.affinity | object | `{}` |  |
+| samba.containerSecurityContext.allowPrivilegeEscalation | bool | `false` |  |
+| samba.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
+| samba.containerSecurityContext.privileged | bool | `false` |  |
+| samba.containerSecurityContext.readOnlyRootFilesystem | bool | `true` |  |
+| samba.containerSecurityContext.runAsGroup | int | `1000` |  |
+| samba.containerSecurityContext.runAsNonRoot | bool | `true` |  |
+| samba.containerSecurityContext.runAsUser | int | `1000` |  |
+| samba.enabled | bool | `false` |  |
+| samba.groups | object | `{}` |  |
+| samba.image.registry | string | `"quay.io"` |  |
+| samba.image.repository | string | `"samba.org/samba-server"` |  |
+| samba.image.tag | string | `"v0.5"` |  |
+| samba.livenessProbe.enabled | bool | `false` |  |
+| samba.mounts | object | `{}` |  |
+| samba.nodeSelector | object | `{}` |  |
+| samba.podDisruptionBudget | bool | `true` |  |
+| samba.readinessProbe.enabled | bool | `false` |  |
+| samba.resources.limits.cpu | int | `2` |  |
+| samba.resources.limits.memory | string | `"1Gi"` |  |
+| samba.resources.requests.cpu | string | `"10m"` |  |
+| samba.resources.requests.memory | string | `"32Mi"` |  |
+| samba.securityContext.fsGroup | int | `1000` |  |
+| samba.securityContext.fsGroupChangePolicy | string | `"OnRootMismatch"` |  |
+| samba.securityContext.runAsGroup | int | `1000` |  |
+| samba.securityContext.runAsNonRoot | bool | `true` |  |
+| samba.securityContext.runAsUser | int | `1000` |  |
+| samba.securityOptions.hostIPC | bool | `false` |  |
+| samba.securityOptions.hostNetwork | bool | `false` |  |
+| samba.securityOptions.hostPID | bool | `false` |  |
+| samba.tolerations | list | `[]` |  |
+| samba.users | object | `{}` |  |
 | users | list | `[]` |  |
 | webdav.affinity | object | `{}` |  |
 | webdav.containerSecurityContext.allowPrivilegeEscalation | bool | `false` |  |
@@ -286,46 +318,6 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | webdav.securityOptions.hostPID | bool | `false` |  |
 | webdav.tolerations | list | `[]` |  |
 | webdav.users | object | `{}` |  |
-| samba.affinity | object | `{}` |  |
-| samba.containerSecurityContext.allowPrivilegeEscalation | bool | `false` |  |
-| samba.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
-| samba.containerSecurityContext.privileged | bool | `false` |  |
-| samba.containerSecurityContext.readOnlyRootFilesystem | bool | `true` |  |
-| samba.containerSecurityContext.runAsGroup | int | `1000` |  |
-| samba.containerSecurityContext.runAsNonRoot | bool | `true` |  |
-| samba.containerSecurityContext.runAsUser | int | `1000` |  |
-| samba.enabled | bool | `false` |  |
-| samba.image.registry | string | `"docker.io"` |  |
-| samba.image.repository | string | `"httpd"` |  |
-| samba.image.tag | string | `"2.4.59"` |  |
-| samba.livenessProbe.enabled | bool | `true` |  |
-| samba.livenessProbe.failureThreshold | int | `4` |  |
-| samba.livenessProbe.initialDelaySeconds | int | `5` |  |
-| samba.livenessProbe.periodSeconds | int | `10` |  |
-| samba.livenessProbe.successThreshold | int | `1` |  |
-| samba.livenessProbe.timeoutSeconds | int | `5` |  |
-| samba.nodeSelector | object | `{}` |  |
-| samba.podDisruptionBudget | bool | `true` |  |
-| samba.readinessProbe.enabled | bool | `true` |  |
-| samba.readinessProbe.failureThreshold | int | `3` |  |
-| samba.readinessProbe.initialDelaySeconds | int | `0` |  |
-| samba.readinessProbe.periodSeconds | int | `1` |  |
-| samba.readinessProbe.successThreshold | int | `1` |  |
-| samba.readinessProbe.timeoutSeconds | int | `1` |  |
-| samba.resources.limits.cpu | int | `4` |  |
-| samba.resources.limits.memory | string | `"1Gi"` |  |
-| samba.resources.requests.cpu | string | `"10m"` |  |
-| samba.resources.requests.memory | string | `"32Mi"` |  |
-| samba.securityContext.fsGroup | int | `1000` |  |
-| samba.securityContext.fsGroupChangePolicy | string | `"OnRootMismatch"` |  |
-| samba.securityContext.runAsGroup | int | `1000` |  |
-| samba.securityContext.runAsNonRoot | bool | `true` |  |
-| samba.securityContext.runAsUser | int | `1000` |  |
-| samba.securityOptions.hostIPC | bool | `false` |  |
-| samba.securityOptions.hostNetwork | bool | `false` |  |
-| samba.securityOptions.hostPID | bool | `false` |  |
-| samba.tolerations | list | `[]` |  |
-| samba.users | object | `{}` |  |
 
 # Upgrading
 
@@ -366,7 +358,3 @@ The maxscale chart sets the innodb_buffer_pool_size to 80% from requested mariad
 This release fixes a bug with the last Chart version for database creation, using either fourAllPortal.database.existing, fourAllPortal.database.operator or maxscale.galera.
 
 You are no longer required or capable of using fourAllPortal.database.existing values when using *.operator. If you currently do, please remove either fourAllPortal.database.existing or fourAllPortal.database.operator before upgrading.
-
-## To 20.1.0
-
-Added Samba to 4allportal helm chart.
