@@ -21,3 +21,7 @@
 {{- define "4allportal.backup.s3.image" -}}
 {{ include "common.images.image" (dict "imageRoot" .Values.backups.s3.image "global" .Values.global) }}
 {{- end -}}
+
+{{- define "4allportal.samba.image" -}}
+{{ include "common.images.image" (dict "imageRoot" .Values.samba.image "global" .Values.global) }}
+{{- end -}}

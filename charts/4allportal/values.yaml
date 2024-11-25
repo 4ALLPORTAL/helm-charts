@@ -244,6 +244,41 @@ dreiDRenderer:
         type: const
         param: 1
 
+samba:
+  enabled: false
+  image:
+    registry: quay.io
+    repository: samba.org/samba-server
+    tag: v0.5
+
+  livenessProbe:
+    enabled: false
+
+  readinessProbe:
+    enabled: false
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      cpu: 2
+      memory: 1Gi
+
+  users: {}
+  groups: {}
+  mounts: {}
+
+  securityContext: *securityContext
+  securityOptions: *securityOptions
+  containerSecurityContext: *containerSecurityContext
+
+  affinity: {}
+  nodeSelector: {}
+  tolerations: []
+
+  podDisruptionBudget: true
+
 webdav:
   enabled: false
   image:

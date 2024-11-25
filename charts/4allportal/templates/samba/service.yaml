@@ -1,0 +1,14 @@
+{{- if .Values.samba.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ include "common.names.fullname" $ }}-samba"
+  namespace: {{ .Release.Namespace }}
+spec:
+  type: LoadBalancer
+  ports:
+    - name: smb
+      port: 445
+      targetPort: smb
+  selector: {{- include "common.labels.matchLabels" $ | nindent 4 }}
+  {{- end }}

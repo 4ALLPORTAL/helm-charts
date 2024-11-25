@@ -1,0 +1,145 @@
+{{- if .Values.samba.enabled }}
+  {{- $securityOptions := .Values.samba.securityOptions | toYaml -}}
+  {{- $securityContext := .Values.samba.securityContext | toYaml -}}
+  {{- $containerSecurityContext := .Values.samba.containerSecurityContext | toYaml -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ include "common.names.fullname" $ }}-samba"
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: samba
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" $ | nindent 6 }}
+      app.kubernetes.io/component: samba
+  template:
+    metadata:
+      labels: {{- include "common.labels.stable" $ | nindent 8 }}
+        app.kubernetes.io/component: samba
+    spec:
+      {{- include "4allportal.samba.priorityClassName" $ | nindent 6 }}
+      {{- $securityOptions | nindent 6 }}
+      automountServiceAccountToken: false
+      securityContext: {{- $securityContext | nindent 8 }}
+      enableServiceLinks: false
+      containers:
+        - name: samba
+          securityContext: {{- $containerSecurityContext | nindent 12 }}
+          image: {{ template "4allportal.samba.image" $ }}
+          {{- if $.Values.samba.image.repository | contains "@" }}
+          imagePullPolicy: IfNotPresent
+          {{- else }}
+          imagePullPolicy: Always
+          {{- end }}
+          ports:
+            - containerPort: 445
+              name: smb
+          command: ["samba-container"]
+          args:
+            - run
+            - smbd
+          volumeMounts:
+            - mountPath: /etc/container-config
+              name: samba-container-config
+            - mountPath: /etc/container-users
+              name: users-config
+            - mountPath: /mnt/assets
+              name: assets
+            - mountPath: /var/lib/samba
+              name: samba-state
+            - mountPath: /run
+              name: run
+            - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+              name: kube-api-access-abcde
+              readOnly: true
+          {{- if $.Values.samba.livenessProbe.enabled }}
+          livenessProbe:
+            exec:
+              command:
+                - bash
+                - -c
+                - timeout 1 ls -d /dav/data/samba/assets
+                - timeout 1 ls -d /dav/data/samba/data
+            failureThreshold: {{ $.Values.samba.livenessProbe.failureThreshold }}
+            initialDelaySeconds: {{ $.Values.samba.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ $.Values.samba.livenessProbe.periodSeconds }}
+            successThreshold: {{ $.Values.samba.livenessProbe.successThreshold }}
+            timeoutSeconds: {{ $.Values.samba.livenessProbe.timeoutSeconds }}
+          {{- end }}
+          {{- if $.Values.samba.readinessProbe.enabled }}
+          readinessProbe:
+            tcpSocket:
+              port: samba
+            failureThreshold: {{ $.Values.samba.readinessProbe.failureThreshold }}
+            initialDelaySeconds: {{ $.Values.samba.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ $.Values.samba.readinessProbe.periodSeconds }}
+            successThreshold: {{ $.Values.samba.readinessProbe.successThreshold }}
+            timeoutSeconds: {{ $.Values.samba.readinessProbe.timeoutSeconds }}
+          {{- end }}
+          resources: {{- toYaml $.Values.samba.resources | nindent 12 }}
+          env:
+            - name: SAMBA_CONTAINER_ID
+              value: assets
+            - name: SAMBACC_CONFIG
+              value: /etc/container-config/config.json:/etc/container-users/users.json
+            - name: SAMBA_POD_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.name
+            - name: SAMBA_POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+                  apiVersion: v1
+      volumes:
+        - name: samba-container-config
+          configMap:
+            defaultMode: 420
+            name: "{{ include "common.names.fullname" $ }}-samba"
+        - name: users-config
+          secret:
+            defaultMode: 420
+            secretName: {{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "samba" "context" $) }}
+            items:
+              - key: users
+                path: users.json
+        - name: assets
+        {{- include "4allportal.fourallportal.persistence.assets.mount" $ | nindent 10 }}
+        - name: samba-state
+          emptyDir: {}
+        - name: run
+          emptyDir:
+            medium: Memory
+        - name: kube-api-access-abcde
+          projected:
+            defaultMode: 420
+            sources:
+              - serviceAccountToken:
+                  expirationSeconds: 3607
+                  path: token
+              - configMap:
+                  items:
+                    - key: ca.crt
+                      path: ca.crt
+                  name: kube-root-ca.crt
+              - downwardAPI:
+                  items:
+                    - fieldRef:
+                        apiVersion: v1
+                        fieldPath: metadata.namespace
+                      path: namespace
+      {{- with $.Values.samba.nodeSelector }}
+      nodeSelector: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.samba.affinity }}
+      affinity: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.samba.tolerations }}
+      tolerations: {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end -}}

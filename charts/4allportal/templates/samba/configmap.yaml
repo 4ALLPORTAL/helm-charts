@@ -1,0 +1,56 @@
+{{- if $.Values.samba.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ include "common.names.fullname" $ }}-samba"
+  namespace: {{ .Release.Namespace }}
+data:
+  config.json: |-
+    {
+      "samba-container-config": "v0",
+      "configs": {
+        "assets": {
+          "shares": [
+            "assets"
+          ],
+          "globals": [
+            "globals"
+          ],
+          "instance_name": "assets",
+          "permissions": {
+            "method": "initialize-share-perms",
+            "status_xattr": "user.share-perms-status",
+            "mode": "0777"
+          }
+        }
+      },
+      "shares": {
+        "assets": {
+          "options": {
+            "force user": "4allportal",
+            "browseable": "yes",
+            "path": "/mnt/assets",
+            "read only": "no"
+          }
+        }
+      },
+      "globals": {
+        "globals": {
+          "options": {
+            "server min protocol": "SMB3",
+            "server smb encrypt": "required",
+            "client smb encrypt": "required",
+            "client min protocol": "SMB3",
+            "disable spoolss": "yes",
+            "dos charset": "ascii",
+            "fileid:algorithm": "fsid",
+            "load printers": "no",
+            "printcap name": "/dev/null",
+            "printing": "bsd",
+            "smb ports": "445",
+            "vfs objects": "fileid"
+          }
+        }
+      }
+    }
+{{- end }}
