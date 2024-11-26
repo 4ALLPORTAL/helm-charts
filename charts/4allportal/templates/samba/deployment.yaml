@@ -22,10 +22,6 @@ spec:
         app.kubernetes.io/component: samba
     spec:
       {{- include "4allportal.samba.priorityClassName" $ | nindent 6 }}
-      {{- $securityOptions | nindent 6 }}
-      automountServiceAccountToken: false
-      securityContext: {{- $securityContext | nindent 8 }}
-      enableServiceLinks: false
       containers:
         - name: samba
           securityContext: {{- $containerSecurityContext | nindent 12 }}
