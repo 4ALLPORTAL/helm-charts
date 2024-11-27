@@ -246,6 +246,7 @@ dreiDRenderer:
 
 samba:
   enabled: false
+  adminPassword: "CHANGEME"
   image:
     registry: quay.io
     repository: samba.org/samba-server
@@ -264,10 +265,6 @@ samba:
     limits:
       cpu: 2
       memory: 1Gi
-
-  users: {}
-  groups: {}
-  mounts: {}
 
   affinity: {}
   nodeSelector: {}

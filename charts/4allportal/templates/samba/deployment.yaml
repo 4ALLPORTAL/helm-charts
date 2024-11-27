@@ -30,10 +30,11 @@ spec:
           ports:
             - containerPort: 445
               name: smb
-          command: ["samba-container"]
+          command: [ "sh", "-c" ]
           args:
-            - run
-            - smbd
+            - |
+              useradd -u 1000 4allportal
+              samba-container run smbd
           volumeMounts:
             - mountPath: /etc/container-config
               name: samba-container-config
@@ -41,6 +42,8 @@ spec:
               name: users-config
             - mountPath: /mnt/assets
               name: assets
+            - mountPath: /mnt/config
+              name: config
             - mountPath: /var/lib/samba
               name: samba-state
             - mountPath: /run
@@ -55,6 +58,7 @@ spec:
                 - bash
                 - -c
                 - timeout 1 ls -d /mnt/assets
+                - timeout 1 ls -d /mnt/config
             failureThreshold: {{ $.Values.samba.livenessProbe.failureThreshold }}
             initialDelaySeconds: {{ $.Values.samba.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ $.Values.samba.livenessProbe.periodSeconds }}
@@ -101,6 +105,8 @@ spec:
                 path: users.json
         - name: assets
         {{- include "4allportal.fourallportal.persistence.assets.mount" $ | nindent 10 }}
+        - name: config
+        {{- include "4allportal.fourallportal.persistence.config.mount" $ | nindent 10 }}
         - name: samba-state
           emptyDir: {}
         - name: run
