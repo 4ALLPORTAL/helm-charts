@@ -318,6 +318,29 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | webdav.securityOptions.hostPID | bool | `false` |  |
 | webdav.tolerations | list | `[]` |  |
 | webdav.users | object | `{}` |  |
+| samba.affinity | object | `{}` |  |
+| samba.enabled | bool | `false` |  |
+| samba.image.registry | string | `"docker.io"` |  |
+| samba.image.repository | string | `"httpd"` |  |
+| samba.image.tag | string | `"2.4.59"` |  |
+| samba.livenessProbe.enabled | bool | `true` |  |
+| samba.livenessProbe.failureThreshold | int | `4` |  |
+| samba.livenessProbe.initialDelaySeconds | int | `5` |  |
+| samba.livenessProbe.periodSeconds | int | `10` |  |
+| samba.livenessProbe.successThreshold | int | `1` |  |
+| samba.livenessProbe.timeoutSeconds | int | `5` |  |
+| samba.nodeSelector | object | `{}` |  |
+| samba.podDisruptionBudget | bool | `true` |  |
+| samba.readinessProbe.enabled | bool | `true` |  |
+| samba.readinessProbe.failureThreshold | int | `3` |  |
+| samba.readinessProbe.initialDelaySeconds | int | `0` |  |
+| samba.readinessProbe.periodSeconds | int | `1` |  |
+| samba.readinessProbe.successThreshold | int | `1` |  |
+| samba.readinessProbe.timeoutSeconds | int | `1` |  |
+| samba.resources.limits.cpu | int | `4` |  |
+| samba.resources.limits.memory | string | `"1Gi"` |  |
+| samba.resources.requests.cpu | string | `"10m"` |  |
+| samba.resources.requests.memory | string | `"32Mi"` |  |
 
 # Upgrading
 
@@ -358,3 +381,7 @@ The maxscale chart sets the innodb_buffer_pool_size to 80% from requested mariad
 This release fixes a bug with the last Chart version for database creation, using either fourAllPortal.database.existing, fourAllPortal.database.operator or maxscale.galera.
 
 You are no longer required or capable of using fourAllPortal.database.existing values when using *.operator. If you currently do, please remove either fourAllPortal.database.existing or fourAllPortal.database.operator before upgrading.
+
+## To 20.1.0
+
+Add Samba template to start easy samba service for each fourallportal.
