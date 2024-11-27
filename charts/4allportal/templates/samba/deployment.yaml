@@ -1,7 +1,4 @@
 {{- if .Values.samba.enabled }}
-  {{- $securityOptions := .Values.samba.securityOptions | toYaml -}}
-  {{- $securityContext := .Values.samba.securityContext | toYaml -}}
-  {{- $containerSecurityContext := .Values.samba.containerSecurityContext | toYaml -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -24,7 +21,6 @@ spec:
       {{- include "4allportal.samba.priorityClassName" $ | nindent 6 }}
       containers:
         - name: samba
-          securityContext: {{- $containerSecurityContext | nindent 12 }}
           image: {{ template "4allportal.samba.image" $ }}
           {{- if $.Values.samba.image.repository | contains "@" }}
           imagePullPolicy: IfNotPresent
