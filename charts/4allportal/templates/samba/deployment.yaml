@@ -54,8 +54,7 @@ spec:
               command:
                 - bash
                 - -c
-                - timeout 1 ls -d /dav/data/samba/assets
-                - timeout 1 ls -d /dav/data/samba/data
+                - timeout 1 ls -d /mnt/assets
             failureThreshold: {{ $.Values.samba.livenessProbe.failureThreshold }}
             initialDelaySeconds: {{ $.Values.samba.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ $.Values.samba.livenessProbe.periodSeconds }}
