@@ -250,7 +250,7 @@ samba:
   image:
     registry: quay.io
     repository: samba.org/samba-server
-    tag: v0.5
+    tag: v0.6
 
   livenessProbe:
     enabled: false
