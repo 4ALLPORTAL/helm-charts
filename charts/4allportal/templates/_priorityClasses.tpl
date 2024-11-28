@@ -15,3 +15,7 @@ priorityClassName: {{ .custom | default .global.priorityClassName -}}
 {{- define "4allportal.webdav.priorityClassName" -}}
 {{- include "4allportal.priorityClassName" (dict "custom" $.Values.webdav.priorityClassName "global" $.Values.global) -}}
 {{- end -}}
+
+{{- define "4allportal.samba.priorityClassName" -}}
+{{- include "4allportal.priorityClassName" (dict "custom" $.Values.samba.priorityClassName "global" $.Values.global) -}}
+{{- end -}}
