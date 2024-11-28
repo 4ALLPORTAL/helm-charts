@@ -9,9 +9,9 @@ data:
     {
      "samba-container-config": "v0",
      "configs": {
-       "assets": {
+       "mountconf": {
          "shares": [
-           "assets", "config"
+           "assets", "data"
          ],
          "globals": [
            "globals"
@@ -33,11 +33,11 @@ data:
            "read only": "no"
          }
        },
-       "config": {
+       "data": {
          "options": {
            "force user": "4allportal",
            "browseable": "yes",
-           "path": "/mnt/config",
+           "path": "/mnt/data",
            "read only": "no"
          }
        }

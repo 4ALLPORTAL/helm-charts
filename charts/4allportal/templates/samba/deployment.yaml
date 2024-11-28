@@ -42,8 +42,8 @@ spec:
               name: users-config
             - mountPath: /mnt/assets
               name: assets
-            - mountPath: /mnt/config
-              name: config
+            - mountPath: /mnt/data
+              name: data
             - mountPath: /var/lib/samba
               name: samba-state
             - mountPath: /run
@@ -58,7 +58,7 @@ spec:
                 - bash
                 - -c
                 - timeout 1 ls -d /mnt/assets
-                - timeout 1 ls -d /mnt/config
+                - timeout 1 ls -d /mnt/data
             failureThreshold: {{ $.Values.samba.livenessProbe.failureThreshold }}
             initialDelaySeconds: {{ $.Values.samba.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ $.Values.samba.livenessProbe.periodSeconds }}
@@ -78,7 +78,7 @@ spec:
           resources: {{- toYaml $.Values.samba.resources | nindent 12 }}
           env:
             - name: SAMBA_CONTAINER_ID
-              value: assets
+              value: mountconf
             - name: SAMBACC_CONFIG
               value: /etc/container-config/config.json:/etc/container-users/users.json
             - name: SAMBA_POD_NAME
@@ -105,7 +105,7 @@ spec:
                 path: users.json
         - name: assets
         {{- include "4allportal.fourallportal.persistence.assets.mount" $ | nindent 10 }}
-        - name: config
+        - name: data
         {{- include "4allportal.fourallportal.persistence.config.mount" $ | nindent 10 }}
         - name: samba-state
           emptyDir: {}
