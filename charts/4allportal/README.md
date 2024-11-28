@@ -244,7 +244,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | samba.enabled | bool | `false` |  |
 | samba.image.registry | string | `"quay.io"` |  |
 | samba.image.repository | string | `"samba.org/samba-server"` |  |
-| samba.image.tag | string | `"v0.5"` |  |
+| samba.image.tag | string | `"v0.6"` |  |
 | samba.livenessProbe.enabled | bool | `false` |  |
 | samba.nodeSelector | object | `{}` |  |
 | samba.podDisruptionBudget | bool | `true` |  |
