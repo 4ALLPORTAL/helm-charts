@@ -75,6 +75,7 @@ traefik:
       memory: 500Mi
   minReplicas: 2
   maxReplicas: 8
+  cipherSuites: []
 
 speedtest:
   enabled: true

@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 40.2.2](https://img.shields.io/badge/Version-40.2.2-informational?style=flat-square)
+![Version: 40.2.3](https://img.shields.io/badge/Version-40.2.3-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -217,6 +217,7 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | speedtest.image.registry | string | `""` |  |
 | speedtest.image.repository | string | `"adolfintel/speedtest"` |  |
 | speedtest.image.tag | string | `"latest"` |  |
+| traefik.cipherSuites | list | `[]` |  |
 | traefik.debug.enabled | bool | `false` |  |
 | traefik.log.level | string | `"ERROR"` |  |
 | traefik.maxReplicas | int | `8` |  |
