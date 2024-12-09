@@ -251,6 +251,8 @@ samba:
     registry: quay.io
     repository: samba.org/samba-server
     tag: v0.6
+  users: []
+  paths: []
 
   livenessProbe:
     enabled: false

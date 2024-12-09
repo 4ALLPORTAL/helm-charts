@@ -25,6 +25,19 @@ data:
        }
      },
      "shares": {
+       {{- with $.Values.samba.paths }}
+       {{- range $k, $v := . }}
+       {{- $k | quote }}
+       {{- ": {" }}
+         "options": {
+           "force user": "4allportal",
+           "browseable": "yes",
+           "path": {{ $v | quote }},
+           "read only": "no"
+           }
+       },
+      {{- end }}
+      {{- end }}
        "assets": {
          "options": {
            "force user": "4allportal",
