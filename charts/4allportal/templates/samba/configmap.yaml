@@ -7,70 +7,80 @@ metadata:
 data:
   config.json: |-
     {
-     "samba-container-config": "v0",
-     "configs": {
-       "mountconf": {
-         "shares": [
-           "assets", "data"
-         ],
-         "globals": [
-           "globals"
-         ],
-         "instance_name": "assets",
-         "permissions": {
-           "method": "initialize-share-perms",
-           "status_xattr": "user.share-perms-status",
-           "mode": "0777"
-         }
-       }
-     },
-     "shares": {
-       {{- with $.Values.samba.paths }}
-       {{- range $k, $v := . }}
-       {{- $k | quote }}: {
-         "options": {
-           "force user": "4allportal",
-           "browseable": "yes",
-           "path": {{ $v | quote }},
-           "read only": "no"
-           }
-       },
-      {{- end }}
-      {{- end }}
-       "assets": {
-         "options": {
-           "force user": "4allportal",
-           "browseable": "yes",
-           "path": "/mnt/assets",
-           "read only": "no"
-         }
-       },
-       "data": {
-         "options": {
-           "force user": "4allportal",
-           "browseable": "yes",
-           "path": "/mnt/data",
-           "read only": "no"
-         }
-       }
-     },
-     "globals": {
-       "globals": {
-         "options": {
-           "server min protocol": "SMB3",
-           "server smb encrypt": "required",
-           "client smb encrypt": "required",
-           "client min protocol": "SMB3",
-           "disable spoolss": "yes",
-           "dos charset": "ascii",
-           "fileid:algorithm": "fsid",
-           "load printers": "no",
-           "printcap name": "/dev/null",
-           "printing": "bsd",
-           "smb ports": "445",
-           "vfs objects": "fileid"
-         }
-       }
-     }
+      "samba-container-config": "v0",
+      "configs": {
+        "mountconf": {
+          "shares": [
+            "assets", "data"
+          ],
+          "globals": [
+            "globals"
+          ],
+          "instance_name": "assets",
+          "permissions": {
+            "method": "initialize-share-perms",
+            "status_xattr": "user.share-perms-status",
+            "mode": "0777"
+          }
+        }
+      },
+      "shares": {
+        {{- with .Values.samba.paths }}
+        {{- range $k, $v := . }}
+        {{- $k | quote | nindent 8 }}: {
+          "options": {
+            "force user": "4allportal",
+            "browseable": "yes",
+            "path": {{ $v | quote }},
+            "read only": "no"
+            {{- if $.Values.samba.userPaths -}}
+            {{- $users := list -}}
+            {{- range $p, $u := $.Values.samba.userPaths -}}
+            {{- if eq $p $k -}}
+            ,
+            {{- $users = append $users (printf "%s" $u) }}
+            "valid users": {{ $users | join "," | quote }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+          }
+        },
+        {{- end }}
+        {{- end }}
+        "assets": {
+          "options": {
+            "force user": "4allportal",
+            "browseable": "yes",
+            "path": "/mnt/assets",
+            "read only": "no"
+          }
+        },
+        "data": {
+          "options": {
+            "force user": "4allportal",
+            "browseable": "yes",
+            "path": "/mnt/data",
+            "read only": "no"
+          }
+        }
+      },
+      "globals": {
+        "globals": {
+          "options": {
+            "server min protocol": "SMB3",
+            "server smb encrypt": "required",
+            "client smb encrypt": "required",
+            "client min protocol": "SMB3",
+            "disable spoolss": "yes",
+            "dos charset": "ascii",
+            "fileid:algorithm": "fsid",
+            "load printers": "no",
+            "printcap name": "/dev/null",
+            "printing": "bsd",
+            "smb ports": "445",
+            "vfs objects": "fileid"
+          }
+        }
+      }
     }
 {{- end }}
