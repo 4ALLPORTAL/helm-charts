@@ -27,8 +27,7 @@ data:
      "shares": {
        {{- with $.Values.samba.paths }}
        {{- range $k, $v := . }}
-       {{- $k | quote }}
-       {{- ": {" }}
+       {{- $k | quote }}: {
          "options": {
            "force user": "4allportal",
            "browseable": "yes",
