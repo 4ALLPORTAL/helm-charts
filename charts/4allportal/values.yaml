@@ -252,7 +252,7 @@ samba:
     repository: samba.org/samba-server
     tag: v0.6
   users: []
-  paths: []
+  mounts: []
 
   livenessProbe:
     enabled: false

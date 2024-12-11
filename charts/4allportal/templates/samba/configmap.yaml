@@ -12,8 +12,8 @@ data:
         "mountconf": {
           "shares": [
             "assets", "data"
-            {{- range $path, $i := .Values.samba.paths -}},
-            {{- regexReplaceAll "\\W+" (regexReplaceAll "^/(.*)" $path "$1") "_" | quote }}
+            {{- range $mount, $i := .Values.samba.mounts -}},
+            {{- regexReplaceAll "\\W+" (regexReplaceAll "^/(.*)" $mount "$1") "_" | quote }}
             {{- end }}
           ],
           "globals": [
@@ -28,12 +28,12 @@ data:
         }
       },
       "shares": {
-        {{- range $path, $perms := .Values.samba.paths -}}
-        {{- regexReplaceAll "\\W+" (regexReplaceAll "^/(.*)" $path "$1") "_" | quote | nindent 8 }}: {
+        {{- range $mount, $perms := .Values.samba.mounts -}}
+        {{- regexReplaceAll "\\W+" (regexReplaceAll "^/(.*)" $mount "$1") "_" | quote | nindent 8 }}: {
           "options": {
             "force user": "4allportal",
             "browseable": "yes",
-            "path": "/mnt{{- $path }}",
+            "path": "/mnt{{- $mount }}",
             "read only": "no"
             {{- if $perms.users -}}
             ,

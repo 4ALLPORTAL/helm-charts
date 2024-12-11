@@ -247,7 +247,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | samba.image.tag | string | `"v0.6"` |  |
 | samba.livenessProbe.enabled | bool | `false` |  |
 | samba.nodeSelector | object | `{}` |  |
-| samba.paths | list | `[]` |  |
+`| samba.mounts | list | `[]` |  |`
 | samba.podDisruptionBudget | bool | `true` |  |
 | samba.readinessProbe.enabled | bool | `false` |  |
 | samba.resources.limits.cpu | int | `2` |  |
@@ -255,7 +255,6 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | samba.resources.requests.cpu | string | `"10m"` |  |
 | samba.resources.requests.memory | string | `"32Mi"` |  |
 | samba.tolerations | list | `[]` |  |
-| samba.userPaths | list | `[]` |  |
 | samba.users | list | `[]` |  |
 | users | list | `[]` |  |
 | webdav.affinity | object | `{}` |  |
