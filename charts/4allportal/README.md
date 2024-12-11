@@ -246,8 +246,8 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | samba.image.repository | string | `"samba.org/samba-server"` |  |
 | samba.image.tag | string | `"v0.6"` |  |
 | samba.livenessProbe.enabled | bool | `false` |  |
+| samba.mounts | list | `[]` |  |
 | samba.nodeSelector | object | `{}` |  |
-`| samba.mounts | list | `[]` |  |`
 | samba.podDisruptionBudget | bool | `true` |  |
 | samba.readinessProbe.enabled | bool | `false` |  |
 | samba.resources.limits.cpu | int | `2` |  |
