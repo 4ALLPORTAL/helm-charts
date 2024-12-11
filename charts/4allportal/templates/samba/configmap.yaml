@@ -12,6 +12,9 @@ data:
         "mountconf": {
           "shares": [
             "assets", "data"
+            {{- range $path, $i := .Values.samba.paths -}},
+            {{- regexReplaceAll "\\W+" (regexReplaceAll "^/(.*)" $path "$1") "_" | quote }}
+            {{- end }}
           ],
           "globals": [
             "globals"
