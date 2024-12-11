@@ -25,27 +25,19 @@ data:
         }
       },
       "shares": {
-        {{- with .Values.samba.paths }}
-        {{- range $k, $v := . }}
-        {{- $k | quote | nindent 8 }}: {
+        {{- range $path, $perms := .Values.samba.paths -}}
+        {{- regexReplaceAll "\\W+" (regexReplaceAll "^/(.*)" $path "$1") "_" | quote | nindent 8 }}: {
           "options": {
             "force user": "4allportal",
             "browseable": "yes",
-            "path": {{ $v | quote }},
+            "path": "/mnt{{- $path }}",
             "read only": "no"
-            {{- if $.Values.samba.userPaths -}}
-            {{- $users := list -}}
-            {{- range $p, $u := $.Values.samba.userPaths -}}
-            {{- if eq $p $k -}}
+            {{- if $perms.users -}}
             ,
-            {{- $users = append $users (printf "%s" $u) }}
-            "valid users": {{ $users | join "," | quote }}
-            {{- end }}
-            {{- end }}
+            "valid users": {{ $perms.users | join "," | quote }}
             {{- end }}
           }
         },
-        {{- end }}
         {{- end }}
         "assets": {
           "options": {
@@ -83,4 +75,4 @@ data:
         }
       }
     }
-{{- end }}
+{{- end -}}

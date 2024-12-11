@@ -253,7 +253,6 @@ samba:
     tag: v0.6
   users: []
   paths: []
-  userPaths: []
 
   livenessProbe:
     enabled: false
