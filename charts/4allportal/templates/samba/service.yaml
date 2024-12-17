@@ -4,6 +4,11 @@ kind: Service
 metadata:
   name: "{{ include "common.names.fullname" $ }}-samba"
   namespace: {{ .Release.Namespace }}
+  labels:
+    samba-service: enabled
+  {{- if .Values.fourAllPortal.ingress.enabled }}
+    hostname: {{ .Values.fourAllPortal.ingress.host }}
+  {{- end }}
 spec:
   ports:
     - name: smb
