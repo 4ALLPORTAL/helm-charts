@@ -255,6 +255,7 @@ samba:
   mounts: []
   service:
     prefix: ""
+    namespace: ""
 
   livenessProbe:
     enabled: false

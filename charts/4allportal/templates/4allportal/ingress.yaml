@@ -31,10 +31,7 @@ spec:
 
           {{- if .Values.samba.enabled }}
           - path: "/smb"
-            backend:
-              service: {{ .Values.samba.service.prefix | default "portals" }}-samba-server.{{ .Values.samba.service.prefix | default "portals" }}
-              port:
-                name: ws
+            backend: {{- include "common.ingress.backend" (dict "serviceName" (printf "%s-samba-server" (include "common.names.fullname" $)) "servicePort" "ws" "context" $) | nindent 14 }}
             pathType: Prefix
           {{- end }}
 
