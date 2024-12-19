@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 20.3.4](https://img.shields.io/badge/Version-20.3.4-informational?style=flat-square) ![AppVersion: 3.10.38](https://img.shields.io/badge/AppVersion-3.10.38-informational?style=flat-square)
+![Version: 20.3.5](https://img.shields.io/badge/Version-20.3.5-informational?style=flat-square) ![AppVersion: 3.10.38](https://img.shields.io/badge/AppVersion-3.10.38-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -241,6 +241,8 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | maxscale.replicas | int | `2` |  |
 | samba.adminPassword | string | `"CHANGEME"` |  |
 | samba.affinity | object | `{}` |  |
+| samba.bridge.namespace | string | `""` |  |
+| samba.bridge.prefix | string | `""` |  |
 | samba.enabled | bool | `false` |  |
 | samba.image.registry | string | `"quay.io"` |  |
 | samba.image.repository | string | `"samba.org/samba-server"` |  |
@@ -254,8 +256,6 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | samba.resources.limits.memory | string | `"1Gi"` |  |
 | samba.resources.requests.cpu | string | `"10m"` |  |
 | samba.resources.requests.memory | string | `"32Mi"` |  |
-| samba.service.namespace | string | `""` |  |
-| samba.service.prefix | string | `""` |  |
 | samba.tolerations | list | `[]` |  |
 | samba.users | list | `[]` |  |
 | users | list | `[]` |  |
