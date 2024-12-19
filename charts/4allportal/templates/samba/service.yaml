@@ -16,4 +16,17 @@ spec:
       targetPort: smb
   selector: {{- include "common.labels.matchLabels" $ | nindent 4 }}
     app.kubernetes.io/component: samba
-  {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ include "common.names.fullname" $ }}-samba-server"
+  namespace: {{ .Release.Namespace }}
+spec:
+  type: ExternalName
+  externalName: {{ .Values.samba.service.prefix | default "portals" }}-samba-server.{{ .Values.samba.service.namespace | default "portals" }}.svc.cluster.local
+  ports:
+    - name: ws
+      port: 80
+      targetPort: 80
+{{- end }}
