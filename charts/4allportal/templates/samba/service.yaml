@@ -28,5 +28,5 @@ spec:
   ports:
     - name: ws
       port: 80
-      targetPort: ws
+      targetPort: 80
 {{- end }}
