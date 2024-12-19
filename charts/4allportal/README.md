@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 20.1.1](https://img.shields.io/badge/Version-20.1.1-informational?style=flat-square) ![AppVersion: 3.10.38](https://img.shields.io/badge/AppVersion-3.10.38-informational?style=flat-square)
+![Version: 20.2.0](https://img.shields.io/badge/Version-20.2.0-informational?style=flat-square) ![AppVersion: 3.10.38](https://img.shields.io/badge/AppVersion-3.10.38-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -246,6 +246,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | samba.image.repository | string | `"samba.org/samba-server"` |  |
 | samba.image.tag | string | `"v0.6"` |  |
 | samba.livenessProbe.enabled | bool | `false` |  |
+| samba.mounts | list | `[]` |  |
 | samba.nodeSelector | object | `{}` |  |
 | samba.podDisruptionBudget | bool | `true` |  |
 | samba.readinessProbe.enabled | bool | `false` |  |
@@ -254,6 +255,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | samba.resources.requests.cpu | string | `"10m"` |  |
 | samba.resources.requests.memory | string | `"32Mi"` |  |
 | samba.tolerations | list | `[]` |  |
+| samba.users | list | `[]` |  |
 | users | list | `[]` |  |
 | webdav.affinity | object | `{}` |  |
 | webdav.containerSecurityContext.allowPrivilegeEscalation | bool | `false` |  |
