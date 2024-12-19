@@ -32,7 +32,7 @@ spec:
           {{- if .Values.samba.enabled }}
           - path: "/smb"
             backend:
-              name: {{ .Values.samba.service.prefix | default "portals" }}-samba-server.{{ .Values.samba.service.prefix | default "portals" }}
+              service: {{ .Values.samba.service.prefix | default "portals" }}-samba-server.{{ .Values.samba.service.prefix | default "portals" }}
               port:
                 name: ws
             pathType: Prefix
