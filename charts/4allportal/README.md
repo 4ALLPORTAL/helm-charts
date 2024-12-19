@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 20.3.0](https://img.shields.io/badge/Version-20.3.0-informational?style=flat-square) ![AppVersion: 3.10.38](https://img.shields.io/badge/AppVersion-3.10.38-informational?style=flat-square)
+![Version: 20.3.1](https://img.shields.io/badge/Version-20.3.1-informational?style=flat-square) ![AppVersion: 3.10.38](https://img.shields.io/badge/AppVersion-3.10.38-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -254,6 +254,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | samba.resources.limits.memory | string | `"1Gi"` |  |
 | samba.resources.requests.cpu | string | `"10m"` |  |
 | samba.resources.requests.memory | string | `"32Mi"` |  |
+| samba.service.prefix | string | `""` |  |
 | samba.tolerations | list | `[]` |  |
 | samba.users | list | `[]` |  |
 | users | list | `[]` |  |

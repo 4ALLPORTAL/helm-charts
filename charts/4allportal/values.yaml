@@ -253,6 +253,8 @@ samba:
     tag: v0.6
   users: []
   mounts: []
+  service:
+    prefix: ""
 
   livenessProbe:
     enabled: false
