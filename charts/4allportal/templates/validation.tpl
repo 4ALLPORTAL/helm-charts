@@ -39,3 +39,9 @@
 {{- fail "You need to set fourAllPortal.systemApiKey in uuidv4 format or leave blank" -}}
 {{- end -}}
 {{- end -}}
+
+{{- if eq .Values.samba.enabled true -}}
+{{- if eq .Values.samba.adminPassword "CHANGEME" -}}
+{{- fail "You need to change samba.adminPassword" -}}
+{{- end -}}
+{{- end -}}

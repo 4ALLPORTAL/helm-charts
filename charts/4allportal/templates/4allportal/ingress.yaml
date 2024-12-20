@@ -29,6 +29,12 @@ spec:
             pathType: Prefix
             {{- end }}
 
+          {{- if .Values.samba.enabled }}
+          - path: "/smb"
+            backend: {{- include "common.ingress.backend" (dict "serviceName" (printf "%s-samba-server" (include "common.names.fullname" $)) "servicePort" "ws" "context" $) | nindent 14 }}
+            pathType: Prefix
+          {{- end }}
+
 {{- range $name, $ingress := .Values.fourAllPortal.ingress.additionalHosts }}
     - host: {{ required "You must provide a host, when enabling ingress" $ingress.host | quote }}
       http:

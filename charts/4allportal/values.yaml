@@ -244,6 +244,39 @@ dreiDRenderer:
         type: const
         param: 1
 
+samba:
+  enabled: false
+  adminPassword: "CHANGEME"
+  image:
+    registry: quay.io
+    repository: samba.org/samba-server
+    tag: v0.6
+  users: []
+  mounts: []
+  service:
+    prefix: ""
+    namespace: ""
+
+  livenessProbe:
+    enabled: false
+
+  readinessProbe:
+    enabled: false
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      cpu: 2
+      memory: 1Gi
+
+  affinity: {}
+  nodeSelector: {}
+  tolerations: []
+
+  podDisruptionBudget: true
+
 webdav:
   enabled: false
   image:

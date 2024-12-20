@@ -50,12 +50,12 @@ global:
     image:
       registry: docker.io
       repository: bitnami/kubectl
-      tag: "1.30.1"
+      tag: "1.31.2"
   helm:
     image:
       registry: docker.io
       repository: alpine/helm
-      tag: "3.14.4"
+      tag: "3.16.2"
   imageRegistry: ""
 
 flux:
@@ -75,6 +75,7 @@ traefik:
       memory: 500Mi
   minReplicas: 2
   maxReplicas: 8
+  cipherSuites: []
 
 speedtest:
   enabled: true
@@ -167,8 +168,11 @@ monitoring:
         enabled: false
         url: ""
         routingKey: ""
+        severity:
+        description:
       emailconfig: []
       routes: []
+      templateFiles: {}
     authentication: {}
   loki:
     enabled: true

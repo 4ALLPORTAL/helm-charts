@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 40.1.1](https://img.shields.io/badge/Version-40.1.1-informational?style=flat-square)
+![Version: 40.2.3](https://img.shields.io/badge/Version-40.2.3-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -79,12 +79,12 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | global.clusterName | string | `"eu-west-1"` |  |
 | global.helm.image.registry | string | `"docker.io"` |  |
 | global.helm.image.repository | string | `"alpine/helm"` |  |
-| global.helm.image.tag | string | `"3.14.4"` |  |
+| global.helm.image.tag | string | `"3.16.2"` |  |
 | global.imageCredentials | object | `{}` |  |
 | global.imageRegistry | string | `""` |  |
 | global.kubectl.image.registry | string | `"docker.io"` |  |
 | global.kubectl.image.repository | string | `"bitnami/kubectl"` |  |
-| global.kubectl.image.tag | string | `"1.30.1"` |  |
+| global.kubectl.image.tag | string | `"1.31.2"` |  |
 | global.networkPolicy.dnsLabels."io.kubernetes.pod.namespace" | string | `"kube-system"` |  |
 | global.networkPolicy.dnsLabels.k8s-app | string | `"kube-dns"` |  |
 | global.networkPolicy.metricsLabels."app.kubernetes.io/name" | string | `"prometheus"` |  |
@@ -170,12 +170,15 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | monitoring.metricsServer.resources.limits.memory | string | `"64Mi"` |  |
 | monitoring.prometheus.alertmanager.emailconfig | list | `[]` |  |
 | monitoring.prometheus.alertmanager.host | string | `"alertmanager"` |  |
+| monitoring.prometheus.alertmanager.pagerduty.description | string | `nil` |  |
 | monitoring.prometheus.alertmanager.pagerduty.enabled | bool | `false` |  |
 | monitoring.prometheus.alertmanager.pagerduty.routingKey | string | `""` |  |
+| monitoring.prometheus.alertmanager.pagerduty.severity | string | `nil` |  |
 | monitoring.prometheus.alertmanager.pagerduty.url | string | `""` |  |
 | monitoring.prometheus.alertmanager.routes | list | `[]` |  |
 | monitoring.prometheus.alertmanager.storage.retention | string | `"120h"` |  |
 | monitoring.prometheus.alertmanager.storage.size | string | `"1Gi"` |  |
+| monitoring.prometheus.alertmanager.templateFiles | object | `{}` |  |
 | monitoring.prometheus.authentication | object | `{}` |  |
 | monitoring.prometheus.enabled | bool | `true` |  |
 | monitoring.prometheus.host | string | `"prometheus"` |  |
@@ -214,6 +217,7 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | speedtest.image.registry | string | `""` |  |
 | speedtest.image.repository | string | `"adolfintel/speedtest"` |  |
 | speedtest.image.tag | string | `"latest"` |  |
+| traefik.cipherSuites | list | `[]` |  |
 | traefik.debug.enabled | bool | `false` |  |
 | traefik.log.level | string | `"ERROR"` |  |
 | traefik.maxReplicas | int | `8` |  |
