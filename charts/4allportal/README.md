@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 20.3.4](https://img.shields.io/badge/Version-20.3.4-informational?style=flat-square) ![AppVersion: 3.10.38](https://img.shields.io/badge/AppVersion-3.10.38-informational?style=flat-square)
+![Version: 20.4.0](https://img.shields.io/badge/Version-20.4.0-informational?style=flat-square) ![AppVersion: 3.10.38](https://img.shields.io/badge/AppVersion-3.10.38-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -132,6 +132,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.database.operator.databaseRef | string | `"CHANGEME"` |  |
 | fourAllPortal.database.operator.enabled | bool | `false` |  |
 | fourAllPortal.database.operator.password | string | `"CHANGEME"` |  |
+| fourAllPortal.database.operator.secretName | string | `""` |  |
 | fourAllPortal.database.operator.user | string | `"CHANGEME"` |  |
 | fourAllPortal.debug | bool | `false` |  |
 | fourAllPortal.env | object | `{}` |  |
@@ -141,6 +142,8 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.general.admin.password | string | `""` |  |
 | fourAllPortal.general.admin.username | string | `"administrator"` |  |
 | fourAllPortal.general.defaultLanguage | string | `"en_US"` |  |
+| fourAllPortal.general.secret.key | string | `""` |  |
+| fourAllPortal.general.secret.name | string | `""` |  |
 | fourAllPortal.hostAliases | list | `[]` |  |
 | fourAllPortal.hpa.enabled | bool | `false` |  |
 | fourAllPortal.hpa.maxReplicas | int | `4` |  |
