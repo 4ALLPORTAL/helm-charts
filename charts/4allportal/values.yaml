@@ -112,6 +112,9 @@ fourAllPortal:
     runAsUser: 1000
 
   general:
+    secret:
+      name: ""
+      key: ""
     admin:
       username: administrator
       firstName: ""
@@ -143,6 +146,7 @@ fourAllPortal:
       password: "CHANGEME"
       databaseName: "CHANGEME"
       databaseRef: "CHANGEME"
+      secretName: ""
     initialPoolSize: 5
     maxIdleTime: 180
     minPoolSize: 5
@@ -354,7 +358,7 @@ backups:
     enabled: false
     retention:
       prune: true
-      policy: {}
+      policy: { }
     password: ""
     schedule: ""
   mysql:

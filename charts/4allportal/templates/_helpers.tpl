@@ -77,6 +77,22 @@ mariadb
 {{- end -}}
 {{- end -}}
 
+{{- define "4allportal.fourallportal.general.secret.name" -}}
+{{- if and (not eq .Values.fourAllPortal.general.secret.name "") (not eq .Values.fourAllPortal.general.secret.key "") }}
+{{ .Values.fourAllPortal.general.secret.name }}
+{{- else -}}
+{{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "general" "context" $) }}
+{{- end -}}
+{{- end -}}
+
+{{- define "4allportal.fourallportal.general.secret.key" -}}
+{{- if and (not eq .Values.fourAllPortal.general.secret.name "") (not eq .Values.fourAllPortal.general.secret.key "") }}
+{{ .Values.fourAllPortal.general.secret.name }}
+{{- else -}}
+{{ include "common.secrets.key" (dict "existingSecret" (dict) "key" "admin-password") }}
+{{- end -}}
+{{- end -}}
+
 {{- define "4allportal.isHa" -}}
 {{- and (eq (include "4allportal.component.isHa" .Values.fourAllPortal) "true") (or (not .Values.maxscale.enabled) (and (eq (include "4allportal.component.isHa" .Values.maxscale) "true") (eq (include "4allportal.component.isHa" .Values.maxscale.mariadb) "true"))) -}}
 {{- end -}}
