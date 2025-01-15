@@ -78,7 +78,9 @@ mariadb
 {{- end -}}
 
 {{- define "4allportal.fourallportal.general.secret.name" -}}
-{{- if and (not eq .Values.fourAllPortal.general.secret.name "") (not eq .Values.fourAllPortal.general.secret.key "") }}
+{{- if not eq .Values.global.security.secretName "" -}}
+{{ .Values.global.security.secretName }}
+{{- else if and (not eq .Values.fourAllPortal.general.secret.name "") (not eq .Values.fourAllPortal.general.secret.key "") }}
 {{ .Values.fourAllPortal.general.secret.name }}
 {{- else -}}
 {{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "general" "context" $) }}

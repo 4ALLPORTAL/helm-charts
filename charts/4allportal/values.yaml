@@ -1,4 +1,6 @@
 global:
+  security:
+    secretName: ""
   persistence:
     enabled: true
   tracing:

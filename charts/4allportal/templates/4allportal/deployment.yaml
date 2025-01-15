@@ -85,8 +85,8 @@ spec:
             - name: GENERAL_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "general" "context" $) }}
-                  key: {{ include "common.secrets.key" (dict "existingSecret" (dict) "key" "admin-password") }}
+                  name: {{ include "4allportal.fourallportal.general.secret.name" . }}
+                  key: {{ include "4allportal.fourallportal.general.secret.key" . }}
             - name: GENERAL_ADMIN_EMAIL
               value: {{ required "You must provide the email for the administrator" .Values.fourAllPortal.general.admin.email | quote }}
             - name: GENERAL_ADMIN_FIRSTNAME
