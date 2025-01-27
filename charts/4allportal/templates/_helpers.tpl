@@ -78,9 +78,9 @@ mariadb
 {{- end -}}
 
 {{- define "4allportal.fourallportal.general.secret.name" -}}
-{{- if not eq .Values.global.security.secretName "" -}}
+{{- if ne .Values.global.security.secretName "" }}
 {{ .Values.global.security.secretName }}
-{{- else if and (not eq .Values.fourAllPortal.general.secret.name "") (not eq .Values.fourAllPortal.general.secret.key "") }}
+{{- else if and (ne .Values.fourAllPortal.general.secret.name "") (ne .Values.fourAllPortal.general.secret.key "") }}
 {{ .Values.fourAllPortal.general.secret.name }}
 {{- else -}}
 {{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "general" "context" $) }}
@@ -88,10 +88,20 @@ mariadb
 {{- end -}}
 
 {{- define "4allportal.fourallportal.general.secret.key" -}}
-{{- if and (not eq .Values.fourAllPortal.general.secret.name "") (not eq .Values.fourAllPortal.general.secret.key "") }}
-{{ .Values.fourAllPortal.general.secret.name }}
+{{- if and (or (ne .Values.fourAllPortal.general.secret.name "") (ne .Values.global.security.secretName "")) (ne .Values.fourAllPortal.general.secret.key "") -}}
+{{ .Values.fourAllPortal.general.secret.key }}
 {{- else -}}
 {{ include "common.secrets.key" (dict "existingSecret" (dict) "key" "admin-password") }}
+{{- end -}}
+{{- end -}}
+
+{{- define "4allportal.fourallportal.database.operator.secretName" -}}
+{{ if ne .Values.global.security.secretName "" }}
+{{- .Values.global.security.secretName }}
+{{ else if (ne .Values.fourAllPortal.database.operator.secretName "") }}
+{{- .Values.fourAllPortal.database.operator.secretName }}
+{{ else }}
+{{- printf "%s%s" .Release.Name "-databaseuser-secret" }}
 {{- end -}}
 {{- end -}}
 
