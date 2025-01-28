@@ -306,6 +306,9 @@
                     "password": {
                       "type": "string"
                     },
+                    "secretName": {
+                      "type": "string"
+                    },
                     "port": {
                       "type": "integer"
                     },

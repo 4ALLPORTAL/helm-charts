@@ -123,8 +123,8 @@ spec:
             - name: MAIL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "mail" "context" $) }}
-                  key: {{ include "common.secrets.key" (dict "existingSecret" (dict) "key" "password") }}
+                  name: {{ include "4allportal.fourallportal.mail.secret.name" . }}
+                  key: {{ include "4allportal.fourallportal.mail.secret.key" . }}
             {{- end }}
             - name: MAIL_SYSTEM_FROM_EMAIL
               value: {{ required "You must provide a sender address, when enabling mail" .Values.fourAllPortal.mail.system.from.email | quote }}

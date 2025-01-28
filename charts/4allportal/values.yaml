@@ -1,6 +1,4 @@
 global:
-  security:
-    secretName: ""
   persistence:
     enabled: true
   tracing:
@@ -132,6 +130,7 @@ fourAllPortal:
     security: SSL
     user: ""
     password: ""
+    secretName: ""
     replyTo: false
     system:
       sender: ""

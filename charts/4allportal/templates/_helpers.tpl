@@ -25,7 +25,9 @@
 {{- required "You must provide a password for the bundled MariaDB deployment" .Values.maxscale.mariadb.db.password -}}
 {{- else -}}
 {{- if .Values.fourAllPortal.database.operator.enabled -}}
+{{- if eq .Values.fourAllPortal.database.operator.secretName "" -}}
 {{- required "You must provide a password for the database user to be created" .Values.fourAllPortal.database.operator.password }}
+{{- end -}}
 {{- else -}}
 {{- required "You must provide a password for the existing database" .Values.fourAllPortal.database.existing.password -}}
 {{- end -}}
@@ -78,9 +80,7 @@ mariadb
 {{- end -}}
 
 {{- define "4allportal.fourallportal.general.secret.name" -}}
-{{- if ne .Values.global.security.secretName "" }}
-{{ .Values.global.security.secretName }}
-{{- else if and (ne .Values.fourAllPortal.general.secret.name "") (ne .Values.fourAllPortal.general.secret.key "") }}
+{{- if and (ne .Values.fourAllPortal.general.secret.name "") (ne .Values.fourAllPortal.general.secret.key "") }}
 {{ .Values.fourAllPortal.general.secret.name }}
 {{- else -}}
 {{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "general" "context" $) }}
@@ -88,17 +88,31 @@ mariadb
 {{- end -}}
 
 {{- define "4allportal.fourallportal.general.secret.key" -}}
-{{- if and (or (ne .Values.fourAllPortal.general.secret.name "") (ne .Values.global.security.secretName "")) (ne .Values.fourAllPortal.general.secret.key "") -}}
+{{- if and (ne .Values.fourAllPortal.general.secret.name "") (ne .Values.fourAllPortal.general.secret.key "") -}}
 {{ .Values.fourAllPortal.general.secret.key }}
 {{- else -}}
 {{ include "common.secrets.key" (dict "existingSecret" (dict) "key" "admin-password") }}
 {{- end -}}
 {{- end -}}
 
+{{- define "4allportal.fourallportal.mail.secret.name" -}}
+{{- if ne .Values.fourAllPortal.mail.secretName "" }}
+{{ .Values.fourAllPortal.mail.secretName }}
+{{- else -}}
+{{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "mail" "context" $) }}
+{{- end -}}
+{{- end -}}
+
+{{- define "4allportal.fourallportal.mail.secret.key" -}}
+{{- if ne .Values.fourAllPortal.mail.secretName "" -}}
+mail-password
+{{- else -}}
+{{ include "common.secrets.key" (dict "existingSecret" (dict) "key" "mail-password") }}
+{{- end -}}
+{{- end -}}
+
 {{- define "4allportal.fourallportal.database.operator.secretName" -}}
-{{ if ne .Values.global.security.secretName "" }}
-{{- .Values.global.security.secretName | quote }}
-{{ else if (ne .Values.fourAllPortal.database.operator.secretName "") }}
+{{ if ne .Values.fourAllPortal.database.operator.secretName "" }}
 {{- .Values.fourAllPortal.database.operator.secretName | quote }}
 {{ else }}
 {{- printf "%s%s" .Release.Name "-databaseuser-secret" | quote }}
