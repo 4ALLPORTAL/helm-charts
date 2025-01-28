@@ -360,7 +360,7 @@ backups:
     enabled: false
     retention:
       prune: true
-      policy: { }
+      policy: {}
     password: ""
     schedule: ""
   mysql:
