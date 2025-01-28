@@ -80,7 +80,7 @@ mariadb
 {{- end -}}
 
 {{- define "4allportal.fourallportal.general.secret.name" -}}
-{{- if and (ne .Values.fourAllPortal.general.admin.secret.name "") (ne .Values.fourAllPortal.general.admin.secret.key "") }}
+{{- if and (ne .Values.fourAllPortal.general.admin.secret.name "") (ne .Values.fourAllPortal.general.admin.secret.key "") -}}
 {{ .Values.fourAllPortal.general.admin.secret.name }}
 {{- else -}}
 {{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "general" "context" $) }}
@@ -96,7 +96,7 @@ mariadb
 {{- end -}}
 
 {{- define "4allportal.fourallportal.mail.secret.name" -}}
-{{- if ne .Values.fourAllPortal.mail.secretName "" }}
+{{- if ne .Values.fourAllPortal.mail.secretName "" -}}
 {{ .Values.fourAllPortal.mail.secretName }}
 {{- else -}}
 {{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "mail" "context" $) }}
