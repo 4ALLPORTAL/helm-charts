@@ -112,14 +112,14 @@ fourAllPortal:
     runAsUser: 1000
 
   general:
-    secret:
-      name: ""
-      key: ""
     admin:
       username: administrator
       firstName: ""
       lastName: ""
       password: ""
+      secret:
+        name: ""
+        key: ""
     defaultLanguage: en_US
 
   mail:

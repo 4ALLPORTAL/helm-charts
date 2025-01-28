@@ -166,18 +166,6 @@
                 "general": {
                   "type": "object",
                   "properties": {
-                    "secret": {
-                      "type": "object",
-                      "properties": {
-                        "name": {
-                          "type": "string"
-                        },
-                        "key": {
-                          "type": "string"
-                        }
-                      },
-                      "additionalProperties": false
-                    },
                     "admin": {
                       "type": "object",
                       "properties": {
@@ -195,6 +183,18 @@
                         },
                         "username": {
                           "type": "string"
+                        },
+                        "secret": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "key": {
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false
                         }
                       },
                       "additionalProperties": false
