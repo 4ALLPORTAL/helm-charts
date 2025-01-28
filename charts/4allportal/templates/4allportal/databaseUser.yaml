@@ -6,9 +6,9 @@ metadata:
   name: {{ .Release.Name }}-databaseuser-secret
   namespace: {{ .Release.Namespace }}
 data:
-  password: {{ required "You must set a user password when using the operator." .Values.fourAllPortal.database.operator.password | quote | b64enc }}
-  user: {{ required "You must set a database user when using the operator." .Values.fourAllPortal.database.operator.user | quote | b64enc }}
-  database: {{ required "You must set a database name when using the operator." .Values.fourAllPortal.database.operator.databaseName | quote | b64enc }}
+  password: {{ required "You must set a user password when using the operator." .Values.fourAllPortal.database.operator.password | b64enc }}
+  user: {{ required "You must set a database user when using the operator." .Values.fourAllPortal.database.operator.user | b64enc }}
+  database: {{ required "You must set a database name when using the operator." .Values.fourAllPortal.database.operator.databaseName | b64enc }}
 ---
 apiVersion: com.fourallportal.credentialsoperator/v1beta1
 kind: DatabaseUser
