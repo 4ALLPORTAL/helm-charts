@@ -80,16 +80,16 @@ mariadb
 {{- end -}}
 
 {{- define "4allportal.fourallportal.general.secret.name" -}}
-{{- if and (ne .Values.fourAllPortal.general.secret.name "") (ne .Values.fourAllPortal.general.secret.key "") }}
-{{ .Values.fourAllPortal.general.secret.name }}
+{{- if and (ne .Values.fourAllPortal.general.admin.secret.name "") (ne .Values.fourAllPortal.general.admin.secret.key "") }}
+{{ .Values.fourAllPortal.general.admin.secret.name }}
 {{- else -}}
 {{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "general" "context" $) }}
 {{- end -}}
 {{- end -}}
 
 {{- define "4allportal.fourallportal.general.secret.key" -}}
-{{- if and (ne .Values.fourAllPortal.general.secret.name "") (ne .Values.fourAllPortal.general.secret.key "") -}}
-{{ .Values.fourAllPortal.general.secret.key }}
+{{- if and (ne .Values.fourAllPortal.general.admin.secret.name "") (ne .Values.fourAllPortal.general.admin.secret.key "") -}}
+{{ .Values.fourAllPortal.general.admin.secret.key }}
 {{- else -}}
 {{ include "common.secrets.key" (dict "existingSecret" (dict) "key" "admin-password") }}
 {{- end -}}
