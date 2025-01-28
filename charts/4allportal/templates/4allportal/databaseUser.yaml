@@ -15,7 +15,7 @@ metadata:
   name: {{ .Release.Name }}-databaseuser
   namespace: {{ .Release.Namespace }}
 spec:
-  database: {{ .Values.fourAllPortal.database.operator.databaseRef }}
-  databaseName: {{ .Values.fourAllPortal.database.operator.databaseName }}
+  database: {{ .Values.fourAllPortal.database.operator.databaseRef | quote }}
+  databaseName: {{ .Values.fourAllPortal.database.operator.databaseName | quote }}
   secretName: {{- include "4allportal.fourallportal.database.operator.secretName" . }}
 {{ end }}

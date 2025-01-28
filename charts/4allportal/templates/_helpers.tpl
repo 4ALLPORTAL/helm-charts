@@ -97,11 +97,11 @@ mariadb
 
 {{- define "4allportal.fourallportal.database.operator.secretName" -}}
 {{ if ne .Values.global.security.secretName "" }}
-{{- .Values.global.security.secretName }}
+{{- .Values.global.security.secretName | quote }}
 {{ else if (ne .Values.fourAllPortal.database.operator.secretName "") }}
-{{- .Values.fourAllPortal.database.operator.secretName }}
+{{- .Values.fourAllPortal.database.operator.secretName | quote }}
 {{ else }}
-{{- printf "%s%s" .Release.Name "-databaseuser-secret" }}
+{{- printf "%s%s" .Release.Name "-databaseuser-secret" | quote }}
 {{- end -}}
 {{- end -}}
 
