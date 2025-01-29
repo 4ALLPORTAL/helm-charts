@@ -117,6 +117,9 @@ fourAllPortal:
       firstName: ""
       lastName: ""
       password: ""
+      secret:
+        name: ""
+        key: ""
     defaultLanguage: en_US
 
   mail:
@@ -127,6 +130,9 @@ fourAllPortal:
     security: SSL
     user: ""
     password: ""
+    secret:
+      name: ""
+      key: ""
     replyTo: false
     system:
       sender: ""
@@ -143,6 +149,7 @@ fourAllPortal:
       password: "CHANGEME"
       databaseName: "CHANGEME"
       databaseRef: "CHANGEME"
+      secretName: ""
     initialPoolSize: 5
     maxIdleTime: 180
     minPoolSize: 5

@@ -85,8 +85,8 @@ spec:
             - name: GENERAL_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "general" "context" $) }}
-                  key: {{ include "common.secrets.key" (dict "existingSecret" (dict) "key" "admin-password") }}
+                  name: {{ include "4allportal.fourallportal.general.secret.name" . }}
+                  key: {{ include "4allportal.fourallportal.general.secret.key" . }}
             - name: GENERAL_ADMIN_EMAIL
               value: {{ required "You must provide the email for the administrator" .Values.fourAllPortal.general.admin.email | quote }}
             - name: GENERAL_ADMIN_FIRSTNAME
@@ -123,8 +123,8 @@ spec:
             - name: MAIL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "mail" "context" $) }}
-                  key: {{ include "common.secrets.key" (dict "existingSecret" (dict) "key" "password") }}
+                  name: {{ include "4allportal.fourallportal.mail.secret.name" . }}
+                  key: {{ include "4allportal.fourallportal.mail.secret.key" . }}
             {{- end }}
             - name: MAIL_SYSTEM_FROM_EMAIL
               value: {{ required "You must provide a sender address, when enabling mail" .Values.fourAllPortal.mail.system.from.email | quote }}
@@ -149,12 +149,12 @@ spec:
             - name: DATABASE_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Release.Name }}-databaseuser-secret
+                  name: {{ include "4allportal.fourallportal.database.operator.secretName" . }}
                   key: user
             - name: DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Release.Name }}-databaseuser-secret
+                  name: {{ include "4allportal.fourallportal.database.operator.secretName" . }}
                   key: password
             - name: DATABASE_TYPE
               valueFrom:
@@ -182,8 +182,8 @@ spec:
             - name: DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "common.secrets.name" (dict "existingSecret" .Values.fourAllPortal.database.existing.existingSecret "defaultNameSuffix" "database" "context" $) }}
-                  key: {{ include "common.secrets.key" (dict "existingSecret" .Values.fourAllPortal.database.existing.existingSecret "key" "password") }}
+                  name: {{ include "4allportal.fourallportal.database.existing.secret.name" . }}
+                  key: {{ include "4allportal.fourallportal.database.existing.secret.key" . }}
             - name: DATABASE_TYPE
               value: {{ include "4allportal.fourallportal.database.type" . | quote }}
             - name: DATABASE_HOST
