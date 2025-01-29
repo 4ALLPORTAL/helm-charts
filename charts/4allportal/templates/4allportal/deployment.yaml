@@ -182,8 +182,8 @@ spec:
             - name: DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "common.secrets.name" (dict "existingSecret" .Values.fourAllPortal.database.existing.existingSecret "defaultNameSuffix" "database" "context" $) }}
-                  key: {{ include "common.secrets.key" (dict "existingSecret" .Values.fourAllPortal.database.existing.existingSecret "key" "password") }}
+                  name: {{ include "4allportal.fourallportal.database.existing.secret.name" . }}
+                  key: {{ include "4allportal.fourallportal.database.existing.secret.key" . }}
             - name: DATABASE_TYPE
               value: {{ include "4allportal.fourallportal.database.type" . | quote }}
             - name: DATABASE_HOST

@@ -79,6 +79,10 @@ mariadb
 {{- end -}}
 {{- end -}}
 
+{{/*
+Helper functions for secret references instead of clear text references for data
+*/}}
+
 {{- define "4allportal.fourallportal.general.secret.name" -}}
 {{- if and (ne .Values.fourAllPortal.general.admin.secret.name "") (ne .Values.fourAllPortal.general.admin.secret.key "") -}}
 {{ .Values.fourAllPortal.general.admin.secret.name }}
@@ -108,6 +112,22 @@ mariadb
 {{ .Values.fourAllPortal.mail.secret.key }}
 {{- else -}}
 {{ include "common.secrets.key" (dict "existingSecret" (dict) "key" "mail-password") }}
+{{- end -}}
+{{- end -}}
+
+{{- define "4allportal.fourallportal.database.existing.secret.name" -}}
+{{- if and (ne .Values.fourAllPortal.database.existing.secret.name "") (ne .Values.fourAllPortal.database.existing.secret.key "") -}}
+{{ .Values.fourAllPortal.database.existing.secret.name }}
+{{- else -}}
+{{ include "common.secrets.name" (dict "existingSecret" .Values.fourAllPortal.database.existing.existingSecret "defaultNameSuffix" "database" "context" $) }}
+{{- end -}}
+{{- end -}}
+
+{{- define "4allportal.fourallportal.database.existing.secret.key" -}}
+{{- if and (ne .Values.fourAllPortal.database.existing.secret.name "") (ne .Values.fourAllPortal.database.existing.secret.key "") -}}
+{{ .Values.fourAllPortal.database.existing.secret.key }}
+{{- else -}}
+{{ include "common.secrets.key" (dict "existingSecret" .Values.fourAllPortal.database.existing.existingSecret "key" "password") }}
 {{- end -}}
 {{- end -}}
 
