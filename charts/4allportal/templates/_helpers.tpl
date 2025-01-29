@@ -116,7 +116,7 @@ Helper functions for secret references instead of clear text references for data
 {{- end -}}
 
 {{- define "4allportal.fourallportal.database.existing.secret.name" -}}
-{{- if and .Values.fourAllPortal.database.existing.secret.name .Values.fourAllPortal.database.existing.secret.key -}}
+{{- if .Values.fourAllPortal.database.existing.secret -}}
 {{- if and (ne .Values.fourAllPortal.database.existing.secret.name "") (ne .Values.fourAllPortal.database.existing.secret.key "") -}}
 {{ .Values.fourAllPortal.database.existing.secret.name }}
 {{- else -}}
@@ -128,7 +128,7 @@ Helper functions for secret references instead of clear text references for data
 {{- end -}}
 
 {{- define "4allportal.fourallportal.database.existing.secret.key" -}}
-{{- if and .Values.fourAllPortal.database.existing.secret.name .Values.fourAllPortal.database.existing.secret.key -}}
+{{- if .Values.fourAllPortal.database.existing.secret -}}
 {{- if and (ne .Values.fourAllPortal.database.existing.secret.name "") (ne .Values.fourAllPortal.database.existing.secret.key "") -}}
 {{ .Values.fourAllPortal.database.existing.secret.key }}
 {{- else -}}
