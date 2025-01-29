@@ -149,12 +149,12 @@ spec:
             - name: DATABASE_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Release.Name }}-databaseuser-secret
+                  name: {{ include "4allportal.fourallportal.database.operator.secretName" . }}
                   key: user
             - name: DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Release.Name }}-databaseuser-secret
+                  name: {{ include "4allportal.fourallportal.database.operator.secretName" . }}
                   key: password
             - name: DATABASE_TYPE
               valueFrom:
@@ -174,7 +174,7 @@ spec:
             - name: DATABASE_DATABASE_NAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Release.Name }}-databaseuser-secret
+                  name: {{ include "4allportal.fourallportal.database.operator.secretName" . }}
                   key: database
             {{ else }}
             - name: DATABASE_USER
