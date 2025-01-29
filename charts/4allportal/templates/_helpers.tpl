@@ -96,16 +96,16 @@ mariadb
 {{- end -}}
 
 {{- define "4allportal.fourallportal.mail.secret.name" -}}
-{{- if ne .Values.fourAllPortal.mail.secretName "" -}}
-{{ .Values.fourAllPortal.mail.secretName }}
+{{- if and (ne .Values.fourAllPortal.mail.secret.name "") (ne .Values.fourAllPortal.mail.secret.key "") -}}
+{{ .Values.fourAllPortal.mail.secret.name }}
 {{- else -}}
 {{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "mail" "context" $) }}
 {{- end -}}
 {{- end -}}
 
 {{- define "4allportal.fourallportal.mail.secret.key" -}}
-{{- if ne .Values.fourAllPortal.mail.secretName "" -}}
-mail-password
+{{- if and (ne .Values.fourAllPortal.mail.secret.name "") (ne .Values.fourAllPortal.mail.secret.key "") -}}
+{{ .Values.fourAllPortal.mail.secret.key }}
 {{- else -}}
 {{ include "common.secrets.key" (dict "existingSecret" (dict) "key" "mail-password") }}
 {{- end -}}

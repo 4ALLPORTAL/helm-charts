@@ -306,8 +306,17 @@
                     "password": {
                       "type": "string"
                     },
-                    "secretName": {
-                      "type": "string"
+                    "secret": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "key": {
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": false
                     },
                     "port": {
                       "type": "integer"

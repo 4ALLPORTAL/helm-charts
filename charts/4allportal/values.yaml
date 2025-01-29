@@ -130,7 +130,9 @@ fourAllPortal:
     security: SSL
     user: ""
     password: ""
-    secretName: ""
+    secret:
+      name: ""
+      key: ""
     replyTo: false
     system:
       sender: ""
