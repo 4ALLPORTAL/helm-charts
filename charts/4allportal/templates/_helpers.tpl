@@ -117,7 +117,7 @@ Helper functions for secret references instead of clear text references for data
 
 {{- define "4allportal.fourallportal.database.existing.secret.name" -}}
 {{- if .Values.fourAllPortal.database.existing.secret -}}
-{{- if and (and .Values.fourAllPortal.database.existing.secret.name (ne .Values.fourAllPortal.database.existing.secret.name "")) (and .Values.fourAllPortal.database.existing.secret.key (ne .Values.fourAllPortal.database.existing.secret.key "")) -}}
+{{- if and (not (empty .Values.fourAllPortal.database.existing.secret.name)) (not (empty .Values.fourAllPortal.database.existing.secret.key)) -}}
 {{ .Values.fourAllPortal.database.existing.secret.name }}
 {{- else -}}
 {{ include "common.secrets.name" (dict "existingSecret" .Values.fourAllPortal.database.existing.existingSecret "defaultNameSuffix" "database" "context" $) }}
@@ -129,7 +129,7 @@ Helper functions for secret references instead of clear text references for data
 
 {{- define "4allportal.fourallportal.database.existing.secret.key" -}}
 {{- if .Values.fourAllPortal.database.existing.secret -}}
-{{- if and (and .Values.fourAllPortal.database.existing.secret.name (ne .Values.fourAllPortal.database.existing.secret.name "")) (and .Values.fourAllPortal.database.existing.secret.key (ne .Values.fourAllPortal.database.existing.secret.key "")) -}}
+{{- if and (not (empty .Values.fourAllPortal.database.existing.secret.name)) (not (empty .Values.fourAllPortal.database.existing.secret.key)) -}}
 {{ .Values.fourAllPortal.database.existing.secret.key }}
 {{- else -}}
 {{ include "common.secrets.key" (dict "existingSecret" .Values.fourAllPortal.database.existing.existingSecret "key" "password") }}
