@@ -7,15 +7,11 @@
 {{- if eq .Values.maxscale.mariadb.rootUser.password "CHANGEME" -}}
 {{- fail "You need to change mariadb.rootUser.password" -}}
 {{- end -}}
-{{- end -}}
 
-{{- if not .Values.maxscale.mariadb.existingSecret -}}
 {{- if eq .Values.maxscale.mariadb.db.password "CHANGEME" -}}
 {{- fail "You need to change mariadb.db.password" -}}
 {{- end -}}
-{{- end -}}
 
-{{- if not .Values.maxscale.mariadb.existingSecret -}}
 {{- if eq .Values.maxscale.mariadb.galera.mariabackup.password "CHANGEME" -}}
 {{- fail "You need to change mariadb.galera.mariabackup.password" -}}
 {{- end -}}
