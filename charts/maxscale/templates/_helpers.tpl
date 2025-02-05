@@ -79,3 +79,23 @@ none
     {{- fail "Please insert the mariadb memory ressource limits in Gi or Mi" }} 
 {{- end -}} 
 {{- end -}}
+
+{{/*
+Define Maxscale Secret Helper Functions
+*/}}
+
+{{- define "maxscale.password.secret.name" -}}
+{{- if and .Values.mariadb.existingSecret (ne .Values.mariadb.existingSecret "") -}}
+{{ .Values.mariadb.existingSecret }}
+{{- else -}}
+{{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "" "context" $) }}
+{{- end -}}
+{{- end -}}
+
+{{- define "maxscale.password.secret.key" -}}
+{{- if and .Values.mariadb.existingSecret (ne .Values.mariadb.existingSecret "") -}}
+mariadb-root-password
+{{- else -}}
+{{ include "common.secrets.key" (dict "existingSecret" (dict) "key" "root-password") }}
+{{- end -}}
+{{- end -}}
