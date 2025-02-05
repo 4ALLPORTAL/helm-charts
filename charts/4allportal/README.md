@@ -22,7 +22,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 ## Values
 
 | Key | Type | Default | Description |
-|-----|------|---------|-------------|
+|-----|------|----|-------------|
 | backups.mysql.containerSecurityContext.allowPrivilegeEscalation | bool | `false` |  |
 | backups.mysql.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | backups.mysql.containerSecurityContext.privileged | bool | `false` |  |
@@ -194,8 +194,10 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.replicas | int | `2` |  |
 | fourAllPortal.resources.limits.cpu | int | `4` |  |
 | fourAllPortal.resources.limits.memory | string | `"4Gi"` |  |
+| fourAllPortal.resources.limits.ephemeral-storage | string | `"250Gi"` |  |
 | fourAllPortal.resources.requests.cpu | string | `"500m"` |  |
 | fourAllPortal.resources.requests.memory | string | `"2Gi"` |  |
+| fourAllPortal.resources.requests.ephemeral-storage | string | `"1Mi"` |  |
 | fourAllPortal.securityContext.fsGroup | int | `1000` |  |
 | fourAllPortal.securityContext.fsGroupChangePolicy | string | `"OnRootMismatch"` |  |
 | fourAllPortal.securityContext.runAsGroup | int | `1000` |  |
