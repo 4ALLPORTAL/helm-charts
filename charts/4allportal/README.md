@@ -241,6 +241,8 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | maxscale.replicas | int | `2` |  |
 | samba.adminPassword | string | `"CHANGEME"` |  |
 | samba.affinity | object | `{}` |  |
+| samba.bridge.namespace | string | `""` |  |
+| samba.bridge.prefix | string | `""` |  |
 | samba.enabled | bool | `false` |  |
 | samba.image.registry | string | `"quay.io"` |  |
 | samba.image.repository | string | `"samba.org/samba-server"` |  |
@@ -254,8 +256,6 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | samba.resources.limits.memory | string | `"1Gi"` |  |
 | samba.resources.requests.cpu | string | `"10m"` |  |
 | samba.resources.requests.memory | string | `"32Mi"` |  |
-| samba.service.namespace | string | `""` |  |
-| samba.service.prefix | string | `""` |  |
 | samba.tolerations | list | `[]` |  |
 | samba.users | list | `[]` |  |
 | users | list | `[]` |  |

@@ -24,7 +24,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   type: ExternalName
-  externalName: {{ .Values.samba.service.prefix | default "portals" }}-samba-bridge-server.{{ .Values.samba.service.namespace | default "portals" }}.svc.cluster.local
+  externalName: {{ .Values.samba.bridge.prefix | default "portals" }}-samba-bridge-server.{{ .Values.samba.bridge.namespace | default "portals" }}.svc.cluster.local
   ports:
     - name: ws
       port: 80
