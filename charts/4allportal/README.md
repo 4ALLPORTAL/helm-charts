@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 20.3.5](https://img.shields.io/badge/Version-20.3.5-informational?style=flat-square) ![AppVersion: 3.10.38](https://img.shields.io/badge/AppVersion-3.10.38-informational?style=flat-square)
+![Version: 20.3.6](https://img.shields.io/badge/Version-20.3.6-informational?style=flat-square) ![AppVersion: 3.10.38](https://img.shields.io/badge/AppVersion-3.10.38-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -193,8 +193,10 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.readinessProbe.timeoutSeconds | int | `5` |  |
 | fourAllPortal.replicas | int | `2` |  |
 | fourAllPortal.resources.limits.cpu | int | `4` |  |
+| fourAllPortal.resources.limits.ephemeral-storage | string | `"250Gi"` |  |
 | fourAllPortal.resources.limits.memory | string | `"4Gi"` |  |
 | fourAllPortal.resources.requests.cpu | string | `"500m"` |  |
+| fourAllPortal.resources.requests.ephemeral-storage | string | `"1Mi"` |  |
 | fourAllPortal.resources.requests.memory | string | `"2Gi"` |  |
 | fourAllPortal.securityContext.fsGroup | int | `1000` |  |
 | fourAllPortal.securityContext.fsGroupChangePolicy | string | `"OnRootMismatch"` |  |
