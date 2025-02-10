@@ -1,0 +1,10 @@
+{{- if .Values.sealedsecrets.enabled -}}
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: sealed-secrets
+  namespace: flux
+spec:
+  interval: 1m
+  url: https://bitnami-labs.github.io/sealed-secrets
+{{- end -}}

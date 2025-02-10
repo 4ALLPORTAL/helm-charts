@@ -85,6 +85,13 @@ speedtest:
     repository: adolfintel/speedtest
     tag: latest
 
+sealedsecrets:
+  enabled: true
+  values:
+    keyrenewperiod: "0"
+    networkPolicy:
+      enabled: true
+
 janitor:
   enabled: true
 
