@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 40.2.3](https://img.shields.io/badge/Version-40.2.3-informational?style=flat-square)
+![Version: 40.2.4](https://img.shields.io/badge/Version-40.2.4-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -212,6 +212,9 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | rbac.view.authenticated | bool | `false` |  |
 | rbac.view.groups | list | `[]` |  |
 | rbac.view.users | list | `[]` |  |
+| sealedsecrets.enabled | bool | `true` |  |
+| sealedsecrets.values.keyrenewperiod | string | `"0"` |  |
+| sealedsecrets.values.networkPolicy.enabled | bool | `true` |  |
 | speedtest.enabled | bool | `true` |  |
 | speedtest.host | string | `"speedtest"` |  |
 | speedtest.image.registry | string | `""` |  |
