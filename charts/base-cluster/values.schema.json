@@ -275,6 +275,18 @@
       },
       "additionalProperties": false
     },
+    "sealedsecrets": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "values": {
+            "type": "array"
+          }
+      },
+      "additionalProperties": false
+    },
     "speedtest": {
       "type": "object",
       "properties": {
