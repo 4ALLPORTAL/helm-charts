@@ -24,7 +24,7 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 ## Values
 
 | Key | Type | Default | Description |
-|-----|---|---------|-------------|
+|-----|------|---------|-------------|
 | backup.enabled | bool | `false` |  |
 | certManager.caInjector.resources.limits.cpu | string | `"250m"` |  |
 | certManager.caInjector.resources.limits.memory | string | `"512Mi"` |  |
