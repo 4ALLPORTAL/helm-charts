@@ -87,7 +87,7 @@ speedtest:
 
 sealedsecrets:
   enabled: true
-  values: []
+  values: {}
 
 janitor:
   enabled: true

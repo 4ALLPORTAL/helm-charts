@@ -282,7 +282,7 @@
           "type": "boolean"
         },
         "values": {
-            "type": "array"
+            "type": "object"
           }
       },
       "additionalProperties": false
