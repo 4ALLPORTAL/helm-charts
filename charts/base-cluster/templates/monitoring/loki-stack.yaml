@@ -44,23 +44,22 @@ spec:
       serviceMonitor:
         enabled: true
       {{- end }}
-      table_manager:
-        retention_deletes_enabled: true
-        retention_period: 2w
       config:
+        table_manager:
+          retention_deletes_enabled: true
+          retention_period: 2w
+        schema_config:
+          configs:
+            - from: 2025-02-01
+              store: boltdb-shipper
+              object_store: filesystem
+              schema: v13
+              index:
+                prefix: index_
+                period: 24h
         ingester:
           chunk_block_size: 524288
           chunk_target_size: 5242880
-{{/* Only after 2.5 is released 🙁 */}}
-{{/*        schema_config:*/}}
-{{/*          configs:*/}}
-{{/*            - from: 2022-02-26*/}}
-{{/*              store: boltdb-shipper*/}}
-{{/*              object_store: filesystem*/}}
-{{/*              schema: v12*/}}
-{{/*              index:*/}}
-{{/*                prefix: index_*/}}
-{{/*                period: 24h*/}}
     promtail:
       {{- if .Values.global.imageRegistry }}
       image:
