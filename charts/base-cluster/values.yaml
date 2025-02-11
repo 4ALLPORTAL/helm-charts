@@ -86,7 +86,7 @@ speedtest:
     tag: latest
 
 sealedsecrets:
-  enabled: true
+  enabled: false
   values: {}
 
 janitor:
