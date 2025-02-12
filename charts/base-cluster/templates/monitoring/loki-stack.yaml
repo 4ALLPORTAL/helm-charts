@@ -50,7 +50,7 @@ spec:
           retention_period: "{{ .Values.monitoring.loki.logRetentionDays | default 14 }}d"
         schema_config:
           configs:
-          - from: 2025-02-01
+          - from: "2025-02-01"
             store: boltdb-shipper
             object_store: filesystem
             schema: v11
