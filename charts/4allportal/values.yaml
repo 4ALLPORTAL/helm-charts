@@ -164,6 +164,7 @@ fourAllPortal:
 
   ingress:
     enabled: false
+    ingressClassName: ""
     existingCertificate: {}
     endpointMonitor:
       enabled: false

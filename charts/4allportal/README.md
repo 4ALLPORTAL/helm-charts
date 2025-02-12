@@ -157,6 +157,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.ingress.endpointMonitor.enabled | bool | `false` |  |
 | fourAllPortal.ingress.existingCertificate | object | `{}` |  |
 | fourAllPortal.ingress.host | string | `""` |  |
+| fourAllPortal.ingress.ingressClassName | string | `""` |  |
 | fourAllPortal.initContainers | list | `[]` |  |
 | fourAllPortal.livenessProbe.enabled | bool | `true` |  |
 | fourAllPortal.livenessProbe.failureThreshold | int | `3` |  |
