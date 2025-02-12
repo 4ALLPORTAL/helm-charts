@@ -140,10 +140,10 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.general.admin.firstName | string | `""` |  |
 | fourAllPortal.general.admin.lastName | string | `""` |  |
 | fourAllPortal.general.admin.password | string | `""` |  |
+| fourAllPortal.general.admin.secret.key | string | `""` |  |
+| fourAllPortal.general.admin.secret.name | string | `""` |  |
 | fourAllPortal.general.admin.username | string | `"administrator"` |  |
 | fourAllPortal.general.defaultLanguage | string | `"en_US"` |  |
-| fourAllPortal.general.secret.key | string | `""` |  |
-| fourAllPortal.general.secret.name | string | `""` |  |
 | fourAllPortal.hostAliases | list | `[]` |  |
 | fourAllPortal.hpa.enabled | bool | `false` |  |
 | fourAllPortal.hpa.maxReplicas | int | `4` |  |
@@ -170,6 +170,8 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.mail.password | string | `""` |  |
 | fourAllPortal.mail.port | int | `25` |  |
 | fourAllPortal.mail.replyTo | bool | `false` |  |
+| fourAllPortal.mail.secret.key | string | `""` |  |
+| fourAllPortal.mail.secret.name | string | `""` |  |
 | fourAllPortal.mail.security | string | `"SSL"` |  |
 | fourAllPortal.mail.system.from.email | string | `""` |  |
 | fourAllPortal.mail.system.from.name | string | `""` |  |
