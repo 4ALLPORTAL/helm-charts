@@ -15,6 +15,9 @@ metadata:
   {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+  {{- if ne .Values.fourAllPortal.ingress.ingressClassName "" }}
+  ingressClassName: {{ .Values.fourAllPortal.ingress.ingressClassName }}
+  {{- end }}
   rules:
     - host: {{ required "You must provide a host, when enabling ingress" .Values.fourAllPortal.ingress.host | quote }}
       http:
