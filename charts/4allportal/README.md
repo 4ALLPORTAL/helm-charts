@@ -196,8 +196,10 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.readinessProbe.timeoutSeconds | int | `5` |  |
 | fourAllPortal.replicas | int | `2` |  |
 | fourAllPortal.resources.limits.cpu | int | `4` |  |
+| fourAllPortal.resources.limits.ephemeral-storage | string | `"250Gi"` |  |
 | fourAllPortal.resources.limits.memory | string | `"4Gi"` |  |
 | fourAllPortal.resources.requests.cpu | string | `"500m"` |  |
+| fourAllPortal.resources.requests.ephemeral-storage | string | `"1Mi"` |  |
 | fourAllPortal.resources.requests.memory | string | `"2Gi"` |  |
 | fourAllPortal.securityContext.fsGroup | int | `1000` |  |
 | fourAllPortal.securityContext.fsGroupChangePolicy | string | `"OnRootMismatch"` |  |

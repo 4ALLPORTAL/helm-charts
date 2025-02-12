@@ -275,6 +275,18 @@
       },
       "additionalProperties": false
     },
+    "sealedsecrets": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "values": {
+            "type": "object"
+          }
+      },
+      "additionalProperties": false
+    },
     "speedtest": {
       "type": "object",
       "properties": {
@@ -741,6 +753,11 @@
             "replicas": {
               "type": "integer",
               "minimum": 1
+            },
+            "logRetentionDays": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Log retention in days"
             },
             "resources": {
               "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"

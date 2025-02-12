@@ -60,9 +60,11 @@ fourAllPortal:
     requests:
       cpu: 500m
       memory: 2Gi
+      ephemeral-storage: 1Mi
     limits:
       cpu: 4
       memory: 4Gi
+      ephemeral-storage: 250Gi
 
   livenessProbe:
     enabled: true

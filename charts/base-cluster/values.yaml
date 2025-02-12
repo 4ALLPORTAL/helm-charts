@@ -85,6 +85,10 @@ speedtest:
     repository: adolfintel/speedtest
     tag: latest
 
+sealedsecrets:
+  enabled: false
+  values: {}
+
 janitor:
   enabled: true
 

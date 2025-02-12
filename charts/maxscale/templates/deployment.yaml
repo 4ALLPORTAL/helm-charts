@@ -58,8 +58,8 @@ spec:
             - name: MAXSCALE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "" "context" $) }}
-                  key: {{ include "common.secrets.key" (dict "existingSecret" (dict) "key" "root-password") }}
+                  name: {{ include "maxscale.password.secret.name" . }}
+                  key: {{ include "maxscale.password.secret.key" . }}
           ports:
             - name: mysql
               containerPort: 3306
