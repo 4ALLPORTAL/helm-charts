@@ -122,6 +122,8 @@ Helper functions for secret references instead of clear text references for data
 {{- else -}}
 {{ include "common.secrets.name" (dict "existingSecret" .Values.fourAllPortal.database.existing.existingSecret "defaultNameSuffix" "database" "context" $) }}
 {{- end -}}
+{{- else if and .Values.maxscale.mariadb.existingSecret (ne .Values.maxscale.mariadb.existingSecret "") -}}
+{{ .Values.maxscale.mariadb.existingSecret }}
 {{- else -}}
 {{ include "common.secrets.name" (dict "existingSecret" .Values.fourAllPortal.database.existing.existingSecret "defaultNameSuffix" "database" "context" $) }}
 {{- end -}}
@@ -134,6 +136,8 @@ Helper functions for secret references instead of clear text references for data
 {{- else -}}
 {{ include "common.secrets.key" (dict "existingSecret" .Values.fourAllPortal.database.existing.existingSecret "key" "password") }}
 {{- end -}}
+{{- else if and .Values.maxscale.mariadb.existingSecret (ne .Values.maxscale.mariadb.existingSecret "") -}}
+mariadb-root-password
 {{- else -}}
 {{ include "common.secrets.key" (dict "existingSecret" .Values.fourAllPortal.database.existing.existingSecret "key" "password") }}
 {{- end -}}
