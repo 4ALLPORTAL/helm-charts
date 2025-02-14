@@ -151,6 +151,50 @@ mariadb-root-password
 {{- end -}}
 {{- end -}}
 
+{{- define "4allportal.webdav.secretName" -}}
+{{- if ne .Values.webdav.secretName "" -}}
+{{ .Values.webdav.secretName }}
+{{- else -}}
+{{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "webdav" "context" $) }}
+{{- end -}}
+{{- end -}}
+
+{{- define "4allportal.samba.secret.name" -}}
+{{- if and (ne .Values.samba.secret.name "") (ne .Values.samba.secret.key "") -}}
+{{ .Values.samba.secret.name }}
+{{- else -}}
+{{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "samba" "context" $) }}
+{{- end -}}
+{{- end -}}
+
+{{- define "4allportal.samba.secret.key" -}}
+{{- if and (ne .Values.samba.secret.name "") (ne .Values.samba.secret.key "") -}}
+{{ .Values.samba.secret.key }}
+{{- else -}}
+users
+{{- end -}}
+{{- end -}}
+
+{{- define "4allportal.backup.mysql.secretName" -}}
+{{- if ne .Values.backups.mysql.secretName "" -}}
+{{ .Values.backups.mysql.secretName }}
+{{- else -}}
+{{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "mysql-backup" "context" $) }}
+{{- end -}}
+{{- end -}}
+
+{{- define "4allportal.backup.volumes.secretName" -}}
+{{- if ne .Values.backups.volumes.secretName "" -}}
+{{ .Values.backups.volumes.secretName }}
+{{- else -}}
+{{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "backup" "context" $) }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Other functions, split for readability of secret ref helpers
+*/}}
+
 {{- define "4allportal.isHa" -}}
 {{- and (eq (include "4allportal.component.isHa" .Values.fourAllPortal) "true") (or (not .Values.maxscale.enabled) (and (eq (include "4allportal.component.isHa" .Values.maxscale) "true") (eq (include "4allportal.component.isHa" .Values.maxscale.mariadb) "true"))) -}}
 {{- end -}}

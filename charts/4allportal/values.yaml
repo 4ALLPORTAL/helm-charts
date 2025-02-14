@@ -261,6 +261,9 @@ samba:
     registry: quay.io
     repository: samba.org/samba-server
     tag: v0.6
+  secret:
+    name: ""
+    key: ""
   users: []
   mounts: []
   service:
@@ -289,6 +292,7 @@ samba:
 
 webdav:
   enabled: false
+  secretName: ""
   image:
     registry: docker.io
     repository: httpd
@@ -362,6 +366,7 @@ backups:
         memory: 1Gi
   volumes:
     enabled: false
+    secretName: false
     retention:
       prune: true
       policy: {}
@@ -369,6 +374,7 @@ backups:
     schedule: ""
   mysql:
     enabled: false
+    secretName: ""
     resources:
       requests:
         cpu: 100m

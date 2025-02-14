@@ -460,6 +460,9 @@
                       "type": "boolean",
                       "const": true
                     },
+                    "secretName": {
+                      "type": "string"
+                    },
                     "mounts": {
                       "type": "object",
                       "description": "The key is the url path and the value is the permission",
@@ -581,6 +584,9 @@
                           "type": "boolean",
                           "const": true
                         },
+                        "secretName": {
+                          "type": "string"
+                        },
                         "nodeSelector": {
                           "$ref": "#/definitions/nodeSelector"
                         },
@@ -627,6 +633,9 @@
               "properties": {
                 "enabled": {
                   "type": "boolean"
+                },
+                "secretname": {
+                  "type": "string"
                 },
                 "password": {
                   "type": "string"
