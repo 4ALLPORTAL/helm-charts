@@ -634,7 +634,7 @@
                 "enabled": {
                   "type": "boolean"
                 },
-                "secretname": {
+                "secretName": {
                   "type": "string"
                 },
                 "password": {
