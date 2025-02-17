@@ -366,7 +366,7 @@ backups:
         memory: 1Gi
   volumes:
     enabled: false
-    secretName: false
+    secretName: ""
     retention:
       prune: true
       policy: {}
