@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 40.3.1](https://img.shields.io/badge/Version-40.3.1-informational?style=flat-square)
+![Version: 41.0.0](https://img.shields.io/badge/Version-41.0.0-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -55,18 +55,16 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | descheduler.strategies.RemovePodsViolatingNodeTaints.enabled | bool | `true` |  |
 | descheduler.strategies.RemovePodsViolatingTopologySpreadConstraint.enabled | bool | `true` |  |
 | descheduler.strategies.RemovePodsViolatingTopologySpreadConstraint.params.includeSoftContraints | bool | `true` |  |
-| dns.apiKey | string | `""` |  |
 | dns.domains | list | `[]` |  |
+| dns.existingSecret | string | `""` |  |
 | externalDNS.resources.limits.cpu | string | `"50m"` |  |
 | externalDNS.resources.limits.memory | string | `"128Mi"` |  |
 | externalDNS.resources.requests.cpu | string | `"50m"` |  |
 | externalDNS.resources.requests.memory | string | `"64Mi"` |  |
 | flux.resources | object | `{}` |  |
 | git.instances | object | `{}` |  |
-| global.authentication.config.clientId | string | `""` |  |
-| global.authentication.config.clientSecret | string | `""` |  |
-| global.authentication.config.cookieSecret | string | `""` |  |
 | global.authentication.config.emailDomains | list | `[]` |  |
+| global.authentication.config.existingSecret | string | `""` |  |
 | global.authentication.config.issuerHost | string | `""` |  |
 | global.authentication.config.issuerPath | string | `""` |  |
 | global.authentication.enabled | bool | `false` |  |
@@ -80,7 +78,7 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | global.helm.image.registry | string | `"docker.io"` |  |
 | global.helm.image.repository | string | `"alpine/helm"` |  |
 | global.helm.image.tag | string | `"3.16.2"` |  |
-| global.imageCredentials | object | `{}` |  |
+| global.imageCredentials | list | `[]` |  |
 | global.imageRegistry | string | `""` |  |
 | global.kubectl.image.registry | string | `"docker.io"` |  |
 | global.kubectl.image.repository | string | `"bitnami/kubectl"` |  |
@@ -115,10 +113,11 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | monitoring.goldpinger.resources.requests.cpu | string | `"10m"` |  |
 | monitoring.goldpinger.resources.requests.memory | string | `"64Mi"` |  |
 | monitoring.grafana.additionalDashboards | object | `{}` |  |
-| monitoring.grafana.adminPassword | string | `""` |  |
 | monitoring.grafana.config | object | `{}` |  |
 | monitoring.grafana.dashboards.fourAllPortal | bool | `true` |  |
 | monitoring.grafana.dashboards.mariadb | bool | `true` |  |
+| monitoring.grafana.envFromSecret | list | `[]` |  |
+| monitoring.grafana.existingAdminSecret | string | `""` |  |
 | monitoring.grafana.host | string | `"grafana"` |  |
 | monitoring.grafana.notifiers | list | `[]` |  |
 | monitoring.grafana.resources.limits.cpu | string | `"500m"` |  |
@@ -129,10 +128,8 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | monitoring.grafana.sidecar.resources.limits.memory | string | `"128Mi"` |  |
 | monitoring.grafana.sidecar.resources.requests.cpu | int | `1` |  |
 | monitoring.grafana.sidecar.resources.requests.memory | string | `"128Mi"` |  |
-| monitoring.ingress.creationDelay | string | `"10m"` |  |
-| monitoring.ingress.enableMonitorDeletion | bool | `true` |  |
 | monitoring.ingress.enabled | bool | `false` |  |
-| monitoring.ingress.providers | list | `[]` |  |
+| monitoring.ingress.existingSecret | string | `""` |  |
 | monitoring.jaeger.agent.resources.limits.cpu | string | `"200m"` |  |
 | monitoring.jaeger.agent.resources.limits.memory | string | `"64Mi"` |  |
 | monitoring.jaeger.agent.resources.requests.cpu | string | `"100m"` |  |
@@ -172,7 +169,7 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | monitoring.prometheus.alertmanager.host | string | `"alertmanager"` |  |
 | monitoring.prometheus.alertmanager.pagerduty.description | string | `nil` |  |
 | monitoring.prometheus.alertmanager.pagerduty.enabled | bool | `false` |  |
-| monitoring.prometheus.alertmanager.pagerduty.routingKey | string | `""` |  |
+| monitoring.prometheus.alertmanager.pagerduty.existingSecret | string | `""` |  |
 | monitoring.prometheus.alertmanager.pagerduty.severity | string | `nil` |  |
 | monitoring.prometheus.alertmanager.pagerduty.url | string | `""` |  |
 | monitoring.prometheus.alertmanager.routes | list | `[]` |  |
