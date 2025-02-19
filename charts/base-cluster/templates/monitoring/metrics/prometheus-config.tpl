@@ -22,13 +22,20 @@ grafana:
   resources: {{- $.Values.monitoring.grafana.resources | toYaml | nindent 4 }}
   serviceMonitor:
     interval: "30s"
-  adminPassword: {{ required "You must provide an adminPassword for grafana" $.Values.monitoring.grafana.adminPassword | quote }}
+  admin:
+    existingSecret: {{ required "You must provide an secret for grafana" $.Values.monitoring.grafana.existingAdminSecret | quote }}
+    userKey: "admin-user"
+    passwordKey: "admin-password"
   plugins:
     - grafana-piechart-panel
   {{- with $.Values.monitoring.grafana.additionalPlugins }}
   {{ . | toYaml | nindent 4 }}
   {{- end }}
   defaultDashboardsEnabled: true
+  envFromSecret:
+  {{- range .Values.monitoring.grafana.envFromSecret }}
+    - {{ . }}
+  {{- end }}
   grafana.ini:
   {{- if $.Values.monitoring.grafana.config -}}
   {{ merge $.Values.monitoring.grafana.config (include "base-cluster.grafana.config" $ | fromYaml) | toYaml | nindent 4 -}}
@@ -140,6 +147,9 @@ prometheus-node-exporter:
   priorityClassName: system-cluster-critical
 alertmanager:
   enabled: true
+  alertmanagerSpec:
+    secrets:
+      - {{ .Values.monitoring.prometheus.alertmanager.pagerduty.existingSecret }}
   config:
   {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.enabled }}
     global:
@@ -167,7 +177,7 @@ alertmanager:
       {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.enabled }}
       - name: pagerduty
         pagerduty_configs:
-          - routing_key: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.routingKey }}
+          - service_key_file: "/etc/alertmanager/secrets/{{ .Values.monitoring.prometheus.alertmanager.pagerduty.existingSecret }}/pagerduty_service_key"
             {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.severity }}
             severity: '{{ .Values.monitoring.prometheus.alertmanager.pagerduty.severity }}'
             {{- end }}

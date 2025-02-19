@@ -92,6 +92,9 @@ spec:
       {{- if empty .Values.monitoring.jaeger.authentication.enabled | ternary .Values.global.authentication.enabled .Values.monitoring.jaeger.authentication.enabled }}
       oAuthSidecar:
         enabled: true
+        envFrom:
+          - secretRef:
+              name: {{ $.Values.global.authentication.config.existingSecret | quote }}
         args:
           - --config=/etc/oauth2-proxy/oauth2-proxy.cfg
           - --http-address=0.0.0.0:4180
@@ -100,9 +103,9 @@ spec:
         config: |-
           provider = "oidc"
           reverse_proxy = true
-          client_id = {{ .Values.global.authentication.config.clientId | quote }}
-          client_secret = {{ .Values.global.authentication.config.clientSecret | quote }}
-          cookie_secret = {{ .Values.global.authentication.config.cookieSecret | quote }}
+          client_id = ${clientId}
+          client_secret = ${clientSecret}
+          cookie_secret = ${cookieSecret}
           oidc_issuer_url = {{ printf "https://%s%s" $.Values.global.authentication.config.issuerHost $.Values.global.authentication.config.issuerPath | quote }}
           skip_provider_button = true
           email_domains = [ "{{ .Values.global.authentication.config.emailDomains | join "\", \"" }}" ]

@@ -31,8 +31,7 @@ spec:
       {{- if .Values.global.imageRegistry }}
       registry: "{{ $.Values.global.imageRegistry }}/stashed"
       {{- end }}
-      license: |-
-    {{ required "You need to provide a license for stash 😡" .Values.backup.license | nindent 8 }}
+      licenseSecretName: {{ required "You need to provide a license secret for stash 😡" .Values.backup.licenseSecretName | quote }}
     features:
       community: true
     security:
@@ -49,10 +48,7 @@ spec:
       apiserver:
         enableValidatingWebhook: false
         servingCerts:
-          generate: false
-          caCrt: "{{ required "Sadly you have to provide 'backup.servingCerts.caCert'" .Values.backup.servingCerts.caCert | b64enc }}"
-          serverCrt: "{{ required "Sadly you have to provide 'backup.servingCerts.serverCert'" .Values.backup.servingCerts.serverCert | b64enc }}"
-          serverKey: "{{ required "Sadly you have to provide 'backup.servingCerts.serverKey'" .Values.backup.servingCerts.serverKey | b64enc }}"
+          generate: true
 ---
 {{ template "base-cluster.dashboards.configmap" (dict "folder" "backup" "context" .) }}
 {{- end -}}
