@@ -70,24 +70,28 @@ spec:
 
     globalArguments: [ ]
 
+    logs:
+      general:
+        level: {{ .Values.traefik.log.level }}
+
+    experimental:
+      fastProxy:
+        enabled: true
+
     additionalArguments:
       {{- if .Values.traefik.ingressIP }}
       - "--providers.kubernetesIngress.ingressEndpoint.ip={{ .Values.traefik.ingressIP }}"
       {{- end }}
-      - "--entryPoints.web.http.redirections.entryPoint.permanent=true"
       {{- if .Values.traefik.debug.enabled }}
       - "--api.debug=true"
       {{- end }}
       - "--log=true"
-      - "--log.level={{ .Values.traefik.log.level }}"
       {{- if .Values.monitoring.jaeger.enabled }}
       - "--tracing.jaeger=true"
       - "--tracing.jaeger.localAgentHostPort=$(JAEGER_AGENT_HOST):$(JAEGER_AGENT_PORT)"
     {{- end }}
       - "--providers.file.filename=/config/config.toml"
       - "--entrypoints.websecure.http.middlewares=compress@file"
-      - "--providers.kubernetesingress.allowexternalnameservices=true"
-      - "--providers.kubernetesingress.allowEmptyServices=true"
       - "--providers.kubernetescrd.allowexternalnameservices=true"
       - "--providers.kubernetescrd.throttleDuration=10s"
       - "--providers.kubernetesingress.throttleDuration=10s"
