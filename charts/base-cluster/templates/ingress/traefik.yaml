@@ -38,7 +38,7 @@ spec:
   values:
     {{- if .Values.global.imageRegistry }}
     image:
-      name: "{{ $.Values.global.imageRegistry }}/traefik"
+      registry: "{{ $.Values.global.imageRegistry }}"
     {{- end }}
     providers:
       kubernetesCRD:
