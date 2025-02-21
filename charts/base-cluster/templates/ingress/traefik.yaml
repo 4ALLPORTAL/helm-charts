@@ -25,7 +25,7 @@ spec:
         kind: HelmRepository
         name: traefik
         namespace: {{ .Release.Namespace }}
-      version: 25.x.x
+      version: 34.x.x
   interval: 1m
   install:
     crds: CreateReplace
@@ -98,8 +98,11 @@ spec:
 
     ports:
       web:
-        redirectTo:
-          port: websecure
+        redirections:
+          entryPoint:
+            to: websecure
+            scheme: https
+            permanent: true
       websecure:
         tls:
           enabled: true
