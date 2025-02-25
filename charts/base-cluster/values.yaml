@@ -95,7 +95,7 @@ monitoring:
     enabled: false
     existingConfigSecret: ""
   grafana:
-    envFromSecret: []
+    envFromSecrets: []
     existingAdminSecret: ""
     host: grafana
     additionalDashboards: {}
