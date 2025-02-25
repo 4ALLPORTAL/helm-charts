@@ -34,7 +34,7 @@ grafana:
   defaultDashboardsEnabled: true
   envFromSecrets:
   {{- range .Values.monitoring.grafana.envFromSecrets }}
-    - {{ . }}
+    - name: {{ . }}
   {{- end }}
   grafana.ini:
   {{- if $.Values.monitoring.grafana.config -}}
