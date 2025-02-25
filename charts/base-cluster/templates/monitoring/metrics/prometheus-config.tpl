@@ -32,8 +32,8 @@ grafana:
   {{ . | toYaml | nindent 4 }}
   {{- end }}
   defaultDashboardsEnabled: true
-  envFromSecret:
-  {{- range .Values.monitoring.grafana.envFromSecret }}
+  envFromSecrets:
+  {{- range .Values.monitoring.grafana.envFromSecrets }}
     - {{ . }}
   {{- end }}
   grafana.ini:

@@ -600,7 +600,7 @@
         "grafana": {
           "type": "object",
           "properties": {
-            "envFromSecret": {
+            "envFromSecrets": {
               "type": "array",
               "items": {
                 "type": "string"
