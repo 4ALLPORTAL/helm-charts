@@ -147,9 +147,6 @@ prometheus-node-exporter:
   priorityClassName: system-cluster-critical
 alertmanager:
   enabled: true
-  alertmanagerSpec:
-    secrets:
-      - {{ .Values.monitoring.prometheus.alertmanager.pagerduty.existingSecret }}
   config:
   {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.enabled }}
     global:
@@ -177,7 +174,7 @@ alertmanager:
       {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.enabled }}
       - name: pagerduty
         pagerduty_configs:
-          - service_key_file: "/etc/alertmanager/secrets/{{ .Values.monitoring.prometheus.alertmanager.pagerduty.existingSecret }}/pagerduty_service_key"
+          - service_key_file: "/etc/alertmanager/secrets/{{ .Values.monitoring.prometheus.alertmanager.pagerduty.existingRoutingKeySecret }}/pagerduty_routing_key"
             {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.severity }}
             severity: '{{ .Values.monitoring.prometheus.alertmanager.pagerduty.severity }}'
             {{- end }}
@@ -213,6 +210,8 @@ alertmanager:
   {{- end }}
   alertmanagerSpec:
     replicas: 3
+    secrets:
+      {{- toYaml (concat .Values.monitoring.prometheus.alertmanager.existingSecrets (list .Values.monitoring.prometheus.alertmanager.pagerduty.existingRoutingKeySecret)) | nindent 4 }}
     podAntiAffinity: soft
     {{- if empty $.Values.monitoring.prometheus.authentication.enabled | ternary $.Values.global.authentication.enabled $.Values.monitoring.prometheus.authentication.enabled }}
     externalUrl: https://{{ include "base-cluster.alertmanager.host" $ }}

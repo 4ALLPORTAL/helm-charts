@@ -93,7 +93,7 @@ janitor:
 monitoring:
   ingress:
     enabled: false
-    existingSecret: ""
+    existingConfigSecret: ""
   grafana:
     envFromSecret: []
     existingAdminSecret: ""
@@ -162,12 +162,13 @@ monitoring:
     host: prometheus
     alertmanager:
       host: alertmanager
+      existingSecrets: []
       storage:
         size: 1Gi
         retention: 120h
       pagerduty:
         enabled: false
-        existingSecret: ""
+        existingRoutingKeySecret: ""
         url: ""
         severity:
         description:

@@ -510,6 +510,13 @@
             "alertmanager": {
               "type": "object",
               "properties": {
+                "existingSecrets":{
+                  "type": "array",
+                  "description": "A list of existing secrets which can be used in service_key_file",
+                  "items": {
+                    "type": "string"
+                  }
+                },
                 "host": {
                   "type": "string"
                 },
@@ -535,7 +542,7 @@
                     "enabled": {
                       "type": "boolean"
                     },
-                    "existingSecret": {
+                    "existingRoutingKeySecret": {
                       "type": "string",
                       "description": "Secret with the pagerduty_routing_key"
                     },
@@ -758,7 +765,7 @@
             "enabled": {
               "type": "boolean"
             },
-            "existingSecret": {
+            "existingConfigSecret": {
               "type": "string",
               "description": "Secret with the enableMonitorDeletion, creationDelay and providers"
             }
