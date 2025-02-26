@@ -5,6 +5,21 @@ metadata:
   name: "{{ include "common.names.fullname" $ }}-samba"
   namespace: {{ .Release.Namespace }}
 data:
+  smb.conf: |-
+    workgroup = WORKGROUP
+    netbios name = server
+    security = user
+    encrypt passwords = no
+    domain master = no
+    preferred master = no
+    domain logons = yes
+    passdb backend = pgsql:pgsql
+    pgsql:pgsql host = psql.{{ .Release.Namespace }}.svc.cluster.local
+    pgsql:pgsql user = samba
+    pgsql:pgsql password = samba
+    pgsql:pgsql database = samba
+    pgsql:pgsql table = samba
+    pgsql:domain column = 'test'
   config.json: |-
     {
       "samba-container-config": "v0",
