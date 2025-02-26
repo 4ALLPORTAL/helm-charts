@@ -45,6 +45,7 @@ spec:
         enabled: true
       kubernetesIngress:
         enabled: true
+        allowExternalNameServices: true
         publishedService:
           {{- if not .Values.traefik.ingressIP }}
           enabled: true
