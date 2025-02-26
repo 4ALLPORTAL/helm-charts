@@ -45,10 +45,12 @@ spec:
         enabled: true
       kubernetesIngress:
         enabled: true
-        {{- if not .Values.traefik.ingressIP }}
         publishedService:
+          {{- if not .Values.traefik.ingressIP }}
           enabled: true
-    {{- end }}
+          {{- else }}
+          enabled: false
+          {{- end }}
 
     rbac:
       enabled: true
