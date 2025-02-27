@@ -13,7 +13,7 @@ spec:
             email: {{ .Values.dns.email }}
             apiKeySecretRef:
               name: {{ required "You must provide a secret for Cloudflare" .Values.dns.existingSecret }}
-              key: cloudflare_api_key
+              key: CF_API_KEY
         {{ with .Values.dns.domains }}
         selector:
           dnsZones:
