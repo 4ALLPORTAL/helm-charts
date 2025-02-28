@@ -31,13 +31,10 @@ spec:
             - containerPort: 445
               name: smb
           command: [ "sh", "-c" ]
-          securityContext:
-            allowPrivilegeEscalation: {{ .Values.samba.activeDirectory.enabled }}
-            privileged: {{ .Values.samba.activeDirectory.enabled }}
           args:
             - |
               useradd -u 1000 4allportal
-              samba-container run smbd
+              samba-container run --setup init-all
           volumeMounts:
             - mountPath: /etc/container-config
               name: samba-container-config

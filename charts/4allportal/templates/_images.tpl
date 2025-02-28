@@ -23,9 +23,5 @@
 {{- end -}}
 
 {{- define "4allportal.samba.image" -}}
-{{- $repo := "samba.org/samba-server" -}}
-{{- if .Values.samba.activeDirectory.enabled -}}
-{{- $repo = "samba.org/samba-ad-server" -}}
-{{- end -}}
-{{ printf "%s/%s:%s" .Values.global.imageRegistry $repo .Values.samba.image.tag }}
+{{ include "common.images.image" (dict "imageRoot" .Values.samba.image "global" .Values.global) }}
 {{- end -}}
