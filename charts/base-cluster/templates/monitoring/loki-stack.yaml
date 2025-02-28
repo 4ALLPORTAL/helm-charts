@@ -57,6 +57,15 @@ spec:
             index:
               prefix: index_
               period: 24h
+        compactor:
+          compaction_interval: 10m
+          retention_delete_delay: 2h
+          retention_delete_worker_count: 150
+          retention_enabled: true
+          shared_store: filesystem
+          working_directory: /data/loki/boltdb-shipper-compactor
+        limits_config:
+          retention_period: "{{ .Values.monitoring.loki.logRetentionDays | default 14 }}d"
         ingester:
           chunk_block_size: 524288
           chunk_target_size: 5242880
