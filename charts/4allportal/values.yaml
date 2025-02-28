@@ -259,6 +259,8 @@ samba:
   service:
     prefix: ""
     namespace: ""
+  activeDirectory:
+    enabled: false
 
   livenessProbe:
     enabled: false
