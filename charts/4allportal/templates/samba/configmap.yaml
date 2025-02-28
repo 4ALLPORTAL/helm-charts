@@ -19,7 +19,7 @@ data:
           "globals": [
             "globals"
           ],
-          "instance_name": "assets",
+          "instance_name": "SRV-{{ .Release.Name }}",
           "permissions": {
             "method": "initialize-share-perms",
             "status_xattr": "user.share-perms-status",
@@ -73,9 +73,12 @@ data:
             "printcap name": "/dev/null",
             "printing": "bsd",
             "smb ports": "445",
-            "vfs objects": "fileid"
+            "vfs objects": "fileid",
+            "guest ok": "no",
+            "security": "user"
           }
         }
-      }
+      },
+      "_footer": 1
     }
 {{- end -}}
