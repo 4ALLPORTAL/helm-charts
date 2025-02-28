@@ -34,7 +34,7 @@ spec:
           args:
             - |
               useradd -u 1000 4allportal
-              samba-container run --setup init-all
+              samba-container run --setup init-all smbd
           volumeMounts:
             - mountPath: /etc/container-config
               name: samba-container-config
