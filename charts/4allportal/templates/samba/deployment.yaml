@@ -38,8 +38,6 @@ spec:
           volumeMounts:
             - mountPath: /etc/container-config
               name: samba-container-config
-            - mountPath: /etc/samba
-              name: samba-conf
             - mountPath: /etc/container-users
               name: users-config
             - mountPath: /mnt/assets
@@ -101,13 +99,6 @@ spec:
             items:
               - key: config.json
                 path: config.json
-        - name: samba-conf
-          configMap:
-            defaultMode: 420
-            name: "{{ include "common.names.fullname" $ }}-samba"
-            items:
-              - key: smb.conf
-                path: smb.conf
         - name: users-config
           secret:
             defaultMode: 420
