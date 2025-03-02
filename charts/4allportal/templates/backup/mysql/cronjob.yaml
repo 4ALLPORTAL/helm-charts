@@ -160,7 +160,7 @@ spec:
               emptyDir: { }
             - name: s3cfg
               secret:
-                secretName: {{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "mysql-backup" "context" $) }}
+                secretName: {{ include "4allportal.backup.mysql.secretName" . }}
           {{- if .Values.backups.mysql.nodeSelector }}
           nodeSelector: {{- toYaml .Values.backups.mysql.nodeSelector | nindent 8 }}
           {{- end }}

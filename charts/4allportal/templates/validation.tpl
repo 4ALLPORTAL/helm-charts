@@ -3,6 +3,7 @@
 {{- end -}}
 
 {{- if and .Release.IsInstall .Values.maxscale.enabled -}}
+{{- if not .Values.maxscale.mariadb.existingSecret -}}
 {{- if eq .Values.maxscale.mariadb.rootUser.password "CHANGEME" -}}
 {{- fail "You need to change mariadb.rootUser.password" -}}
 {{- end -}}
@@ -15,13 +16,14 @@
 {{- fail "You need to change mariadb.galera.mariabackup.password" -}}
 {{- end -}}
 {{- end -}}
+{{- end -}}
 
-{{- if eq .Values.fourAllPortal.database.operator.enabled true -}}
+{{- if and (eq .Values.fourAllPortal.database.operator.enabled true) (eq .Values.fourAllPortal.database.operator.secretName "") -}}
 {{- if eq .Values.fourAllPortal.database.operator.user "CHANGEME" -}}
 {{- fail "You need to change fourAllPortal.database.operator.user" -}}
 {{- end -}}
 
-{{- if eq .Values.fourAllPortal.database.operator.password "CHANGEME" -}}
+{{- if and (eq .Values.fourAllPortal.database.operator.password "CHANGEME") (eq .Values.fourAllPortal.database.operator.secretName "") -}}
 {{- fail "You need to change fourAllPortal.database.operator.password" -}}
 {{- end -}}
 

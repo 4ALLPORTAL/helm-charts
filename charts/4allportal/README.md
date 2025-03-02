@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 20.4.0](https://img.shields.io/badge/Version-20.4.0-informational?style=flat-square) ![AppVersion: 3.10.38](https://img.shields.io/badge/AppVersion-3.10.38-informational?style=flat-square)
+![Version: 20.5.0](https://img.shields.io/badge/Version-20.5.0-informational?style=flat-square) ![AppVersion: 3.10.38](https://img.shields.io/badge/AppVersion-3.10.38-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -16,7 +16,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://4allportal.github.io/helm-charts | maxscale | 4.1.11 |
+| https://4allportal.github.io/helm-charts | maxscale | 4.1.13 |
 | https://charts.bitnami.com/bitnami | common | 2.19.3 |
 
 ## Values
@@ -132,6 +132,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.database.operator.databaseRef | string | `"CHANGEME"` |  |
 | fourAllPortal.database.operator.enabled | bool | `false` |  |
 | fourAllPortal.database.operator.password | string | `"CHANGEME"` |  |
+| fourAllPortal.database.operator.secretName | string | `""` |  |
 | fourAllPortal.database.operator.user | string | `"CHANGEME"` |  |
 | fourAllPortal.debug | bool | `false` |  |
 | fourAllPortal.env | object | `{}` |  |
@@ -139,6 +140,8 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.general.admin.firstName | string | `""` |  |
 | fourAllPortal.general.admin.lastName | string | `""` |  |
 | fourAllPortal.general.admin.password | string | `""` |  |
+| fourAllPortal.general.admin.secret.key | string | `""` |  |
+| fourAllPortal.general.admin.secret.name | string | `""` |  |
 | fourAllPortal.general.admin.username | string | `"administrator"` |  |
 | fourAllPortal.general.defaultLanguage | string | `"en_US"` |  |
 | fourAllPortal.hostAliases | list | `[]` |  |
@@ -167,6 +170,8 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.mail.password | string | `""` |  |
 | fourAllPortal.mail.port | int | `25` |  |
 | fourAllPortal.mail.replyTo | bool | `false` |  |
+| fourAllPortal.mail.secret.key | string | `""` |  |
+| fourAllPortal.mail.secret.name | string | `""` |  |
 | fourAllPortal.mail.security | string | `"SSL"` |  |
 | fourAllPortal.mail.system.from.email | string | `""` |  |
 | fourAllPortal.mail.system.from.name | string | `""` |  |
