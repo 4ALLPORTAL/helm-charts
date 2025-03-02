@@ -10,7 +10,7 @@ metadata:
     app.kubernetes.io/part-of: backup
 spec:
   backend:
-    storageSecretName: {{ include "4allportal.backup.volumes.secretName" . }}
+    storageSecretName: {{ include "4allportal.backup.volumes.secretName" $ }}
     s3:
       bucket: {{ $.Values.backups.target.s3.bucket | quote }}
       endpoint: {{ $.Values.backups.target.s3.endpoint | quote }}
