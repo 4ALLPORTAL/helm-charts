@@ -12,8 +12,8 @@ spec:
           cloudflare:
             email: {{ .Values.dns.email }}
             apiKeySecretRef:
-              name: cert-manager-cloudflare
-              key: key
+              name: {{ required "You must provide a secret for Cloudflare" .Values.dns.existingSecret }}
+              key: cloudflare_api_key
         {{ with .Values.dns.domains }}
         selector:
           dnsZones:

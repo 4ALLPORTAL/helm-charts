@@ -1,7 +1,7 @@
 global:
   baseDomain: "4allportal.com"
   clusterName: "eu-west-1"
-  imageCredentials: {}
+  imageCredentials: []
   certificates: {}
   priorityClasses:
     defaultClasses:
@@ -32,12 +32,10 @@ global:
   authentication:
     enabled: false
     config:
-      clientId: ""
-      clientSecret: ""
+      existingSecret: ""
       issuerHost: ""
       issuerPath: ""
       emailDomains: []
-      cookieSecret: ""
     oauth:
       resources:
         limits:
@@ -95,11 +93,10 @@ janitor:
 monitoring:
   ingress:
     enabled: false
-    enableMonitorDeletion: true
-    providers: []
-    creationDelay: 10m
+    existingConfigSecret: ""
   grafana:
-    adminPassword: ""
+    envFromSecrets: []
+    existingAdminSecret: ""
     host: grafana
     additionalDashboards: {}
     dashboards:
@@ -165,13 +162,14 @@ monitoring:
     host: prometheus
     alertmanager:
       host: alertmanager
+      existingSecrets: []
       storage:
         size: 1Gi
         retention: 120h
       pagerduty:
         enabled: false
+        existingRoutingKeySecret: ""
         url: ""
-        routingKey: ""
         severity:
         description:
       emailconfig: []
@@ -267,7 +265,7 @@ git:
   instances: {}
 
 dns:
-  apiKey: ""
+  existingSecret: ""
   domains: []
 
 rbac:

@@ -88,9 +88,7 @@ spec:
       enabled: true
     resources: {{- toYaml $.Values.global.authentication.oauth.resources | nindent 6 }}
     configuration:
-      clientID: {{ $.Values.global.authentication.config.clientId | quote }}
-      clientSecret: {{ $.Values.global.authentication.config.clientSecret | quote }}
-      cookieSecret: {{ $.Values.global.authentication.config.cookieSecret | quote }}
+      existingSecret: {{ $.Values.global.authentication.config.existingSecret | quote }}
       content: |-
         provider = "oidc"
         reverse_proxy = true
