@@ -81,8 +81,8 @@ speedtest:
   enabled: true
   host: speedtest
   image:
-    registry: ""
-    repository: adolfintel/speedtest
+    registry: "ghcr.io"
+    repository: librespeed/speedtest
     tag: latest
 
 sealedsecrets:
