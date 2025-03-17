@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 40.4.0](https://img.shields.io/badge/Version-40.4.0-informational?style=flat-square)
+![Version: 40.5.0](https://img.shields.io/badge/Version-40.5.0-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -216,8 +216,8 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | sealedsecrets.values | object | `{}` |  |
 | speedtest.enabled | bool | `true` |  |
 | speedtest.host | string | `"speedtest"` |  |
-| speedtest.image.registry | string | `""` |  |
-| speedtest.image.repository | string | `"adolfintel/speedtest"` |  |
+| speedtest.image.registry | string | `"ghcr.io"` |  |
+| speedtest.image.repository | string | `"librespeed/speedtest"` |  |
 | speedtest.image.tag | string | `"latest"` |  |
 | traefik.cipherSuites | list | `[]` |  |
 | traefik.debug.enabled | bool | `false` |  |
