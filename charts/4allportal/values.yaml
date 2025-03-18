@@ -119,6 +119,9 @@ fourAllPortal:
       firstName: ""
       lastName: ""
       password: ""
+      secret:
+        name: ""
+        key: ""
     defaultLanguage: en_US
 
   mail:
@@ -129,6 +132,9 @@ fourAllPortal:
     security: SSL
     user: ""
     password: ""
+    secret:
+      name: ""
+      key: ""
     replyTo: false
     system:
       sender: ""
@@ -145,6 +151,7 @@ fourAllPortal:
       password: "CHANGEME"
       databaseName: "CHANGEME"
       databaseRef: "CHANGEME"
+      secretName: ""
     initialPoolSize: 5
     maxIdleTime: 180
     minPoolSize: 5
@@ -254,6 +261,9 @@ samba:
     registry: quay.io
     repository: samba.org/samba-server
     tag: v0.6
+  secret:
+    name: ""
+    key: ""
   users: []
   mounts: []
   service:
@@ -282,6 +292,7 @@ samba:
 
 webdav:
   enabled: false
+  secretName: ""
   image:
     registry: docker.io
     repository: httpd
@@ -355,6 +366,7 @@ backups:
         memory: 1Gi
   volumes:
     enabled: false
+    secretName: ""
     retention:
       prune: true
       policy: {}
@@ -362,6 +374,7 @@ backups:
     schedule: ""
   mysql:
     enabled: false
+    secretName: ""
     resources:
       requests:
         cpu: 100m
