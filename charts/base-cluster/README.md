@@ -221,7 +221,6 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | speedtest.image.tag | string | `"latest"` |  |
 | traefik.cipherSuites | list | `[]` |  |
 | traefik.debug.enabled | bool | `false` |  |
-| traefik.experimental.fastProxy.enabled | bool | `false` |  |
 | traefik.log.level | string | `"ERROR"` |  |
 | traefik.maxReplicas | int | `8` |  |
 | traefik.minReplicas | int | `2` |  |
@@ -378,4 +377,5 @@ Our implementation of the DeadMansSwitch was removed entirely and we swapped to 
 ### To 40.6.0
 
 We've upgraded Traefik to v34.x.x, going from Traefik v2 to Traefik v3 Proxy.
-We urge you to read the [traefik release notes](https://github.com/traefik/traefik-helm-chart/releases/tag/v26.0.0) of all versions >25.0.0 before upgrading
+We urge you to read the [traefik release notes](https://github.com/traefik/traefik-helm-chart/releases/tag/v26.0.0) of all versions >25.0.0 before upgrading.
+We've linked Traefik v26.0.0, all other release notes are accessible from that link
