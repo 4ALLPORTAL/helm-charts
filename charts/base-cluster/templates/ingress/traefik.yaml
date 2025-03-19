@@ -77,10 +77,6 @@ spec:
       general:
         level: {{ .Values.traefik.log.level }}
 
-    experimental:
-      fastProxy:
-        enabled: {{ .Values.traefik.experimental.fastProxy.enabled }}
-
     additionalArguments:
       {{- if .Values.traefik.ingressIP }}
       - "--providers.kubernetesIngress.ingressEndpoint.ip={{ .Values.traefik.ingressIP }}"
