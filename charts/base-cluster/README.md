@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 40.5.0](https://img.shields.io/badge/Version-40.5.0-informational?style=flat-square)
+![Version: 40.6.0](https://img.shields.io/badge/Version-40.6.0-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -374,7 +374,7 @@ You can now add extra configurations for Trivy, allowing for more efficient reso
 
 Our implementation of the DeadMansSwitch was removed entirely and we swapped to the DeadMansSnitch from Prometheus.
 
-### To 40.6.0
+### To 41.0.0
 
 We've upgraded Traefik to v34.x.x, going from Traefik v2 to Traefik v3 Proxy.
 We urge you to read the [traefik release notes](https://github.com/traefik/traefik-helm-chart/releases/tag/v26.0.0) of all versions >25.0.0 before upgrading
