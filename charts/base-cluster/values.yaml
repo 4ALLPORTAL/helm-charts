@@ -76,6 +76,9 @@ traefik:
   minReplicas: 2
   maxReplicas: 8
   cipherSuites: []
+  experimental:
+    fastProxy:
+      enabled: false
 
 speedtest:
   enabled: true

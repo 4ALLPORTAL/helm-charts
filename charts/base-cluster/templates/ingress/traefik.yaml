@@ -79,7 +79,7 @@ spec:
 
     experimental:
       fastProxy:
-        enabled: true
+        enabled: {{ .Values.traefik.experimental.fastProxy.enabled }}
 
     additionalArguments:
       {{- if .Values.traefik.ingressIP }}
