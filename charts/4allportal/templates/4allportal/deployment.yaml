@@ -215,6 +215,9 @@ spec:
             - name: LOGGING_PATTERN_CONSOLE
               value: "{\"time\": \"%d\", \"thread\": \"%thread\", \"level\": \"%p\", \"logger\": \"%logger{63}\", \"line\": \"%L\", \"message\": \"%replace(%replace(%m%wEx{6}){'[\r\n]+', '\\\\n'}%nopex\"}){'[\t]+', '\\\\t'}%n"
 
+            - name: MANAGEMENT_SERVER_PORT
+              value: {{ .Values.fourAllPortal.metrics.port | quote }}
+
             {{- include "4allportal.tracing.jaeger.env" (dict "Chart" .Chart "Release" .Release "Values" .Values "local" .Values.fourAllPortal.tracing) | nindent 12 }}
 
             {{- range $name, $value := .Values.fourAllPortal.env }}
@@ -235,7 +238,7 @@ spec:
             {{- end }}
             {{- if .Values.fourAllPortal.metrics.enabled }}
             - name: metrics
-              containerPort: 8181
+              containerPort: {{ .Values.fourAllPortal.metrics.port }}
               protocol: TCP
           {{- end }}
           {{- if and (not .Values.fourAllPortal.debug) .Values.fourAllPortal.livenessProbe.enabled }}

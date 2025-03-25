@@ -26,10 +26,6 @@ spec:
             backend: {{- include "common.ingress.backend" (dict "serviceName" (printf "%s-backend" (include "common.names.fullname" .)) "servicePort" "http" "context" $) | nindent 14 }}
             pathType: Prefix
 
-          - path: /actuator/prometheus
-            backend: {{- include "common.ingress.backend" (dict "serviceName" (printf "%s-backend" (include "common.names.fullname" .)) "servicePort" "no-endpoint" "context" $) | nindent 14 }}
-            pathType: Prefix
-
           {{- if .Values.webdav.enabled }}
           - path: "/webdav"
             backend: {{- include "common.ingress.backend" (dict "serviceName" (printf "%s-webdav" (include "common.names.fullname" $)) "servicePort" "webdav" "context" $) | nindent 14 }}
