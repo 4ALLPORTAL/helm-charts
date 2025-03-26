@@ -11,10 +11,6 @@ spec:
       targetPort: http
       protocol: TCP
       name: http
-    - port: 20000
-      targetPort: no-endpoint
-      protocol: TCP
-      name: no-endpoint
     {{- if .Values.fourAllPortal.debug }}
     - port: 8001
       targetPort: debug
