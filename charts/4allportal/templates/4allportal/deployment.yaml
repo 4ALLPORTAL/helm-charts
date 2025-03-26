@@ -228,9 +228,6 @@ spec:
             - name: http
               containerPort: 8181
               protocol: TCP
-            - name: no-endpoint
-              containerPort: 20000
-              protocol: TCP
             {{- if .Values.fourAllPortal.debug }}
             - name: debug
               containerPort: 8001
