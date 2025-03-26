@@ -36,8 +36,9 @@ spec:
     remediation:
       retries: -1
   values:
-    {{- if .Values.global.imageRegistry }}
     image:
+      tag: {{ .Values.traefik.image.tag }}
+    {{- if .Values.global.imageRegistry }}
       registry: "{{ $.Values.global.imageRegistry }}"
     {{- end }}
     providers:

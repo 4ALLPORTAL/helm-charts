@@ -212,6 +212,15 @@
     "traefik": {
       "type": "object",
       "properties": {
+        "image": {
+          "type": "object",
+          "properties": {
+            "tag": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
         "resources": {
           "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },

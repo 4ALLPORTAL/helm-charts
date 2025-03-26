@@ -62,6 +62,8 @@ flux:
   resources: {}
 
 traefik:
+  image:
+    tag: 3.3.4
   log:
     level: ERROR
   debug:
