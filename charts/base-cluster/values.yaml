@@ -63,7 +63,7 @@ flux:
 
 traefik:
   image:
-    tag: 3.3.4
+    tag: v3.3.4
   log:
     level: ERROR
   debug:
