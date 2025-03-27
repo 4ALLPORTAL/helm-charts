@@ -8,5 +8,5 @@ metadata:
 spec:
   headers:
     customResponseHeaders:
-      Content-Type: identity
+      Content-Encoding: identity
 {{- end -}}
