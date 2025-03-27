@@ -7,6 +7,8 @@ metadata:
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
 spec:
   headers:
+    customRequestHeaders:
+      Accept-Encoding: identity
     customResponseHeaders:
       Content-Encoding: identity
 {{- end -}}
