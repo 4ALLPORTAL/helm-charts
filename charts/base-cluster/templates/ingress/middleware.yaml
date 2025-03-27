@@ -9,4 +9,6 @@ spec:
   headers:
     customRequestHeaders:
       Accept-Encoding: identity
+    customResponseHeaders:
+      Content-Encoding: identity
 {{- end -}}
