@@ -194,7 +194,6 @@ fourAllPortal:
   metrics:
     # whether to expose the metrics port
     enabled: true
-    port: 9000
     serviceMonitor:
       # whether to create a prometheus ServiceMonitor
       enabled: true

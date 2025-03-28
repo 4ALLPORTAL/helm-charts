@@ -216,7 +216,7 @@ spec:
               value: "{\"time\": \"%d\", \"thread\": \"%thread\", \"level\": \"%p\", \"logger\": \"%logger{63}\", \"line\": \"%L\", \"message\": \"%replace(%replace(%m%wEx{6}){'[\r\n]+', '\\\\n'}%nopex\"}){'[\t]+', '\\\\t'}%n"
 
             - name: MANAGEMENT_SERVER_PORT
-              value: {{ .Values.fourAllPortal.metrics.port | quote }}
+              value: "9000"
 
             {{- include "4allportal.tracing.jaeger.env" (dict "Chart" .Chart "Release" .Release "Values" .Values "local" .Values.fourAllPortal.tracing) | nindent 12 }}
 
@@ -235,7 +235,7 @@ spec:
             {{- end }}
             {{- if .Values.fourAllPortal.metrics.enabled }}
             - name: metrics
-              containerPort: {{ .Values.fourAllPortal.metrics.port }}
+              containerPort: 9000
               protocol: TCP
           {{- end }}
           {{- if and (not .Values.fourAllPortal.debug) .Values.fourAllPortal.livenessProbe.enabled }}

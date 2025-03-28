@@ -1051,9 +1051,6 @@
             "enabled": {
               "type": "boolean"
             },
-            "port": {
-              "type": "integer"
-            },
             "serviceMonitor": {
               "type": "object",
               "properties": {
