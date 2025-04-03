@@ -359,3 +359,7 @@ The maxscale chart sets the innodb_buffer_pool_size to 80% from requested mariad
 This release fixes a bug with the last Chart version for database creation, using either fourAllPortal.database.existing, fourAllPortal.database.operator or maxscale.galera.
 
 You are no longer required or capable of using fourAllPortal.database.existing values when using *.operator. If you currently do, please remove either fourAllPortal.database.existing or fourAllPortal.database.operator before upgrading.
+
+## To 21.0.0
+
+This release moves JAVA_OPTS to an option in the values.yaml file under `.Values.fourAllPortal.javaOpts`. Setting this environment variable via `.Values.fourAllPortal.env` is no longer supported. The new value will be merged into the pre-existing environment variable on the Deployment. Please make sure to move this value in your HelmRelease!
