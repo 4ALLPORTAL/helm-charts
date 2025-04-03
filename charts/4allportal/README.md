@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 20.8.0](https://img.shields.io/badge/Version-20.8.0-informational?style=flat-square) ![AppVersion: 3.10.38](https://img.shields.io/badge/AppVersion-3.10.38-informational?style=flat-square)
+![Version: 21.0.0](https://img.shields.io/badge/Version-21.0.0-informational?style=flat-square) ![AppVersion: 3.10.38](https://img.shields.io/badge/AppVersion-3.10.38-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -161,6 +161,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.ingress.host | string | `""` |  |
 | fourAllPortal.ingress.ingressClassName | string | `""` |  |
 | fourAllPortal.initContainers | list | `[]` |  |
+| fourAllPortal.javaOpts | string | `""` |  |
 | fourAllPortal.livenessProbe.enabled | bool | `true` |  |
 | fourAllPortal.livenessProbe.failureThreshold | int | `3` |  |
 | fourAllPortal.livenessProbe.initialDelaySeconds | int | `30` |  |
