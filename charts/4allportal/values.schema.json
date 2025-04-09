@@ -160,9 +160,6 @@
                     "pattern": "^[0-9A-Za-z\\-.+]+$"
                   }
                 },
-                "javaOpts": {
-                  "type": "string"
-                },
                 "startupProbe": {
                   "$ref": "#/definitions/probe"
                 },

@@ -39,8 +39,6 @@ fourAllPortal:
 
   fourApps: {}
 
-  javaOpts: ""
-
   persistence:
     config:
       enabled: false
