@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 21.0.0](https://img.shields.io/badge/Version-21.0.0-informational?style=flat-square) ![AppVersion: 3.10.38](https://img.shields.io/badge/AppVersion-3.10.38-informational?style=flat-square)
+![Version: 20.8.0](https://img.shields.io/badge/Version-20.8.0-informational?style=flat-square) ![AppVersion: 3.10.38](https://img.shields.io/badge/AppVersion-3.10.38-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -161,7 +161,6 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.ingress.host | string | `""` |  |
 | fourAllPortal.ingress.ingressClassName | string | `""` |  |
 | fourAllPortal.initContainers | list | `[]` |  |
-| fourAllPortal.javaOpts | string | `""` |  |
 | fourAllPortal.livenessProbe.enabled | bool | `true` |  |
 | fourAllPortal.livenessProbe.failureThreshold | int | `3` |  |
 | fourAllPortal.livenessProbe.initialDelaySeconds | int | `30` |  |
@@ -359,7 +358,3 @@ The maxscale chart sets the innodb_buffer_pool_size to 80% from requested mariad
 This release fixes a bug with the last Chart version for database creation, using either fourAllPortal.database.existing, fourAllPortal.database.operator or maxscale.galera.
 
 You are no longer required or capable of using fourAllPortal.database.existing values when using *.operator. If you currently do, please remove either fourAllPortal.database.existing or fourAllPortal.database.operator before upgrading.
-
-## To 21.0.0
-
-This release moves JAVA_OPTS to an option in the values.yaml file under `.Values.fourAllPortal.javaOpts`. Setting this environment variable via `.Values.fourAllPortal.env` is no longer supported. The new value will be merged into the pre-existing environment variable on the Deployment. Please make sure to move this value in your HelmRelease!
