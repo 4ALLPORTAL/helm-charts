@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 20.7.0](https://img.shields.io/badge/Version-20.7.0-informational?style=flat-square) ![AppVersion: 3.10.38](https://img.shields.io/badge/AppVersion-3.10.38-informational?style=flat-square)
+![Version: 20.7.1](https://img.shields.io/badge/Version-20.7.1-informational?style=flat-square) ![AppVersion: 3.10.38](https://img.shields.io/badge/AppVersion-3.10.38-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
