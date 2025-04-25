@@ -18,6 +18,8 @@ spec:
       apiVersion: v1
       kind: PersistentVolumeClaim
       name: "{{ include "common.names.fullname" $ }}-{{ $volume }}"
+    exclude:
+    - /stash-data/.health*
   schedule: "{{- $.Values.backups.volumes.schedule -}}"
   retentionPolicy:
     name: retention
