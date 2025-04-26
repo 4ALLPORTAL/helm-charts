@@ -230,13 +230,13 @@ spec:
             {{- if not (regexMatch "(DERIVATESERVICE(_DEBUG)?_JAVA_OPTIONS|JAVA_OPTS)" $name) }}
             - name: {{ $name }}
               value: {{ $value | quote }}
-            {{- end }}
-            {{- end }}
+          {{- end }}
+          {{- end }}
           ports:
             - name: http
               containerPort: 8181
               protocol: TCP
-            {{- if .Values.fourAllPortal.debug }}
+          {{- if .Values.fourAllPortal.debug }}
             - name: debug
               containerPort: 8001
               protocol: TCP
