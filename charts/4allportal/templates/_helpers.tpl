@@ -79,30 +79,6 @@ mariadb
 {{- end -}}
 {{- end -}}
 
-{{- define "fourAllPortal.env.javaOpts" -}}
-{{- range $name, $value := .Values.fourAllPortal.env -}}
-{{- if eq "JAVA_OPTS" $name -}}
-{{ $value }}
-{{- end -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "fourAllPortal.env.derivateOpts" -}}
-{{- range $name, $value := .Values.fourAllPortal.env -}}
-{{- if eq "DERIVATESERVICE_JAVA_OPTIONS" $name -}}
-{{ $value }}
-{{- end -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "fourAllPortal.env.derivateDebugOpts" -}}
-{{- range $name, $value := .Values.fourAllPortal.env -}}
-{{- if eq "DERIVATESERVICE_DEBUG_JAVA_OPTIONS" $name -}}
-{{ $value }}
-{{- end -}}
-{{- end -}}
-{{- end -}}
-
 {{/*
 Helper functions for secret references instead of clear text references for data
 */}}
