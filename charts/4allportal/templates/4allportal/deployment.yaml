@@ -217,23 +217,11 @@ spec:
 
             {{- include "4allportal.tracing.jaeger.env" (dict "Chart" .Chart "Release" .Release "Values" .Values "local" .Values.fourAllPortal.tracing) | nindent 12 }}
 
-            - name: DERIVATESERVICE_JAVA_OPTIONS
-              value: {{ trim (printf "%s %s" "-Dmanagement.server.port=9001" (trimPrefix " " (include "fourAllPortal.env.derivateOpts" . ))) | quote }}
-
-            - name: DERIVATESERVICE_DEBUG_JAVA_OPTIONS
-              value: {{ trim (printf "%s %s" "-Dmanagement.server.port=9001" (trimPrefix " " (include "fourAllPortal.env.derivateDebugOpts" . ))) | quote }}
-
-            - name: JAVA_OPTS
-              value: {{ trim (printf "%s %s" "-Dmanagement.server.port=9000" (trimPrefix " " (include "fourAllPortal.env.javaOpts" . ))) | quote }}
-
             {{- range $name, $value := .Values.fourAllPortal.env }}
-            {{- if not (regexMatch "(DERIVATESERVICE(_DEBUG)?_JAVA_OPTIONS|JAVA_OPTS)" $name) }}
             - name: {{ $name }}
               value: {{ $value | quote }}
           {{- end }}
-          {{- end }}
           ports:
-          {{- if .Values.fourAllPortal }}
             - name: http
               containerPort: 8181
               protocol: TCP
@@ -244,9 +232,8 @@ spec:
             {{- end }}
             {{- if .Values.fourAllPortal.metrics.enabled }}
             - name: metrics
-              containerPort: 9000
+              containerPort: 8181
               protocol: TCP
-            {{- end }}
           {{- end }}
           {{- if and (not .Values.fourAllPortal.debug) .Values.fourAllPortal.livenessProbe.enabled }}
           livenessProbe:
