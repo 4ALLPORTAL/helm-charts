@@ -233,10 +233,11 @@ spec:
           {{- end }}
           {{- end }}
           ports:
+          {{- if .Values.fourAllPortal }}
             - name: http
               containerPort: 8181
               protocol: TCP
-          {{- if .Values.fourAllPortal.debug }}
+            {{- if .Values.fourAllPortal.debug }}
             - name: debug
               containerPort: 8001
               protocol: TCP
@@ -245,6 +246,7 @@ spec:
             - name: metrics
               containerPort: 9000
               protocol: TCP
+            {{- end }}
           {{- end }}
           {{- if and (not .Values.fourAllPortal.debug) .Values.fourAllPortal.livenessProbe.enabled }}
           livenessProbe:
