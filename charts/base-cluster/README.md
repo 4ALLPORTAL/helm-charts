@@ -116,7 +116,7 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | monitoring.grafana.config | object | `{}` |  |
 | monitoring.grafana.dashboards.fourAllPortal | bool | `true` |  |
 | monitoring.grafana.dashboards.mariadb | bool | `true` |  |
-| monitoring.grafana.envFromSecret | list | `[]` |  |
+| monitoring.grafana.envFromSecrets | list | `[]` |  |
 | monitoring.grafana.existingAdminSecret | string | `""` |  |
 | monitoring.grafana.host | string | `"grafana"` |  |
 | monitoring.grafana.notifiers | list | `[]` |  |
@@ -129,7 +129,7 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | monitoring.grafana.sidecar.resources.requests.cpu | int | `1` |  |
 | monitoring.grafana.sidecar.resources.requests.memory | string | `"128Mi"` |  |
 | monitoring.ingress.enabled | bool | `false` |  |
-| monitoring.ingress.existingSecret | string | `""` |  |
+| monitoring.ingress.existingConfigSecret | string | `""` |  |
 | monitoring.jaeger.agent.resources.limits.cpu | string | `"200m"` |  |
 | monitoring.jaeger.agent.resources.limits.memory | string | `"64Mi"` |  |
 | monitoring.jaeger.agent.resources.requests.cpu | string | `"100m"` |  |
@@ -166,10 +166,11 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | monitoring.metricsServer.resources.limits.cpu | string | `"100m"` |  |
 | monitoring.metricsServer.resources.limits.memory | string | `"64Mi"` |  |
 | monitoring.prometheus.alertmanager.emailconfig | list | `[]` |  |
+| monitoring.prometheus.alertmanager.existingSecrets | list | `[]` |  |
 | monitoring.prometheus.alertmanager.host | string | `"alertmanager"` |  |
 | monitoring.prometheus.alertmanager.pagerduty.description | string | `nil` |  |
 | monitoring.prometheus.alertmanager.pagerduty.enabled | bool | `false` |  |
-| monitoring.prometheus.alertmanager.pagerduty.existingSecret | string | `""` |  |
+| monitoring.prometheus.alertmanager.pagerduty.existingRoutingKeySecret | string | `""` |  |
 | monitoring.prometheus.alertmanager.pagerduty.severity | string | `nil` |  |
 | monitoring.prometheus.alertmanager.pagerduty.url | string | `""` |  |
 | monitoring.prometheus.alertmanager.routes | list | `[]` |  |
@@ -366,3 +367,22 @@ Prometheus will now send alerts for levels where human interference might be nec
 ### To 39.0.2
 
 You can now add extra configurations for Trivy, allowing for more efficient resource usage and schedulable pods.
+
+### To 41.0.0
+
+Credentials must now be specified as existing secrets to avoid plaintext passwords. The following entries must be adjusted:
+| Old entry | New entry | Used key from secret | Description |
+|-----|------|---------|-------------|
+| global.imageCredentials.* | global.imageCredentials | .dockerconfigjson | An array of existing secret names. The secrets must contain .dockerconfigjson |
+| global.authentication.config.* | authentication.config.existingSecret | client-id, client-secret, cookie-secret | Secret must contain client-id, client-secret, cookie-secret |
+| git.instances.* | git.instances.existingSecret | username, password | Secret must contain username, password |
+| dns.apiKey | dns.existingSecret | cloudflare_api_key | Secret must contain cloudflare_api_key |
+| backup.license.instances.* | backup.licenseSecretName | key.txt | Secret must contain key.txt with a license certificate |
+| backup.servingCerts.* | / | * | omitted because generate is now set to true |
+| monitoring.prometheus.alertmanager.* | monitoring.prometheus.alertmanager.existingSecrets | * | A list of existing secrets which can be used in service_key_file |
+| monitoring.prometheus.alertmanager.pagerduty. | monitoring.prometheus.alertmanager.pagerduty.existingRoutingKeySecret | pagerduty_routing_key | | Secret must contain pagerduty_routing_key |
+| monitoring.grafana.* | monitoring.grafana.envFromSecrets | * | A list of secret keys to be used in envFromSecret |
+| monitoring.grafana.* | monitoring.grafana.existingAdminSecret | admin-user, admin-password | Secret must contain admin-user, admin-password |
+| monitoring.ingress.* | monitoring.ingress.existingSecret | * | Secret with the enableMonitorDeletion, creationDelay and providers |
+| monitoring.ingress.* | monitoring.ingress.existingConfigSecret | * | Secret with the enableMonitorDeletion, creationDelay and providers |
+
