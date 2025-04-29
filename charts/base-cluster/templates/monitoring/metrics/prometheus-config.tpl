@@ -23,7 +23,7 @@ grafana:
   serviceMonitor:
     interval: "30s"
   admin:
-    existingSecret: {{ required "You must provide an secret for grafana" $.Values.monitoring.grafana.existingAdminSecret | quote }}
+    existingSecret: {{ required "You must provide a secret for grafana" $.Values.monitoring.grafana.existingAdminSecret | quote }}
     userKey: "admin-user"
     passwordKey: "admin-password"
   plugins:
