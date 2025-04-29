@@ -25,7 +25,9 @@
 {{- required "You must provide a password for the bundled MariaDB deployment" .Values.maxscale.mariadb.db.password -}}
 {{- else -}}
 {{- if .Values.fourAllPortal.database.operator.enabled -}}
+{{- if eq .Values.fourAllPortal.database.operator.secretName "" -}}
 {{- required "You must provide a password for the database user to be created" .Values.fourAllPortal.database.operator.password }}
+{{- end -}}
 {{- else -}}
 {{- required "You must provide a password for the existing database" .Values.fourAllPortal.database.existing.password -}}
 {{- end -}}
@@ -76,6 +78,122 @@ mariadb
 {{- end -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Helper functions for secret references instead of clear text references for data
+*/}}
+
+{{- define "4allportal.fourallportal.general.secret.name" -}}
+{{- if and (ne .Values.fourAllPortal.general.admin.secret.name "") (ne .Values.fourAllPortal.general.admin.secret.key "") -}}
+{{ .Values.fourAllPortal.general.admin.secret.name }}
+{{- else -}}
+{{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "general" "context" $) }}
+{{- end -}}
+{{- end -}}
+
+{{- define "4allportal.fourallportal.general.secret.key" -}}
+{{- if and (ne .Values.fourAllPortal.general.admin.secret.name "") (ne .Values.fourAllPortal.general.admin.secret.key "") -}}
+{{ .Values.fourAllPortal.general.admin.secret.key }}
+{{- else -}}
+{{ include "common.secrets.key" (dict "existingSecret" (dict) "key" "admin-password") }}
+{{- end -}}
+{{- end -}}
+
+{{- define "4allportal.fourallportal.mail.secret.name" -}}
+{{- if and (ne .Values.fourAllPortal.mail.secret.name "") (ne .Values.fourAllPortal.mail.secret.key "") -}}
+{{ .Values.fourAllPortal.mail.secret.name }}
+{{- else -}}
+{{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "mail" "context" $) }}
+{{- end -}}
+{{- end -}}
+
+{{- define "4allportal.fourallportal.mail.secret.key" -}}
+{{- if and (ne .Values.fourAllPortal.mail.secret.name "") (ne .Values.fourAllPortal.mail.secret.key "") -}}
+{{ .Values.fourAllPortal.mail.secret.key }}
+{{- else -}}
+{{ include "common.secrets.key" (dict "existingSecret" (dict) "key" "mail-password") }}
+{{- end -}}
+{{- end -}}
+
+{{- define "4allportal.fourallportal.database.existing.secret.name" -}}
+{{- if .Values.fourAllPortal.database.existing.secret -}}
+{{- if and (not (empty .Values.fourAllPortal.database.existing.secret.name)) (not (empty .Values.fourAllPortal.database.existing.secret.key)) -}}
+{{ .Values.fourAllPortal.database.existing.secret.name }}
+{{- else -}}
+{{ include "common.secrets.name" (dict "existingSecret" .Values.fourAllPortal.database.existing.existingSecret "defaultNameSuffix" "database" "context" $) }}
+{{- end -}}
+{{- else if and .Values.maxscale.mariadb.existingSecret (ne .Values.maxscale.mariadb.existingSecret "") -}}
+{{ .Values.maxscale.mariadb.existingSecret }}
+{{- else -}}
+{{ include "common.secrets.name" (dict "existingSecret" .Values.fourAllPortal.database.existing.existingSecret "defaultNameSuffix" "database" "context" $) }}
+{{- end -}}
+{{- end -}}
+
+{{- define "4allportal.fourallportal.database.existing.secret.key" -}}
+{{- if .Values.fourAllPortal.database.existing.secret -}}
+{{- if and (not (empty .Values.fourAllPortal.database.existing.secret.name)) (not (empty .Values.fourAllPortal.database.existing.secret.key)) -}}
+{{ .Values.fourAllPortal.database.existing.secret.key }}
+{{- else -}}
+{{ include "common.secrets.key" (dict "existingSecret" .Values.fourAllPortal.database.existing.existingSecret "key" "password") }}
+{{- end -}}
+{{- else if and .Values.maxscale.mariadb.existingSecret (ne .Values.maxscale.mariadb.existingSecret "") -}}
+mariadb-root-password
+{{- else -}}
+{{ include "common.secrets.key" (dict "existingSecret" .Values.fourAllPortal.database.existing.existingSecret "key" "password") }}
+{{- end -}}
+{{- end -}}
+
+{{- define "4allportal.fourallportal.database.operator.secretName" -}}
+{{- if ne .Values.fourAllPortal.database.operator.secretName "" -}}
+{{ .Values.fourAllPortal.database.operator.secretName | quote }}
+{{- else -}}
+{{ printf "%s%s" .Release.Name "-databaseuser-secret" | quote }}
+{{- end -}}
+{{- end -}}
+
+{{- define "4allportal.webdav.secretName" -}}
+{{- if ne .Values.webdav.secretName "" -}}
+{{ .Values.webdav.secretName }}
+{{- else -}}
+{{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "webdav" "context" $) }}
+{{- end -}}
+{{- end -}}
+
+{{- define "4allportal.samba.secret.name" -}}
+{{- if and (ne .Values.samba.secret.name "") (ne .Values.samba.secret.key "") -}}
+{{ .Values.samba.secret.name }}
+{{- else -}}
+{{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "samba" "context" $) }}
+{{- end -}}
+{{- end -}}
+
+{{- define "4allportal.samba.secret.key" -}}
+{{- if and (ne .Values.samba.secret.name "") (ne .Values.samba.secret.key "") -}}
+{{ .Values.samba.secret.key }}
+{{- else -}}
+users
+{{- end -}}
+{{- end -}}
+
+{{- define "4allportal.backup.mysql.secretName" -}}
+{{- if ne .Values.backups.mysql.secretName "" -}}
+{{ .Values.backups.mysql.secretName }}
+{{- else -}}
+{{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "mysql-backup" "context" $) }}
+{{- end -}}
+{{- end -}}
+
+{{- define "4allportal.backup.volumes.secretName" -}}
+{{- if ne .Values.backups.volumes.secretName "" -}}
+{{ .Values.backups.volumes.secretName }}
+{{- else -}}
+{{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "backup" "context" $) }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Other functions, split for readability of secret ref helpers
+*/}}
 
 {{- define "4allportal.isHa" -}}
 {{- and (eq (include "4allportal.component.isHa" .Values.fourAllPortal) "true") (or (not .Values.maxscale.enabled) (and (eq (include "4allportal.component.isHa" .Values.maxscale) "true") (eq (include "4allportal.component.isHa" .Values.maxscale.mariadb) "true"))) -}}

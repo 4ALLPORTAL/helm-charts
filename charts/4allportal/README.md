@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 20.4.0](https://img.shields.io/badge/Version-20.4.0-informational?style=flat-square) ![AppVersion: 3.10.38](https://img.shields.io/badge/AppVersion-3.10.38-informational?style=flat-square)
+![Version: 20.8.3](https://img.shields.io/badge/Version-20.8.3-informational?style=flat-square) ![AppVersion: 3.10.38](https://img.shields.io/badge/AppVersion-3.10.38-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -16,7 +16,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://4allportal.github.io/helm-charts | maxscale | 4.1.11 |
+| https://4allportal.github.io/helm-charts | maxscale | 4.1.13 |
 | https://charts.bitnami.com/bitnami | common | 2.19.3 |
 
 ## Values
@@ -39,6 +39,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | backups.mysql.resources.limits.memory | string | `"1Gi"` |  |
 | backups.mysql.resources.requests.cpu | string | `"100m"` |  |
 | backups.mysql.resources.requests.memory | string | `"256Mi"` |  |
+| backups.mysql.secretName | string | `""` |  |
 | backups.mysql.securityContext.fsGroup | int | `1000` |  |
 | backups.mysql.securityContext.fsGroupChangePolicy | string | `"OnRootMismatch"` |  |
 | backups.mysql.securityContext.runAsGroup | int | `1000` |  |
@@ -65,6 +66,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | backups.volumes.retention.policy | object | `{}` |  |
 | backups.volumes.retention.prune | bool | `true` |  |
 | backups.volumes.schedule | string | `""` |  |
+| backups.volumes.secretName | string | `""` |  |
 | dreiDRenderer.affinity | object | `{}` |  |
 | dreiDRenderer.containerSecurityContext.allowPrivilegeEscalation | bool | `false` |  |
 | dreiDRenderer.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
@@ -132,6 +134,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.database.operator.databaseRef | string | `"CHANGEME"` |  |
 | fourAllPortal.database.operator.enabled | bool | `false` |  |
 | fourAllPortal.database.operator.password | string | `"CHANGEME"` |  |
+| fourAllPortal.database.operator.secretName | string | `""` |  |
 | fourAllPortal.database.operator.user | string | `"CHANGEME"` |  |
 | fourAllPortal.debug | bool | `false` |  |
 | fourAllPortal.env | object | `{}` |  |
@@ -139,6 +142,8 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.general.admin.firstName | string | `""` |  |
 | fourAllPortal.general.admin.lastName | string | `""` |  |
 | fourAllPortal.general.admin.password | string | `""` |  |
+| fourAllPortal.general.admin.secret.key | string | `""` |  |
+| fourAllPortal.general.admin.secret.name | string | `""` |  |
 | fourAllPortal.general.admin.username | string | `"administrator"` |  |
 | fourAllPortal.general.defaultLanguage | string | `"en_US"` |  |
 | fourAllPortal.hostAliases | list | `[]` |  |
@@ -167,6 +172,8 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.mail.password | string | `""` |  |
 | fourAllPortal.mail.port | int | `25` |  |
 | fourAllPortal.mail.replyTo | bool | `false` |  |
+| fourAllPortal.mail.secret.key | string | `""` |  |
+| fourAllPortal.mail.secret.name | string | `""` |  |
 | fourAllPortal.mail.security | string | `"SSL"` |  |
 | fourAllPortal.mail.system.from.email | string | `""` |  |
 | fourAllPortal.mail.system.from.name | string | `""` |  |
@@ -257,6 +264,8 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | samba.resources.limits.memory | string | `"1Gi"` |  |
 | samba.resources.requests.cpu | string | `"10m"` |  |
 | samba.resources.requests.memory | string | `"32Mi"` |  |
+| samba.secret.key | string | `""` |  |
+| samba.secret.name | string | `""` |  |
 | samba.service.namespace | string | `""` |  |
 | samba.service.prefix | string | `""` |  |
 | samba.tolerations | list | `[]` |  |
@@ -298,6 +307,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | webdav.resources.limits.memory | string | `"1Gi"` |  |
 | webdav.resources.requests.cpu | string | `"10m"` |  |
 | webdav.resources.requests.memory | string | `"32Mi"` |  |
+| webdav.secretName | string | `""` |  |
 | webdav.securityContext.fsGroup | int | `1000` |  |
 | webdav.securityContext.fsGroupChangePolicy | string | `"OnRootMismatch"` |  |
 | webdav.securityContext.runAsGroup | int | `1000` |  |

@@ -183,6 +183,18 @@
                         },
                         "username": {
                           "type": "string"
+                        },
+                        "secret": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "key": {
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false
                         }
                       },
                       "additionalProperties": false
@@ -296,6 +308,18 @@
                     },
                     "password": {
                       "type": "string"
+                    },
+                    "secret": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "key": {
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": false
                     },
                     "port": {
                       "type": "integer"
@@ -436,6 +460,9 @@
                       "type": "boolean",
                       "const": true
                     },
+                    "secretName": {
+                      "type": "string"
+                    },
                     "mounts": {
                       "type": "object",
                       "description": "The key is the url path and the value is the permission",
@@ -557,6 +584,9 @@
                           "type": "boolean",
                           "const": true
                         },
+                        "secretName": {
+                          "type": "string"
+                        },
                         "nodeSelector": {
                           "$ref": "#/definitions/nodeSelector"
                         },
@@ -603,6 +633,9 @@
               "properties": {
                 "enabled": {
                   "type": "boolean"
+                },
+                "secretName": {
+                  "type": "string"
                 },
                 "password": {
                   "type": "string"

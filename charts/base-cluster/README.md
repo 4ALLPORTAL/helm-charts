@@ -214,8 +214,8 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | sealedsecrets.values | object | `{}` |  |
 | speedtest.enabled | bool | `true` |  |
 | speedtest.host | string | `"speedtest"` |  |
-| speedtest.image.registry | string | `""` |  |
-| speedtest.image.repository | string | `"adolfintel/speedtest"` |  |
+| speedtest.image.registry | string | `"ghcr.io"` |  |
+| speedtest.image.repository | string | `"librespeed/speedtest"` |  |
 | speedtest.image.tag | string | `"latest"` |  |
 | traefik.cipherSuites | list | `[]` |  |
 | traefik.debug.enabled | bool | `false` |  |
@@ -368,6 +368,16 @@ Prometheus will now send alerts for levels where human interference might be nec
 
 You can now add extra configurations for Trivy, allowing for more efficient resource usage and schedulable pods.
 
+### To 40.0.0
+
+Our implementation of the DeadMansSwitch was removed entirely and we swapped to the DeadMansSnitch from Prometheus.
+
+### To 40.6.0
+
+We've upgraded Traefik to v34.x.x, going from Traefik v2 to Traefik v3 Proxy.
+We urge you to read the [traefik release notes](https://github.com/traefik/traefik-helm-chart/releases/tag/v26.0.0) of all versions >25.0.0 before upgrading.
+We've linked Traefik v26.0.0, all other release notes are accessible from that link
+
 ### To 41.0.0
 
 Credentials must now be specified as existing secrets to avoid plaintext passwords. The following entries must be adjusted:
@@ -385,4 +395,3 @@ Credentials must now be specified as existing secrets to avoid plaintext passwor
 | monitoring.grafana.* | monitoring.grafana.existingAdminSecret | admin-user, admin-password | Secret must contain admin-user, admin-password |
 | monitoring.ingress.* | monitoring.ingress.existingSecret | * | Secret with the enableMonitorDeletion, creationDelay and providers |
 | monitoring.ingress.* | monitoring.ingress.existingConfigSecret | * | Secret with the enableMonitorDeletion, creationDelay and providers |
-
