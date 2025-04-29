@@ -180,7 +180,7 @@ Credentials must now be specified as existing secrets to avoid plaintext passwor
 | backup.license.instances.* | backup.licenseSecretName | key.txt | Secret must contain key.txt with a license certificate |
 | backup.servingCerts.* | / | * | omitted because generate is now set to true |
 | monitoring.prometheus.alertmanager.* | monitoring.prometheus.alertmanager.existingSecrets | * | A list of existing secrets which can be used in service_key_file |
-| monitoring.prometheus.alertmanager.pagerduty. | monitoring.prometheus.alertmanager.pagerduty.existingRoutingKeySecret | pagerduty_routing_key | | Secret must contain pagerduty_routing_key |
+| monitoring.prometheus.alertmanager.pagerduty. | monitoring.prometheus.alertmanager.pagerduty.existingRoutingKeySecret | pagerduty_routing_key | Secret must contain pagerduty_routing_key |
 | monitoring.grafana.* | monitoring.grafana.envFromSecrets | * | A list of secret keys to be used in envFromSecret |
 | monitoring.grafana.* | monitoring.grafana.existingAdminSecret | admin-user, admin-password | Secret must contain admin-user, admin-password |
 | monitoring.ingress.* | monitoring.ingress.existingSecret | * | Secret with the enableMonitorDeletion, creationDelay and providers |
