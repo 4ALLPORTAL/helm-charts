@@ -196,7 +196,7 @@ spec:
           emptyDir: { }
         - name: users
           secret:
-            secretName: {{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "webdav" "context" $) }}
+            secretName: {{ include "4allportal.webdav.secretName" . }}
         - name: tmp
           emptyDir:
             medium: Memory

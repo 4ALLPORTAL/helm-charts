@@ -1,0 +1,14 @@
+{{- if .Values.speedtest.enabled -}}
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "common.names.fullname" $ }}-speedtest-no-compression
+  namespace: ingress
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  headers:
+    customRequestHeaders:
+      Accept-Encoding: identity
+    customResponseHeaders:
+      Content-Encoding: identity
+{{- end -}}

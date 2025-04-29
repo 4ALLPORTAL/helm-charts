@@ -99,9 +99,9 @@ spec:
         - name: users-config
           secret:
             defaultMode: 420
-            secretName: {{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "samba" "context" $) }}
+            secretName: {{ include "4allportal.samba.secret.name" . }}
             items:
-              - key: users
+              - key: {{ include "4allportal.samba.secret.key" . }}
                 path: users.json
         - name: assets
         {{- include "4allportal.fourallportal.persistence.assets.mount" $ | nindent 10 }}
