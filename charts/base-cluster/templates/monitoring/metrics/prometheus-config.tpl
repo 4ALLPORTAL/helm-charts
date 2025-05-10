@@ -22,13 +22,20 @@ grafana:
   resources: {{- $.Values.monitoring.grafana.resources | toYaml | nindent 4 }}
   serviceMonitor:
     interval: "30s"
-  adminPassword: {{ required "You must provide an adminPassword for grafana" $.Values.monitoring.grafana.adminPassword | quote }}
+  admin:
+    existingSecret: {{ required "You must provide a secret for grafana" $.Values.monitoring.grafana.existingAdminSecret | quote }}
+    userKey: "admin-user"
+    passwordKey: "admin-password"
   plugins:
     - grafana-piechart-panel
   {{- with $.Values.monitoring.grafana.additionalPlugins }}
   {{ . | toYaml | nindent 4 }}
   {{- end }}
   defaultDashboardsEnabled: true
+  envFromSecrets:
+  {{- range .Values.monitoring.grafana.envFromSecrets }}
+    - name: {{ . }}
+  {{- end }}
   grafana.ini:
   {{- if $.Values.monitoring.grafana.config -}}
   {{ merge $.Values.monitoring.grafana.config (include "base-cluster.grafana.config" $ | fromYaml) | toYaml | nindent 4 -}}
@@ -167,7 +174,7 @@ alertmanager:
       {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.enabled }}
       - name: pagerduty
         pagerduty_configs:
-          - routing_key: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.routingKey }}
+          - service_key_file: "/etc/alertmanager/secrets/{{ .Values.monitoring.prometheus.alertmanager.pagerduty.existingRoutingKeySecret }}/pagerduty_routing_key"
             {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.severity }}
             severity: '{{ .Values.monitoring.prometheus.alertmanager.pagerduty.severity }}'
             {{- end }}
@@ -203,6 +210,8 @@ alertmanager:
   {{- end }}
   alertmanagerSpec:
     replicas: 3
+    secrets:
+      {{- toYaml (concat .Values.monitoring.prometheus.alertmanager.existingSecrets (list .Values.monitoring.prometheus.alertmanager.pagerduty.existingRoutingKeySecret)) | nindent 4 }}
     podAntiAffinity: soft
     {{- if empty $.Values.monitoring.prometheus.authentication.enabled | ternary $.Values.global.authentication.enabled $.Values.monitoring.prometheus.authentication.enabled }}
     externalUrl: https://{{ include "base-cluster.alertmanager.host" $ }}

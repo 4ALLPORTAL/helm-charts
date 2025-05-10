@@ -35,7 +35,7 @@ spec:
       imageRegistry: {{ $.Values.global.imageRegistry | quote }}
     {{- end }}
     cloudflare:
-      apiKey: {{ required "You must provide the apiKey for Cloudflare" .Values.dns.apiKey }}
+      secretName: {{ required "You must provide a secret for Cloudflare" .Values.dns.existingSecret }}
       email: {{ required "You must provide the email for Cloudflare" .Values.dns.email }}
       proxied: false
     provider: cloudflare
