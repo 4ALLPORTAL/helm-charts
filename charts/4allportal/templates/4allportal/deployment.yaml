@@ -242,6 +242,9 @@ spec:
               protocol: TCP
             {{- end }}
             {{- if .Values.fourAllPortal.metrics.enabled }}
+            - name: to-be-removed
+              containerPort: 8181
+              protocol: TCP
             - name: lineprotocol
               containerPort: 9000
               protocol: TCP
