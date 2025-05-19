@@ -19,9 +19,9 @@ spec:
     {{- end }}
     {{- if .Values.fourAllPortal.metrics.enabled }}
     - port: 9000
-      targetPort: metrics
+      targetPort: lineprotocol
       protocol: TCP
-      name: metrics
+      name: lineprotocol
   {{- end }}
   selector: {{- include "common.labels.matchLabels" $ | nindent 4 }}
     app.kubernetes.io/component: backend
