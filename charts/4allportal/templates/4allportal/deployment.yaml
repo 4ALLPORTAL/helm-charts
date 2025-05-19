@@ -233,22 +233,19 @@ spec:
             {{- end }}
             {{- end }}
           ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
             {{- if .Values.fourAllPortal.debug }}
             - name: debug
               containerPort: 8001
               protocol: TCP
             {{- end }}
             {{- if .Values.fourAllPortal.metrics.enabled }}
-            - name: to-be-removed
-              containerPort: 8181
-              protocol: TCP
-            - name: lineprotocol
+            - name: metrics
               containerPort: 9000
               protocol: TCP
           {{- end }}
-            - name: http
-              containerPort: 8181
-              protocol: TCP
           {{- if and (not .Values.fourAllPortal.debug) .Values.fourAllPortal.livenessProbe.enabled }}
           livenessProbe:
             exec:
