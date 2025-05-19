@@ -29,7 +29,7 @@ fourAllPortal:
   image:
     registry: registry.4allportal.net
     repository: 4allportal
-    tag: 3.10.37
+    tag: 3.10.62
 
   replicas: 2
 
