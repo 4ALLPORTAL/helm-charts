@@ -242,7 +242,7 @@ spec:
                 - bash
                 - -c
                 - |
-                  timeout {{ .Values.fourAllPortal.livenessProbe.timeoutSeconds }} curl --silent -f localhost:8080/health &&
+                  timeout {{ .Values.fourAllPortal.livenessProbe.timeoutSeconds }} curl --silent -f localhost:8181/health &&
                   timeout 1 ls -d /4allportal/data && timeout 1 ls -d /4allportal/assets
             failureThreshold: {{ .Values.fourAllPortal.livenessProbe.failureThreshold }}
             initialDelaySeconds: {{ .Values.fourAllPortal.livenessProbe.initialDelaySeconds }}
