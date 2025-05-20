@@ -167,3 +167,21 @@ Our implementation of the DeadMansSwitch was removed entirely and we swapped to 
 We've upgraded Traefik to v34.x.x, going from Traefik v2 to Traefik v3 Proxy.
 We urge you to read the [traefik release notes](https://github.com/traefik/traefik-helm-chart/releases/tag/v26.0.0) of all versions >25.0.0 before upgrading.
 We've linked Traefik v26.0.0, all other release notes are accessible from that link
+
+### To 41.0.0
+
+Credentials must now be specified as existing secrets to avoid plaintext passwords. The following entries must be adjusted:
+| Old entry | New entry | Used key from secret | Description |
+|-----|------|---------|-------------|
+| global.imageCredentials.* | global.imageCredentials | .dockerconfigjson | An array of existing secret names. The secrets must contain .dockerconfigjson |
+| global.authentication.config.* | authentication.config.existingSecret | client-id, client-secret, cookie-secret | Secret must contain client-id, client-secret, cookie-secret |
+| git.instances.* | git.instances.existingSecret | username, password | Secret must contain username, password |
+| dns.apiKey | dns.existingSecret | cloudflare_api_key | Secret must contain cloudflare_api_key |
+| backup.license.instances.* | backup.licenseSecretName | key.txt | Secret must contain key.txt with a license certificate |
+| backup.servingCerts.* | / | * | omitted because generate is now set to true |
+| monitoring.prometheus.alertmanager.* | monitoring.prometheus.alertmanager.existingSecrets | * | A list of existing secrets which can be used in service_key_file |
+| monitoring.prometheus.alertmanager.pagerduty. | monitoring.prometheus.alertmanager.pagerduty.existingRoutingKeySecret | pagerduty_routing_key | Secret must contain pagerduty_routing_key |
+| monitoring.grafana.* | monitoring.grafana.envFromSecrets | * | A list of secret keys to be used in envFromSecret |
+| monitoring.grafana.* | monitoring.grafana.existingAdminSecret | admin-user, admin-password | Secret must contain admin-user, admin-password |
+| monitoring.ingress.* | monitoring.ingress.existingSecret | * | Secret with the enableMonitorDeletion, creationDelay and providers |
+| monitoring.ingress.* | monitoring.ingress.existingConfigSecret | * | Secret with the enableMonitorDeletion, creationDelay and providers |
