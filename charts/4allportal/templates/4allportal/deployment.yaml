@@ -217,13 +217,27 @@ spec:
 
             {{- include "4allportal.tracing.jaeger.env" (dict "Chart" .Chart "Release" .Release "Values" .Values "local" .Values.fourAllPortal.tracing) | nindent 12 }}
 
+            - name: DERIVATESERVICE_JAVA_OPTIONS
+              value: {{ trim (printf "%s %s" "-Dmanagement.server.port=9001 -Dserver.port=8181" (trimPrefix " " (include "fourAllPortal.env.derivateOpts" . ))) | quote }}
+
+            - name: DERIVATESERVICE_DEBUG_JAVA_OPTIONS
+              value: {{ trim (printf "%s %s" "-Dmanagement.server.port=9001 -Dserver.port=8181" (trimPrefix " " (include "fourAllPortal.env.derivateDebugOpts" . ))) | quote }}
+
+            - name: JAVA_OPTS
+              value: {{ trim (printf "%s %s" "-Dmanagement.server.port=9000 -Dserver.port=8080" (trimPrefix " " (include "fourAllPortal.env.javaOpts" . ))) | quote }}
+
+            - name: DERIVATESERVICE_PORT
+              value: "8181"
+
             {{- range $name, $value := .Values.fourAllPortal.env }}
+            {{- if not (regexMatch "(DERIVATESERVICE(_PORT|(_DEBUG)?_JAVA_OPTIONS)|JAVA_OPTS)" $name) }}
             - name: {{ $name }}
               value: {{ $value | quote }}
-          {{- end }}
+            {{- end }}
+            {{- end }}
           ports:
             - name: http
-              containerPort: 8181
+              containerPort: 8080
               protocol: TCP
             {{- if .Values.fourAllPortal.debug }}
             - name: debug
@@ -232,7 +246,7 @@ spec:
             {{- end }}
             {{- if .Values.fourAllPortal.metrics.enabled }}
             - name: metrics
-              containerPort: 8181
+              containerPort: 9000
               protocol: TCP
           {{- end }}
           {{- if and (not .Values.fourAllPortal.debug) .Values.fourAllPortal.livenessProbe.enabled }}
@@ -242,7 +256,7 @@ spec:
                 - bash
                 - -c
                 - |
-                  timeout {{ .Values.fourAllPortal.livenessProbe.timeoutSeconds }} curl --silent -f localhost:8181/health &&
+                  timeout {{ .Values.fourAllPortal.livenessProbe.timeoutSeconds }} curl --silent -f localhost:8080/health &&
                   timeout 1 ls -d /4allportal/data && timeout 1 ls -d /4allportal/assets
             failureThreshold: {{ .Values.fourAllPortal.livenessProbe.failureThreshold }}
             initialDelaySeconds: {{ .Values.fourAllPortal.livenessProbe.initialDelaySeconds }}
