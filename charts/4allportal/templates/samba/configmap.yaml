@@ -11,9 +11,11 @@ data:
       "configs": {
         "mountconf": {
           "shares": [
-            "assets", "data"
-            {{- range $mount, $i := .Values.samba.mounts -}},
-            {{- regexReplaceAll "\\W+" (regexReplaceAll "^/(.*)" $mount "$1") "_" | quote }}
+            {{- $keys := .Values.samba.mounts | keys | sortAlpha }}
+            {{- $lastIndex := sub (len $keys) 1 }}
+            {{- range $i, $k := $keys }}
+              {{ regexReplaceAll "\\W+" (regexReplaceAll "^/(.*)" $k "$1") "_" | quote }}
+              {{- if lt $i $lastIndex }},{{ end }}
             {{- end }}
           ],
           "globals": [
@@ -28,36 +30,22 @@ data:
         }
       },
       "shares": {
-        {{- range $mount, $perms := .Values.samba.mounts -}}
-        {{- regexReplaceAll "\\W+" (regexReplaceAll "^/(.*)" $mount "$1") "_" | quote | nindent 8 }}: {
+        {{- $keys := .Values.samba.mounts | keys | sortAlpha }}
+        {{- range $i, $k := $keys }}
+        {{- $perms := index $.Values.samba.mounts $k }}
+        {{- $shareName := regexReplaceAll "\\W+" (regexReplaceAll "^/(.*)" $k "$1") "_" }}
+        {{ $shareName | quote }}: {
           "options": {
             "force user": "4allportal",
             "browseable": "yes",
-            "path": "/mnt{{- $mount }}",
+            "path": "/mnt{{ $k }}",
             "read only": "no"
-            {{- if $perms.users -}}
-            ,
+                {{- if $perms.users }},
             "valid users": {{ $perms.users | join "," | quote }}
-            {{- end }}
+                {{- end }}
           }
-        },
+        }{{- if lt (add $i 1) (len $keys) }},{{ end }}
         {{- end }}
-        "assets": {
-          "options": {
-            "force user": "4allportal",
-            "browseable": "yes",
-            "path": "/mnt/assets",
-            "read only": "no"
-          }
-        },
-        "data": {
-          "options": {
-            "force user": "4allportal",
-            "browseable": "yes",
-            "path": "/mnt/data",
-            "read only": "no"
-          }
-        }
       },
       "globals": {
         "globals": {
@@ -78,4 +66,4 @@ data:
         }
       }
     }
-{{- end -}}
+{{- end }}
