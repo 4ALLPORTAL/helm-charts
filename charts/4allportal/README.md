@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 20.9.1](https://img.shields.io/badge/Version-20.9.1-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
+![Version: 20.10.0](https://img.shields.io/badge/Version-20.10.0-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -251,6 +251,8 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | maxscale.replicas | int | `2` |  |
 | samba.adminPassword | string | `"CHANGEME"` |  |
 | samba.affinity | object | `{}` |  |
+| samba.bridge.namespace | string | `""` |  |
+| samba.bridge.prefix | string | `""` |  |
 | samba.enabled | bool | `false` |  |
 | samba.image.registry | string | `"quay.io"` |  |
 | samba.image.repository | string | `"samba.org/samba-server"` |  |
@@ -266,8 +268,6 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | samba.resources.requests.memory | string | `"32Mi"` |  |
 | samba.secret.key | string | `""` |  |
 | samba.secret.name | string | `""` |  |
-| samba.service.namespace | string | `""` |  |
-| samba.service.prefix | string | `""` |  |
 | samba.tolerations | list | `[]` |  |
 | samba.users | list | `[]` |  |
 | users | list | `[]` |  |
@@ -358,3 +358,7 @@ The maxscale chart sets the innodb_buffer_pool_size to 80% from requested mariad
 This release fixes a bug with the last Chart version for database creation, using either fourAllPortal.database.existing, fourAllPortal.database.operator or maxscale.galera.
 
 You are no longer required or capable of using fourAllPortal.database.existing values when using *.operator. If you currently do, please remove either fourAllPortal.database.existing or fourAllPortal.database.operator before upgrading.
+
+## To 20.10.0
+
+This release fixes the Samba mounts. The standard mounts asset and data have been removed and must now be explicitly specified in the values.

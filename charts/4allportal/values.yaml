@@ -266,7 +266,7 @@ samba:
     key: ""
   users: []
   mounts: []
-  service:
+  bridge:
     prefix: ""
     namespace: ""
 
