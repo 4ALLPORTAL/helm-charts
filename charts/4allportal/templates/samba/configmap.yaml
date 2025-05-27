@@ -40,7 +40,11 @@ data:
             "browseable": "yes",
             "path": "/mnt{{ $k }}",
             "read only": "no",
+                {{- if $perms.users }}
             "valid users": {{ append $perms.users "admin" | uniq | join "," | quote }}
+                {{- else }}
+            "valid users": "admin"
+                {{- end }}
           }
         }{{- if lt (add $i 1) (len $keys) }},{{ end }}
         {{- end }}
