@@ -358,3 +358,7 @@ The maxscale chart sets the innodb_buffer_pool_size to 80% from requested mariad
 This release fixes a bug with the last Chart version for database creation, using either fourAllPortal.database.existing, fourAllPortal.database.operator or maxscale.galera.
 
 You are no longer required or capable of using fourAllPortal.database.existing values when using *.operator. If you currently do, please remove either fourAllPortal.database.existing or fourAllPortal.database.operator before upgrading.
+
+## To 20.10.0
+
+This release fixes the Samba mounts. The standard mounts asset and data have been removed and must now be explicitly specified in the values.
