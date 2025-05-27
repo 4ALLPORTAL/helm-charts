@@ -39,10 +39,8 @@ data:
             "force user": "4allportal",
             "browseable": "yes",
             "path": "/mnt{{ $k }}",
-            "read only": "no"
-                {{- if $perms.users }},
+            "read only": "no",
             "valid users": {{ append $perms.users "admin" | uniq | join "," | quote }}
-                {{- end }}
           }
         }{{- if lt (add $i 1) (len $keys) }},{{ end }}
         {{- end }}
