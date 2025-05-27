@@ -41,7 +41,7 @@ data:
             "path": "/mnt{{ $k }}",
             "read only": "no"
                 {{- if $perms.users }},
-            "valid users": {{ $perms.users | join "," | quote }}
+            "valid users": {{ append $perms.users "admin" | uniq | join "," | quote }}
                 {{- end }}
           }
         }{{- if lt (add $i 1) (len $keys) }},{{ end }}
