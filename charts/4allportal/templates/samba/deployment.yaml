@@ -34,6 +34,20 @@ spec:
           args:
             - |
               useradd -u 1000 4allportal
+              USER_FILE="/etc/container-users/users.json"
+              if [ ! -f "$USER_FILE" ]; then
+                  echo "Error: JSON file not found at $USER_FILE"
+                  exit 1
+              fi
+              usernames=$(grep -oP '"name"\s*:\s*"\K[^"]+' "$USER_FILE")
+              for username in $usernames; do
+                  if id "$username" &>/dev/null; then
+                      echo "User $username already exists. Skipping."
+                  else
+                      useradd -m "$username"
+                      echo "User $username created."
+                  fi
+              done
               samba-container run smbd
           volumeMounts:
             - mountPath: /etc/container-config
