@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 41.0.5](https://img.shields.io/badge/Version-41.0.5-informational?style=flat-square)
+![Version: 41.0.6](https://img.shields.io/badge/Version-41.0.6-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -82,7 +82,7 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | global.imageRegistry | string | `""` |  |
 | global.kubectl.image.registry | string | `"docker.io"` |  |
 | global.kubectl.image.repository | string | `"bitnami/kubectl"` |  |
-| global.kubectl.image.tag | string | `"1.33.1"` |  |
+| global.kubectl.image.tag | string | `"1.33.3"` |  |
 | global.networkPolicy.dnsLabels."io.kubernetes.pod.namespace" | string | `"kube-system"` |  |
 | global.networkPolicy.dnsLabels.k8s-app | string | `"kube-dns"` |  |
 | global.networkPolicy.metricsLabels."app.kubernetes.io/name" | string | `"prometheus"` |  |
