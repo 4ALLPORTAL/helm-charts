@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 41.0.5](https://img.shields.io/badge/Version-41.0.5-informational?style=flat-square)
+![Version: 41.1.0](https://img.shields.io/badge/Version-41.1.0-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -395,3 +395,7 @@ Credentials must now be specified as existing secrets to avoid plaintext passwor
 | monitoring.grafana.* | monitoring.grafana.existingAdminSecret | admin-user, admin-password | Secret must contain admin-user, admin-password |
 | monitoring.ingress.* | monitoring.ingress.existingSecret | * | Secret with the enableMonitorDeletion, creationDelay and providers |
 | monitoring.ingress.* | monitoring.ingress.existingConfigSecret | * | Secret with the enableMonitorDeletion, creationDelay and providers |
+
+### To 41.1.0
+
+We've upgraded the integrated Stash HelmChart from v2024.02.13 to v2025.06.30
