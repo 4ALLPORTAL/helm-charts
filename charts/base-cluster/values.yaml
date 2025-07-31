@@ -48,12 +48,12 @@ global:
     image:
       registry: docker.io
       repository: bitnami/kubectl
-      tag: "1.33.1"
+      tag: "1.33.3"
   helm:
     image:
       registry: docker.io
       repository: alpine/helm
-      tag: "3.18.3"
+      tag: "3.18.4"
   imageRegistry: ""
 
 flux:
