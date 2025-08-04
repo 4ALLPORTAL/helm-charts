@@ -19,9 +19,6 @@ metadata:
   name: {{ $name }}
   namespace: {{ $.Release.Namespace }}
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
-  annotations:
-    meta.helm.sh/release-namespace: {{ $.Release.Namespace }}
-    meta.helm.sh/release-name: {{ $.Release.Name }}
 spec:
   interval: 5m
   url: {{ $url }}

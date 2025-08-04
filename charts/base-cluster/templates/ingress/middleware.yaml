@@ -1,4 +1,4 @@
-{{- if and .Values.speedtest.enabled (lookup "apiextensions.k8s.io/v1" "CustomResourceDefinition" "" "middlewares.traefik.io") }}
+{{- if .Values.speedtest.enabled -}}
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
