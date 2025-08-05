@@ -4,6 +4,8 @@ kind: Middleware
 metadata:
   name: {{ include "common.names.fullname" $ }}-speedtest-no-compression
   namespace: ingress
+  annotations:
+    helm.sh/hook: post-install
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
 spec:
   headers:
