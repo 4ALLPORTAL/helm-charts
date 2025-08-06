@@ -51,7 +51,7 @@ spec:
     ingress:
       enabled: true
       annotations:
-        traefik.ingress.kubernetes.io/router.middlewares: speedtest-no-compression@file
+        traefik.ingress.kubernetes.io/router.middlewares: ingress-{{ include "common.names.fullname" $ }}-speedtest-no-compression@kubernetescrd
       hostname: {{ include "base-cluster.speedtest.host" . }}
       extraTls: |-
         - secretName: cluster-wildcard-certificate
