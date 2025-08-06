@@ -1,11 +1,9 @@
-{{- if and .Values.speedtest.enabled false -}}
+{{- if .Values.speedtest.enabled -}}
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: {{ include "common.names.fullname" $ }}-speedtest-no-compression
   namespace: ingress
-  annotations:
-    helm.sh/hook: post-install
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
 spec:
   headers:
