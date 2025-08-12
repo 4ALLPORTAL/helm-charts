@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 41.0.5](https://img.shields.io/badge/Version-41.0.5-informational?style=flat-square)
+![Version: 41.0.11](https://img.shields.io/badge/Version-41.0.11-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -77,12 +77,12 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | global.clusterName | string | `"eu-west-1"` |  |
 | global.helm.image.registry | string | `"docker.io"` |  |
 | global.helm.image.repository | string | `"alpine/helm"` |  |
-| global.helm.image.tag | string | `"3.18.2"` |  |
+| global.helm.image.tag | string | `"3.18.4"` |  |
 | global.imageCredentials | list | `[]` |  |
 | global.imageRegistry | string | `""` |  |
 | global.kubectl.image.registry | string | `"docker.io"` |  |
 | global.kubectl.image.repository | string | `"bitnami/kubectl"` |  |
-| global.kubectl.image.tag | string | `"1.33.1"` |  |
+| global.kubectl.image.tag | string | `"1.33.3"` |  |
 | global.networkPolicy.dnsLabels."io.kubernetes.pod.namespace" | string | `"kube-system"` |  |
 | global.networkPolicy.dnsLabels.k8s-app | string | `"kube-dns"` |  |
 | global.networkPolicy.metricsLabels."app.kubernetes.io/name" | string | `"prometheus"` |  |
@@ -393,5 +393,4 @@ Credentials must now be specified as existing secrets to avoid plaintext passwor
 | monitoring.prometheus.alertmanager.pagerduty. | monitoring.prometheus.alertmanager.pagerduty.existingRoutingKeySecret | pagerduty_routing_key | Secret must contain pagerduty_routing_key |
 | monitoring.grafana.* | monitoring.grafana.envFromSecrets | * | A list of secret keys to be used in envFromSecret |
 | monitoring.grafana.* | monitoring.grafana.existingAdminSecret | admin-user, admin-password | Secret must contain admin-user, admin-password |
-| monitoring.ingress.* | monitoring.ingress.existingSecret | * | Secret with the enableMonitorDeletion, creationDelay and providers |
 | monitoring.ingress.* | monitoring.ingress.existingConfigSecret | * | Secret with the enableMonitorDeletion, creationDelay and providers |

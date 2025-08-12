@@ -9,6 +9,10 @@ data:
   config.toml: |-
     [http.middlewares]
       [http.middlewares.compress.compress]
+      [http.middlewares.speedtest-no-compression.headers.customRequestHeaders]
+        Accept-Encoding = "identity"
+      [http.middlewares.speedtest-no-compression.headers.customResponseHeaders]
+        Content-Encoding = "identity"
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease

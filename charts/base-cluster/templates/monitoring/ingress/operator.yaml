@@ -32,7 +32,5 @@ spec:
     serviceMonitor:
       enabled: true
     {{- end }}
-    configSecretName: {{ required "You must provide a secret for ingress monitor operator" .Values.monitoring.ingress.existingSecret }}
-    podAnnotations:
-      checksum/secret: {{ include (print $.Template.BasePath "/monitoring/ingress/operator-secret.yaml") . | sha256sum }}
+    configSecretName: {{ required "You must provide a secret for ingress monitor operator" .Values.monitoring.ingress.existingConfigSecret }}
   {{- end -}}
