@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 41.0.13](https://img.shields.io/badge/Version-41.0.13-informational?style=flat-square)
+![Version: 41.1.0](https://img.shields.io/badge/Version-41.1.0-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -151,6 +151,7 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | monitoring.jaeger.query.resources.requests.cpu | string | `"50m"` |  |
 | monitoring.jaeger.query.resources.requests.memory | string | `"32Mi"` |  |
 | monitoring.loki.enabled | bool | `true` |  |
+| monitoring.loki.promtail.extraTolerations | list | `[]` |  |
 | monitoring.loki.promtail.resources.limits.cpu | int | `1` |  |
 | monitoring.loki.promtail.resources.limits.memory | string | `"128Mi"` |  |
 | monitoring.loki.promtail.resources.requests.cpu | string | `"100m"` |  |
@@ -394,3 +395,7 @@ Credentials must now be specified as existing secrets to avoid plaintext passwor
 | monitoring.grafana.* | monitoring.grafana.envFromSecrets | * | A list of secret keys to be used in envFromSecret |
 | monitoring.grafana.* | monitoring.grafana.existingAdminSecret | admin-user, admin-password | Secret must contain admin-user, admin-password |
 | monitoring.ingress.* | monitoring.ingress.existingConfigSecret | * | Secret with the enableMonitorDeletion, creationDelay and providers |
+
+### To 41.1.0
+
+We've updated our Loki subchart to have configurable promtail tolerations, adding onto the default tolerations provided by the Chart.
