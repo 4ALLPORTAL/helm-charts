@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 41.0.11](https://img.shields.io/badge/Version-41.0.11-informational?style=flat-square)
+![Version: 41.0.12](https://img.shields.io/badge/Version-41.0.12-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -77,7 +77,7 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | global.clusterName | string | `"eu-west-1"` |  |
 | global.helm.image.registry | string | `"docker.io"` |  |
 | global.helm.image.repository | string | `"alpine/helm"` |  |
-| global.helm.image.tag | string | `"3.18.4"` |  |
+| global.helm.image.tag | string | `"3.18.5"` |  |
 | global.imageCredentials | list | `[]` |  |
 | global.imageRegistry | string | `""` |  |
 | global.kubectl.image.registry | string | `"docker.io"` |  |
