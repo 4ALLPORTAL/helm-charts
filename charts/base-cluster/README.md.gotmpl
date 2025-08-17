@@ -184,3 +184,7 @@ Credentials must now be specified as existing secrets to avoid plaintext passwor
 | monitoring.grafana.* | monitoring.grafana.envFromSecrets | * | A list of secret keys to be used in envFromSecret |
 | monitoring.grafana.* | monitoring.grafana.existingAdminSecret | admin-user, admin-password | Secret must contain admin-user, admin-password |
 | monitoring.ingress.* | monitoring.ingress.existingConfigSecret | * | Secret with the enableMonitorDeletion, creationDelay and providers |
+
+### To 41.1.0
+
+We've updated our Loki subchart to have configurable promtail tolerations, adding onto the default tolerations provided by the Chart.
