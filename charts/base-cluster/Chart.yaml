@@ -11,4 +11,4 @@ maintainers:
 dependencies:
   - name: common
     repository: https://charts.bitnami.com/bitnami
-    version: 2.31.3
+    version: 2.27.0
