@@ -70,6 +70,20 @@ spec:
           chunk_block_size: 524288
           chunk_target_size: 5242880
     promtail:
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          operator: Exists
+          effect: NoSchedule
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule
+        {{- if .Values.monitoring.loki.promtail.extraTolerations }}
+        {{- range .Values.monitoring.loki.promtail.extraTolerations }}
+        - key: {{ .key | quote }}
+          operator: {{ .operator | quote }}
+          effect: {{ .effect | quote }}
+        {{- end }}
+        {{- end }}
       {{- if .Values.global.imageRegistry }}
       image:
         registry: "{{ $.Values.global.imageRegistry }}"

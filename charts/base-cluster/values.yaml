@@ -189,6 +189,7 @@ monitoring:
         cpu: 1
         memory: 1Gi
     promtail:
+      extraTolerations: []
       resources:
         requests:
           cpu: 100m
