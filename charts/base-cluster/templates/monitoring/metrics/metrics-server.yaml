@@ -21,6 +21,8 @@ spec:
     global:
       imageRegistry: {{ $.Values.global.imageRegistry | quote }}
     {{- end }}
+    image:
+      repository: bitnamilegacy/metrics-server
     resources:
       limits:
         cpu: {{ .Values.monitoring.metricsServer.resources.limits.cpu }}
