@@ -27,9 +27,9 @@ spec:
           containers:
             - name: stash-retry-backup
               {{- if $.Values.global.imageRegistry }}
-              image: "{{ $.Values.global.imageRegistry }}/bitnami/kubectl"
+              image: "{{ $.Values.global.imageRegistry }}/{{ $.Values.global.kubectl.image.repository }}:{{ $.Values.global.kubectl.image.tag }}"
               {{- else }}
-              image: "bitnami/kubectl"
+              image: "{{ $.Values.global.kubectl.image.repository }}:{{ $.Values.global.kubectl.image.tag }}"
               {{- end }}
               securityContext:
                 allowPrivilegeEscalation: false
