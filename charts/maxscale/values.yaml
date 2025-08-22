@@ -80,6 +80,8 @@ containerSecurityContext:
 podDisruptionBudget: true
 
 mariadb:
+  image:
+    repository: bitnamilegacy/mariadb-galera
   replicaCount: 3
   rootUser:
     forcePassword: true
@@ -100,6 +102,8 @@ mariadb:
       value: --skip-log-bin
   metrics:
     enabled: true
+    image:
+      repository: bitnamilegacy/mysqld-exporter
     serviceMonitor:
       enabled: true
       selector: {}
