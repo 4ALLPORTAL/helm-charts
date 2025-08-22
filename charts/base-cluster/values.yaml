@@ -85,9 +85,7 @@ speedtest:
 
 sealedsecrets:
   enabled: false
-  values:
-    image:
-      repository: bitnamilegacy/sealed-secrets-controller
+  values: {}
 
 janitor:
   enabled: true
