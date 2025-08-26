@@ -100,6 +100,7 @@ monitoring:
     host: grafana
     additionalDashboards: {}
     dashboards:
+      mysql: true
       fourAllPortal: true
       mariadb: true
     config: {}

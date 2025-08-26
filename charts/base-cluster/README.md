@@ -116,6 +116,7 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | monitoring.grafana.config | object | `{}` |  |
 | monitoring.grafana.dashboards.fourAllPortal | bool | `true` |  |
 | monitoring.grafana.dashboards.mariadb | bool | `true` |  |
+| monitoring.grafana.dashboards.mysql | bool | `true` |  |
 | monitoring.grafana.envFromSecrets | list | `[]` |  |
 | monitoring.grafana.existingAdminSecret | string | `""` |  |
 | monitoring.grafana.host | string | `"grafana"` |  |
