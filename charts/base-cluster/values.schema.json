@@ -640,6 +640,9 @@
                 "fourAllPortal": {
                   "type": "boolean"
                 },
+                "mysql": {
+                  "type": "boolean"
+                },
                 "mariadb": {
                   "type": "boolean"
                 }
