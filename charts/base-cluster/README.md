@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 41.1.0](https://img.shields.io/badge/Version-41.1.0-informational?style=flat-square)
+![Version: 41.1.1](https://img.shields.io/badge/Version-41.1.1-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -116,6 +116,7 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | monitoring.grafana.config | object | `{}` |  |
 | monitoring.grafana.dashboards.fourAllPortal | bool | `true` |  |
 | monitoring.grafana.dashboards.mariadb | bool | `true` |  |
+| monitoring.grafana.dashboards.mysql | bool | `true` |  |
 | monitoring.grafana.envFromSecrets | list | `[]` |  |
 | monitoring.grafana.existingAdminSecret | string | `""` |  |
 | monitoring.grafana.host | string | `"grafana"` |  |

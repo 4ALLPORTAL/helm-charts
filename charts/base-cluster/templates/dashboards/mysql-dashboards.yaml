@@ -1,0 +1,3 @@
+{{- if .Values.monitoring.grafana.dashboards.mysql -}}
+{{- template "base-cluster.dashboards.configmap" (dict "folder" "mysql" "context" .) -}}
+{{- end -}}
