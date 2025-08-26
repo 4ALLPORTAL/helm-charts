@@ -213,7 +213,7 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | rbac.view.groups | list | `[]` |  |
 | rbac.view.users | list | `[]` |  |
 | sealedsecrets.enabled | bool | `false` |  |
-| sealedsecrets.values.image.repository | string | `"bitnamilegacy/sealed-secrets-controller"` |  |
+| sealedsecrets.values | object | `{}` |  |
 | speedtest.enabled | bool | `true` |  |
 | speedtest.host | string | `"speedtest"` |  |
 | speedtest.image.registry | string | `"ghcr.io"` |  |
