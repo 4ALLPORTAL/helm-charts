@@ -34,6 +34,8 @@ spec:
     global:
       imageRegistry: {{ $.Values.global.imageRegistry | quote }}
     {{- end }}
+    image:
+      repository: bitnamilegacy/external-dns
     cloudflare:
       secretName: {{ required "You must provide a secret for Cloudflare" .Values.dns.existingSecret }}
       email: {{ required "You must provide the email for Cloudflare" .Values.dns.email }}

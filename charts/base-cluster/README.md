@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 41.1.1](https://img.shields.io/badge/Version-41.1.1-informational?style=flat-square)
+![Version: 41.1.2](https://img.shields.io/badge/Version-41.1.2-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -81,7 +81,7 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | global.imageCredentials | list | `[]` |  |
 | global.imageRegistry | string | `""` |  |
 | global.kubectl.image.registry | string | `"docker.io"` |  |
-| global.kubectl.image.repository | string | `"bitnami/kubectl"` |  |
+| global.kubectl.image.repository | string | `"bitnamilegacy/kubectl"` |  |
 | global.kubectl.image.tag | string | `"1.33.4"` |  |
 | global.networkPolicy.dnsLabels."io.kubernetes.pod.namespace" | string | `"kube-system"` |  |
 | global.networkPolicy.dnsLabels.k8s-app | string | `"kube-dns"` |  |
@@ -400,3 +400,11 @@ Credentials must now be specified as existing secrets to avoid plaintext passwor
 ### To 41.1.0
 
 We've updated our Loki subchart to have configurable promtail tolerations, adding onto the default tolerations provided by the Chart.
+
+### To 41.1.1
+
+We've added a new MySQL Dashboard for Grafana, showing metrics with the Instance Name from Kubernetes instead of internal IP Address showing
+
+### To 41.1.2
+
+In respect of Bitnami moving their old(er) tagged images to a legacy repository (`docker.io/bitnamilegacy`), all image references were changed to pull from said new repository.
