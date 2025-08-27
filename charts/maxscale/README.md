@@ -1,6 +1,6 @@
 # maxscale
 
-![Version: 4.1.14](https://img.shields.io/badge/Version-4.1.14-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 23.02.2](https://img.shields.io/badge/AppVersion-23.02.2-informational?style=flat-square)
+![Version: 4.1.15](https://img.shields.io/badge/Version-4.1.15-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 23.02.2](https://img.shields.io/badge/AppVersion-23.02.2-informational?style=flat-square)
 
 Deploys a maxscale mariadb-galera proxy including mariadb-galera
 
@@ -61,7 +61,9 @@ Deploys a maxscale mariadb-galera proxy including mariadb-galera
 | mariadb.extraEnvVars[0].value | string | `"--skip-log-bin"` |  |
 | mariadb.galera.mariabackup.forcePassword | bool | `true` |  |
 | mariadb.galera.mariabackup.password | string | `"CHANGEME"` |  |
+| mariadb.image.repository | string | `"bitnamilegacy/mariadb-galera"` |  |
 | mariadb.metrics.enabled | bool | `true` |  |
+| mariadb.metrics.image.repository | string | `"bitnamilegacy/mysqld-exporter"` |  |
 | mariadb.metrics.resources.limits.cpu | string | `"250m"` |  |
 | mariadb.metrics.resources.limits.memory | string | `"64Mi"` |  |
 | mariadb.metrics.resources.requests.cpu | string | `"10m"` |  |
@@ -114,3 +116,7 @@ This release upgrades the included mariadb-galera chart from 6.x.x to 7.x.x.
 During the upgrade, it deletes the mariadb statefulSet with `--cascade orphan`.
 
 Before you upgrade beyond this version, you should upgrade to here first
+
+### To 4.1.15
+
+In respect of Bitnami moving their old(er) tagged images to a legacy repository (`docker.io/bitnamilegacy`), all image references were changed to pull from said new repository.
