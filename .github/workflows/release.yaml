@@ -11,8 +11,7 @@ name: Release Charts
 jobs:
   release:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    permissions: write-all
     steps:
       - name: Checkout
         uses: actions/checkout@v5
