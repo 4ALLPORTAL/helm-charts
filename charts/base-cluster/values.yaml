@@ -47,8 +47,8 @@ global:
   kubectl:
     image:
       registry: docker.io
-      repository: bitnamilegacy/kubectl
-      tag: "1.33.4"
+      repository: rancher/kubectl
+      tag: "v1.33.4"
   helm:
     image:
       registry: docker.io
