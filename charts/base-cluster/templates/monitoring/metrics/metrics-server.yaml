@@ -22,7 +22,9 @@ spec:
       imageRegistry: {{ $.Values.global.imageRegistry | quote }}
     {{- end }}
     image:
-      repository: bitnamilegacy/metrics-server
+      repository: metrics-server/metrics-server
+      tag: v0.8.0
+    command: ["/metrics-server"]
     resources:
       limits:
         cpu: {{ .Values.monitoring.metricsServer.resources.limits.cpu }}
@@ -31,6 +33,7 @@ spec:
     extraArgs:
       - --kubelet-preferred-address-types=InternalIP
       - --kubelet-insecure-tls=true
+      - --cert-dir=/tmp
     apiService:
       create: true
   {{- end -}}

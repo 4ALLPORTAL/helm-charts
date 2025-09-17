@@ -47,7 +47,7 @@ global:
   kubectl:
     image:
       registry: docker.io
-      repository: bitnamilegacy/kubectl
+      repository: alpine/k8s
       tag: "1.33.4"
   helm:
     image:
