@@ -71,7 +71,8 @@ spec:
       imageRegistry: {{ $.Values.global.imageRegistry | quote }}
     {{- end }}
     image:
-      repository: bitnamilegacy/oauth2-proxy
+      repository: oauth2-proxy/oauth2-proxy
+      tag: v7.4.0
     ingress:
       enabled: true
       hostname: {{ include (printf "base-cluster.%s.host" $host) $ }}
