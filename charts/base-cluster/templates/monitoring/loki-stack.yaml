@@ -93,6 +93,9 @@ spec:
       {{- if .Values.monitoring.prometheus.enabled }}
       serviceMonitor:
         enabled: true
+      {{- if .Values.monitoring.loki.promtail.config }}
+      config: {{- .Values.monitoring.loki.promtail.config | toYaml | nindent 8 }}
+      {{- end }}
     {{- end }}
     grafana:
       enabled: false
