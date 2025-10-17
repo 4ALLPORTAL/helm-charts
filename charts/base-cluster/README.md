@@ -153,7 +153,6 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | monitoring.jaeger.query.resources.requests.memory | string | `"32Mi"` |  |
 | monitoring.loki.enabled | bool | `true` |  |
 | monitoring.loki.promtail.extraTolerations | list | `[]` |  |
-| monitoring.loki.promtail.config | object | `{}` |  |
 | monitoring.loki.promtail.resources.limits.cpu | int | `1` |  |
 | monitoring.loki.promtail.resources.limits.memory | string | `"128Mi"` |  |
 | monitoring.loki.promtail.resources.requests.cpu | string | `"100m"` |  |
