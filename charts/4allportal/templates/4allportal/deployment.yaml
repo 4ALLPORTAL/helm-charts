@@ -24,6 +24,7 @@ spec:
     metadata:
       labels: {{- include "common.labels.stable" $ | nindent 8 }}
         app.kubernetes.io/component: backend
+        fourallportal.com/app-version: {{ .Values.fourAllPortal.image.tag }}
       annotations:
         checksum/secret: {{ include (print $.Template.BasePath "/4allportal/secrets.yaml") . | sha256sum }}
     spec:
