@@ -24,7 +24,7 @@ jobs:
         uses: helm/chart-testing-action@v2.7.0
 
       - name: Conventional commit check
-        uses: cocogitto/cocogitto-action@v3
+        uses: cocogitto/cocogitto-action@v4
 
       - name: Validate PR Name
         run: .github/scripts/validate-pullrequest.sh
