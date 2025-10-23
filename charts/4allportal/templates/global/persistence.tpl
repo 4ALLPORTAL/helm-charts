@@ -23,3 +23,30 @@ persistentVolumeClaim:
 emptyDir: {}
         {{- end -}}
 {{- end -}}
+
+{{- define "4allportal.fourallportal.persistence.storage.mount" -}}
+      {{- if or $.Values.global.persistence.enabled $.Values.fourAllPortal.persistence.storage.enabled -}}
+persistentVolumeClaim:
+        {{- if .Values.fourAllPortal.persistence.storage.existingClaim }}
+  claimName: {{ .Values.fourAllPortal.persistence.storage.existingClaim }}
+        {{- else }}
+  claimName:  "{{ include "common.names.fullname" . }}-storage"
+          {{- end }}
+      {{- else -}}
+emptyDir: {}
+        {{- end -}}
+{{- end -}}
+
+{{- define "fourAllPortal.checkPersistence" -}}
+{{- $persistenceTypes := list "config" "assets" "storage" -}}
+{{- $allValid := true -}}
+{{- range $persistenceTypes }}
+  {{- $persistence := index $.Values.fourAllPortal.persistence . -}}
+  {{- $enabled := or $.Values.global.persistence.enabled $persistence.enabled -}}
+  {{- $isRWX := eq $persistence.accessMode "ReadWriteMany" -}}
+  {{- if and $enabled (not $isRWX) }}
+    {{- $allValid = false -}}
+  {{- end }}
+{{- end }}
+{{- $allValid -}}
+{{- end -}}

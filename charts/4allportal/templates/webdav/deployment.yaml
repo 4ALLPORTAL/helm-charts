@@ -97,10 +97,15 @@ spec:
             - name: shared-dav-events
               mountPath: /dav-events
             {{ end }}
-            - name: assets
-              mountPath: /dav/data/webdav/assets
-            - name: config
-              mountPath: /dav/data/webdav/data
+            {{ if .Values.global.persistence.useCombinedVolumes }}
+            - mountPath: /dav/data/webdav
+              name: storage
+            {{ else }}
+            - mountPath: /dav/data/webdav/assets
+              name: assets
+            - mountPath: /dav/data/webdav/data
+              name: data
+            {{ end }}
             - name: webdavconfig
               subPath: dav.conf
               mountPath: /usr/local/apache2/conf/conf-enabled/dav.conf
@@ -185,10 +190,15 @@ spec:
           configMap:
             name: "{{ include "common.names.fullname" $ }}-webdav"
             defaultMode: 0555
+        {{ if .Values.global.persistence.useCombinedVolumes }}
+        - name: storage
+        {{- include "4allportal.fourallportal.persistence.storage.mount" $ | nindent 10 }}
+        {{ else }}
         - name: assets
         {{- include "4allportal.fourallportal.persistence.assets.mount" $ | nindent 10 }}
         - name: config
         {{- include "4allportal.fourallportal.persistence.config.mount" $ | nindent 10 }}
+        {{ end }}
         - name: webdavconfig
           configMap:
             name: "{{ include "common.names.fullname" $ }}-webdav"

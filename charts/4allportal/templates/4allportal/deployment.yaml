@@ -7,10 +7,10 @@ metadata:
     app.kubernetes.io/component: backend
 spec:
   strategy:
-    {{- if (and (or (not (or .Values.global.persistence.enabled .Values.fourAllPortal.persistence.config.enabled)) (eq .Values.fourAllPortal.persistence.config.accessMode "ReadWriteMany")) (or (not (or .Values.global.persistence.enabled .Values.fourAllPortal.persistence.assets.enabled)) (eq .Values.fourAllPortal.persistence.assets.accessMode "ReadWriteMany"))) }}
-    type: RollingUpdate
-    {{- else }}
+  {{- if (include "fourAllPortal.checkPersistence" . | fromYaml) }}
     type: Recreate
+  {{- else }}
+    type: RollingUpdate
   {{- end }}
   {{- if not .Values.fourAllPortal.hpa.enabled }}
   replicas: {{ .Values.fourAllPortal.replicas }}
@@ -291,10 +291,15 @@ spec:
               mountPath: /tmp
             - name: runtime
               mountPath: /4allportal/_runtime
+            {{ if .Values.global.persistence.useCombinedVolumes }}
+            - name: storage
+              mountPath: /4allportal
+            {{ else }}
             - name: assets
               mountPath: /4allportal/assets
             - name: config
               mountPath: /4allportal/data
+            {{ end }}
             - name: read-only
               mountPath: /4allportal/data/data
               readOnly: true
@@ -308,10 +313,15 @@ spec:
         - name: runtime
           emptyDir:
             medium: Memory
+        {{ if .Values.global.persistence.useCombinedVolumes }}
+        - name: storage
+            {{- include "4allportal.fourallportal.persistence.storage.mount" . | nindent 10 }}
+        {{ else }}
         - name: assets
-        {{- include "4allportal.fourallportal.persistence.assets.mount" . | nindent 10 }}
+            {{- include "4allportal.fourallportal.persistence.assets.mount" . | nindent 10 }}
         - name: config
-      {{- include "4allportal.fourallportal.persistence.config.mount" . | nindent 10 }}
+            {{- include "4allportal.fourallportal.persistence.config.mount" . | nindent 10 }}
+        {{ end }}
       {{- with .Values.fourAllPortal.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}
       {{- end }}

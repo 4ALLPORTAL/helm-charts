@@ -1,4 +1,4 @@
-{{- if and (or $.Values.global.persistence.enabled $.Values.fourAllPortal.persistence.assets.enabled) (not $.Values.fourAllPortal.persistence.assets.existingClaim) }}
+{{- if and (or $.Values.global.persistence.enabled $.Values.fourAllPortal.persistence.assets.enabled) (not $.Values.fourAllPortal.persistence.assets.existingClaim) (not $.Values.global.persistence.useCombinedVolumes) }}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -16,9 +16,9 @@ spec:
     requests:
       storage: {{ $.Values.fourAllPortal.persistence.assets.size | quote }}
   {{- include "common.storage.class" ( dict "persistence" $.Values.fourAllPortal.persistence.assets "global" $.Values.global.persistence) | nindent 2 }}
-  {{- end }}
+{{- end }}
 ---
-  {{- if and (or $.Values.global.persistence.enabled $.Values.fourAllPortal.persistence.config.enabled) (not $.Values.fourAllPortal.persistence.config.existingClaim) }}
+{{- if and (or $.Values.global.persistence.enabled $.Values.fourAllPortal.persistence.config.enabled) (not $.Values.fourAllPortal.persistence.config.existingClaim) (not $.Values.global.persistence.useCombinedVolumes) }}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -31,9 +31,29 @@ metadata:
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
 spec:
   accessModes:
-    - {{ $.Values.fourAllPortal.persistence.assets.accessMode | quote }}
+    - {{ $.Values.fourAllPortal.persistence.config.accessMode | quote }}
   resources:
     requests:
       storage: {{ $.Values.fourAllPortal.persistence.config.size | quote }}
   {{- include "common.storage.class" ( dict "persistence" $.Values.fourAllPortal.persistence.config "global" $.Values.global.persistence) | nindent 2 }}
+{{- end }}
+---
+{{- if and (or $.Values.global.persistence.enabled $.Values.fourAllPortal.persistence.storage.enabled) (not $.Values.fourAllPortal.persistence.storage.existingClaim) ($.Values.global.persistence.useCombinedVolumes) }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: "{{ include "common.names.fullname" $ }}-config"
+  namespace: {{ .Release.Namespace }}
+  {{- with $.Values.fourAllPortal.persistence.storage.annotations  }}
+  annotations:
+  {{ toYaml . | indent 4 }}
   {{- end }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  accessModes:
+    - {{ $.Values.fourAllPortal.persistence.storage.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ $.Values.fourAllPortal.persistence.config.size | quote }}
+  {{- include "common.storage.class" ( dict "persistence" $.Values.fourAllPortal.persistence.storage "global" $.Values.global.persistence) | nindent 2 }}
+{{- end }}
