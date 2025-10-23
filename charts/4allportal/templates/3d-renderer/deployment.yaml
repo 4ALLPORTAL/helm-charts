@@ -8,10 +8,10 @@ metadata:
     app.kubernetes.io/component: 3d-renderer
 spec:
   strategy:
-  {{- if (include "fourAllPortal.checkPersistence" . | fromYaml) }}
-    type: Recreate
-  {{- else }}
+  {{- if eq (include "fourAllPortal.checkPersistence" $) "true" }}
     type: RollingUpdate
+  {{- else }}
+    type: Recreate
   {{- end }}
   {{- if not .Values.dreiDRenderer.hpa.enabled }}
   replicas: {{ .Values.dreiDRenderer.replicas }}

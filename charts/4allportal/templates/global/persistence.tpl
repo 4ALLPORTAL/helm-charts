@@ -38,15 +38,29 @@ emptyDir: {}
 {{- end -}}
 
 {{- define "fourAllPortal.checkPersistence" -}}
-{{- $persistenceTypes := list "config" "assets" "storage" -}}
-{{- $allValid := true -}}
-{{- range $persistenceTypes }}
-  {{- $persistence := index $.Values.fourAllPortal.persistence . -}}
-  {{- $enabled := or $.Values.global.persistence.enabled $persistence.enabled -}}
-  {{- $isRWX := eq $persistence.accessMode "ReadWriteMany" -}}
-  {{- if and $enabled (not $isRWX) }}
-    {{- $allValid = false -}}
-  {{- end }}
+{{- if .Values.global.persistence.useCombinedVolumes }}
+    {{- if or
+      (not (or .Values.global.persistence.enabled .Values.fourAllPortal.persistence.storage.enabled))
+      (eq .Values.fourAllPortal.persistence.storage.accessMode "ReadWriteMany")
+     -}}
+    true
+    {{- else }}
+    false
+    {{- end }}
+{{- else }}
+    {{- if (and
+        (or
+          (not (or .Values.global.persistence.enabled .Values.fourAllPortal.persistence.config.enabled))
+          (eq .Values.fourAllPortal.persistence.config.accessMode "ReadWriteMany")
+        )
+        (or
+          (not (or .Values.global.persistence.enabled .Values.fourAllPortal.persistence.assets.enabled))
+          (eq .Values.fourAllPortal.persistence.assets.accessMode "ReadWriteMany")
+        )
+    ) -}}
+    true
+    {{- else }}
+    false
+    {{- end }}
 {{- end }}
-{{- $allValid -}}
 {{- end -}}

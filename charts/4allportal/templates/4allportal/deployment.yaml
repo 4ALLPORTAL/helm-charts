@@ -7,10 +7,10 @@ metadata:
     app.kubernetes.io/component: backend
 spec:
   strategy:
-  {{- if (include "fourAllPortal.checkPersistence" . | fromYaml) }}
-    type: Recreate
-  {{- else }}
+  {{- if eq (include "fourAllPortal.checkPersistence" $) "true" }}
     type: RollingUpdate
+  {{- else }}
+    type: Recreate
   {{- end }}
   {{- if not .Values.fourAllPortal.hpa.enabled }}
   replicas: {{ .Values.fourAllPortal.replicas }}

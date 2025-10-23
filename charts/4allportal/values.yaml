@@ -55,7 +55,7 @@ fourAllPortal:
       enabled: false
       accessMode: ReadWriteMany
       size: 100Gi
-      annotations: { }
+      annotations: {}
 
   hpa:
     enabled: false
