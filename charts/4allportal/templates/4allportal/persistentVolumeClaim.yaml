@@ -42,7 +42,7 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: "{{ include "common.names.fullname" $ }}-config"
+  name: "{{ include "common.names.fullname" $ }}-storage"
   namespace: {{ .Release.Namespace }}
   {{- with $.Values.fourAllPortal.persistence.storage.annotations  }}
   annotations:
@@ -54,6 +54,6 @@ spec:
     - {{ $.Values.fourAllPortal.persistence.storage.accessMode | quote }}
   resources:
     requests:
-      storage: {{ $.Values.fourAllPortal.persistence.config.size | quote }}
+      storage: {{ $.Values.fourAllPortal.persistence.storage.size | quote }}
   {{- include "common.storage.class" ( dict "persistence" $.Values.fourAllPortal.persistence.storage "global" $.Values.global.persistence) | nindent 2 }}
 {{- end }}
