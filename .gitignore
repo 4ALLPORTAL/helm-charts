@@ -1,6 +1,0 @@
-*.tgz
-.idea
-.vscode
-.DS_Store
-/charts/*/charts
-!/charts/4allportal/charts/*.tgz
