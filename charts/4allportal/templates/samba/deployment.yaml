@@ -55,8 +55,12 @@ spec:
             - mountPath: /etc/container-users
               name: users-config
             {{ if .Values.global.persistence.useCombinedVolumes }}
-            - mountPath: /mnt
+            - mountPath: /mnt/assets
               name: storage
+              subPath: assets
+            - mountPath: /mnt/data
+              name: storage
+              subPath: data
             {{ else }}
             - mountPath: /mnt/assets
               name: assets
@@ -124,7 +128,7 @@ spec:
                 path: users.json
         {{ if .Values.global.persistence.useCombinedVolumes }}
         - name: storage
-        {{- include "4allportal.fourallportal.persistence.assets.mount" $ | nindent 10 }}
+        {{- include "4allportal.fourallportal.persistence.storage.mount" $ | nindent 10 }}
         {{ else }}
         - name: assets
         {{- include "4allportal.fourallportal.persistence.assets.mount" $ | nindent 10 }}
