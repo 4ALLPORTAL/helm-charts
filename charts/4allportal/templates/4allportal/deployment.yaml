@@ -289,8 +289,6 @@ spec:
           volumeMounts:
             - name: tmp
               mountPath: /tmp
-            - name: runtime
-              mountPath: /4allportal/_runtime
             {{ if .Values.global.persistence.useCombinedVolumes }}
             - name: storage
               mountPath: /4allportal
@@ -300,6 +298,8 @@ spec:
             - name: config
               mountPath: /4allportal/data
             {{ end }}
+            - name: runtime
+              mountPath: /4allportal/_runtime
             - name: read-only
               mountPath: /4allportal/data/data
               readOnly: true
