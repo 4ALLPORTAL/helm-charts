@@ -7,9 +7,9 @@ metadata:
     app.kubernetes.io/component: backend
 spec:
   strategy:
-    {{- if (and (or (not (or .Values.global.persistence.enabled .Values.fourAllPortal.persistence.config.enabled)) (eq .Values.fourAllPortal.persistence.config.accessMode "ReadWriteMany")) (or (not (or .Values.global.persistence.enabled .Values.fourAllPortal.persistence.assets.enabled)) (eq .Values.fourAllPortal.persistence.assets.accessMode "ReadWriteMany"))) }}
+  {{- if eq (include "fourAllPortal.checkPersistence" $) "true" }}
     type: RollingUpdate
-    {{- else }}
+  {{- else }}
     type: Recreate
   {{- end }}
   {{- if not .Values.fourAllPortal.hpa.enabled }}
@@ -24,7 +24,6 @@ spec:
     metadata:
       labels: {{- include "common.labels.stable" $ | nindent 8 }}
         app.kubernetes.io/component: backend
-        fourallportal.com/app-version: {{ .Values.fourAllPortal.image.tag }}
       annotations:
         checksum/secret: {{ include (print $.Template.BasePath "/4allportal/secrets.yaml") . | sha256sum }}
     spec:
@@ -290,12 +289,21 @@ spec:
           volumeMounts:
             - name: tmp
               mountPath: /tmp
-            - name: runtime
-              mountPath: /4allportal/_runtime
+            {{- if .Values.global.persistence.useCombinedVolumes }}
+            - name: storage
+              mountPath: /4allportal/assets
+              subPath: assets
+            - name: storage
+              mountPath: /4allportal/data
+              subPath: data
+            {{- else }}
             - name: assets
               mountPath: /4allportal/assets
             - name: config
               mountPath: /4allportal/data
+            {{- end }}
+            - name: runtime
+              mountPath: /4allportal/_runtime
             - name: read-only
               mountPath: /4allportal/data/data
               readOnly: true
@@ -309,10 +317,15 @@ spec:
         - name: runtime
           emptyDir:
             medium: Memory
+        {{- if .Values.global.persistence.useCombinedVolumes }}
+        - name: storage
+            {{- include "4allportal.fourallportal.persistence.storage.mount" . | nindent 10 }}
+        {{- else }}
         - name: assets
-        {{- include "4allportal.fourallportal.persistence.assets.mount" . | nindent 10 }}
+            {{- include "4allportal.fourallportal.persistence.assets.mount" . | nindent 10 }}
         - name: config
-      {{- include "4allportal.fourallportal.persistence.config.mount" . | nindent 10 }}
+            {{- include "4allportal.fourallportal.persistence.config.mount" . | nindent 10 }}
+        {{- end }}
       {{- with .Values.fourAllPortal.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}
       {{- end }}
