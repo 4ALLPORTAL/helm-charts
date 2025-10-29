@@ -1,6 +1,7 @@
 global:
   persistence:
     enabled: true
+    useCombinedVolumes: false
   tracing:
     enabled: false
     jaeger:
@@ -49,6 +50,11 @@ fourAllPortal:
       enabled: false
       accessMode: ReadWriteMany
       size: 5Gi
+      annotations: {}
+    storage:
+      enabled: false
+      accessMode: ReadWriteMany
+      size: 100Gi
       annotations: {}
 
   hpa:
