@@ -99,7 +99,11 @@ spec:
             {{ end }}
             {{- if .Values.global.persistence.useCombinedVolumes }}
             - name: storage
-              mountPath: /dav/data/webdav
+              mountPath: /dav/data/webdav/assets
+              subPath: assets
+            - name: storage
+              mountPath: /dav/data/webdav/data
+              subPath: data
             {{- else }}
             - name: assets
               mountPath: /dav/data/webdav/assets

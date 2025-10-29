@@ -291,7 +291,11 @@ spec:
               mountPath: /tmp
             {{ if .Values.global.persistence.useCombinedVolumes }}
             - name: storage
-              mountPath: /4allportal
+              mountPath: /4allportal/assets
+              subPath: assets
+            - name: storage
+              mountPath: /4allportal/data
+              subPath: data
             {{ else }}
             - name: assets
               mountPath: /4allportal/assets
