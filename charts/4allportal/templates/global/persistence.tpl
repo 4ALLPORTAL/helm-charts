@@ -38,10 +38,10 @@ emptyDir: {}
 {{- end -}}
 
 {{- define "fourAllPortal.checkPersistence" -}}
-{{- if .Values.global.persistence.useCombinedVolumes }}
+{{- if $.Values.global.persistence.useCombinedVolumes }}
     {{- if or
-      (not (or .Values.global.persistence.enabled .Values.fourAllPortal.persistence.storage.enabled))
-      (eq .Values.fourAllPortal.persistence.storage.accessMode "ReadWriteMany")
+      (not (or $.Values.global.persistence.enabled $.Values.fourAllPortal.persistence.storage.enabled))
+      (eq $.Values.fourAllPortal.persistence.storage.accessMode "ReadWriteMany")
      -}}
     true
     {{- else }}
@@ -50,12 +50,12 @@ emptyDir: {}
 {{- else }}
     {{- if (and
         (or
-          (not (or .Values.global.persistence.enabled .Values.fourAllPortal.persistence.config.enabled))
-          (eq .Values.fourAllPortal.persistence.config.accessMode "ReadWriteMany")
+          (not (or $.Values.global.persistence.enabled $.Values.fourAllPortal.persistence.config.enabled))
+          (eq $.Values.fourAllPortal.persistence.config.accessMode "ReadWriteMany")
         )
         (or
-          (not (or .Values.global.persistence.enabled .Values.fourAllPortal.persistence.assets.enabled))
-          (eq .Values.fourAllPortal.persistence.assets.accessMode "ReadWriteMany")
+          (not (or $.Values.global.persistence.enabled $.Values.fourAllPortal.persistence.assets.enabled))
+          (eq $.Values.fourAllPortal.persistence.assets.accessMode "ReadWriteMany")
         )
     ) -}}
     true
