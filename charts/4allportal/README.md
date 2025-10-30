@@ -366,4 +366,4 @@ You are no longer required or capable of using fourAllPortal.database.existing v
 
 ## To 20.10.0
 
-This release fixes the Samba mounts. The standard mounts asset and data have been removed and must now be explicitly specified in the values.l
+This release fixes the Samba mounts. The standard mounts asset and data have been removed and must now be explicitly specified in the values.
