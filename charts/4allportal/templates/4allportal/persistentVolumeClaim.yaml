@@ -1,3 +1,6 @@
+{{- if and .Values.global.persistence.useCombinedVolumes (or $.Values.fourAllPortal.persistence.assets.enabled $.Values.fourAllPortal.persistence.config.enabled) }}
+  {{- fail "Error: 'global.persistence.useCombinedVolumes' and individual persistence settings ('fourAllPortal.persistence.assets.enabled' or 'fourAllPortal.persistence.config.enabled') cannot be enabled simultaneously. Please choose either 'useCombinedVolumes' OR the individual persistence options." }}
+{{- end }}
 {{- if and (or $.Values.global.persistence.enabled $.Values.fourAllPortal.persistence.assets.enabled) (not $.Values.fourAllPortal.persistence.assets.existingClaim) (not $.Values.global.persistence.useCombinedVolumes) }}
 kind: PersistentVolumeClaim
 apiVersion: v1
