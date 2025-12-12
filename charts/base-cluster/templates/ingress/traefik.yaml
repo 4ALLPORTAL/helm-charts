@@ -104,6 +104,11 @@ spec:
         type: configMap
 
     ports:
+      kafka:
+        port: 9095
+        expose: true
+        exposedPort: 9095
+        protocol: TCP
       web:
         redirections:
           entryPoint:
