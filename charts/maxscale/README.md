@@ -1,6 +1,6 @@
 # maxscale
 
-![Version: 4.1.15](https://img.shields.io/badge/Version-4.1.15-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 23.02.2](https://img.shields.io/badge/AppVersion-23.02.2-informational?style=flat-square)
+![Version: 4.1.16](https://img.shields.io/badge/Version-4.1.16-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 23.02.2](https://img.shields.io/badge/AppVersion-23.02.2-informational?style=flat-square)
 
 Deploys a maxscale mariadb-galera proxy including mariadb-galera
 
