@@ -208,7 +208,7 @@
                 "hostAliases": {
                   "type": "array",
                   "items": {
-                    "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.HostAlias"
+                    "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.HostAlias"
                   }
                 },
                 "ingress": {
@@ -289,7 +289,7 @@
                     {
                       "type": "array",
                       "items": {
-                        "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.Container"
+                        "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.Container"
                       }
                     },
                     {
@@ -565,7 +565,7 @@
                   "$ref": "#/definitions/image"
                 },
                 "resources": {
-                  "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+                  "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
                 }
               },
               "additionalProperties": false
@@ -591,12 +591,12 @@
                           "$ref": "#/definitions/nodeSelector"
                         },
                         "resources": {
-                          "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+                          "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
                         },
                         "tolerations": {
                           "type": "array",
                           "items": {
-                            "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.Toleration"
+                            "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.Toleration"
                           }
                         },
                         "daysToKeep": {
@@ -830,7 +830,7 @@
     "nodeSelector": {
       "oneOf": [
         {
-          "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.NodeSelector"
+          "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.NodeSelector"
         },
         {
           "maxProperties": 0
@@ -864,7 +864,7 @@
               "type": "string"
             },
             "size": {
-              "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+              "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
             }
           },
           "required": [
@@ -887,10 +887,10 @@
       "type": "object",
       "properties": {
         "containerSecurityContext": {
-          "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.SecurityContext"
+          "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.SecurityContext"
         },
         "securityContext": {
-          "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.PodSecurityContext"
+          "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.PodSecurityContext"
         },
         "securityOptions": {
           "type": "object",
@@ -920,7 +920,7 @@
               "$ref": "#/definitions/image"
             },
             "affinity": {
-              "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.Affinity"
+              "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.Affinity"
             },
             "livenessProbe": {
               "$ref": "#/definitions/probe"
@@ -935,12 +935,12 @@
               "$ref": "#/definitions/probe"
             },
             "resources": {
-              "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+              "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
             },
             "tolerations": {
               "type": "array",
               "items": {
-                "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.Toleration"
+                "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.Toleration"
               }
             },
             "priorityClassName": {
