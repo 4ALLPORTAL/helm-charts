@@ -1,4 +1,4 @@
-{{- if .Values.webdav.enabled -}}
+{{- if and $.Values.webdav.enabled (eq .Values.webdav.secretName "") }}
 {{- range $path, $permissions := .Values.webdav.mounts -}}
     {{- with $users := $permissions.users -}}
         {{- range $user := $users -}}
