@@ -54,10 +54,19 @@ spec:
               name: samba-container-config
             - mountPath: /etc/container-users
               name: users-config
+            {{ if .Values.global.persistence.useCombinedVolumes }}
+            - mountPath: /mnt/assets
+              name: storage
+              subPath: assets
+            - mountPath: /mnt/data
+              name: storage
+              subPath: data
+            {{ else }}
             - mountPath: /mnt/assets
               name: assets
             - mountPath: /mnt/data
               name: data
+            {{ end }}
             - mountPath: /var/lib/samba
               name: samba-state
             - mountPath: /run
@@ -117,10 +126,15 @@ spec:
             items:
               - key: {{ include "4allportal.samba.secret.key" . }}
                 path: users.json
+        {{ if .Values.global.persistence.useCombinedVolumes }}
+        - name: storage
+        {{- include "4allportal.fourallportal.persistence.storage.mount" $ | nindent 10 }}
+        {{ else }}
         - name: assets
         {{- include "4allportal.fourallportal.persistence.assets.mount" $ | nindent 10 }}
         - name: data
         {{- include "4allportal.fourallportal.persistence.config.mount" $ | nindent 10 }}
+        {{ end }}
         - name: samba-state
           emptyDir: {}
         - name: run

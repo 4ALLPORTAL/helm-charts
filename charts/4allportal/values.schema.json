@@ -31,6 +31,9 @@
                     },
                     "storageClass": {
                       "type": "string"
+                    },
+                    "useCombinedVolumes": {
+                      "type": "boolean"
                     }
                   }
                 },
@@ -392,6 +395,9 @@
                       "$ref": "#/definitions/volume"
                     },
                     "config": {
+                      "$ref": "#/definitions/volume"
+                    },
+                    "storage": {
                       "$ref": "#/definitions/volume"
                     }
                   },
