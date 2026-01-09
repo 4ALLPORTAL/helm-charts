@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 20.10.10](https://img.shields.io/badge/Version-20.10.10-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
+![Version: 20.11.0](https://img.shields.io/badge/Version-20.11.0-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -192,6 +192,10 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.persistence.config.annotations | object | `{}` |  |
 | fourAllPortal.persistence.config.enabled | bool | `false` |  |
 | fourAllPortal.persistence.config.size | string | `"100Gi"` |  |
+| fourAllPortal.persistence.storage.accessMode | string | `"ReadWriteMany"` |  |
+| fourAllPortal.persistence.storage.annotations | object | `{}` |  |
+| fourAllPortal.persistence.storage.enabled | bool | `false` |  |
+| fourAllPortal.persistence.storage.size | string | `"100Gi"` |  |
 | fourAllPortal.podDisruptionBudget | bool | `true` |  |
 | fourAllPortal.readinessProbe.enabled | bool | `true` |  |
 | fourAllPortal.readinessProbe.failureThreshold | int | `3` |  |
@@ -237,6 +241,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | global.networkPolicy.metricsLabels."io.kubernetes.pod.namespace" | string | `"monitoring"` |  |
 | global.networkPolicy.type | string | `"auto"` |  |
 | global.persistence.enabled | bool | `true` |  |
+| global.persistence.useCombinedVolumes | bool | `false` |  |
 | global.tracing.enabled | bool | `false` |  |
 | global.tracing.jaeger.agent.port | int | `6831` |  |
 | global.tracing.jaeger.agent.useDaemonSet | bool | `true` |  |
@@ -362,7 +367,3 @@ You are no longer required or capable of using fourAllPortal.database.existing v
 ## To 20.10.0
 
 This release fixes the Samba mounts. The standard mounts asset and data have been removed and must now be explicitly specified in the values.
-
-## To 20.11.0
-
-This release adds support for single volume use in 4allportal helm chart.
