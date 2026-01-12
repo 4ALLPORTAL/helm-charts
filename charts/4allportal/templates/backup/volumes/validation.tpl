@@ -2,11 +2,11 @@
 {{- if $.Values.global.persistence.useCombinedVolumes }}
 {{- if not (eq (index (index $.Values.fourAllPortal.persistence "storage") "accessMode") "ReadWriteMany") -}}
 {{- fail (printf "To enable backups, the volume storage must be ReadWriteMany") -}}
+{{- end -}}
 {{- else -}}
 {{- range $volume := list "config" "assets" -}}
 {{- if not (eq (index (index $.Values.fourAllPortal.persistence $volume) "accessMode") "ReadWriteMany") -}}
 {{- fail (printf "To enable backups, the volume '%s' must be ReadWriteMany" $volume) -}}
-{{- end -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}
