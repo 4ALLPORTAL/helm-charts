@@ -1137,18 +1137,51 @@
                   "type": "string",
                   "enum": [
                     "mysql",
-                    "mariadb"
+                    "mariadb",
+                    "mssql"
                   ]
                 },
                 "user": {
                   "type": "string"
+                },
+                "jdbcUrl": {
+                  "type": "string"
                 }
               },
               "required": [
-                "type",
-                "host",
-                "name",
-                "user"
+                "type"
+              ]
+            },
+            {
+              "oneOf": [
+                {
+                  "properties": {
+                    "jdbcUrl": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "jdbcUrl"
+                  ]
+                },
+                {
+                  "properties": {
+                    "host": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "user": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "host",
+                    "name",
+                    "user"
+                  ]
+                }
               ]
             },
             {
@@ -1183,6 +1216,16 @@
                   },
                   "required": [
                     "existingSecret"
+                  ]
+                },
+                {
+                  "properties": {
+                    "jdbcUrl": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "jdbcUrl"
                   ]
                 }
               ]
