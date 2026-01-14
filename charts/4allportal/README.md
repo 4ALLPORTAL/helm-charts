@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 20.10.10](https://img.shields.io/badge/Version-20.10.10-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
+![Version: 20.11.0](https://img.shields.io/badge/Version-20.11.0-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -362,3 +362,17 @@ You are no longer required or capable of using fourAllPortal.database.existing v
 ## To 20.10.0
 
 This release fixes the Samba mounts. The standard mounts asset and data have been removed and must now be explicitly specified in the values.
+
+## To 20.11.0
+
+This release adds support for MSSQL Type Databases. The JDBC URL will be built using the following values:
+
+`.Values.fourAllPortal.database.existing.host`
+`.Values.fourAllPortal.database.existing.name`
+
+You can otherwise set the JDBC URL manually using `.Values.fourAllPortal.database.existing.jdbcUrl`
+
+Regardless of the method, the following values are required:
+
+`.Values.fourAllPortal.database.existing.user`
+`.Values.fourAllPortal.database.existing.password`
