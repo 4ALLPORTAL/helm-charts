@@ -147,6 +147,8 @@ spec:
             {{- end }}
 
             {{- if eq (default "" .Values.fourAllPortal.database.existing.type) "mssql" }}
+            - name: DATABASE_TYPE
+              value: {{ .Values.fourAllPortal.database.existing.type }}
             - name: DATABASE_JDBC_URL
               value: {{ include "4allportal.fourallportal.database.jdbcUrl" . }}
             - name: DATABASE_USER
