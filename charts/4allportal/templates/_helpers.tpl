@@ -80,12 +80,10 @@ mariadb
 {{- end -}}
 
 {{- define "4allportal.fourallportal.database.jdbcUrl" -}}
-{{- if eq $.Values.fourAllPortal.database.existing.type "mssql" -}}
-{{- if eq $.Values.fourAllPortal.database.existing.jdbcUrl "" -}}
+{{- if eq (default "" $.Values.fourAllPortal.database.existing.jdbcUrl) "" -}}
 jdbc:sqlserver://{{ $.Values.fourAllPortal.database.existing.host }};databaseName={{ $.Values.fourAllPortal.database.existing.name }};encrypt=false;trustServerCertificate=true
 {{- else -}}
 {{ $.Values.fourAllPortal.database.existing.jdbcUrl }}
-{{- end -}}
 {{- end -}}
 {{- end -}}
 

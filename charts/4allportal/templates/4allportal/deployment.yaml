@@ -146,8 +146,7 @@ spec:
               value: {{ .Values.fourAllPortal.mail.security | quote }}
             {{- end }}
 
-            {{- if .Values.fourAllPortal.database.existing.type }}
-            {{- if eq .Values.fourAllPortal.database.existing.type "mssql" }}
+            {{- if eq (default "" .Values.fourAllPortal.database.existing.type) "mssql" }}
             - name: DATABASE_JDBC_URL
               value: {{ include "4allportal.fourallportal.database.jdbcUrl" . }}
             - name: DATABASE_USER
@@ -157,7 +156,6 @@ spec:
                 secretKeyRef:
                   name: {{ include "4allportal.fourallportal.database.existing.secret.name" . }}
                   key: {{ include "4allportal.fourallportal.database.existing.secret.key" . }}
-            {{- end }}
             {{- else if and .Values.fourAllPortal.database.operator.enabled (not .Values.maxscale.enabled) }}
             - name: DATABASE_USER
               valueFrom:
