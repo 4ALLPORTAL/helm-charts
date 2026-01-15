@@ -1,5 +1,5 @@
-{{- if not (eq (without (list .Values.maxscale.enabled .Values.fourAllPortal.database.operator.enabled (not (empty .Values.fourAllPortal.database.existing.host))) false | len) 1) -}}
-{{- fail "Need to use MariaDB, existing database or database creation via operator" -}}
+{{- if not (eq (without (list .Values.maxscale.enabled .Values.fourAllPortal.database.operator.enabled (or (not (empty .Values.fourAllPortal.database.existing.host)) (not (empty .Values.fourAllPortal.database.existing.jdbcUrl)))) false | len) 1) -}}
+{{- fail "Exactly one of maxscale.enabled, fourAllPortal.database.operator.enabled, or fourAllPortal.database.existing.(host|jdbcUrl) must be set." -}}
 {{- end -}}
 
 {{- if and .Release.IsInstall .Values.maxscale.enabled -}}

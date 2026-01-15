@@ -146,7 +146,19 @@ spec:
               value: {{ .Values.fourAllPortal.mail.security | quote }}
             {{- end }}
 
-            {{- if and .Values.fourAllPortal.database.operator.enabled (not .Values.maxscale.enabled) }}
+            {{- if eq (default "" .Values.fourAllPortal.database.existing.type) "mssql" }}
+            - name: DATABASE_TYPE
+              value: {{ .Values.fourAllPortal.database.existing.type }}
+            - name: DATABASE_JDBC_URL
+              value: {{ include "4allportal.fourallportal.database.jdbcUrl" . }}
+            - name: DATABASE_USER
+              value: {{ include "4allportal.fourallportal.database.user" . | quote }}
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "4allportal.fourallportal.database.existing.secret.name" . }}
+                  key: {{ include "4allportal.fourallportal.database.existing.secret.key" . }}
+            {{- else if and .Values.fourAllPortal.database.operator.enabled (not .Values.maxscale.enabled) }}
             - name: DATABASE_USER
               valueFrom:
                 secretKeyRef:
