@@ -80,10 +80,14 @@ mariadb
 {{- end -}}
 
 {{- define "4allportal.fourallportal.database.jdbcUrl" -}}
-{{- if eq (default "" $.Values.fourAllPortal.database.existing.jdbcUrl) "" -}}
+{{- $jdbc := default "" $.Values.fourAllPortal.database.existing.jdbcUrl -}}
+{{- if eq $jdbc "" -}}
 jdbc:sqlserver://{{ $.Values.fourAllPortal.database.existing.host }};databaseName={{ $.Values.fourAllPortal.database.existing.name }};encrypt=false;trustServerCertificate=true
 {{- else -}}
-{{ $.Values.fourAllPortal.database.existing.jdbcUrl }}
+{{- if not (hasPrefix "jdbc:sqlserver://" $jdbc) -}}
+{{- fail "fourAllPortal.database.existing.jdbcUrl must start with 'jdbc:sqlserver://'" -}}
+{{- end -}}
+{{ $jdbc }}
 {{- end -}}
 {{- end -}}
 
