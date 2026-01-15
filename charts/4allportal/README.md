@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 20.11.0](https://img.shields.io/badge/Version-20.11.0-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
+![Version: 20.12.0](https://img.shields.io/badge/Version-20.12.0-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -369,6 +369,11 @@ You are no longer required or capable of using fourAllPortal.database.existing v
 This release fixes the Samba mounts. The standard mounts asset and data have been removed and must now be explicitly specified in the values.
 
 ## To 20.11.0
+
+This release adds support for creating a single Persistent Volume Claim, combining both Assets and Data mounts
+into a single volume with sub-path mounts for easier management of assigned storage to a system.
+
+## To 20.12.0
 
 This release adds support for MSSQL Type Databases. The JDBC URL will be built using the following values:
 
