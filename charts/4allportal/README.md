@@ -192,6 +192,10 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.persistence.config.annotations | object | `{}` |  |
 | fourAllPortal.persistence.config.enabled | bool | `false` |  |
 | fourAllPortal.persistence.config.size | string | `"100Gi"` |  |
+| fourAllPortal.persistence.storage.accessMode | string | `"ReadWriteMany"` |  |
+| fourAllPortal.persistence.storage.annotations | object | `{}` |  |
+| fourAllPortal.persistence.storage.enabled | bool | `false` |  |
+| fourAllPortal.persistence.storage.size | string | `"100Gi"` |  |
 | fourAllPortal.podDisruptionBudget | bool | `true` |  |
 | fourAllPortal.readinessProbe.enabled | bool | `true` |  |
 | fourAllPortal.readinessProbe.failureThreshold | int | `3` |  |
@@ -237,6 +241,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | global.networkPolicy.metricsLabels."io.kubernetes.pod.namespace" | string | `"monitoring"` |  |
 | global.networkPolicy.type | string | `"auto"` |  |
 | global.persistence.enabled | bool | `true` |  |
+| global.persistence.useCombinedVolumes | bool | `false` |  |
 | global.tracing.enabled | bool | `false` |  |
 | global.tracing.jaeger.agent.port | int | `6831` |  |
 | global.tracing.jaeger.agent.useDaemonSet | bool | `true` |  |
