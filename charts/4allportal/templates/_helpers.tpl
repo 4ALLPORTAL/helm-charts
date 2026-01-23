@@ -79,6 +79,18 @@ mariadb
 {{- end -}}
 {{- end -}}
 
+{{- define "4allportal.fourallportal.database.jdbcUrl" -}}
+{{- $jdbc := default "" $.Values.fourAllPortal.database.existing.jdbcUrl -}}
+{{- if eq $jdbc "" -}}
+jdbc:sqlserver://{{ $.Values.fourAllPortal.database.existing.host }}{{ if not (empty $.Values.fourAllPortal.database.existing.port) }}:{{ $.Values.fourAllPortal.database.existing.port }}{{ end }};databaseName={{ $.Values.fourAllPortal.database.existing.name }};encrypt=true;trustServerCertificate=false
+{{- else -}}
+{{- if not (hasPrefix "jdbc:sqlserver://" $jdbc) -}}
+{{- fail "fourAllPortal.database.existing.jdbcUrl must start with 'jdbc:sqlserver://'" -}}
+{{- end -}}
+{{ $jdbc }}
+{{- end -}}
+{{- end -}}
+
 {{- define "fourAllPortal.env.javaOpts" -}}
 {{- range $name, $value := .Values.fourAllPortal.env -}}
 {{- if eq "JAVA_OPTS" $name -}}
