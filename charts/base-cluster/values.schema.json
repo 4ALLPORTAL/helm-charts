@@ -116,7 +116,7 @@
               "type": "object",
               "properties": {
                 "resources": {
-                  "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+                  "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
                 }
               },
               "additionalProperties": false
@@ -184,7 +184,7 @@
       "type": "object",
       "properties": {
         "resources": {
-          "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         }
       },
       "additionalProperties": false
@@ -193,7 +193,7 @@
       "type": "object",
       "properties": {
         "resources": {
-          "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
         "minReplicas": {
           "type": "integer",
@@ -443,7 +443,7 @@
       "type": "object",
       "properties": {
         "resources": {
-          "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         }
       },
       "additionalProperties": false
@@ -462,7 +462,7 @@
               "minimum": 1
             },
             "resources": {
-              "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+              "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
             },
             "storage": {
               "type": "object",
@@ -472,7 +472,7 @@
                   "pattern": "[0-9]+(ms|s|m|h|d|w|y)"
                 },
                 "size": {
-                  "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+                  "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
                 }
               },
               "additionalProperties": false
@@ -481,7 +481,7 @@
               "type": "object",
               "properties": {
                 "resources": {
-                  "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+                  "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
                 }
               },
               "additionalProperties": false
@@ -490,7 +490,7 @@
               "type": "object",
               "properties": {
                 "resources": {
-                  "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+                  "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
                 }
               },
               "additionalProperties": false
@@ -499,7 +499,7 @@
               "type": "object",
               "properties": {
                 "resources": {
-                  "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+                  "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
                 }
               },
               "additionalProperties": false
@@ -531,7 +531,7 @@
                       "pattern": "[0-9]+(ms|s|m|h|d|w|y)"
                     },
                     "size": {
-                      "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+                      "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
                     }
                   },
                   "additionalProperties": false
@@ -698,13 +698,13 @@
               }
             },
             "resources": {
-              "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+              "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
             },
             "sidecar": {
               "type": "object",
               "properties": {
                 "resources": {
-                  "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+                  "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
                 }
               },
               "additionalProperties": false
@@ -723,7 +723,7 @@
               "default": false
             },
             "storageSize": {
-              "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+              "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
             },
             "replicas": {
               "type": "integer",
@@ -735,7 +735,7 @@
               "description": "Log retention in days"
             },
             "resources": {
-              "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+              "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
             },
             "promtail": {
               "type": "object",
@@ -748,7 +748,7 @@
                   "additionalProperties": true
                 },
                 "resources": {
-                  "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+                  "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
                 }
               },
               "additionalProperties": false
@@ -763,7 +763,7 @@
               "type": "boolean"
             },
             "resources": {
-              "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+              "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
             }
           },
           "additionalProperties": false
@@ -809,7 +809,7 @@
               "type": "boolean"
             },
             "resources": {
-              "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+              "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
             },
             "host": {
               "type": "string"
@@ -845,7 +845,7 @@
               "type": "object",
               "properties": {
                 "resources": {
-                  "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+                  "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
                 }
               },
               "additionalProperties": false
@@ -854,7 +854,7 @@
               "type": "object",
               "properties": {
                 "resources": {
-                  "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+                  "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
                 }
               },
               "additionalProperties": false
@@ -863,7 +863,7 @@
               "type": "object",
               "properties": {
                 "resources": {
-                  "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+                  "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
                 }
               },
               "additionalProperties": false
@@ -872,13 +872,13 @@
               "type": "object",
               "properties": {
                 "resources": {
-                  "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+                  "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
                 },
                 "storage": {
                   "type": "object",
                   "properties": {
                     "size": {
-                      "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+                      "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
                     }
                   },
                   "additionalProperties": false
@@ -957,13 +957,13 @@
       "type": "object",
       "properties": {
         "resources": {
-          "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
         "webhook": {
           "type": "object",
           "properties": {
             "resources": {
-              "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+              "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
             }
           },
           "additionalProperties": false
@@ -972,7 +972,7 @@
           "type": "object",
           "properties": {
             "resources": {
-              "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+              "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
             }
           },
           "additionalProperties": false
