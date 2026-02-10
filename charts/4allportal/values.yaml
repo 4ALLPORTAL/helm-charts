@@ -153,9 +153,6 @@ fourAllPortal:
   database:
     operator:
       enabled: false
-      user: "CHANGEME"
-      password: "CHANGEME"
-      databaseName: "CHANGEME"
       databaseRef: "CHANGEME"
       secretName: ""
     initialPoolSize: 5

@@ -183,7 +183,7 @@ mariadb-root-password
 {{- if ne .Values.fourAllPortal.database.operator.secretName "" -}}
 {{ .Values.fourAllPortal.database.operator.secretName | quote }}
 {{- else -}}
-{{ printf "%s%s" .Release.Name "-databaseuser-secret" | quote }}
+{{ printf "%s%s" .Release.Name "-databaseuser-credentials" | quote }}
 {{- end -}}
 {{- end -}}
 

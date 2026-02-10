@@ -1,4 +1,10 @@
 {{- if .Values.fourAllPortal.database.operator.enabled -}}
+  {{- $externalSecret := .Values.fourAllPortal.database.operator.secretName -}}
+  {{- $hasUser := not (empty .Values.fourAllPortal.database.operator.user) -}}
+  {{- $hasPassword := not (empty .Values.fourAllPortal.database.operator.password) -}}
+  {{- $hasDatabase := not (empty .Values.fourAllPortal.database.operator.databaseName) -}}
+  {{- $hasInlineCredentials := or $hasUser $hasPassword $hasDatabase -}}
+  {{- if and $hasInlineCredentials (empty $externalSecret) }}
 ---
 apiVersion: v1
 kind: Secret
@@ -6,11 +12,16 @@ metadata:
   name: {{ .Release.Name }}-databaseuser-secret
   namespace: {{ .Release.Namespace }}
 data:
-  {{- if eq .Values.fourAllPortal.database.operator.secretName "" }}
-  password: {{ required "You must set a user password when using the operator." .Values.fourAllPortal.database.operator.password | b64enc }}
-  user: {{ required "You must set a database user when using the operator." .Values.fourAllPortal.database.operator.user | b64enc }}
+    {{- if $hasUser }}
+  user: {{ .Values.fourAllPortal.database.operator.user }}
+    {{- end }}
+    {{- if $hasPassword }}
+  password: {{ .Values.fourAllPortal.database.operator.password }}
+    {{- end }}
+    {{- if $hasDatabase }}
+  database: {{ .Values.fourAllPortal.database.operator.databaseName }}
+    {{- end }}
   {{- end }}
-  database: {{ required "You must set a database name when using the operator." .Values.fourAllPortal.database.operator.databaseName | b64enc }}
 ---
 apiVersion: com.fourallportal.credentialsoperator/v1beta1
 kind: DatabaseUser
@@ -19,6 +30,12 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   database: {{ .Values.fourAllPortal.database.operator.databaseRef | quote }}
+    {{- if $hasDatabase }}
   databaseName: {{ .Values.fourAllPortal.database.operator.databaseName | quote }}
-  secretName: {{ include "4allportal.fourallportal.database.operator.secretName" . }}
-{{ end }}
+    {{- end }}
+    {{- if $externalSecret }}
+  secretName: {{ $externalSecret }}
+    {{- else if $hasInlineCredentials }}
+  secretName: {{ .Release.Name }}-databaseuser-secret
+    {{- end }}
+{{- end }}
