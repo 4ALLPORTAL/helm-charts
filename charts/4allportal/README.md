@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 20.12.0](https://img.shields.io/badge/Version-20.12.0-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
+![Version: 21.0.0](https://img.shields.io/badge/Version-21.0.0-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -130,12 +130,9 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.database.maxPoolSize | int | `90` |  |
 | fourAllPortal.database.minPoolSize | int | `5` |  |
 | fourAllPortal.database.numHelperThreads | int | `5` |  |
-| fourAllPortal.database.operator.databaseName | string | `"CHANGEME"` |  |
 | fourAllPortal.database.operator.databaseRef | string | `"CHANGEME"` |  |
 | fourAllPortal.database.operator.enabled | bool | `false` |  |
-| fourAllPortal.database.operator.password | string | `"CHANGEME"` |  |
 | fourAllPortal.database.operator.secretName | string | `""` |  |
-| fourAllPortal.database.operator.user | string | `"CHANGEME"` |  |
 | fourAllPortal.debug | bool | `false` |  |
 | fourAllPortal.env | object | `{}` |  |
 | fourAllPortal.fourApps | object | `{}` |  |
@@ -386,21 +383,3 @@ Regardless of the method, the following values are required:
 
 `.Values.fourAllPortal.database.existing.user`
 `.Values.fourAllPortal.database.existing.password`
-
-## To 21.0.0
-
-This release adds support for the new **4allportal database operator**.
-
-> **Important**  
-> The old database operator is **not compatible** with this release.  
-> If it is still in use, 4allportal will **not** be able to find the required secrets.
-
-### Changes
-
-The following fields are now **optional**:
-
-- `.Values.fourAllPortal.database.operator.user`
-- `.Values.fourAllPortal.database.operator.databaseName`
-- `.Values.fourAllPortal.database.operator.password`
-
-If these values are not set, the operator will **automatically generate them** and store the data in a **new Kubernetes Secret**, which is then used by 4allportal.
