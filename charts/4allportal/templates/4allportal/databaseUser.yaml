@@ -11,7 +11,7 @@ kind: Secret
 metadata:
   name: {{ .Release.Name }}-databaseuser-secret
   namespace: {{ .Release.Namespace }}
-data:
+stringData:
     {{- if $hasUser }}
   user: {{ .Values.fourAllPortal.database.operator.user }}
     {{- end }}
