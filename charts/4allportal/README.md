@@ -386,3 +386,21 @@ Regardless of the method, the following values are required:
 
 `.Values.fourAllPortal.database.existing.user`
 `.Values.fourAllPortal.database.existing.password`
+
+## To 21.0.0
+
+This release adds support for the new **4allportal database operator**.
+
+> **Important**  
+> The old database operator is **not compatible** with this release.  
+> If it is still in use, 4allportal will **not** be able to find the required secrets.
+
+### Changes
+
+The following fields are now **optional**:
+
+- `.Values.fourAllPortal.database.operator.user`
+- `.Values.fourAllPortal.database.operator.databaseName`
+- `.Values.fourAllPortal.database.operator.password`
+
+If these values are not set, the operator will **automatically generate them** and store the data in a **new Kubernetes Secret**, which is then used by 4allportal.
