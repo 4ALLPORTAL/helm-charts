@@ -1,10 +1,6 @@
 {{- if .Values.fourAllPortal.database.operator.enabled -}}
   {{- $externalSecret := .Values.fourAllPortal.database.operator.secretName -}}
-  {{- $hasUser := not (empty .Values.fourAllPortal.database.operator.user) -}}
-  {{- $hasPassword := not (empty .Values.fourAllPortal.database.operator.password) -}}
-  {{- $hasDatabase := not (empty .Values.fourAllPortal.database.operator.databaseName) -}}
-  {{- $hasInlineCredentials := or $hasUser $hasPassword $hasDatabase -}}
-  {{- if and $hasInlineCredentials (empty $externalSecret) }}
+  {{- if empty $externalSecret }}
 ---
 apiVersion: v1
 kind: Secret
@@ -14,14 +10,10 @@ metadata:
   labels:
     database-operator.fourallportal.com/input-secret: "true"
 stringData:
-    {{- if $hasUser }}
-  user: {{ .Values.fourAllPortal.database.operator.user }}
-    {{- end }}
-    {{- if $hasPassword }}
-  password: {{ .Values.fourAllPortal.database.operator.password }}
-    {{- end }}
-    {{- if $hasDatabase }}
-  database: {{ .Values.fourAllPortal.database.operator.databaseName }}
+  user: {{ .Values.fourAllPortal.database.operator.user | default .Release.Name | quote }}
+  database: {{ .Values.fourAllPortal.database.operator.databaseName | default (printf "%s-4allportal" .Release.Name) | quote }}
+    {{- if not (empty .Values.fourAllPortal.database.operator.password) }}
+  password: {{ .Values.fourAllPortal.database.operator.password | quote }}
     {{- end }}
   {{- end }}
 ---
@@ -32,12 +24,13 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   database: {{ .Values.fourAllPortal.database.operator.databaseRef | quote }}
-    {{- if $hasDatabase }}
-  databaseName: {{ .Values.fourAllPortal.database.operator.databaseName | quote }}
-    {{- end }}
     {{- if $externalSecret }}
   secretName: {{ $externalSecret }}
-    {{- else if $hasInlineCredentials }}
+      {{- if not (empty .Values.fourAllPortal.database.operator.databaseName) }}
+  databaseName: {{ .Values.fourAllPortal.database.operator.databaseName | quote }}
+      {{- end }}
+    {{- else }}
+  databaseName: {{ .Values.fourAllPortal.database.operator.databaseName | default (printf "%s-4allportal" .Release.Name) | quote }}
   secretName: {{ .Release.Name }}-databaseuser-secret
     {{- end }}
 {{- end }}
