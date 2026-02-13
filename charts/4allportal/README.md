@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 20.12.0](https://img.shields.io/badge/Version-20.12.0-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
+![Version: 20.13.0](https://img.shields.io/badge/Version-20.13.0-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -63,6 +63,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | backups.target.s3.secretKey | string | `""` |  |
 | backups.volumes.enabled | bool | `false` |  |
 | backups.volumes.password | string | `""` |  |
+| backups.volumes.restic.packSize | string | `"64"` |  |
 | backups.volumes.retention.policy | object | `{}` |  |
 | backups.volumes.retention.prune | bool | `true` |  |
 | backups.volumes.schedule | string | `""` |  |
@@ -386,3 +387,7 @@ Regardless of the method, the following values are required:
 
 `.Values.fourAllPortal.database.existing.user`
 `.Values.fourAllPortal.database.existing.password`
+
+## To 20.13.0
+
+This release adds the ability to customize the backup pack size used for the Stash backup configurations using .Values.backups.volumes.restic.packSize
