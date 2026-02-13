@@ -637,6 +637,14 @@
             "volumes": {
               "type": "object",
               "properties": {
+                "restic": {
+                  "type": "object",
+                  "properties": {
+                    "packSize": {
+                      "type": "string"
+                    }
+                  }
+                },
                 "enabled": {
                   "type": "boolean"
                 },

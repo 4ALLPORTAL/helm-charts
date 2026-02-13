@@ -26,6 +26,9 @@ spec:
     prune: {{ $.Values.backups.volumes.retention.prune }}
   {{- $.Values.backups.volumes.retention.policy | toYaml | nindent 4 }}
   runtimeSettings:
+    env:
+      - name: RESTIC_PACK_SIZE
+        value: {{ $.Values.backups.volumes.restic.packSize | quote }}
     container:
       securityContext: {{- $.Values.fourAllPortal.containerSecurityContext | toYaml | nindent 8 }}
     pod:
@@ -59,6 +62,9 @@ spec:
     prune: {{ $.Values.backups.volumes.retention.prune }}
   {{- $.Values.backups.volumes.retention.policy | toYaml | nindent 4 }}
   runtimeSettings:
+    env:
+      - name: RESTIC_PACK_SIZE
+        value: {{ $.Values.backups.volumes.restic.packSize | quote }}
     container:
       securityContext: {{- $.Values.fourAllPortal.containerSecurityContext | toYaml | nindent 8 }}
     pod:

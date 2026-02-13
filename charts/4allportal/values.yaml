@@ -372,6 +372,8 @@ backups:
         memory: 1Gi
   volumes:
     enabled: false
+    restic:
+      packSize: "64"
     secretName: ""
     retention:
       prune: true
