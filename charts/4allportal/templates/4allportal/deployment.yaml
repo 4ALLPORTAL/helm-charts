@@ -172,17 +172,17 @@ spec:
             - name: DATABASE_TYPE
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Values.fourAllPortal.database.operator.databaseRef }}-configmap
+                  name: {{ .Release.Name }}-databaseuser-configmap
                   key: "DATABASE_TYPE"
             - name: DATABASE_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Values.fourAllPortal.database.operator.databaseRef }}-configmap
+                  name: {{ .Release.Name }}-databaseuser-configmap
                   key: "DATABASE_HOST"
             - name: DATABASE_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Values.fourAllPortal.database.operator.databaseRef }}-configmap
+                  name: {{ .Release.Name }}-databaseuser-configmap
                   key: "DATABASE_PORT"
             - name: DATABASE_DATABASE_NAME
               valueFrom:
