@@ -32,7 +32,7 @@ if ! cog verify "$PR_TITLE"; then
   exit 1
 fi
 
-if ! [[ "$PR_TITLE" =~ ^[a-z]+\("$changed"\)!?:\ ]]; then
+if ! [[ "$PR_TITLE" =~ ^[a-z]+"($changed)"!?:\ ]]; then
     echo "PR title must start with '\$type($changed)!?:'." >&2
     exit 1
 fi
