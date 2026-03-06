@@ -1,21 +1,5 @@
-{{- if not (eq (without (list .Values.maxscale.enabled .Values.fourAllPortal.database.operator.enabled (or (not (empty .Values.fourAllPortal.database.existing.host)) (not (empty .Values.fourAllPortal.database.existing.jdbcUrl)))) false | len) 1) -}}
-{{- fail "Exactly one of maxscale.enabled, fourAllPortal.database.operator.enabled, or fourAllPortal.database.existing.(host|jdbcUrl) must be set." -}}
-{{- end -}}
-
-{{- if and .Release.IsInstall .Values.maxscale.enabled -}}
-{{- if not .Values.maxscale.mariadb.existingSecret -}}
-{{- if eq .Values.maxscale.mariadb.rootUser.password "CHANGEME" -}}
-{{- fail "You need to change mariadb.rootUser.password" -}}
-{{- end -}}
-
-{{- if eq .Values.maxscale.mariadb.db.password "CHANGEME" -}}
-{{- fail "You need to change mariadb.db.password" -}}
-{{- end -}}
-
-{{- if eq .Values.maxscale.mariadb.galera.mariabackup.password "CHANGEME" -}}
-{{- fail "You need to change mariadb.galera.mariabackup.password" -}}
-{{- end -}}
-{{- end -}}
+{{- if not (eq (without (list .Values.fourAllPortal.database.operator.enabled (or (not (empty .Values.fourAllPortal.database.existing.host)) (not (empty .Values.fourAllPortal.database.existing.jdbcUrl)))) false | len) 1) -}}
+{{- fail "Exactly one of fourAllPortal.database.operator.enabled or fourAllPortal.database.existing.(host|jdbcUrl) must be set." -}}
 {{- end -}}
 
 {{- if and (eq .Values.fourAllPortal.database.operator.enabled true) (eq .Values.fourAllPortal.database.operator.secretName "") -}}

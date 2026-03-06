@@ -407,11 +407,6 @@
             }
           ]
         },
-        "maxscale": {
-          "type": "object",
-          "description": "Refer to https://raw.githubusercontent.com/4ALLPORTAL/helm-charts/main/charts/maxscale/values.schema.json",
-          "$ref": "https://raw.githubusercontent.com/4ALLPORTAL/helm-charts/main/charts/maxscale/values.schema.json"
-        },
         "dreiDRenderer": {
           "type": "object",
           "allOf": [
@@ -710,22 +705,6 @@
                   ]
                 }
               }
-            }
-          }
-        },
-        {
-          "properties": {
-            "maxscale": {
-              "type": "object",
-              "properties": {
-                "enabled": {
-                  "type": "boolean",
-                  "const": true
-                }
-              },
-              "required": [
-                "enabled"
-              ]
             }
           }
         }

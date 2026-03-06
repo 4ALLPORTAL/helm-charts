@@ -28,10 +28,6 @@ spec:
       annotations:
         checksum/secret: {{ include (print $.Template.BasePath "/4allportal/secrets.yaml") . | sha256sum }}
     spec:
-      {{- if .Values.maxscale.enabled }}
-      affinity:
-        podAffinity: {{- include "common.affinities.pods.soft" (dict "context" (dict "Release" $.Release "Chart" (dict "Name" "maxscale") "Values" $.Values.maxscale.mariadb)) | nindent 10 }}
-      {{- end }}
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: topology.kubernetes.io/zone
@@ -158,7 +154,7 @@ spec:
                 secretKeyRef:
                   name: {{ include "4allportal.fourallportal.database.existing.secret.name" . }}
                   key: {{ include "4allportal.fourallportal.database.existing.secret.key" . }}
-            {{- else if and .Values.fourAllPortal.database.operator.enabled (not .Values.maxscale.enabled) }}
+            {{- else if .Values.fourAllPortal.database.operator.enabled }}
             - name: DATABASE_USER
               valueFrom:
                 secretKeyRef:

@@ -31,11 +31,7 @@ spec:
             - name: backup
               securityContext: {{- .Values.backups.mysql.containerSecurityContext | toYaml | nindent 16 }}
               image: {{ template "4allportal.backup.mysql.image" . }}
-              {{- if .Values.maxscale.image.repository | contains "@" }}
-              imagePullPolicy: IfNotPresent
-              {{- else }}
               imagePullPolicy: Always
-              {{- end }}
               env:
                 - name: BACKUP_DIR
                   value: "/backups"

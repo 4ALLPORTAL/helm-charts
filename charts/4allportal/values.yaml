@@ -398,14 +398,3 @@ backups:
     nodeSelector: {}
     tolerations: []
 
-maxscale:
-  enabled: true
-  replicas: 2
-  enterpriseLicensed: false
-  hpa:
-    enabled: false
-  mariadb:
-    db:
-      name: 4allportal
-      user: 4allportal
-    podDisruptionBudget: {}
