@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 20.12.0](https://img.shields.io/badge/Version-20.12.0-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
+![Version: 21.0.0](https://img.shields.io/badge/Version-21.0.0-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -16,7 +16,6 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://4allportal.github.io/helm-charts | maxscale | 4.1.16 |
 | https://charts.bitnami.com/bitnami | common | 2.31.3 |
 
 ## Values
@@ -247,13 +246,6 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | global.tracing.jaeger.agent.useDaemonSet | bool | `true` |  |
 | global.tracing.jaeger.sampler.param | int | `1` |  |
 | global.tracing.jaeger.sampler.type | string | `"const"` |  |
-| maxscale.enabled | bool | `true` |  |
-| maxscale.enterpriseLicensed | bool | `false` |  |
-| maxscale.hpa.enabled | bool | `false` |  |
-| maxscale.mariadb.db.name | string | `"4allportal"` |  |
-| maxscale.mariadb.db.user | string | `"4allportal"` |  |
-| maxscale.mariadb.podDisruptionBudget | object | `{}` |  |
-| maxscale.replicas | int | `2` |  |
 | samba.adminPassword | string | `"CHANGEME"` |  |
 | samba.affinity | object | `{}` |  |
 | samba.bridge.namespace | string | `""` |  |
@@ -386,3 +378,9 @@ Regardless of the method, the following values are required:
 
 `.Values.fourAllPortal.database.existing.user`
 `.Values.fourAllPortal.database.existing.password`
+
+## To 21.0.0
+
+This release removes the bundled MariaDB chart without replacement. From now on, please use the
+configuration options for an existing Database using `fourAllPortal.database.existing` or
+a database operator using `fourAllPortal.database.operator`
