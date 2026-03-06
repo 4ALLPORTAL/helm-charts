@@ -397,4 +397,3 @@ backups:
     containerSecurityContext: *containerSecurityContext
     nodeSelector: {}
     tolerations: []
-
