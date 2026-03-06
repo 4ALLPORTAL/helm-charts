@@ -77,3 +77,9 @@ Regardless of the method, the following values are required:
 
 `.Values.fourAllPortal.database.existing.user`
 `.Values.fourAllPortal.database.existing.password`
+
+## To 21.0.0
+
+This release removes the bundled MariaDB chart without replacement. From now on, please use the
+configuration options for an existing Database using `fourAllPortal.database.existing` or
+a database operator using `fourAllPortal.database.operator`
