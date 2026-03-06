@@ -36,7 +36,7 @@
 {{- define  "4allportal.fourallportal.database.host" -}}
 {{- if .Values.fourAllPortal.database.operator.enabled }}
 {{- else -}}
-{{- required "Operator is disabled, please provide a host for the existing database" (tpl .Values.fourAllPortal.database.existing.host .) -}}
+{{- required "Operator is disabled, please provide a host for the existing database" (tpl (default "" .Values.fourAllPortal.database.existing.host) .) -}}
 {{- end -}}
 {{- end -}}
 
