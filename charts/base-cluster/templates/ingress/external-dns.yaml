@@ -44,6 +44,7 @@ spec:
     provider: cloudflare
     sources:
       - ingress
+      - traefik-proxy
     rbac:
       create: true
     crd:
