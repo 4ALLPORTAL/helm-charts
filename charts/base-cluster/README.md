@@ -417,3 +417,7 @@ Allow additional arguments to be passed to traefik
 ## To 41.2.3
 
 We've enabled the external-dns deployment's Traefik source for use in DNS management.
+
+## To 41.2.4
+
+Change oauth-proxy registry to quay and bugfix for alter manager existing secret

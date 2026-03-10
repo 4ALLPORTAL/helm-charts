@@ -211,7 +211,11 @@ alertmanager:
   alertmanagerSpec:
     replicas: 3
     secrets:
-      {{- toYaml (concat .Values.monitoring.prometheus.alertmanager.existingSecrets (list .Values.monitoring.prometheus.alertmanager.pagerduty.existingRoutingKeySecret)) | nindent 4 }}
+      {{- $secrets := .Values.monitoring.prometheus.alertmanager.existingSecrets }}
+      {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.existingRoutingKeySecret }}
+      {{- $secrets = concat $secrets (list .Values.monitoring.prometheus.alertmanager.pagerduty.existingRoutingKeySecret) }}
+      {{- end }}
+      {{- toYaml $secrets | nindent 4 }}
     podAntiAffinity: soft
     {{- if empty $.Values.monitoring.prometheus.authentication.enabled | ternary $.Values.global.authentication.enabled $.Values.monitoring.prometheus.authentication.enabled }}
     externalUrl: https://{{ include "base-cluster.alertmanager.host" $ }}
