@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 41.2.2](https://img.shields.io/badge/Version-41.2.2-informational?style=flat-square)
+![Version: 41.2.3](https://img.shields.io/badge/Version-41.2.3-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -413,3 +413,7 @@ In respect of Bitnami moving their old(er) tagged images to a legacy repository 
 ### To 41.2.2
 
 Allow additional arguments to be passed to traefik
+
+## To 41.2.3
+
+We've enabled the external-dns deployment's Traefik source for use in DNS management.
