@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 41.2.3](https://img.shields.io/badge/Version-41.2.3-informational?style=flat-square)
+![Version: 41.2.4](https://img.shields.io/badge/Version-41.2.4-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -417,7 +417,3 @@ Allow additional arguments to be passed to traefik
 ## To 41.2.3
 
 We've enabled the external-dns deployment's Traefik source for use in DNS management.
-
-## To 41.2.4
-
-Change oauth-proxy registry to quay and bugfix for alter manager existing secret
