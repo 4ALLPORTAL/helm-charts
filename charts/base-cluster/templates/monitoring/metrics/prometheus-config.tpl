@@ -150,7 +150,7 @@ alertmanager:
   config:
   {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.enabled }}
     global:
-      pagerduty_url: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.url }}
+      pagerduty_url: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.url | quote }}
   {{- end }}
   {{- if eq (include "base-cluster.alertmanager.email.tls" .) "false" }}
       smtp_require_tls: false
