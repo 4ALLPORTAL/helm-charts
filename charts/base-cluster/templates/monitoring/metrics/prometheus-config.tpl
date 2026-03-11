@@ -150,7 +150,7 @@ alertmanager:
   config:
   {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.enabled }}
     global:
-      pagerduty_url: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.url | quote }}
+      pagerduty_url: {{ .Values.monitoring.prometheus.alertmanager.pagerduty.url }}
   {{- end }}
   {{- if eq (include "base-cluster.alertmanager.email.tls" .) "false" }}
       smtp_require_tls: false
@@ -185,7 +185,7 @@ alertmanager:
       {{- if .Values.monitoring.deadMansSnitch.enabled}}
       - name: uptimerobot
         webhook_configs:
-          - url: {{ .Values.monitoring.deadMansSnitch.webhookUrl | quote }}
+          - url: {{ .Values.monitoring.deadMansSnitch.webhookUrl }}
       {{- end }}
       {{- with $.Values.monitoring.prometheus.alertmanager.emailconfig }}
       {{ . | toYaml | nindent 6 }}
@@ -215,7 +215,7 @@ alertmanager:
       {{- if .Values.monitoring.prometheus.alertmanager.pagerduty.existingRoutingKeySecret }}
       {{- $secrets = concat $secrets (list .Values.monitoring.prometheus.alertmanager.pagerduty.existingRoutingKeySecret) }}
       {{- end }}
-      {{- toYaml $secrets | nindent 4 }}
+      {{- toYaml $secrets | nindent 6 }}
     podAntiAffinity: soft
     {{- if empty $.Values.monitoring.prometheus.authentication.enabled | ternary $.Values.global.authentication.enabled $.Values.monitoring.prometheus.authentication.enabled }}
     externalUrl: https://{{ include "base-cluster.alertmanager.host" $ }}
