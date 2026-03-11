@@ -185,7 +185,7 @@ alertmanager:
       {{- if .Values.monitoring.deadMansSnitch.enabled}}
       - name: uptimerobot
         webhook_configs:
-          - url: {{ .Values.monitoring.deadMansSnitch.webhookUrl }}
+          - url: {{ .Values.monitoring.deadMansSnitch.webhookUrl | quote }}
       {{- end }}
       {{- with $.Values.monitoring.prometheus.alertmanager.emailconfig }}
       {{ . | toYaml | nindent 6 }}
