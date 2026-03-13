@@ -187,14 +187,6 @@ users
 {{- end -}}
 {{- end -}}
 
-{{- define "4allportal.backup.mysql.secretName" -}}
-{{- if ne .Values.backups.mysql.secretName "" -}}
-{{ .Values.backups.mysql.secretName }}
-{{- else -}}
-{{ include "common.secrets.name" (dict "existingSecret" (dict) "defaultNameSuffix" "mysql-backup" "context" $) }}
-{{- end -}}
-{{- end -}}
-
 {{- define "4allportal.backup.volumes.secretName" -}}
 {{- if ne .Values.backups.volumes.secretName "" -}}
 {{ .Values.backups.volumes.secretName }}

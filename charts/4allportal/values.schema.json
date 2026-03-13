@@ -571,64 +571,6 @@
               },
               "additionalProperties": false
             },
-            "mysql": {
-              "type": "object",
-              "allOf": [
-                {
-                  "$ref": "#/definitions/security"
-                },
-                {
-                  "oneOf": [
-                    {
-                      "properties": {
-                        "enabled": {
-                          "type": "boolean",
-                          "const": true
-                        },
-                        "secretName": {
-                          "type": "string"
-                        },
-                        "nodeSelector": {
-                          "$ref": "#/definitions/nodeSelector"
-                        },
-                        "resources": {
-                          "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
-                        },
-                        "tolerations": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.19.16/_definitions.json#/definitions/io.k8s.api.core.v1.Toleration"
-                          }
-                        },
-                        "daysToKeep": {
-                          "type": "integer"
-                        },
-                        "monthsToKeep": {
-                          "type": "integer"
-                        },
-                        "weeksToKeep": {
-                          "type": "integer"
-                        }
-                      },
-                      "required": [
-                        "enabled"
-                      ]
-                    },
-                    {
-                      "properties": {
-                        "enabled": {
-                          "type": "boolean",
-                          "const": false
-                        }
-                      },
-                      "required": [
-                        "enabled"
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
             "volumes": {
               "type": "object",
               "properties": {
@@ -665,7 +607,6 @@
             }
           },
           "required": [
-            "mysql",
             "volumes"
           ],
           "additionalProperties": false
