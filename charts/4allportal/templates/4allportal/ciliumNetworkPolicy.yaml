@@ -29,15 +29,6 @@ spec:
             - port: "8190"
               protocol: TCP
     {{- end }}
-    {{- if .Values.maxscale.enabled }}
-    - toEndpoints:
-        - matchLabels: {{- include "common.labels.matchLabels" (dict "Release" $.Release "Chart" (dict "Name" "maxscale") "Values" $.Values.maxscale) | nindent 12 }}
-            io.kubernetes.pod.namespace: {{ .Release.Namespace }}
-      toPorts:
-        - ports:
-            - port: "3306"
-              protocol: TCP
-    {{- else }}
     - toFQDNs:
         {{ range $host := (.Values.fourAllPortal.database.existing.host | splitList "," ) }}
         - matchName: {{ $host | quote }}
@@ -46,7 +37,6 @@ spec:
         - ports:
             - port: {{ .Values.fourAllPortal.database.existing.port | quote }}
               protocol: TCP
-    {{- end }}
     {{- if or .Values.fourAllPortal.tracing.enabled .Values.global.tracing.enabled }}
     - toPorts:
         - ports:
