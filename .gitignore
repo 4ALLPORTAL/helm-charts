@@ -1,4 +1,5 @@
+*.tgz
 .idea
 .vscode
 .DS_Store
-/charts/base-cluster/charts
+/charts/*/charts
