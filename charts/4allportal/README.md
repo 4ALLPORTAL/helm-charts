@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 21.0.0](https://img.shields.io/badge/Version-21.0.0-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
+![Version: 22.0.0](https://img.shields.io/badge/Version-22.0.0-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -356,3 +356,21 @@ configuration options for an existing Database using `fourAllPortal.database.exi
 a database operator using `fourAllPortal.database.operator`
 This release also removes the embedded MySQL Backup functionality. From now on, backups need to be
 handled by different tools for the database.
+
+## To 22.0.0
+
+This release adds support for the new **4allportal database operator**.
+
+> **Important**
+> The old database operator is **not compatible** with this release.
+> If it is still in use, 4allportal will **not** be able to find the required secrets.
+
+### Changes
+
+The following fields are now **optional**:
+
+- `.Values.fourAllPortal.database.operator.user`
+- `.Values.fourAllPortal.database.operator.databaseName`
+- `.Values.fourAllPortal.database.operator.password`
+
+If these values are not set, the operator will **automatically generate them** and store the data in a **new Kubernetes Secret**, which is then used by 4allportal.
