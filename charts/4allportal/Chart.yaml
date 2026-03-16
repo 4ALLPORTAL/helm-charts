@@ -17,7 +17,3 @@ dependencies:
   - name: common
     repository: https://charts.bitnami.com/bitnami
     version: 2.31.3
-  - repository: https://4allportal.github.io/helm-charts
-    name: maxscale
-    version: 4.1.16
-    condition: maxscale.enabled

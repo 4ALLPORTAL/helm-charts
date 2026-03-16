@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 41.2.1](https://img.shields.io/badge/Version-41.2.1-informational?style=flat-square)
+![Version: 41.2.4](https://img.shields.io/badge/Version-41.2.4-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -219,6 +219,7 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | speedtest.image.registry | string | `"ghcr.io"` |  |
 | speedtest.image.repository | string | `"librespeed/speedtest"` |  |
 | speedtest.image.tag | string | `"latest"` |  |
+| traefik.additionalArguments | list | `[]` |  |
 | traefik.cipherSuites | list | `[]` |  |
 | traefik.debug.enabled | bool | `false` |  |
 | traefik.log.level | string | `"ERROR"` |  |
@@ -408,3 +409,11 @@ We've added a new MySQL Dashboard for Grafana, showing metrics with the Instance
 ### To 41.1.2
 
 In respect of Bitnami moving their old(er) tagged images to a legacy repository (`docker.io/bitnamilegacy`), all image references were changed to pull from said new repository.
+
+### To 41.2.2
+
+Allow additional arguments to be passed to traefik
+
+## To 41.2.3
+
+We've enabled the external-dns deployment's Traefik source for use in DNS management.

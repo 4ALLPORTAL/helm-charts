@@ -60,6 +60,7 @@ flux:
   resources: {}
 
 traefik:
+  additionalArguments: []
   log:
     level: ERROR
   debug:

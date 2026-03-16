@@ -375,34 +375,3 @@ backups:
       policy: {}
     password: ""
     schedule: ""
-  mysql:
-    enabled: false
-    secretName: ""
-    resources:
-      requests:
-        cpu: 100m
-        memory: 256Mi
-      limits:
-        cpu: 2
-        memory: 1Gi
-    persistence: {}
-    daysToKeep: 7
-    weeksToKeep: 4
-    monthsToKeep: 6
-    securityContext: *securityContext
-    securityOptions: *securityOptions
-    containerSecurityContext: *containerSecurityContext
-    nodeSelector: {}
-    tolerations: []
-
-maxscale:
-  enabled: true
-  replicas: 2
-  enterpriseLicensed: false
-  hpa:
-    enabled: false
-  mariadb:
-    db:
-      name: 4allportal
-      user: 4allportal
-    podDisruptionBudget: {}

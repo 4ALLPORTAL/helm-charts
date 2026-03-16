@@ -16,40 +16,12 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://4allportal.github.io/helm-charts | maxscale | 4.1.16 |
 | https://charts.bitnami.com/bitnami | common | 2.31.3 |
 
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| backups.mysql.containerSecurityContext.allowPrivilegeEscalation | bool | `false` |  |
-| backups.mysql.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
-| backups.mysql.containerSecurityContext.privileged | bool | `false` |  |
-| backups.mysql.containerSecurityContext.readOnlyRootFilesystem | bool | `true` |  |
-| backups.mysql.containerSecurityContext.runAsGroup | int | `1000` |  |
-| backups.mysql.containerSecurityContext.runAsNonRoot | bool | `true` |  |
-| backups.mysql.containerSecurityContext.runAsUser | int | `1000` |  |
-| backups.mysql.daysToKeep | int | `7` |  |
-| backups.mysql.enabled | bool | `false` |  |
-| backups.mysql.monthsToKeep | int | `6` |  |
-| backups.mysql.nodeSelector | object | `{}` |  |
-| backups.mysql.persistence | object | `{}` |  |
-| backups.mysql.resources.limits.cpu | int | `2` |  |
-| backups.mysql.resources.limits.memory | string | `"1Gi"` |  |
-| backups.mysql.resources.requests.cpu | string | `"100m"` |  |
-| backups.mysql.resources.requests.memory | string | `"256Mi"` |  |
-| backups.mysql.secretName | string | `""` |  |
-| backups.mysql.securityContext.fsGroup | int | `1000` |  |
-| backups.mysql.securityContext.fsGroupChangePolicy | string | `"OnRootMismatch"` |  |
-| backups.mysql.securityContext.runAsGroup | int | `1000` |  |
-| backups.mysql.securityContext.runAsNonRoot | bool | `true` |  |
-| backups.mysql.securityContext.runAsUser | int | `1000` |  |
-| backups.mysql.securityOptions.hostIPC | bool | `false` |  |
-| backups.mysql.securityOptions.hostNetwork | bool | `false` |  |
-| backups.mysql.securityOptions.hostPID | bool | `false` |  |
-| backups.mysql.tolerations | list | `[]` |  |
-| backups.mysql.weeksToKeep | int | `4` |  |
 | backups.s3.image.registry | string | `"docker.io"` |  |
 | backups.s3.image.repository | string | `"jess/s3cmd"` |  |
 | backups.s3.image.tag | string | `"latest@sha256:7e2eb958be3819293a81f4f97823beb0761e35c1b2f0ed1685eccd7ddd558d8e"` |  |
@@ -244,13 +216,6 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | global.tracing.jaeger.agent.useDaemonSet | bool | `true` |  |
 | global.tracing.jaeger.sampler.param | int | `1` |  |
 | global.tracing.jaeger.sampler.type | string | `"const"` |  |
-| maxscale.enabled | bool | `true` |  |
-| maxscale.enterpriseLicensed | bool | `false` |  |
-| maxscale.hpa.enabled | bool | `false` |  |
-| maxscale.mariadb.db.name | string | `"4allportal"` |  |
-| maxscale.mariadb.db.user | string | `"4allportal"` |  |
-| maxscale.mariadb.podDisruptionBudget | object | `{}` |  |
-| maxscale.replicas | int | `2` |  |
 | samba.adminPassword | string | `"CHANGEME"` |  |
 | samba.affinity | object | `{}` |  |
 | samba.bridge.namespace | string | `""` |  |
@@ -383,3 +348,11 @@ Regardless of the method, the following values are required:
 
 `.Values.fourAllPortal.database.existing.user`
 `.Values.fourAllPortal.database.existing.password`
+
+## To 21.0.0
+
+This release removes the bundled MariaDB chart without replacement. From now on, please use the
+configuration options for an existing Database using `fourAllPortal.database.existing` or
+a database operator using `fourAllPortal.database.operator`
+This release also removes the embedded MySQL Backup functionality. From now on, backups need to be
+handled by different tools for the database.

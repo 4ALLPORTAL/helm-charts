@@ -251,6 +251,14 @@
           "items": {
             "type": "string"
           }
+        },
+        "additionalArguments": {
+          "type": "array",
+          "description": "Additional Traefik CLI arguments appended to the static configuration",
+          "items": {
+            "type": "string"
+          },
+          "default": []
         }
       },
       "additionalProperties": false
