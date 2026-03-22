@@ -1,16 +1,21 @@
 {{- if .Values.fourAllPortal.database.operator.enabled -}}
+  {{- $externalSecret := .Values.fourAllPortal.database.operator.secretName -}}
+  {{- if empty $externalSecret }}
 ---
 apiVersion: v1
 kind: Secret
 metadata:
   name: {{ .Release.Name }}-databaseuser-secret
   namespace: {{ .Release.Namespace }}
-data:
-  {{- if eq .Values.fourAllPortal.database.operator.secretName "" }}
-  password: {{ required "You must set a user password when using the operator." .Values.fourAllPortal.database.operator.password | b64enc }}
-  user: {{ required "You must set a database user when using the operator." .Values.fourAllPortal.database.operator.user | b64enc }}
+  labels:
+    database-operator.fourallportal.com/input-secret: "true"
+stringData:
+  user: {{ .Values.fourAllPortal.database.operator.user | default .Release.Name | quote }}
+  database: {{ .Values.fourAllPortal.database.operator.databaseName | default (printf "%s-4allportal" .Release.Name) | quote }}
+    {{- if not (empty .Values.fourAllPortal.database.operator.password) }}
+  password: {{ .Values.fourAllPortal.database.operator.password | quote }}
+    {{- end }}
   {{- end }}
-  database: {{ required "You must set a database name when using the operator." .Values.fourAllPortal.database.operator.databaseName | b64enc }}
 ---
 apiVersion: com.fourallportal.credentialsoperator/v1beta1
 kind: DatabaseUser
@@ -19,6 +24,13 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   database: {{ .Values.fourAllPortal.database.operator.databaseRef | quote }}
+    {{- if $externalSecret }}
+  secretName: {{ $externalSecret }}
+      {{- if not (empty .Values.fourAllPortal.database.operator.databaseName) }}
   databaseName: {{ .Values.fourAllPortal.database.operator.databaseName | quote }}
-  secretName: {{ include "4allportal.fourallportal.database.operator.secretName" . }}
-{{ end }}
+      {{- end }}
+    {{- else }}
+  databaseName: {{ .Values.fourAllPortal.database.operator.databaseName | default (printf "%s-4allportal" .Release.Name) | quote }}
+  secretName: {{ .Release.Name }}-databaseuser-secret
+    {{- end }}
+{{- end }}
