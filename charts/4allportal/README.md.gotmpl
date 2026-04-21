@@ -103,3 +103,21 @@ The following fields are now **optional**:
 - `.Values.fourAllPortal.database.operator.password`
 
 If these values are not set, the operator will **automatically generate them** and store the data in a **new Kubernetes Secret**, which is then used by 4allportal.
+
+## To 22.0.1
+
+This release renames the database type `mssql` to `sqlserver` to align with the correct naming convention.
+
+The value `mssql` introduced in 20.12.0 is now **deprecated** but continues to work as an alias for `sqlserver`. Support for `mssql` will be removed in a future major release.
+
+### Recommended Action
+
+Update your values from:
+
+`.Values.fourAllPortal.database.existing.type: mssql`
+
+to:
+
+`.Values.fourAllPortal.database.existing.type: sqlserver`
+
+No other changes to the database configuration are required.
