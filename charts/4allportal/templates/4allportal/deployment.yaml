@@ -142,9 +142,12 @@ spec:
               value: {{ .Values.fourAllPortal.mail.security | quote }}
             {{- end }}
 
-            {{- if eq (default "" .Values.fourAllPortal.database.existing.type) "mssql" }}
+            {{- if or (eq (default "" .Values.fourAllPortal.database.existing.type) "mssql") (eq (default "" .Values.fourAllPortal.database.existing.type) "sqlserver") }}
+              {{- if eq (default "" .Values.fourAllPortal.database.existing.type) "mssql" }}
+            # WARNING: database.existing.type 'mssql' is deprecated, use 'sqlserver' instead. Support for 'mssql' will be removed in a future release.
+              {{- end }}
             - name: DATABASE_TYPE
-              value: {{ .Values.fourAllPortal.database.existing.type }}
+              value: "sqlserver"
             - name: DATABASE_JDBC_URL
               value: {{ include "4allportal.fourallportal.database.jdbcUrl" . }}
             - name: DATABASE_USER
