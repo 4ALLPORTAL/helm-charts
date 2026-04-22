@@ -90,6 +90,11 @@ sealedsecrets:
 
 janitor:
   enabled: true
+  excludeResources:
+    - events
+    - controllerrevisions
+  excludeNamespaces:
+    - kube-system
 
 monitoring:
   ingress:
