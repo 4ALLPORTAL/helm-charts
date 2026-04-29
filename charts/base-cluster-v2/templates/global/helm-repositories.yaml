@@ -1,0 +1,23 @@
+{{/*
+Centralized Flux HelmRepository sources for the upstream charts this chart
+deploys. Adding a new component? Add its chart repo here, then reference it
+from the component's HelmRelease.
+*/}}
+{{- $repos := dict
+  "fluxcd-community" "https://fluxcd-community.github.io/helm-charts"
+  "traefik" "https://traefik.github.io/charts"
+  "jetstack" "https://charts.jetstack.io"
+  "external-dns" "https://kubernetes-sigs.github.io/external-dns/"
+-}}
+{{- range $name, $url := $repos }}
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: {{ $name }}
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "base-cluster.labels" $ | nindent 4 }}
+spec:
+  interval: 5m
+  url: {{ $url | quote }}
+{{- end }}

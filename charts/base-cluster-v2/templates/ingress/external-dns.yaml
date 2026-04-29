@@ -1,0 +1,73 @@
+{{/*
+ExternalDNS — published from the kubernetes-sigs chart.
+
+Cloudflare credentials come from .Values.dns.existingSecret (key:
+cloudflare_api_token). Uses the modern CF_API_TOKEN (scoped token) auth.
+
+Sources include `traefik-proxy` so Traefik IngressRoutes (CRDs) also get DNS
+records published, not just core Ingress objects.
+*/}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: external-dns
+  namespace: traefik
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: external-dns
+spec:
+  interval: 1m
+  dependsOn:
+    - name: ingress-traefik
+      namespace: traefik
+  chart:
+    spec:
+      chart: external-dns
+      version: {{ include "base-cluster.versions.externalDns.chart" . | quote }}
+      sourceRef:
+        kind: HelmRepository
+        name: external-dns
+        namespace: {{ .Release.Namespace }}
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  values:
+    image:
+      {{- with .Values.global.imageRegistry }}
+      registry: {{ . | quote }}
+      {{- end }}
+      tag: "v0.20.0@{{ include "base-cluster.digests.externalDns" . }}"
+    provider:
+      name: cloudflare
+    sources:
+      - ingress
+      - traefik-proxy
+    policy: sync
+    txtOwnerId: {{ required "global.clusterName is required" .Values.global.clusterName | quote }}
+    env:
+      - name: CF_API_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: {{ required "dns.existingSecret is required" .Values.dns.existingSecret | quote }}
+            key: cloudflare_api_token
+    rbac:
+      create: true
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 1001
+      runAsGroup: 1001
+      seccompProfile:
+        type: RuntimeDefault
+    podSecurityContext:
+      fsGroup: 1001
+    containerSecurityContext:
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      privileged: false
+      seccompProfile:
+        type: RuntimeDefault
+      capabilities:
+        drop: [ALL]
+    resources: {{- .Values.externalDNS.resources | toYaml | nindent 6 }}

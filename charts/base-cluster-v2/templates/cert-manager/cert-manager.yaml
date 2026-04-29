@@ -1,0 +1,78 @@
+{{/*
+cert-manager HelmRelease.
+
+CRD lifecycle: this chart ships cert-manager CRDs in `crds/` so first-install
+ordering is predictable. We therefore set `crds.enabled: false` here to avoid
+double-management. To upgrade cert-manager:
+  1. bump the version in templates/_versions.tpl
+  2. refresh crds/cert-manager.yaml from the cert-manager release of the same
+     version (https://github.com/cert-manager/cert-manager/releases)
+  3. bump this chart's own version
+*/}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: cert-manager
+  namespace: cert-manager
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: cert-manager
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: cert-manager
+      version: {{ include "base-cluster.versions.certManager.chart" . | quote }}
+      sourceRef:
+        kind: HelmRepository
+        name: jetstack
+        namespace: {{ .Release.Namespace }}
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  values:
+    crds:
+      # CRDs are managed by this chart's `crds/` directory, not by the
+      # cert-manager Helm release. Keep this false to avoid two owners.
+      enabled: false
+    image:
+      {{- with .Values.global.imageRegistry }}
+      repository: {{ printf "%s/jetstack/cert-manager-controller" . | quote }}
+      {{- end }}
+      digest: {{ include "base-cluster.digests.certManager.controller" . }}
+    replicaCount: 1
+    resources: {{- .Values.certManager.resources | toYaml | nindent 6 }}
+    securityContext: &securityContext
+      runAsNonRoot: true
+      runAsUser: 1001
+      runAsGroup: 1001
+      fsGroup: 1001
+      seccompProfile:
+        type: RuntimeDefault
+    ingressShim:
+      defaultIssuerName: letsencrypt-prod
+      defaultIssuerKind: ClusterIssuer
+    extraArgs:
+      # Use a public resolver for DNS01 self-checks; avoids depending on the
+      # cluster's internal resolver (which may not see the public TXT record
+      # cert-manager just wrote to Cloudflare).
+      - --dns01-recursive-nameservers=1.1.1.1:53
+      - --dns01-recursive-nameservers-only
+    cainjector:
+      resources: {{- .Values.certManager.caInjector.resources | toYaml | nindent 8 }}
+      securityContext: *securityContext
+      image:
+        {{- with .Values.global.imageRegistry }}
+        repository: {{ printf "%s/jetstack/cert-manager-cainjector" . | quote }}
+        {{- end }}
+        digest: {{ include "base-cluster.digests.certManager.cainjector" . }}
+    webhook:
+      resources: {{- .Values.certManager.webhook.resources | toYaml | nindent 8 }}
+      securityContext: *securityContext
+      image:
+        {{- with .Values.global.imageRegistry }}
+        repository: {{ printf "%s/jetstack/cert-manager-webhook" . | quote }}
+        {{- end }}
+        digest: {{ include "base-cluster.digests.certManager.webhook" . }}

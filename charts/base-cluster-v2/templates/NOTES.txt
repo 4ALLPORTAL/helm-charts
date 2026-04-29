@@ -1,0 +1,21 @@
+{{- $domain := include "base-cluster.domain" . -}}
+base-cluster-v2 has been installed for cluster "{{ .Values.global.clusterName }}".
+
+Cluster domain:    {{ $domain }}
+Wildcard cert:     cluster-wildcard-certificate (covers *.{{ $domain }})
+
+What happens next is driven by Flux:
+  - HelmReleases for cert-manager, Traefik, external-dns and the speedtest
+    are now in the cluster. Flux will reconcile each in turn.
+  - Watch progress with:
+        flux get helmreleases -A
+        flux get kustomizations -A
+
+Endpoints (once Flux is reconciled and DNS is published):
+{{- if .Values.speedtest.enabled }}
+  - Speedtest:  https://{{ include "base-cluster.speedtest.host" . }}
+{{- end }}
+
+If this is a first install and you see ClusterIssuer errors for ~1-2 minutes,
+that is expected: cert-manager needs a moment to come up before the issuer can
+be reconciled. Flux will retry automatically.

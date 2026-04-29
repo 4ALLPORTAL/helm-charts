@@ -1,0 +1,158 @@
+## Global settings shared across all components.
+global:
+  ## -- Required. Base DNS domain. The cluster's wildcard cert and ingress
+  ##    hostnames are published under <clusterName>.<baseDomain>.
+  baseDomain: ""
+  ## -- Required. Short identifier of this cluster, used as a sub-zone and as
+  ##    the external-dns txtOwnerId so multiple clusters can share a zone.
+  clusterName: ""
+  ## -- Optional pull-through registry prefix; if set, every image reference
+  ##    is rewritten to "<imageRegistry>/<original-repository>".
+  imageRegistry: ""
+  ## -- Optional list of image-pull secrets to create. Each entry:
+  ##    {name, registry, username, password}
+  imageCredentials: []
+  ## -- Additional cluster-wide cert-manager Certificates to issue. Map of
+  ##    name -> { dnsNames: [...] }. Issued via the letsencrypt-prod issuer.
+  certificates: {}
+  ## NetworkPolicy mode.
+  ##   auto   — emit CiliumNetworkPolicy if the API is present, otherwise nothing
+  ##   cilium — always emit CiliumNetworkPolicy
+  ##   none   — emit nothing
+  networkPolicy:
+    type: auto
+    ## Endpoint selectors used in NetworkPolicies. Override if your cluster's
+    ## kube-dns / Prometheus pods are labelled differently.
+    dnsLabels:
+      io.kubernetes.pod.namespace: kube-system
+      k8s-app: kube-dns
+
+## FluxCD bootstrap.
+##
+## NOTE: in most clusters Flux is bootstrapped out-of-band with `flux bootstrap`
+## *before* this chart is installed; the chart only emits HelmReleases that
+## Flux then reconciles. Set `install: true` for a greenfield install where
+## this chart should also deploy the flux2 controllers.
+flux:
+  install: false
+  ## Resource requests/limits applied to all Flux controllers when install=true.
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+## Per-tenant Flux GitRepository + Kustomization sources. Each entry produces
+## one GitRepository and one Kustomization in the chart's namespace.
+##
+## Example:
+##   instances:
+##     apps:
+##       url: ssh://git@git.example.com/platform/apps.git
+##       existingSecret: flux-apps-git
+##       gitInterval: 1m
+##       path: ./clusters/gt-office
+git:
+  instances: {}
+
+## DNS provider used by both cert-manager (DNS01 solver) and external-dns.
+## Currently only Cloudflare is wired up.
+dns:
+  ## Required when cert-manager is enabled. The Cloudflare account email.
+  email: ""
+  ## Required. Name of an existing secret in the chart's namespace containing
+  ## key `cloudflare_api_token`. Mounted by both cert-manager and external-dns.
+  existingSecret: ""
+  ## Optional. Restrict the issuer's DNS01 solver to these zones. Empty = all.
+  domains: []
+
+## Traefik ingress controller.
+traefik:
+  log:
+    level: WARN
+  service:
+    ## On Talos with no LoadBalancer provider yet, set type=ClusterIP and
+    ## populate `traefik.ingressIP` so external-dns publishes a record pointing
+    ## at the node/HA-VIP. With MetalLB or Cilium L2Announcements, leave as
+    ## LoadBalancer.
+    type: LoadBalancer
+    loadBalancerIP: ""
+    externalIPs: []
+  ## When set, --providers.kubernetesIngress.ingressEndpoint.ip is forced to
+  ## this value (used when Service has no externally-routable VIP yet).
+  ingressIP: ""
+  minReplicas: 2
+  maxReplicas: 8
+  resources:
+    requests:
+      cpu: "1"
+      memory: 250Mi
+    limits:
+      cpu: "4"
+      memory: 500Mi
+  ## Extra TLS cipher suites appended to the safe defaults.
+  cipherSuites: []
+  ## Extra Traefik CLI arguments.
+  additionalArguments: []
+
+## cert-manager.
+##
+## CRDs are shipped in this chart's `crds/` directory so first-install ordering
+## works (Helm applies CRDs before templates). The HelmRelease has crds.enabled=
+## false to avoid double-management; bumping cert-manager requires also
+## refreshing crds/cert-manager.yaml in this chart.
+certManager:
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 250m
+      memory: 512Mi
+  caInjector:
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: 250m
+        memory: 512Mi
+  webhook:
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: "1"
+        memory: 512Mi
+
+## external-dns (kubernetes-sigs chart).
+externalDNS:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 50m
+      memory: 128Mi
+
+## Internal speedtest health endpoint (Librespeed). Reached at
+## https://<speedtest.host>.<clusterName>.<baseDomain>
+speedtest:
+  enabled: true
+  host: speedtest
+  replicas: 2
+  image:
+    registry: ghcr.io
+    repository: librespeed/speedtest
+    tag: "6.0.2"
+    digest: "sha256:871ec7a1c908e7c9288e51e074b321088a297c37fc672a4c882b0309f61ddef7"
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi

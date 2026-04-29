@@ -1,0 +1,39 @@
+{{/*
+The cluster's wildcard certificate. Issued by cert-manager via the
+letsencrypt-prod ClusterIssuer (DNS01 / Cloudflare) and consumed by ingresses
+that don't bring their own cert (notably the speedtest endpoint).
+
+Lives in the chart namespace; cert-manager copies the resulting Secret around
+via Certificate.spec.secretTemplate when needed.
+*/}}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cluster-wildcard
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+spec:
+  secretName: cluster-wildcard-certificate
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: letsencrypt-prod
+  dnsNames:
+    - {{ include "base-cluster.domain" . | quote }}
+    - {{ printf "*.%s" (include "base-cluster.domain" .) | quote }}
+{{- range $name, $cert := .Values.global.certificates }}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ $name }}
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "base-cluster.labels" $ | nindent 4 }}
+spec:
+  secretName: {{ printf "%s-certificate" $name }}
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: letsencrypt-prod
+  dnsNames: {{- $cert.dnsNames | toYaml | nindent 4 }}
+{{- end }}
