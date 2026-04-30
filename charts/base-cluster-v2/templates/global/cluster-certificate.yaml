@@ -3,14 +3,14 @@ The cluster's wildcard certificate. Issued by cert-manager via the
 letsencrypt-prod ClusterIssuer (DNS01 / Cloudflare) and consumed by ingresses
 that don't bring their own cert (notably the speedtest endpoint).
 
-Lives in the chart namespace; cert-manager copies the resulting Secret around
-via Certificate.spec.secretTemplate when needed.
+Lives in the traefik namespace so the resulting Secret is available to
+Ingress resources that reference it (notably the speedtest endpoint).
 */}}
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: cluster-wildcard
-  namespace: {{ .Release.Namespace }}
+  namespace: traefik
   labels: {{- include "base-cluster.labels" . | nindent 4 }}
 spec:
   secretName: cluster-wildcard-certificate

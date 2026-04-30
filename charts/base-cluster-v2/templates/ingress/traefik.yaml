@@ -138,6 +138,11 @@ spec:
           - {{ . | quote }}
           {{- end }}
 
+    tlsStore:
+      default:
+        defaultCertificate:
+          secretName: cluster-wildcard-certificate
+
     podSecurityContext:
       runAsUser: 65532
       runAsGroup: 65532

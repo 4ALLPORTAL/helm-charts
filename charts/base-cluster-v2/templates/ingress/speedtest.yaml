@@ -163,6 +163,7 @@ spec:
         - name: tmp
           emptyDir: {}
 ---
+{{- if ge (.Values.speedtest.replicas | int) 2 }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
@@ -175,6 +176,7 @@ spec:
   selector:
     matchLabels: {{- include "base-cluster.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: speedtest
+{{- end }}
 ---
 apiVersion: v1
 kind: Service
@@ -205,8 +207,7 @@ metadata:
 spec:
   ingressClassName: traefik
   tls:
-    - secretName: cluster-wildcard-certificate
-      hosts:
+    - hosts:
         - {{ include "base-cluster.speedtest.host" . | quote }}
   rules:
     - host: {{ include "base-cluster.speedtest.host" . | quote }}
