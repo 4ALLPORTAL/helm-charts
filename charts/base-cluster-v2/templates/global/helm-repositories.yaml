@@ -2,22 +2,28 @@
 Centralized Flux HelmRepository sources for the upstream charts this chart
 deploys. Adding a new component? Add its chart repo here, then reference it
 from the component's HelmRelease.
+OCI repos require type: oci; HTTPS repos omit the type field.
 */}}
-{{- $repos := dict
-  "fluxcd-community" "https://fluxcd-community.github.io/helm-charts"
-  "traefik" "https://traefik.github.io/charts"
-  "jetstack" "https://charts.jetstack.io"
-  "external-dns" "https://kubernetes-sigs.github.io/external-dns/"
+{{- $repos := list
+  (dict "name" "fluxcd-community" "url" "oci://ghcr.io/fluxcd-community/charts"            "type" "oci")
+  (dict "name" "dhi"              "url" "oci://dhi.io"                                      "type" "oci" "secret" .Values.global.imagePullSecretName)
 -}}
-{{- range $name, $url := $repos }}
+{{- range $repos }}
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: {{ $name }}
+  name: {{ .name }}
   namespace: {{ $.Release.Namespace }}
   labels: {{- include "base-cluster.labels" $ | nindent 4 }}
 spec:
   interval: 5m
-  url: {{ $url | quote }}
+  {{- with .type }}
+  type: {{ . }}
+  {{- end }}
+  url: {{ .url | quote }}
+  {{- with .secret }}
+  secretRef:
+    name: {{ . }}
+  {{- end }}
 {{- end }}

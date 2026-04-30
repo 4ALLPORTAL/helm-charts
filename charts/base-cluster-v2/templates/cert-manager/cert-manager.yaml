@@ -20,11 +20,11 @@ spec:
   interval: 1m
   chart:
     spec:
-      chart: cert-manager
+      chart: cert-manager-chart
       version: {{ include "base-cluster.versions.certManager.chart" . | quote }}
       sourceRef:
         kind: HelmRepository
-        name: jetstack
+        name: dhi
         namespace: {{ .Release.Namespace }}
   install:
     remediation:
@@ -37,11 +37,11 @@ spec:
       # CRDs are managed by this chart's `crds/` directory, not by the
       # cert-manager Helm release. Keep this false to avoid two owners.
       enabled: false
-    image:
-      {{- with .Values.global.imageRegistry }}
-      repository: {{ printf "%s/jetstack/cert-manager-controller" . | quote }}
-      {{- end }}
-      digest: {{ include "base-cluster.digests.certManager.controller" . }}
+    {{- with .Values.global.imagePullSecretName }}
+    global:
+      imagePullSecrets:
+        - name: {{ . }}
+    {{- end }}
     replicaCount: 1
     resources: {{- .Values.certManager.resources | toYaml | nindent 6 }}
     securityContext: &securityContext
@@ -55,24 +55,11 @@ spec:
       defaultIssuerName: letsencrypt-prod
       defaultIssuerKind: ClusterIssuer
     extraArgs:
-      # Use a public resolver for DNS01 self-checks; avoids depending on the
-      # cluster's internal resolver (which may not see the public TXT record
-      # cert-manager just wrote to Cloudflare).
       - --dns01-recursive-nameservers=1.1.1.1:53
       - --dns01-recursive-nameservers-only
     cainjector:
       resources: {{- .Values.certManager.caInjector.resources | toYaml | nindent 8 }}
       securityContext: *securityContext
-      image:
-        {{- with .Values.global.imageRegistry }}
-        repository: {{ printf "%s/jetstack/cert-manager-cainjector" . | quote }}
-        {{- end }}
-        digest: {{ include "base-cluster.digests.certManager.cainjector" . }}
     webhook:
       resources: {{- .Values.certManager.webhook.resources | toYaml | nindent 8 }}
       securityContext: *securityContext
-      image:
-        {{- with .Values.global.imageRegistry }}
-        repository: {{ printf "%s/jetstack/cert-manager-webhook" . | quote }}
-        {{- end }}
-        digest: {{ include "base-cluster.digests.certManager.webhook" . }}

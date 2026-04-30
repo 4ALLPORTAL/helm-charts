@@ -4,11 +4,12 @@ Internal speedtest endpoint (Librespeed). Plain Deployment + Service +
 Ingress — no upstream Helm chart wrapper, since the image is self-contained.
 
 The librespeed entrypoint expects to run as root (chowns files, edits Apache
-config, then execs apache2-foreground). We split that into two phases:
+config, then execs apache2-foreground). We split that into two phases so the
+pod passes PSS "restricted":
 
-  1. init container — runs as root with only CHOWN+FOWNER caps, copies the
-     speedtest source files and a patched Apache config (port 8080) into
-     emptyDir volumes, then chowns everything to UID 65534 (nobody).
+  1. init container — runs as nobody (65534), copies the speedtest source
+     files and a patched Apache config (port 8080) into emptyDir volumes.
+     No capabilities, no root.
   2. main container — runs as nobody (65534) with readOnlyRootFilesystem,
      mounts the prepared volumes, and starts Apache directly.
 
@@ -35,6 +36,10 @@ spec:
         app.kubernetes.io/component: speedtest
     spec:
       automountServiceAccountToken: false
+      {{- with .Values.global.imagePullSecretName }}
+      imagePullSecrets:
+        - name: {{ . }}
+      {{- end }}
       securityContext:
         seccompProfile:
           type: RuntimeDefault

@@ -21,11 +21,11 @@ spec:
       namespace: traefik
   chart:
     spec:
-      chart: external-dns
+      chart: external-dns-chart
       version: {{ include "base-cluster.versions.externalDns.chart" . | quote }}
       sourceRef:
         kind: HelmRepository
-        name: external-dns
+        name: dhi
         namespace: {{ .Release.Namespace }}
   install:
     remediation:
@@ -34,11 +34,10 @@ spec:
     remediation:
       retries: -1
   values:
-    image:
-      {{- with .Values.global.imageRegistry }}
-      registry: {{ . | quote }}
-      {{- end }}
-      tag: "v0.20.0@{{ include "base-cluster.digests.externalDns" . }}"
+    {{- with .Values.global.imagePullSecretName }}
+    imagePullSecrets:
+      - name: {{ . }}
+    {{- end }}
     provider:
       name: cloudflare
     sources:

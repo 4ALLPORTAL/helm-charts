@@ -41,11 +41,11 @@ spec:
       namespace: cert-manager
   chart:
     spec:
-      chart: traefik
+      chart: traefik-chart
       version: {{ include "base-cluster.versions.traefik.chart" . | quote }}
       sourceRef:
         kind: HelmRepository
-        name: traefik
+        name: dhi
         namespace: {{ .Release.Namespace }}
   install:
     crds: CreateReplace
@@ -56,11 +56,11 @@ spec:
     remediation:
       retries: -1
   values:
-    image:
-      {{- with .Values.global.imageRegistry }}
-      registry: {{ . | quote }}
-      {{- end }}
-      tag: "v3.6.12@{{ include "base-cluster.digests.traefik" . }}"
+    {{- with .Values.global.imagePullSecretName }}
+    deployment:
+      imagePullSecrets:
+        - name: {{ . }}
+    {{- end }}
     providers:
       kubernetesCRD:
         enabled: true
@@ -82,8 +82,10 @@ spec:
       {{- with .Values.traefik.service.externalIPs }}
       externalIPs: {{- . | toYaml | nindent 8 }}
       {{- end }}
+      {{- if ne .Values.traefik.service.type "ClusterIP" }}
       spec:
         externalTrafficPolicy: Local
+      {{- end }}
 
     logs:
       general:
