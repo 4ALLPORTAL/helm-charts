@@ -179,7 +179,7 @@ spec:
               topologyKey: kubernetes.io/hostname
               labelSelector:
                 matchLabels:
-                  app.kubernetes.io/name: traefik
+                  app.kubernetes.io/name: traefik-chart
 
     topologySpreadConstraints:
       - maxSkew: 1
@@ -187,7 +187,7 @@ spec:
         whenUnsatisfiable: ScheduleAnyway
         labelSelector:
           matchLabels:
-            app.kubernetes.io/name: traefik
+            app.kubernetes.io/name: traefik-chart
 
     updateStrategy:
       rollingUpdate:
