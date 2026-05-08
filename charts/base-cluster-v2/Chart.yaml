@@ -1,9 +1,9 @@
 apiVersion: v2
 name: base-cluster-v2
 description: |
-  Foundational base cluster setup — FluxCD, Traefik ingress, cert-manager,
-  ExternalDNS, and an internal Librespeed speedtest endpoint. Successor to
-  the base-cluster chart; deliberately scoped to bootstrap-and-ingress only.
+  Foundational base cluster setup — Cilium CNI, FluxCD, Traefik ingress,
+  cert-manager, ExternalDNS, and an internal Librespeed speedtest endpoint.
+  Successor to the base-cluster chart.
 type: application
 version: 1.0.0
 appVersion: "1.0.0"
@@ -14,6 +14,9 @@ maintainers:
   - name: Dominic-Beer
     email: d.beer@4allportal.com
 keywords:
+  - cilium
+  - cni
+  - wireguard
   - flux
   - fluxcd
   - traefik

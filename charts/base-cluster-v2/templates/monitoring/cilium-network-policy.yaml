@@ -1,0 +1,49 @@
+{{- if eq (include "base-cluster.networkPolicy.type" .) "cilium" }}
+{{/*
+Baseline CiliumNetworkPolicies for the monitoring namespace.
+
+Planned stack: Grafana Alloy (collector), Mimir (metrics backend),
+Node Exporter, Grafana (UI), OTEL Collector (tracing), DeadMansSnitch.
+
+Policies are split by role so they can be tightened once the components
+are deployed and their labels are known.
+*/}}
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: monitoring-collectors
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+spec:
+  description: "Alloy, Node Exporter, OTEL Collector — scrape cluster-wide, receive OTLP, send to backends"
+  endpointSelector: {}
+  egress:
+    - toEntities: [cluster, kube-apiserver, host]
+    - toEntities: [world]
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+    - toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+  ingress:
+    - fromEntities: [cluster]
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: traefik-chart
+            io.kubernetes.pod.namespace: traefik
+      toPorts:
+        - ports:
+            - port: "3000"
+              protocol: TCP
+            - port: "8080"
+              protocol: TCP
+            - port: "9090"
+              protocol: TCP
+{{- end }}

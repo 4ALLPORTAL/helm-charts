@@ -1,0 +1,100 @@
+{{/*
+Cilium CNI HelmRelease.
+
+Cilium is the cluster's CNI — it must already be running before this chart
+is first installed (same chicken-and-egg as Flux). On subsequent reconciles
+Flux adopts the existing release. Bootstrap path:
+  1. helm install cilium cilium/cilium -n kube-system …
+  2. flux bootstrap …
+  3. Deploy this chart — Flux takes over Cilium lifecycle management.
+
+CRDs are managed by the Cilium chart itself (CreateReplace on install and
+upgrade). Unlike cert-manager we do NOT ship Cilium CRDs in crds/ because
+the set is large and tightly coupled to the Cilium version.
+*/}}
+{{- if .Values.cilium.install }}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: cilium
+  namespace: kube-system
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: cilium
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: cilium
+      version: {{ include "base-cluster.versions.cilium.chart" . | quote }}
+      sourceRef:
+        kind: HelmRepository
+        name: cilium
+        namespace: {{ .Release.Namespace }}
+  install:
+    crds: CreateReplace
+    remediation:
+      retries: -1
+  upgrade:
+    crds: CreateReplace
+    remediation:
+      retries: -1
+  values:
+    MTU: {{ .Values.cilium.mtu }}
+    {{- with .Values.cilium.devices }}
+    devices: {{ . }}
+    {{- end }}
+    cni:
+      install: true
+    cgroup:
+      autoMount:
+        enabled: {{ .Values.cilium.cgroup.autoMount }}
+      hostRoot: {{ .Values.cilium.cgroup.hostRoot | quote }}
+    ipam:
+      mode: cluster-pool
+      operator:
+        clusterPoolIPv4MaskSize: {{ .Values.cilium.podCIDRMaskSize }}
+        clusterPoolIPv4PodCIDRList:
+          - {{ .Values.cilium.podCIDR | quote }}
+    {{- with .Values.cilium.k8sServiceHost }}
+    k8sServiceHost: {{ . | quote }}
+    {{- end }}
+    k8sServicePort: {{ .Values.cilium.k8sServicePort }}
+    kubeProxyReplacement: {{ .Values.cilium.kubeProxyReplacement }}
+    routingMode: {{ .Values.cilium.routingMode }}
+    tunnelProtocol: {{ .Values.cilium.tunnelProtocol }}
+    bpf:
+      masquerade: {{ .Values.cilium.bpfMasquerade }}
+    bgpControlPlane:
+      enabled: {{ .Values.cilium.bgpControlPlane.enabled }}
+    encryption:
+      enabled: {{ .Values.cilium.encryption.enabled }}
+      {{- if .Values.cilium.encryption.enabled }}
+      type: wireguard
+      {{- end }}
+    hubble:
+      enabled: {{ .Values.cilium.hubble.enabled }}
+      relay:
+        enabled: {{ .Values.cilium.hubble.relay.enabled }}
+      ui:
+        enabled: {{ .Values.cilium.hubble.ui.enabled }}
+    operator:
+      replicas: {{ .Values.cilium.operator.replicas }}
+    securityContext:
+      capabilities:
+        ciliumAgent:
+          - CHOWN
+          - KILL
+          - NET_ADMIN
+          - NET_RAW
+          - IPC_LOCK
+          - SYS_ADMIN
+          - SYS_RESOURCE
+          - DAC_OVERRIDE
+          - FOWNER
+          - SETGID
+          - SETUID
+        cleanCiliumState:
+          - NET_ADMIN
+          - SYS_ADMIN
+          - SYS_RESOURCE
+{{- end }}

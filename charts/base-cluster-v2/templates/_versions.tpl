@@ -8,6 +8,8 @@ chart bumps are explicit, reviewable PRs.
 All charts are sourced from DHI (dhi.io) except flux2 (fluxcd-community).
 */}}
 
+{{- define "base-cluster.versions.cilium.chart" -}}1.19.3{{- end -}}
+
 {{- define "base-cluster.versions.flux2.chart" -}}2.18.3{{- end -}}
 
 {{- define "base-cluster.versions.traefik.chart" -}}39.0.8{{- end -}}
