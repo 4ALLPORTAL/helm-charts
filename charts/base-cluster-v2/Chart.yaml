@@ -5,8 +5,8 @@ description: |
   cert-manager, ExternalDNS, and an internal Librespeed speedtest endpoint.
   Successor to the base-cluster chart.
 type: application
-version: 1.0.0
-appVersion: "1.0.0"
+version: 1.0.1
+appVersion: "1.0.1"
 home: https://4allportal.com
 maintainers:
   - name: jpkraemer-mg
