@@ -6,6 +6,7 @@ OCI repos require type: oci; HTTPS repos omit the type field.
 */}}
 {{- $repos := list
   (dict "name" "cilium"           "url" "https://helm.cilium.io/")
+  (dict "name" "emberstack"       "url" "https://emberstack.github.io/helm-charts")
   (dict "name" "fluxcd-community" "url" "oci://ghcr.io/fluxcd-community/charts"            "type" "oci")
   (dict "name" "dhi"              "url" "oci://dhi.io"                                      "type" "oci" "secret" .Values.global.imagePullSecretName)
 -}}

@@ -10,6 +10,9 @@ global:
   ##    Must exist in: flux-system, cert-manager, traefik (and sealed-secrets
   ##    if enabled) BEFORE installing this chart.
   imagePullSecretName: ""
+  ## -- Override the image registry for all components. Useful for air-gapped
+  ##    environments that mirror images to a private registry.
+  imageRegistry: ""
   ## -- Additional cluster-wide cert-manager Certificates to issue. Map of
   ##    name -> { dnsNames: [...] }. Issued via the letsencrypt-prod issuer.
   certificates: {}
@@ -87,7 +90,7 @@ cilium:
   install: true
   ## MTU for the datapath. Match the network's lowest link MTU minus
   ## encapsulation overhead (VXLAN: 50 bytes).
-  mtu: 1500
+  mtu: 1450
   ## Physical devices Cilium attaches to. Space-separated string.
   ## Leave empty for auto-detection.
   devices: ""
@@ -165,7 +168,7 @@ certManager:
       cpu: 250m
       memory: 512Mi
     limits:
-      cpu: 250m
+      cpu: 500m
       memory: 512Mi
   caInjector:
     resources:
@@ -173,7 +176,7 @@ certManager:
         cpu: 250m
         memory: 512Mi
       limits:
-        cpu: 250m
+        cpu: 500m
         memory: 512Mi
   webhook:
     resources:
@@ -191,7 +194,19 @@ externalDNS:
       cpu: 50m
       memory: 64Mi
     limits:
+      cpu: 200m
+      memory: 128Mi
+
+## kubernetes-reflector — mirrors Secrets across namespaces automatically.
+## Create source secrets once in flux-system with reflection annotations;
+## reflector propagates them to cert-manager, traefik, and sealed-secrets.
+reflector:
+  resources:
+    requests:
       cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
       memory: 128Mi
 
 ## Sealed Secrets controller (DHI chart).

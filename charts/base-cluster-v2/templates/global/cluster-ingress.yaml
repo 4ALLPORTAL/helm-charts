@@ -13,6 +13,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels: {{- include "base-cluster.labels" . | nindent 4 }}
 spec:
+  ingressClassName: traefik
   rules:
     - host: {{ include "base-cluster.domain" . | quote }}
     - host: {{ printf "*.%s" (include "base-cluster.domain" .) | quote }}

@@ -16,6 +16,26 @@ Endpoints (once Flux is reconciled and DNS is published):
   - Speedtest:  https://{{ include "base-cluster.speedtest.host" . }}
 {{- end }}
 
+Pre-install: create these two secrets ONCE in the {{ .Release.Namespace }} namespace
+with reflection annotations. kubernetes-reflector will propagate them automatically.
+
+  kubectl create secret docker-registry dhi-pull-secret \
+    --docker-server=dhi.io \
+    --docker-username=<user> --docker-password=<token> \
+    -n {{ .Release.Namespace }}
+  kubectl annotate secret dhi-pull-secret -n {{ .Release.Namespace }} \
+    reflector.v1.k8s.emberstack.com/reflection-allowed=true \
+    reflector.v1.k8s.emberstack.com/reflection-auto-enabled=true \
+    "reflector.v1.k8s.emberstack.com/reflection-auto-namespaces=cert-manager,traefik,sealed-secrets"
+
+  kubectl create secret generic cloudflare-api-key \
+    --from-literal=cloudflare_api_token=<token> \
+    -n {{ .Release.Namespace }}
+  kubectl annotate secret cloudflare-api-key -n {{ .Release.Namespace }} \
+    reflector.v1.k8s.emberstack.com/reflection-allowed=true \
+    reflector.v1.k8s.emberstack.com/reflection-auto-enabled=true \
+    "reflector.v1.k8s.emberstack.com/reflection-auto-namespaces=cert-manager,traefik"
+
 If this is a first install and you see ClusterIssuer errors for ~1-2 minutes,
 that is expected: cert-manager needs a moment to come up before the issuer can
 be reconciled. Flux will retry automatically.

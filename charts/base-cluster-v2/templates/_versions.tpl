@@ -19,3 +19,5 @@ All charts are sourced from DHI (dhi.io) except flux2 (fluxcd-community).
 {{- define "base-cluster.versions.externalDns.chart" -}}1.20.0{{- end -}}
 
 {{- define "base-cluster.versions.sealedSecrets.chart" -}}0.36.6{{- end -}}
+
+{{- define "base-cluster.versions.reflector.chart" -}}10.0.42{{- end -}}

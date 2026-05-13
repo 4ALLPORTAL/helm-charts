@@ -1,0 +1,22 @@
+{{- if eq (include "base-cluster.networkPolicy.type" .) "cilium" }}
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: reflector
+  namespace: reflector
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: reflector
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: reflector
+  egress:
+    - toEntities: [kube-apiserver]
+    - toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+{{- end }}
