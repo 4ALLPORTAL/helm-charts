@@ -70,4 +70,11 @@ spec:
       app.kubernetes.io/instance: cert-manager
   egress:
     - toEntities: [kube-apiserver]
+    - toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
 {{- end }}

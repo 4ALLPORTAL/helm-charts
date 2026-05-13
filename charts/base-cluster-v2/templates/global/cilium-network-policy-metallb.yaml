@@ -75,7 +75,8 @@ spec:
               protocol: TCP
             - port: "7946"
               protocol: UDP
-    - toPorts:
+    - fromEntities: [cluster]
+      toPorts:
         - ports:
             - port: "7472"
               protocol: TCP

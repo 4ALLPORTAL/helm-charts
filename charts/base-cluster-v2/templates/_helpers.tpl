@@ -40,7 +40,7 @@ Resolve a registry: explicit per-component overrides win, otherwise the global
 imageRegistry pull-through, otherwise empty (Docker Hub default).
 */}}
 {{- define "base-cluster.speedtest.image" -}}
-{{- $reg := default .Values.global.imageRegistry .Values.speedtest.image.registry -}}
+{{- $reg := default .Values.speedtest.image.registry .Values.global.imageRegistry -}}
 {{- $ref := printf "%s:%s" .Values.speedtest.image.repository .Values.speedtest.image.tag -}}
 {{- if $reg -}}
 {{- $ref = printf "%s/%s" $reg $ref -}}
