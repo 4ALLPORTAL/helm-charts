@@ -38,8 +38,9 @@ spec:
       retries: -1
   values:
     {{- with .Values.global.imagePullSecretName }}
-    imagePullSecrets:
-      - name: {{ . }}
+    image:
+      pullSecrets:
+        - name: {{ . }}
     {{- end }}
     ## The chart's default download-dashboards init container uses dhi.io/curl,
     ## which is distroless and has no /bin/sh — the init container's `sh -c`

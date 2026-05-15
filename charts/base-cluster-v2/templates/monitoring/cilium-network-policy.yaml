@@ -88,27 +88,13 @@ spec:
             dns:
               - matchPattern: "*"
   ingress:
+    ## Allow any port from inside the monitoring namespace so cross-component
+    ## traffic (memberlist, Kafka, MinIO S3, Mimir gRPC, etc.) works without
+    ## tracking every internal port. External ingress is still gated by the
+    ## per-role policies above.
     - fromEndpoints:
         - matchLabels:
             io.kubernetes.pod.namespace: monitoring
-      toPorts:
-        - ports:
-            - port: "8080"          ## mimir all-in-one http
-              protocol: TCP
-            - port: "9095"          ## mimir grpc
-              protocol: TCP
-            - port: "3100"          ## loki http
-              protocol: TCP
-            - port: "9096"          ## loki grpc
-              protocol: TCP
-            - port: "3200"          ## tempo http
-              protocol: TCP
-            - port: "4317"          ## tempo otlp grpc
-              protocol: TCP
-            - port: "4318"          ## tempo otlp http
-              protocol: TCP
-            - port: "7946"          ## memberlist
-              protocol: TCP
 ---
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
