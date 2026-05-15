@@ -49,8 +49,6 @@ spec:
           backend: local
           local:
             path: /var/tempo/traces
-    podLabels:
-      app.kubernetes.io/instance: tempo
     persistence:
       enabled: true
       size: {{ .Values.monitoring.tempo.size }}

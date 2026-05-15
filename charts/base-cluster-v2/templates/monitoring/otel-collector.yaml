@@ -38,8 +38,6 @@ spec:
     mode: deployment
     replicaCount: 1
     resources: {{- toYaml .Values.monitoring.otelCollector.resources | nindent 6 }}
-    podLabels:
-      app.kubernetes.io/instance: otel-collector
     presets:
       kubernetesAttributes:
         enabled: true

@@ -58,8 +58,6 @@ spec:
     singleBinary:
       replicas: 1
       resources: {{- toYaml .Values.monitoring.loki.resources | nindent 8 }}
-      podLabels:
-        app.kubernetes.io/instance: loki
       persistence:
         enabled: true
         size: {{ .Values.monitoring.loki.size }}

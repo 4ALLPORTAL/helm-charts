@@ -47,8 +47,6 @@ spec:
       create: false
     controller:
       type: daemonset
-      podLabels:
-        app.kubernetes.io/instance: alloy
     alloy:
       resources: {{- toYaml .Values.monitoring.alloy.resources | nindent 8 }}
       clustering:

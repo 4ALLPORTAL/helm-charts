@@ -36,8 +36,6 @@ spec:
         - name: {{ . }}
     {{- end }}
     resources: {{- toYaml .Values.monitoring.nodeExporter.resources | nindent 6 }}
-    podLabels:
-      app.kubernetes.io/instance: node-exporter
     service:
       annotations:
         prometheus.io/scrape: "true"

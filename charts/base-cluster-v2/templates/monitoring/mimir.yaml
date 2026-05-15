@@ -41,10 +41,6 @@ spec:
     remediation:
       retries: -1
   values:
-    global:
-      ## Applied to every Mimir pod so monitoring-storage NetworkPolicy matches.
-      podLabels:
-        app.kubernetes.io/instance: mimir
     mimir:
       structuredConfig:
         limits:

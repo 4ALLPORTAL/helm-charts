@@ -44,8 +44,6 @@ spec:
     {{- end }}
     replicas: 1
     resources: {{- toYaml $g.resources | nindent 6 }}
-    podLabels:
-      app.kubernetes.io/instance: grafana
     admin:
       existingSecret: {{ required "monitoring.grafana.existingAdminSecret is required when grafana is enabled" $g.existingAdminSecret | quote }}
       userKey: admin-user

@@ -34,8 +34,6 @@ spec:
         - name: {{ . }}
     {{- end }}
     resources: {{- toYaml .Values.monitoring.kubeStateMetrics.resources | nindent 6 }}
-    podLabels:
-      app.kubernetes.io/instance: kube-state-metrics
     prometheusScrape: true
     service:
       annotations:
