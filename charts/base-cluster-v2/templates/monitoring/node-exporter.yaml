@@ -31,9 +31,8 @@ spec:
       retries: -1
   values:
     {{- with .Values.global.imagePullSecretName }}
-    global:
-      imagePullSecrets:
-        - name: {{ . }}
+    imagePullSecrets:
+      - name: {{ . }}
     {{- end }}
     resources: {{- toYaml .Values.monitoring.nodeExporter.resources | nindent 6 }}
     service:

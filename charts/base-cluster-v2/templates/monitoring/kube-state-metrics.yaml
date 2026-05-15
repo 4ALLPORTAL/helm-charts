@@ -29,9 +29,8 @@ spec:
       retries: -1
   values:
     {{- with .Values.global.imagePullSecretName }}
-    global:
-      imagePullSecrets:
-        - name: {{ . }}
+    imagePullSecrets:
+      - name: {{ . }}
     {{- end }}
     resources: {{- toYaml .Values.monitoring.kubeStateMetrics.resources | nindent 6 }}
     ## `prometheusScrape: true` already adds prometheus.io/scrape="true" to the

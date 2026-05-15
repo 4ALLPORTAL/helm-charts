@@ -30,9 +30,8 @@ spec:
       retries: -1
   values:
     {{- with .Values.global.imagePullSecretName }}
-    global:
-      imagePullSecrets:
-        - name: {{ . }}
+    imagePullSecrets:
+      - name: {{ . }}
     {{- end }}
     deploymentMode: Monolithic
     loki:

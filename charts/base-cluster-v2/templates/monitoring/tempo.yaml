@@ -30,7 +30,7 @@ spec:
       retries: -1
   values:
     {{- with .Values.global.imagePullSecretName }}
-    global:
+    serviceAccount:
       imagePullSecrets:
         - name: {{ . }}
     {{- end }}

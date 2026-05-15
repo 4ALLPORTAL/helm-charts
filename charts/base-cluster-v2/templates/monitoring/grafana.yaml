@@ -38,10 +38,18 @@ spec:
       retries: -1
   values:
     {{- with .Values.global.imagePullSecretName }}
-    global:
-      imagePullSecrets:
-        - name: {{ . }}
+    imagePullSecrets:
+      - name: {{ . }}
     {{- end }}
+    ## The chart's default download-dashboards init container uses dhi.io/curl,
+    ## which is distroless and has no /bin/sh — the init container's `sh -c`
+    ## entrypoint fails. Override with the upstream curlimages/curl that ships
+    ## a shell. This image only runs at install to fetch gnetId dashboards.
+    downloadDashboardsImage:
+      registry: docker.io
+      repository: curlimages/curl
+      tag: "8.14.1"
+      sha: ""
     replicas: 1
     resources: {{- toYaml $g.resources | nindent 6 }}
     admin:
