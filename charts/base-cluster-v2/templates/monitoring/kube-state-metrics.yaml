@@ -34,9 +34,10 @@ spec:
         - name: {{ . }}
     {{- end }}
     resources: {{- toYaml .Values.monitoring.kubeStateMetrics.resources | nindent 6 }}
+    ## `prometheusScrape: true` already adds prometheus.io/scrape="true" to the
+    ## service; only add the port annotation to avoid duplicate-key errors.
     prometheusScrape: true
     service:
       annotations:
-        prometheus.io/scrape: "true"
         prometheus.io/port: "8080"
 {{- end }}
