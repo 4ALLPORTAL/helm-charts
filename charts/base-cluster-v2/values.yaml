@@ -222,6 +222,159 @@ sealedSecrets:
       cpu: 250m
       memory: 256Mi
 
+## Observability stack — Grafana Alloy → Mimir + Loki + Tempo, OTEL Collector
+## for traces, Mimir-internal Alertmanager routes the Watchdog heartbeat to an
+## UptimeRobot heartbeat URL, and a CronJob reconciles UptimeRobot monitors via
+## the UptimeRobot API.
+##
+## Mimir is pulled from the upstream `grafana` HelmRepository because DHI does
+## not mirror it; everything else uses DHI-hardened charts.
+monitoring:
+  ## Master switch — when false, nothing in templates/monitoring/ is rendered
+  ## except the namespace's default-deny exclusion.
+  enabled: false
+  ## StorageClass for Mimir/Loki/Tempo PVCs. Empty = cluster default.
+  storageClass: ""
+
+  ## Mimir — single-binary (target=all). Persistent local PVC backend; swap to
+  ## object storage by overriding mimir.values.mimir.structuredConfig.
+  mimir:
+    enabled: true
+    retention: 720h          ## 30d
+    size: 50Gi
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: "2"
+        memory: 4Gi
+
+  ## Loki — SingleBinary deployment, filesystem chunk store on PVC.
+  loki:
+    enabled: true
+    retention: 336h          ## 14d
+    size: 50Gi
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: "1"
+        memory: 2Gi
+
+  ## Tempo — monolithic, filesystem backend on PVC.
+  tempo:
+    enabled: true
+    retention: 168h          ## 7d
+    size: 20Gi
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: "1"
+        memory: 2Gi
+
+  ## Grafana — UI, sidecar datasource/dashboard discovery, ingress via Traefik.
+  grafana:
+    enabled: true
+    ## Hostname is published as <host>.<clusterName>.<baseDomain>.
+    host: grafana
+    ## Required when grafana.enabled. Secret with keys `admin-user` and
+    ## `admin-password`.
+    existingAdminSecret: ""
+    ## OIDC SSO. When enabled, fill in clientId/clientSecret/authUrl/tokenUrl/
+    ## apiUrl. `existingSecret` may carry GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET.
+    oidc:
+      enabled: false
+      name: SSO
+      clientId: ""
+      existingSecret: ""
+      scopes: "openid profile email"
+      authUrl: ""
+      tokenUrl: ""
+      apiUrl: ""
+      allowedDomains: ""
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+  ## Alloy — unified collector. DaemonSet for node-local log/metric scraping,
+  ## Deployment for cluster-wide metric scraping.
+  alloy:
+    enabled: true
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi
+
+  ## Prometheus Node Exporter — host CPU/memory/disk/network metrics.
+  nodeExporter:
+    enabled: true
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 128Mi
+
+  ## kube-state-metrics — Kubernetes object metrics.
+  kubeStateMetrics:
+    enabled: true
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+
+  ## OTEL Collector — receives OTLP (gRPC :4317, HTTP :4318), exports to Tempo.
+  otelCollector:
+    enabled: true
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+  ## UptimeRobot — receives the Watchdog heartbeat and runs external uptime
+  ## probes. Both heartbeat and monitor reconciliation use the API key from
+  ## `existingSecret` (key `api_key`).
+  uptimeRobot:
+    enabled: false
+    existingSecret: ""
+    ## Heartbeat URL the Watchdog alert pings via Alertmanager webhook. Format:
+    ## https://heartbeat.uptimerobot.com/<token>
+    heartbeatUrl: ""
+    ## Monitors reconciled by the CronJob. friendlyName must be unique.
+    ##   monitors:
+    ##     - friendlyName: portal-prod
+    ##       url: https://portal.example.com
+    ##       type: 1            # 1=HTTP(S), 2=keyword, 3=ping, 4=port
+    ##       interval: 300      # seconds, min 60
+    monitors: []
+    reconciler:
+      schedule: "*/15 * * * *"
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          cpu: 200m
+          memory: 128Mi
+
 ## Internal speedtest health endpoint (Librespeed). Reached at
 ## https://<speedtest.host>.<clusterName>.<baseDomain>
 speedtest:

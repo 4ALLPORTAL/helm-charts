@@ -1,0 +1,62 @@
+{{- if and .Values.monitoring.enabled .Values.monitoring.tempo.enabled }}
+{{/*
+Tempo — DHI `tempo-chart`, monolithic single-binary, filesystem backend.
+
+Receives OTLP from the OTEL Collector on :4317/:4318 and from Alloy if app
+tracing is enabled. Retention is enforced by the compactor.
+*/}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: tempo
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: tempo-chart
+      version: {{ include "base-cluster.versions.tempo.chart" . | quote }}
+      sourceRef:
+        kind: HelmRepository
+        name: dhi
+        namespace: {{ .Release.Namespace }}
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  values:
+    {{- with .Values.global.imagePullSecretName }}
+    global:
+      imagePullSecrets:
+        - name: {{ . }}
+    {{- end }}
+    tempo:
+      resources: {{- toYaml .Values.monitoring.tempo.resources | nindent 8 }}
+      retention: {{ .Values.monitoring.tempo.retention | quote }}
+      receivers:
+        otlp:
+          protocols:
+            grpc:
+              endpoint: 0.0.0.0:4317
+            http:
+              endpoint: 0.0.0.0:4318
+      storage:
+        trace:
+          backend: local
+          local:
+            path: /var/tempo/traces
+    podLabels:
+      app.kubernetes.io/instance: tempo
+    persistence:
+      enabled: true
+      size: {{ .Values.monitoring.tempo.size }}
+      {{- with .Values.monitoring.storageClass }}
+      storageClass: {{ . | quote }}
+      {{- end }}
+    service:
+      type: ClusterIP
+{{- end }}

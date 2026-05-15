@@ -1,0 +1,195 @@
+{{- if and .Values.monitoring.enabled .Values.monitoring.grafana.enabled }}
+{{/*
+Grafana — UI for the LGTM stack. The sidecar discovers datasources and
+dashboards from ConfigMaps in this namespace via their labels:
+
+  grafana_datasource: "1"
+  grafana_dashboard:  "1"
+
+That keeps datasource/dashboard definitions in their own template files
+(see datasources.yaml and dashboards.yaml) instead of inline values here.
+
+OIDC SSO is opt-in via values.monitoring.grafana.oidc; when disabled the
+chart's default admin auth from `existingAdminSecret` is used.
+*/}}
+{{- $g := .Values.monitoring.grafana -}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: grafana
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: grafana-chart
+      version: {{ include "base-cluster.versions.grafana.chart" . | quote }}
+      sourceRef:
+        kind: HelmRepository
+        name: dhi
+        namespace: {{ .Release.Namespace }}
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  values:
+    {{- with .Values.global.imagePullSecretName }}
+    global:
+      imagePullSecrets:
+        - name: {{ . }}
+    {{- end }}
+    replicas: 1
+    resources: {{- toYaml $g.resources | nindent 6 }}
+    podLabels:
+      app.kubernetes.io/instance: grafana
+    admin:
+      existingSecret: {{ required "monitoring.grafana.existingAdminSecret is required when grafana is enabled" $g.existingAdminSecret | quote }}
+      userKey: admin-user
+      passwordKey: admin-password
+    sidecar:
+      datasources:
+        enabled: true
+        label: grafana_datasource
+        labelValue: "1"
+        searchNamespace: monitoring
+      dashboards:
+        enabled: true
+        label: grafana_dashboard
+        labelValue: "1"
+        searchNamespace: ALL
+        provider:
+          allowUiUpdates: false
+    ## Baseline community dashboards pulled from grafana.com at install. Users
+    ## can ship additional ConfigMaps with `grafana_dashboard: "1"` to extend.
+    dashboardProviders:
+      dashboardproviders.yaml:
+        apiVersion: 1
+        providers:
+          - name: 'default'
+            orgId: 1
+            folder: ''
+            type: file
+            disableDeletion: true
+            editable: false
+            options:
+              path: /var/lib/grafana/dashboards/default
+    dashboards:
+      default:
+        node-exporter-full:
+          gnetId: 1860
+          revision: 37
+          datasource: Mimir
+        kubernetes-cluster:
+          gnetId: 7249
+          revision: 1
+          datasource: Mimir
+        kubernetes-views-global:
+          gnetId: 15757
+          revision: 43
+          datasource: Mimir
+        loki-logs:
+          gnetId: 13639
+          revision: 2
+          datasource: Loki
+        traefik:
+          gnetId: 17347
+          revision: 9
+          datasource: Mimir
+    service:
+      type: ClusterIP
+      port: 80
+      targetPort: 3000
+    grafana.ini:
+      server:
+        root_url: https://{{ include "base-cluster.grafana.host" . }}
+      analytics:
+        check_for_updates: false
+        reporting_enabled: false
+      {{- if $g.oidc.enabled }}
+      auth.generic_oauth:
+        enabled: true
+        name: {{ $g.oidc.name | quote }}
+        client_id: {{ $g.oidc.clientId | quote }}
+        scopes: {{ $g.oidc.scopes | quote }}
+        auth_url: {{ $g.oidc.authUrl | quote }}
+        token_url: {{ $g.oidc.tokenUrl | quote }}
+        api_url: {{ $g.oidc.apiUrl | quote }}
+        {{- with $g.oidc.allowedDomains }}
+        allowed_domains: {{ . | quote }}
+        {{- end }}
+      {{- end }}
+    {{- if and $g.oidc.enabled $g.oidc.existingSecret }}
+    envFromSecret: {{ $g.oidc.existingSecret | quote }}
+    {{- end }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - {{ include "base-cluster.grafana.host" . | quote }}
+  rules:
+    - host: {{ include "base-cluster.grafana.host" . | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: grafana
+                port:
+                  number: 80
+---
+{{/*
+Datasource ConfigMaps — picked up by the Grafana sidecar via the
+`grafana_datasource: "1"` label.
+
+Each datasource targets the in-cluster service of its backend. URLs are
+hard-coded to the standard chart service names; if you fullnameOverride
+those releases, also override these.
+*/}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+    grafana_datasource: "1"
+data:
+  datasources.yaml: |
+    apiVersion: 1
+    datasources:
+      {{- if .Values.monitoring.mimir.enabled }}
+      - name: Mimir
+        type: prometheus
+        access: proxy
+        url: http://mimir-query-frontend.monitoring.svc:8080/prometheus
+        isDefault: true
+        editable: false
+      {{- end }}
+      {{- if .Values.monitoring.loki.enabled }}
+      - name: Loki
+        type: loki
+        access: proxy
+        url: http://loki.monitoring.svc:3100
+        editable: false
+      {{- end }}
+      {{- if .Values.monitoring.tempo.enabled }}
+      - name: Tempo
+        type: tempo
+        access: proxy
+        url: http://tempo.monitoring.svc:3200
+        editable: false
+      {{- end }}
+{{- end }}

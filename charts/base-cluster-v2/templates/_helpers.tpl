@@ -36,6 +36,13 @@ Speedtest hostname.
 {{- end -}}
 
 {{/*
+Grafana hostname.
+*/}}
+{{- define "base-cluster.grafana.host" -}}
+{{- required "monitoring.grafana.host is required when grafana is enabled" .Values.monitoring.grafana.host -}}.{{ include "base-cluster.domain" . }}
+{{- end -}}
+
+{{/*
 Resolve a registry: explicit per-component overrides win, otherwise the global
 imageRegistry pull-through, otherwise empty (Docker Hub default).
 */}}

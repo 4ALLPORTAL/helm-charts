@@ -1,0 +1,22 @@
+{{- if .Values.monitoring.enabled }}
+{{/*
+Monitoring namespace.
+
+PSA is `privileged` because Node Exporter needs hostNetwork/hostPID and
+mounts host filesystems, and Alloy's DaemonSet mounts /var/log/pods for log
+scraping. Workloads that satisfy `restricted` (Grafana, Mimir, Loki, Tempo,
+OTEL, KSM) still run as non-root inside this namespace — PSA at the namespace
+level is the floor, not the ceiling.
+*/}}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+  annotations:
+    helm.sh/resource-policy: keep
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/audit: baseline
+    pod-security.kubernetes.io/warn: baseline
+{{- end }}

@@ -1,0 +1,171 @@
+{{- if and .Values.monitoring.enabled .Values.monitoring.alloy.enabled }}
+{{/*
+Grafana Alloy — single DaemonSet that scrapes:
+  - /var/log/pods on its own node → Loki
+  - Kubernetes pods annotated `prometheus.io/scrape=true` → Mimir
+  - kube-state-metrics + node-exporter via service discovery
+
+The chart's clustering feature is disabled — duplicate scrapes are acceptable
+for a base-cluster scale, and clustering needs an HTTP service mesh that the
+NetworkPolicies would have to grow to support. Revisit if scrape load matters.
+
+Mimir is reached at distributor's HTTP port via cluster DNS; Loki at the
+singleBinary service.
+*/}}
+{{- $clusterDomain := "cluster.local" -}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: alloy
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: alloy-chart
+      version: {{ include "base-cluster.versions.alloy.chart" . | quote }}
+      sourceRef:
+        kind: HelmRepository
+        name: dhi
+        namespace: {{ .Release.Namespace }}
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  values:
+    {{- with .Values.global.imagePullSecretName }}
+    global:
+      image:
+        pullSecrets:
+          - name: {{ . }}
+    {{- end }}
+    crds:
+      create: false
+    controller:
+      type: daemonset
+      podLabels:
+        app.kubernetes.io/instance: alloy
+    alloy:
+      resources: {{- toYaml .Values.monitoring.alloy.resources | nindent 8 }}
+      clustering:
+        enabled: false
+      mounts:
+        ## Required for log scraping.
+        varlog: true
+        dockercontainers: true
+      configMap:
+        create: true
+        content: |
+          logging {
+            level  = "info"
+            format = "logfmt"
+          }
+
+          // ─── Pod log scraping → Loki ────────────────────────────────────
+          discovery.kubernetes "pods" {
+            role = "pod"
+          }
+
+          discovery.relabel "pod_logs" {
+            targets = discovery.kubernetes.pods.targets
+            rule {
+              source_labels = ["__meta_kubernetes_namespace"]
+              target_label  = "namespace"
+            }
+            rule {
+              source_labels = ["__meta_kubernetes_pod_name"]
+              target_label  = "pod"
+            }
+            rule {
+              source_labels = ["__meta_kubernetes_pod_container_name"]
+              target_label  = "container"
+            }
+            rule {
+              source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name"]
+              target_label  = "app"
+            }
+          }
+
+          loki.source.kubernetes "pods" {
+            targets    = discovery.relabel.pod_logs.output
+            forward_to = [loki.write.default.receiver]
+          }
+
+          loki.write "default" {
+            endpoint {
+              url = "http://loki.monitoring.svc.{{ $clusterDomain }}:3100/loki/api/v1/push"
+            }
+          }
+
+          // ─── Metric scraping → Mimir ────────────────────────────────────
+          discovery.relabel "scrape_pods" {
+            targets = discovery.kubernetes.pods.targets
+            rule {
+              source_labels = ["__meta_kubernetes_pod_annotation_prometheus_io_scrape"]
+              regex         = "true"
+              action        = "keep"
+            }
+            rule {
+              source_labels = ["__meta_kubernetes_pod_annotation_prometheus_io_path"]
+              regex         = "(.+)"
+              target_label  = "__metrics_path__"
+            }
+            rule {
+              source_labels = ["__address__", "__meta_kubernetes_pod_annotation_prometheus_io_port"]
+              regex         = "([^:]+)(?::\\d+)?;(\\d+)"
+              replacement   = "$1:$2"
+              target_label  = "__address__"
+            }
+            rule {
+              source_labels = ["__meta_kubernetes_namespace"]
+              target_label  = "namespace"
+            }
+            rule {
+              source_labels = ["__meta_kubernetes_pod_name"]
+              target_label  = "pod"
+            }
+          }
+
+          discovery.kubernetes "endpoints" {
+            role = "endpoints"
+          }
+
+          discovery.relabel "scrape_endpoints" {
+            targets = discovery.kubernetes.endpoints.targets
+            rule {
+              source_labels = ["__meta_kubernetes_service_annotation_prometheus_io_scrape"]
+              regex         = "true"
+              action        = "keep"
+            }
+            rule {
+              source_labels = ["__meta_kubernetes_namespace"]
+              target_label  = "namespace"
+            }
+            rule {
+              source_labels = ["__meta_kubernetes_service_name"]
+              target_label  = "service"
+            }
+          }
+
+          prometheus.scrape "pods" {
+            targets         = discovery.relabel.scrape_pods.output
+            forward_to      = [prometheus.remote_write.mimir.receiver]
+            scrape_interval = "30s"
+          }
+
+          prometheus.scrape "endpoints" {
+            targets         = discovery.relabel.scrape_endpoints.output
+            forward_to      = [prometheus.remote_write.mimir.receiver]
+            scrape_interval = "30s"
+          }
+
+          prometheus.remote_write "mimir" {
+            endpoint {
+              url = "http://mimir-distributor.monitoring.svc.{{ $clusterDomain }}:8080/api/v1/push"
+            }
+          }
+{{- end }}

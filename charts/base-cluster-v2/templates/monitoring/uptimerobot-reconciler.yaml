@@ -1,0 +1,156 @@
+{{- if and .Values.monitoring.enabled .Values.monitoring.uptimeRobot.enabled }}
+{{/*
+UptimeRobot reconciler — CronJob that POSTs to the UptimeRobot v2 API,
+creating monitors listed in values.monitoring.uptimeRobot.monitors and
+updating any whose URL/interval/type drifts.
+
+Deliberately does NOT delete monitors absent from the values list, because
+admins frequently register monitors via the UR UI for one-off checks and
+losing them would be surprising. To remove a monitor, do it from the UR
+console.
+
+The API key comes from `existingSecret` (key `api_key`).
+*/}}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: uptimerobot-reconciler
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+automountServiceAccountToken: false
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: uptimerobot-reconciler
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+data:
+  monitors.json: |
+    {{- toJson .Values.monitoring.uptimeRobot.monitors | nindent 4 }}
+  reconcile.py: |
+    import json
+    import os
+    import sys
+    import urllib.parse
+    import urllib.request
+
+    API = "https://api.uptimerobot.com/v2"
+    KEY = os.environ["UR_API_KEY"]
+
+    def post(path, params):
+        params = {**params, "api_key": KEY, "format": "json"}
+        req = urllib.request.Request(
+            f"{API}{path}",
+            data=urllib.parse.urlencode(params).encode(),
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+        )
+        with urllib.request.urlopen(req, timeout=30) as r:
+            body = json.loads(r.read())
+        if body.get("stat") != "ok":
+            raise RuntimeError(f"{path}: {body}")
+        return body
+
+    def list_monitors():
+        out = {}
+        offset = 0
+        while True:
+            page = post("/getMonitors", {"offset": offset, "limit": 50})
+            for m in page.get("monitors", []):
+                out[m["friendly_name"]] = m
+            total = page.get("pagination", {}).get("total", 0)
+            offset += 50
+            if offset >= total:
+                break
+        return out
+
+    def main():
+        with open("/etc/reconciler/monitors.json") as f:
+            desired = json.load(f)
+        existing = list_monitors()
+        for d in desired:
+            name = d["friendlyName"]
+            payload = {
+                "friendly_name": name,
+                "url": d["url"],
+                "type": d.get("type", 1),
+                "interval": d.get("interval", 300),
+            }
+            cur = existing.get(name)
+            if cur is None:
+                print(f"create  {name}  {d['url']}")
+                post("/newMonitor", payload)
+            elif (cur["url"] != d["url"]
+                  or cur["type"] != payload["type"]
+                  or cur.get("interval") != payload["interval"]):
+                print(f"update  {name}  {d['url']}")
+                post("/editMonitor", {**payload, "id": cur["id"]})
+            else:
+                print(f"ok      {name}")
+        return 0
+
+    sys.exit(main())
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: uptimerobot-reconciler
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+spec:
+  schedule: {{ .Values.monitoring.uptimeRobot.reconciler.schedule | quote }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      ttlSecondsAfterFinished: 3600
+      template:
+        metadata:
+          labels: {{- include "base-cluster.labels" . | nindent 12 }}
+            app.kubernetes.io/component: monitoring
+            app.kubernetes.io/instance: uptimerobot-reconciler
+        spec:
+          serviceAccountName: uptimerobot-reconciler
+          automountServiceAccountToken: false
+          restartPolicy: OnFailure
+          {{- with .Values.global.imagePullSecretName }}
+          imagePullSecrets:
+            - name: {{ . }}
+          {{- end }}
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            fsGroup: 65532
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: reconcile
+              image: {{ printf "%s/python:latest" (default "dhi.io" .Values.global.imageRegistry) | quote }}
+              command: ["python3", "/etc/reconciler/reconcile.py"]
+              resources: {{- toYaml .Values.monitoring.uptimeRobot.reconciler.resources | nindent 16 }}
+              env:
+                - name: UR_API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ required "monitoring.uptimeRobot.existingSecret is required when uptimeRobot is enabled" .Values.monitoring.uptimeRobot.existingSecret | quote }}
+                      key: api_key
+              volumeMounts:
+                - name: reconciler
+                  mountPath: /etc/reconciler
+                  readOnly: true
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: [ALL]
+          volumes:
+            - name: reconciler
+              configMap:
+                name: uptimerobot-reconciler
+{{- end }}

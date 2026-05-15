@@ -1,13 +1,19 @@
-{{- if eq (include "base-cluster.networkPolicy.type" .) "cilium" }}
+{{- if and .Values.monitoring.enabled (eq (include "base-cluster.networkPolicy.type" .) "cilium") }}
 {{/*
-Baseline CiliumNetworkPolicies for the monitoring namespace.
+Per-role CiliumNetworkPolicies for the monitoring namespace.
 
-Planned stack: Grafana Alloy (collector), Mimir (metrics backend),
-Node Exporter, Grafana (UI), OTEL Collector (tracing), DeadMansSnitch.
+Policies match on `app.kubernetes.io/instance` because that label is set by
+every standard Helm chart to the HelmRelease name — keeping us independent of
+DHI's `<name>-chart` suffix convention and Mimir's upstream label scheme.
 
-Policies are split by role so they can be tightened once the components
-are deployed and their labels are known.
+Roles:
+  collectors     — Alloy, Node Exporter, KSM (scrape cluster, send to backends)
+  storage        — Mimir, Loki, Tempo (receive from collectors, queried by Grafana)
+  grafana        — UI, queries backends, fronted by Traefik
+  otel-collector — receives OTLP from workloads, forwards to Tempo
+  uptimerobot    — egress to api.uptimerobot.com only
 */}}
+---
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
@@ -16,10 +22,118 @@ metadata:
   labels: {{- include "base-cluster.labels" . | nindent 4 }}
     app.kubernetes.io/component: monitoring
 spec:
-  description: "Alloy, Node Exporter, OTEL Collector — scrape cluster-wide, receive OTLP, send to backends"
-  endpointSelector: {}
+  description: "Alloy / Node Exporter / kube-state-metrics — scrape cluster, write to storage"
+  endpointSelector:
+    matchExpressions:
+      - key: app.kubernetes.io/instance
+        operator: In
+        values: [alloy, node-exporter, kube-state-metrics]
   egress:
     - toEntities: [cluster, kube-apiserver, host]
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: monitoring
+            app.kubernetes.io/instance: mimir
+        - matchLabels:
+            io.kubernetes.pod.namespace: monitoring
+            app.kubernetes.io/instance: loki
+    - toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+  ingress:
+    - fromEntities: [cluster]
+      toPorts:
+        - ports:
+            - port: "9100"          ## node-exporter
+              protocol: TCP
+            - port: "8080"          ## kube-state-metrics
+              protocol: TCP
+            - port: "12345"         ## alloy ui / scrape
+              protocol: TCP
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: monitoring-storage
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+spec:
+  description: "Mimir / Loki / Tempo — accept ingest from collectors + OTEL, queries from Grafana, egress for AM webhooks"
+  endpointSelector:
+    matchExpressions:
+      - key: app.kubernetes.io/instance
+        operator: In
+        values: [mimir, loki, tempo]
+  egress:
+    ## Inter-pod gossip / ring (Mimir+Loki use memberlist) and kube-apiserver
+    ## for service discovery.
+    - toEntities: [cluster, kube-apiserver]
+    ## Mimir-internal Alertmanager webhook → UptimeRobot heartbeat URL.
+    - toFQDNs:
+        - matchPattern: "*.uptimerobot.com"
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+    - toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: monitoring
+      toPorts:
+        - ports:
+            - port: "8080"          ## mimir all-in-one http
+              protocol: TCP
+            - port: "9095"          ## mimir grpc
+              protocol: TCP
+            - port: "3100"          ## loki http
+              protocol: TCP
+            - port: "9096"          ## loki grpc
+              protocol: TCP
+            - port: "3200"          ## tempo http
+              protocol: TCP
+            - port: "4317"          ## tempo otlp grpc
+              protocol: TCP
+            - port: "4318"          ## tempo otlp http
+              protocol: TCP
+            - port: "7946"          ## memberlist
+              protocol: TCP
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: monitoring-grafana
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+spec:
+  description: "Grafana UI — Traefik ingress, queries to storage, world:443 for plugins/OIDC"
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/instance: grafana
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: monitoring
+            app.kubernetes.io/instance: mimir
+        - matchLabels:
+            io.kubernetes.pod.namespace: monitoring
+            app.kubernetes.io/instance: loki
+        - matchLabels:
+            io.kubernetes.pod.namespace: monitoring
+            app.kubernetes.io/instance: tempo
+    - toEntities: [kube-apiserver]
     - toEntities: [world]
       toPorts:
         - ports:
@@ -33,7 +147,6 @@ spec:
             dns:
               - matchPattern: "*"
   ingress:
-    - fromEntities: [cluster]
     - fromEndpoints:
         - matchLabels:
             app.kubernetes.io/name: traefik-chart
@@ -42,8 +155,65 @@ spec:
         - ports:
             - port: "3000"
               protocol: TCP
-            - port: "8080"
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: monitoring-otel-collector
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+spec:
+  description: "OTEL Collector — OTLP receiver for workload traces, forwards to Tempo"
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/instance: otel-collector
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: monitoring
+            app.kubernetes.io/instance: tempo
+    - toEntities: [kube-apiserver]
+    - toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+  ingress:
+    - fromEntities: [cluster]
+      toPorts:
+        - ports:
+            - port: "4317"
               protocol: TCP
-            - port: "9090"
+            - port: "4318"
               protocol: TCP
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: monitoring-uptimerobot-reconciler
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+spec:
+  description: "UptimeRobot reconciler CronJob — egress only to api.uptimerobot.com"
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/instance: uptimerobot-reconciler
+  egress:
+    - toFQDNs:
+        - matchPattern: "api.uptimerobot.com"
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+    - toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
 {{- end }}
