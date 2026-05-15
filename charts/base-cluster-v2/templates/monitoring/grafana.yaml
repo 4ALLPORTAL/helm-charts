@@ -184,6 +184,10 @@ data:
         url: http://mimir-query-frontend.monitoring.svc:8080/prometheus
         isDefault: true
         editable: false
+        jsonData:
+          httpHeaderName1: X-Scope-OrgID
+        secureJsonData:
+          httpHeaderValue1: anonymous
       {{- end }}
       {{- if .Values.monitoring.loki.enabled }}
       - name: Loki

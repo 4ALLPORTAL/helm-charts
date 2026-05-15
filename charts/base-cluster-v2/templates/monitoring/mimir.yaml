@@ -51,6 +51,10 @@ spec:
   values:
     mimir:
       structuredConfig:
+        ## Single-tenant base-cluster install — disable multitenancy so writes
+        ## don't require the X-Scope-OrgID header. Mimir routes everything to
+        ## the synthetic `anonymous` tenant (matches our watchdog rule path).
+        multitenancy_enabled: false
         limits:
           compactor_blocks_retention_period: {{ .Values.monitoring.mimir.retention | quote }}
         ruler:
