@@ -37,9 +37,12 @@ spec:
     mode: deployment
     replicaCount: 1
     resources: {{- toYaml .Values.monitoring.otelCollector.resources | nindent 6 }}
+    ## DHI's opentelemetry-collector image is the core distribution, not
+    ## contrib — k8sattributes processor isn't available. Workloads can
+    ## enrich spans themselves via the OTel SDK if needed.
     presets:
       kubernetesAttributes:
-        enabled: true
+        enabled: false
     config:
       receivers:
         otlp:
@@ -56,7 +59,7 @@ spec:
           spike_limit_percentage: 25
       exporters:
         otlp/tempo:
-          endpoint: tempo.monitoring.svc:4317
+          endpoint: tempo-tempo-chart.monitoring.svc:4317
           tls:
             insecure: true
       service:

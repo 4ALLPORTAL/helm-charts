@@ -189,14 +189,14 @@ data:
       - name: Loki
         type: loki
         access: proxy
-        url: http://loki.monitoring.svc:3100
+        url: http://loki-loki-chart.monitoring.svc:3100
         editable: false
       {{- end }}
       {{- if .Values.monitoring.tempo.enabled }}
       - name: Tempo
         type: tempo
         access: proxy
-        url: http://tempo.monitoring.svc:3200
+        url: http://tempo-tempo-chart.monitoring.svc:3200
         editable: false
       {{- end }}
 {{- end }}
