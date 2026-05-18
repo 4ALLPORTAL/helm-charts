@@ -1,0 +1,215 @@
+{{/*
+Traefik ingress controller.
+
+A small Traefik file-provider config (ConfigMap) declares two static middlewares:
+  - compress:                 default gzip compression on every websecure response
+  - speedtest-no-compression: identity transfer-encoding for the speedtest path,
+                              so iperf-style throughput measurements aren't
+                              skewed by gzip
+The ConfigMap is mounted into Traefik via the chart's `volumes` value and
+referenced by `--providers.file.filename`.
+*/}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ingress-traefik-config
+  namespace: traefik
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: traefik
+data:
+  config.toml: |-
+    [http.middlewares]
+      [http.middlewares.compress.compress]
+      [http.middlewares.speedtest-no-compression.headers.customRequestHeaders]
+        Accept-Encoding = "identity"
+      [http.middlewares.speedtest-no-compression.headers.customResponseHeaders]
+        Content-Encoding = "identity"
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: ingress-traefik
+  namespace: traefik
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: traefik
+spec:
+  interval: 1m
+  # cert-manager comes up first so the cluster wildcard cert can be issued
+  # by the time Traefik starts serving HTTPS.
+  dependsOn:
+    - name: cert-manager
+      namespace: cert-manager
+  chart:
+    spec:
+      chart: traefik-chart
+      version: {{ include "base-cluster.versions.traefik.chart" . | quote }}
+      sourceRef:
+        kind: HelmRepository
+        name: dhi
+        namespace: {{ .Release.Namespace }}
+  install:
+    crds: CreateReplace
+    remediation:
+      retries: -1
+  upgrade:
+    crds: CreateReplace
+    remediation:
+      retries: -1
+  values:
+    {{- with .Values.global.imagePullSecretName }}
+    deployment:
+      imagePullSecrets:
+        - name: {{ . }}
+    {{- end }}
+    providers:
+      kubernetesCRD:
+        enabled: true
+      kubernetesIngress:
+        enabled: true
+        allowExternalNameServices: true
+        publishedService:
+          enabled: {{ not .Values.traefik.ingressIP }}
+
+    rbac:
+      enabled: true
+
+    service:
+      enabled: true
+      type: {{ .Values.traefik.service.type | quote }}
+      {{- with .Values.traefik.service.loadBalancerIP }}
+      loadBalancerIP: {{ . | quote }}
+      {{- end }}
+      {{- with .Values.traefik.service.externalIPs }}
+      externalIPs: {{- . | toYaml | nindent 8 }}
+      {{- end }}
+      {{- if ne .Values.traefik.service.type "ClusterIP" }}
+      spec:
+        externalTrafficPolicy: Local
+      {{- end }}
+
+    logs:
+      general:
+        level: {{ .Values.traefik.log.level | quote }}
+
+    additionalArguments:
+      {{- with .Values.traefik.ingressIP }}
+      - "--providers.kubernetesingress.ingressEndpoint.ip={{ . }}"
+      {{- end }}
+      - "--providers.file.filename=/config/config.toml"
+      - "--entrypoints.websecure.http.middlewares=compress@file"
+      - "--providers.kubernetescrd.allowexternalnameservices=true"
+      - "--providers.kubernetescrd.throttleDuration=10s"
+      - "--providers.kubernetesingress.throttleDuration=10s"
+      {{- range .Values.traefik.additionalArguments }}
+      - {{ . | quote }}
+      {{- end }}
+
+    volumes:
+      - name: ingress-traefik-config
+        mountPath: /config
+        type: configMap
+
+    ports:
+      web:
+        http:
+          redirections:
+            entryPoint:
+              to: websecure
+              scheme: https
+              permanent: true
+      websecure:
+        http:
+          tls:
+            enabled: true
+
+    ingressClass:
+      enabled: true
+      isDefaultClass: true
+
+    tlsOptions:
+      default:
+        preferServerCipherSuites: true
+        minVersion: VersionTLS12
+        cipherSuites:
+          - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
+          - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+          - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+          - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256
+          - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+          - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+          {{- range .Values.traefik.cipherSuites }}
+          - {{ . | quote }}
+          {{- end }}
+
+    tlsStore:
+      default:
+        defaultCertificate:
+          secretName: cluster-wildcard-certificate
+
+    podSecurityContext:
+      runAsUser: 65532
+      runAsGroup: 65532
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
+    securityContext:
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      runAsGroup: 65532
+      runAsUser: 65532
+      runAsNonRoot: true
+      privileged: false
+      seccompProfile:
+        type: RuntimeDefault
+      capabilities:
+        drop: [ALL]
+
+    priorityClassName: system-cluster-critical
+
+    {{- if ge (.Values.traefik.minReplicas | int) 2 }}
+    podDisruptionBudget:
+      enabled: true
+      minAvailable: {{ sub (.Values.traefik.minReplicas | int) 1 }}
+    {{- end }}
+
+    resources: {{- .Values.traefik.resources | toYaml | nindent 6 }}
+
+    affinity:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: traefik-chart
+
+    topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: traefik-chart
+
+    updateStrategy:
+      rollingUpdate:
+        maxSurge: {{ max 1 (div (.Values.traefik.maxReplicas | int) 2) }}
+
+    autoscaling:
+      enabled: true
+      minReplicas: {{ .Values.traefik.minReplicas }}
+      maxReplicas: {{ .Values.traefik.maxReplicas }}
+      metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization: 70
+        - type: Resource
+          resource:
+            name: memory
+            target:
+              type: Utilization
+              averageUtilization: 80

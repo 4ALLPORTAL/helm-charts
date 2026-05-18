@@ -1,0 +1,40 @@
+{{/*
+kubernetes-reflector — automatically mirrors Secrets (and ConfigMaps) from a
+source namespace into target namespaces using annotations on the source object.
+
+This removes the need to manually pre-create imagePullSecrets and the
+Cloudflare API token in every namespace. Bootstrap flow:
+  1. Create secrets once in the release namespace (flux-system) with
+     the reflection annotations (see NOTES.txt).
+  2. Reflector propagates them to cert-manager, traefik, and sealed-secrets
+     automatically before those controllers start.
+
+cert-manager and sealed-secrets depend on this HelmRelease so Flux waits
+for reflector to be Ready before reconciling either.
+*/}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: reflector
+  namespace: reflector
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: reflector
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: reflector
+      version: {{ include "base-cluster.versions.reflector.chart" . | quote }}
+      sourceRef:
+        kind: HelmRepository
+        name: emberstack
+        namespace: {{ .Release.Namespace }}
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  values:
+    replicaCount: 1
+    resources: {{- .Values.reflector.resources | toYaml | nindent 6 }}

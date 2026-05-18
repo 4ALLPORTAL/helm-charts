@@ -1,0 +1,28 @@
+{{- if and (eq (include "base-cluster.networkPolicy.type" .) "cilium") .Values.sealedSecrets.enabled }}
+{{/*
+CiliumNetworkPolicy for sealed-secrets controller. Needs egress to the
+kube-apiserver (watches SealedSecrets, creates Secrets) and ingress from
+the apiserver for webhook validation.
+*/}}
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: sealed-secrets
+  namespace: sealed-secrets
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: sealed-secrets
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: sealed-secrets-chart
+  egress:
+    - toEntities: [kube-apiserver]
+  ingress:
+    - fromEntities: [kube-apiserver, remote-node, host]
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
+            - port: "8081"
+              protocol: TCP
+{{- end }}

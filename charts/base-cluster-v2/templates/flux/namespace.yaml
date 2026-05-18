@@ -1,0 +1,18 @@
+{{/*
+flux-system namespace. Only created when this chart is the one installing
+Flux (flux.install=true). When Flux is bootstrapped externally the namespace
+already exists — we don't try to manage it twice.
+*/}}
+{{- if .Values.flux.install }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flux-system
+  annotations:
+    helm.sh/resource-policy: keep
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: flux
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
+{{- end }}

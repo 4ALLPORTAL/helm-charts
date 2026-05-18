@@ -1,0 +1,42 @@
+{{/*
+Per-tenant Flux sources. Each entry under .Values.git.instances produces a
+GitRepository + matching Kustomization that Flux will reconcile into the
+cluster. The Kustomization's `path` is overridable per-instance; defaults to
+the repo root so simple "everything in this repo" wiring works.
+*/}}
+{{- range $name, $instance := .Values.git.instances }}
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: {{ printf "flux-%s" $name }}
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "base-cluster.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: flux
+    app.kubernetes.io/part-of: flux
+spec:
+  interval: {{ default "1m" $instance.gitInterval | quote }}
+  url: {{ required (printf "git.instances.%s.url is required" $name) $instance.url | quote }}
+  ref:
+    branch: {{ default "main" $instance.branch | quote }}
+  {{- with $instance.existingSecret }}
+  secretRef:
+    name: {{ . | quote }}
+  {{- end }}
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: {{ printf "flux-%s" $name }}
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "base-cluster.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: flux
+spec:
+  interval: 1m
+  prune: true
+  path: {{ default "./" $instance.path | quote }}
+  sourceRef:
+    kind: GitRepository
+    name: {{ printf "flux-%s" $name }}
+    namespace: {{ $.Release.Namespace }}
+{{- end }}

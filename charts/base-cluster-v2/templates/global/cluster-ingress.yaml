@@ -1,0 +1,24 @@
+{{/*
+A "tracer" Ingress for external-dns: it has no rules with paths and no backend,
+so Traefik never routes traffic to it. The point is purely to give external-dns
+two hostnames to publish A-records for — the apex (clusterName.baseDomain) and
+its wildcard. Combined with the cluster wildcard certificate this is enough to
+serve any *.<cluster>.<domain> hostname over TLS without each ingress needing
+its own DNS record or its own cert.
+*/}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cluster
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: {{ include "base-cluster.domain" . | quote }}
+    - host: {{ printf "*.%s" (include "base-cluster.domain" .) | quote }}
+  tls:
+    - secretName: cluster-wildcard-certificate
+      hosts:
+        - {{ include "base-cluster.domain" . | quote }}
+        - {{ printf "*.%s" (include "base-cluster.domain" .) | quote }}

@@ -1,0 +1,242 @@
+## Global settings shared across all components.
+global:
+  ## -- Required. Base DNS domain. The cluster's wildcard cert and ingress
+  ##    hostnames are published under <clusterName>.<baseDomain>.
+  baseDomain: ""
+  ## -- Required. Short identifier of this cluster, used as a sub-zone and as
+  ##    the external-dns txtOwnerId so multiple clusters can share a zone.
+  clusterName: ""
+  ## -- Name of a pre-existing dockerconfigjson Secret for pulling DHI images.
+  ##    Must exist in: flux-system, cert-manager, traefik (and sealed-secrets
+  ##    if enabled) BEFORE installing this chart.
+  imagePullSecretName: ""
+  ## -- Override the image registry for all components. Useful for air-gapped
+  ##    environments that mirror images to a private registry.
+  imageRegistry: ""
+  ## -- Additional cluster-wide cert-manager Certificates to issue. Map of
+  ##    name -> { dnsNames: [...] }. Issued via the letsencrypt-prod issuer.
+  certificates: {}
+  ## NetworkPolicy mode.
+  ##   auto   — emit CiliumNetworkPolicy if the API is present, otherwise nothing
+  ##   cilium — always emit CiliumNetworkPolicy
+  ##   none   — emit nothing
+  networkPolicy:
+    type: auto
+    ## Cluster-wide default-deny policy. Requires per-namespace allow policies
+    ## to be in place first. kube-system and rook-ceph are excluded because
+    ## blocking them risks total cluster failure.
+    defaultDeny:
+      enabled: true
+      excludedNamespaces:
+        - kube-system
+        - rook-ceph
+    ## Endpoint selectors used in NetworkPolicies. Override if your cluster's
+    ## kube-dns / Prometheus pods are labelled differently.
+    dnsLabels:
+      io.kubernetes.pod.namespace: kube-system
+      k8s-app: kube-dns
+
+## FluxCD bootstrap.
+##
+## NOTE: in most clusters Flux is bootstrapped out-of-band with `flux bootstrap`
+## *before* this chart is installed; the chart only emits HelmReleases that
+## Flux then reconciles. Set `install: true` for a greenfield install where
+## this chart should also deploy the flux2 controllers.
+flux:
+  install: false
+  ## Resource requests/limits applied to all Flux controllers when install=true.
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+## Per-tenant Flux GitRepository + Kustomization sources. Each entry produces
+## one GitRepository and one Kustomization in the chart's namespace.
+##
+## Example:
+##   instances:
+##     apps:
+##       url: ssh://git@git.example.com/platform/apps.git
+##       existingSecret: flux-apps-git
+##       gitInterval: 1m
+##       path: ./clusters/gt-office
+git:
+  instances: {}
+
+## DNS provider used by both cert-manager (DNS01 solver) and external-dns.
+## Currently only Cloudflare is wired up.
+dns:
+  ## Required when cert-manager is enabled. The Cloudflare account email.
+  email: ""
+  ## Required. Name of an existing secret in the chart's namespace containing
+  ## key `cloudflare_api_token`. Mounted by both cert-manager and external-dns.
+  existingSecret: ""
+  ## Optional. Restrict the issuer's DNS01 solver to these zones. Empty = all.
+  domains: []
+
+## Cilium CNI.
+##
+## Like Flux, Cilium is a chicken-and-egg dependency: the HelmRelease needs
+## Flux and pod networking (Cilium) to reconcile, so Cilium must already be
+## running before this chart is first installed. On subsequent reconciles
+## Flux takes over lifecycle management. Bootstrap path:
+##   1. Install Cilium manually (`helm install cilium cilium/cilium …`)
+##   2. Install Flux (`flux bootstrap …`)
+##   3. Deploy this chart — Flux adopts the existing Cilium release.
+cilium:
+  install: true
+  ## MTU for the datapath. Match the network's lowest link MTU minus
+  ## encapsulation overhead (VXLAN: 50 bytes).
+  mtu: 1450
+  ## Physical devices Cilium attaches to. Space-separated string.
+  ## Leave empty for auto-detection.
+  devices: ""
+  ## Kubernetes API endpoint. On Talos this is typically localhost:7445.
+  k8sServiceHost: ""
+  k8sServicePort: 6443
+  ## Pod CIDR for cluster-pool IPAM.
+  podCIDR: "10.244.0.0/16"
+  podCIDRMaskSize: 24
+  ## Node-to-node WireGuard encryption.
+  encryption:
+    enabled: true
+  ## Replace kube-proxy with Cilium's eBPF datapath.
+  kubeProxyReplacement: true
+  ## Hubble observability stack.
+  hubble:
+    enabled: true
+    relay:
+      enabled: true
+    ui:
+      enabled: true
+  operator:
+    replicas: 2
+  ## Routing: tunnel (vxlan/geneve) or native.
+  routingMode: tunnel
+  tunnelProtocol: vxlan
+  ## eBPF-based masquerading (requires native routing or direct routing).
+  bpfMasquerade: false
+  ## BGP control plane for service/pod advertisement.
+  bgpControlPlane:
+    enabled: false
+  ## cgroup settings. Set autoMount=false on Talos.
+  cgroup:
+    autoMount: true
+    hostRoot: /sys/fs/cgroup
+
+## Traefik ingress controller.
+traefik:
+  log:
+    level: WARN
+  service:
+    ## On Talos with no LoadBalancer provider yet, set type=ClusterIP and
+    ## populate `traefik.ingressIP` so external-dns publishes a record pointing
+    ## at the node/HA-VIP. With MetalLB or Cilium L2Announcements, leave as
+    ## LoadBalancer.
+    type: LoadBalancer
+    loadBalancerIP: ""
+    externalIPs: []
+  ## When set, --providers.kubernetesIngress.ingressEndpoint.ip is forced to
+  ## this value (used when Service has no externally-routable VIP yet).
+  ingressIP: ""
+  minReplicas: 2
+  maxReplicas: 8
+  resources:
+    requests:
+      cpu: "1"
+      memory: 250Mi
+    limits:
+      cpu: "4"
+      memory: 500Mi
+  ## Extra TLS cipher suites appended to the safe defaults.
+  cipherSuites: []
+  ## Extra Traefik CLI arguments.
+  additionalArguments: []
+
+## cert-manager (DHI chart).
+##
+## CRDs are shipped in this chart's `crds/` directory so first-install ordering
+## works (Helm applies CRDs before templates). The HelmRelease has crds.enabled=
+## false to avoid double-management; bumping cert-manager requires also
+## refreshing crds/cert-manager.yaml in this chart.
+certManager:
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  caInjector:
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+  webhook:
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: "1"
+        memory: 512Mi
+
+## external-dns (DHI chart).
+externalDNS:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+## kubernetes-reflector — mirrors Secrets across namespaces automatically.
+## Create source secrets once in flux-system with reflection annotations;
+## reflector propagates them to cert-manager, traefik, and sealed-secrets.
+reflector:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+## Sealed Secrets controller (DHI chart).
+sealedSecrets:
+  enabled: true
+  ## Extra values passed through to the sealed-secrets chart.
+  values: {}
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+## Internal speedtest health endpoint (Librespeed). Reached at
+## https://<speedtest.host>.<clusterName>.<baseDomain>
+speedtest:
+  enabled: true
+  host: speedtest
+  replicas: 2
+  image:
+    registry: ghcr.io
+    repository: librespeed/speedtest
+    tag: "6.0.2"
+    digest: "sha256:871ec7a1c908e7c9288e51e074b321088a297c37fc672a4c882b0309f61ddef7"
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi

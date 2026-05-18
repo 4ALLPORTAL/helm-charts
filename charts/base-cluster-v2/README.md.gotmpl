@@ -1,0 +1,54 @@
+{{ template "chart.header" . }}
+
+{{ template "chart.deprecationWarning" . }}
+
+{{ template "chart.badgesSection" . }}
+
+{{ template "chart.description" . }}
+
+{{ template "chart.homepageLine" . }}
+
+## Scope
+
+This chart bootstraps the **foundation** of a Kubernetes cluster:
+
+- **FluxCD** — the GitOps engine. Deployed by this chart only when
+  `flux.install=true`; the default assumes Flux was already installed via
+  `flux bootstrap`.
+- **Traefik** — the cluster's primary ingress controller.
+- **cert-manager** — issues TLS certificates from Let's Encrypt via the
+  Cloudflare DNS01 solver. CRDs ship in `crds/` so first-install ordering is
+  predictable.
+- **ExternalDNS** — publishes DNS records for ingresses to Cloudflare.
+- **Librespeed speedtest** — an internal endpoint at
+  `https://speedtest.<cluster>.<domain>` that doubles as a connectivity smoke
+  test.
+
+**Out of scope** — monitoring, backups, RBAC scaffolding, descheduler,
+sealedsecrets, security scanning. These will land in separate charts/stories.
+
+## Versions
+
+Component upstream versions are pinned exactly in
+`templates/_versions.tpl`. Bumping any component is an explicit edit to that
+file plus a chart version bump.
+
+## Network policies
+
+`global.networkPolicy.type` defaults to `auto`: the chart emits
+CiliumNetworkPolicy objects when the `cilium.io/v2` API is present, otherwise
+nothing. On Talos pre-Cilium, set this to `none` if you'd rather not pre-stage
+the policies (they are inert without Cilium).
+
+## Successor to `base-cluster`
+
+This is a clean v1 of a chart that succeeds the older `base-cluster` chart.
+The older chart remains in this repo for clusters that haven't migrated.
+
+{{ template "chart.maintainersSection" . }}
+
+{{ template "chart.requirementsSection" . }}
+
+{{ template "chart.valuesSection" . }}
+
+{{ template "helm-docs.versionFooter" . }}

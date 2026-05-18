@@ -1,0 +1,229 @@
+{{- if .Values.speedtest.enabled }}
+{{/*
+Internal speedtest endpoint (Librespeed). Plain Deployment + Service +
+Ingress — no upstream Helm chart wrapper, since the image is self-contained.
+
+The librespeed entrypoint expects to run as root (chowns files, edits Apache
+config, then execs apache2-foreground). We split that into two phases so the
+pod passes PSS "restricted":
+
+  1. init container — runs as nobody (65534), copies the speedtest source
+     files and a patched Apache config (port 8080) into emptyDir volumes.
+     No capabilities, no root.
+  2. main container — runs as nobody (65534) with readOnlyRootFilesystem,
+     mounts the prepared volumes, and starts Apache directly.
+
+The Ingress carries an annotation pinning the Traefik
+`speedtest-no-compression` middleware (defined in the Traefik file-provider
+ConfigMap) so gzip doesn't skew throughput numbers. TLS is the cluster
+wildcard cert.
+*/}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: speedtest
+  namespace: traefik
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: speedtest
+spec:
+  replicas: {{ .Values.speedtest.replicas }}
+  selector:
+    matchLabels: {{- include "base-cluster.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: speedtest
+  template:
+    metadata:
+      labels: {{- include "base-cluster.labels" . | nindent 8 }}
+        app.kubernetes.io/component: speedtest
+    spec:
+      automountServiceAccountToken: false
+      {{- with .Values.global.imagePullSecretName }}
+      imagePullSecrets:
+        - name: {{ . }}
+      {{- end }}
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels: {{- include "base-cluster.selectorLabels" . | nindent 20 }}
+                    app.kubernetes.io/component: speedtest
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels: {{- include "base-cluster.selectorLabels" . | nindent 14 }}
+              app.kubernetes.io/component: speedtest
+      initContainers:
+        - name: setup
+          image: {{ include "base-cluster.speedtest.image" . | quote }}
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -e
+              # --- Web content (standalone mode) ---
+              cp /speedtest/*.js          /srv/html/
+              cp /speedtest/config.json   /srv/html/
+              cp /speedtest/favicon.ico   /srv/html/
+              cp -r /speedtest/backend/   /srv/html/backend
+              cp /speedtest/index.html         /srv/html/
+              cp /speedtest/index-classic.html /srv/html/
+              cp /speedtest/index-modern.html  /srv/html/
+              mkdir -p /srv/html/styling /srv/html/javascript /srv/html/images /srv/html/fonts
+              cp -r /speedtest/frontend/styling/*    /srv/html/styling/
+              cp -r /speedtest/frontend/javascript/* /srv/html/javascript/
+              cp -r /speedtest/frontend/images/*     /srv/html/images/
+              cp -r /speedtest/frontend/fonts/*      /srv/html/fonts/ 2>/dev/null || true
+              cp /speedtest/frontend/settings.json   /srv/html/settings.json 2>/dev/null || true
+              printf '[{"name":"local","server":"/backend","dlURL":"garbage.php","ulURL":"empty.php","pingURL":"empty.php","getIpURL":"getIP.php","id":1}]' > /srv/html/server-list.json
+              # --- Apache config patched for port 8080 ---
+              cp -r /etc/apache2/. /srv/apache-config/
+              sed -i 's/^Listen 80$/Listen 8080/g'   /srv/apache-config/ports.conf
+              sed -i 's/\*:80>/\*:8080>/g'           /srv/apache-config/sites-available/000-default.conf
+          volumeMounts:
+            - name: html
+              mountPath: /srv/html
+            - name: apache-config
+              mountPath: /srv/apache-config
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop: [ALL]
+      containers:
+        - name: speedtest
+          image: {{ include "base-cluster.speedtest.image" . | quote }}
+          imagePullPolicy: IfNotPresent
+          command: ["apache2-foreground"]
+          env:
+            - name: APACHE_RUN_USER
+              value: "nobody"
+            - name: APACHE_RUN_GROUP
+              value: "nogroup"
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            failureThreshold: 30
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          volumeMounts:
+            - name: html
+              mountPath: /var/www/html
+            - name: apache-config
+              mountPath: /etc/apache2
+            - name: apache-run
+              mountPath: /run/apache2
+            - name: apache-lock
+              mountPath: /run/lock/apache2
+            - name: apache-log
+              mountPath: /var/log/apache2
+            - name: tmp
+              mountPath: /tmp
+          resources: {{- .Values.speedtest.resources | toYaml | nindent 12 }}
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop: [ALL]
+      volumes:
+        - name: html
+          emptyDir: {}
+        - name: apache-config
+          emptyDir: {}
+        - name: apache-run
+          emptyDir: {}
+        - name: apache-lock
+          emptyDir: {}
+        - name: apache-log
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
+---
+{{- if ge (.Values.speedtest.replicas | int) 2 }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: speedtest
+  namespace: traefik
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: speedtest
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels: {{- include "base-cluster.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: speedtest
+{{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: speedtest
+  namespace: traefik
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: speedtest
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
+  selector: {{- include "base-cluster.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: speedtest
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: speedtest
+  namespace: traefik
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: speedtest
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: speedtest-no-compression@file
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - {{ include "base-cluster.speedtest.host" . | quote }}
+  rules:
+    - host: {{ include "base-cluster.speedtest.host" . | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: speedtest
+                port:
+                  name: http
+{{- end }}

@@ -1,0 +1,64 @@
+{{- if eq (include "base-cluster.networkPolicy.type" .) "cilium" }}
+{{/*
+CiliumNetworkPolicies for Flux controllers. All four controllers share the
+same egress pattern: kube-apiserver + world:443 (git/OCI fetches) + DNS.
+notification-controller additionally accepts webhook ingress.
+*/}}
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: flux-controllers
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: flux
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/part-of: flux
+  egress:
+    - toEntities: [kube-apiserver]
+    - toEntities: [world]
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+            - port: "80"
+              protocol: TCP
+            - port: "22"
+              protocol: TCP
+    - toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/part-of: flux
+      toPorts:
+        - ports:
+            - port: "80"
+              protocol: TCP
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: flux-notification-webhook
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: flux
+spec:
+  endpointSelector:
+    matchLabels:
+      app: notification-controller
+  ingress:
+    - fromEntities: [world, cluster]
+      toPorts:
+        - ports:
+            - port: "9292"
+              protocol: TCP
+            - port: "80"
+              protocol: TCP
+{{- end }}
