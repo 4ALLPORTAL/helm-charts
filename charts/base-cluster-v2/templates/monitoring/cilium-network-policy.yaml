@@ -1,18 +1,47 @@
 {{- if and .Values.monitoring.enabled (eq (include "base-cluster.networkPolicy.type" .) "cilium") }}
 {{/*
-Per-role CiliumNetworkPolicies for the monitoring namespace.
+CiliumNetworkPolicies for the monitoring namespace.
 
-Policies match on `app.kubernetes.io/instance` because that label is set by
-every standard Helm chart to the HelmRelease name — keeping us independent of
-DHI's `<name>-chart` suffix convention and Mimir's upstream label scheme.
+`monitoring-intra-ns` is the catch-all that allows any-port traffic between
+any two pods in the namespace — Mimir's sub-chart MinIO uses legacy `app:`
+labels rather than `app.kubernetes.io/instance`, and similar sub-charts
+would otherwise need bespoke selectors.
 
-Roles:
-  collectors     — Alloy, Node Exporter, KSM (scrape cluster, send to backends)
-  storage        — Mimir, Loki, Tempo (receive from collectors, queried by Grafana)
-  grafana        — UI, queries backends, fronted by Traefik
-  otel-collector — receives OTLP from workloads, forwards to Tempo
-  uptimerobot    — egress to api.uptimerobot.com only
+The per-role policies below add **external** allowances on top:
+  collectors              — Alloy, Node Exporter, KSM (scrape cluster pods)
+  storage                 — Mimir, Loki, Tempo (egress to UptimeRobot heartbeat)
+  grafana                 — Traefik ingress + world:443 for plugins/OIDC
+  otel-collector          — accepts OTLP from any cluster workload
+  uptimerobot             — egress to api.uptimerobot.com only
+  rollout-operator-webhook — kube-apiserver → mimir-rollout-operator admission webhook
 */}}
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: monitoring-intra-ns
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+spec:
+  description: "Allow all intra-namespace traffic in monitoring (covers sub-chart pods with non-standard labels)"
+  endpointSelector: {}
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: monitoring
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: monitoring
+    - toEntities: [kube-apiserver, host]
+    - toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
 ---
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
@@ -174,6 +203,29 @@ spec:
             - port: "4317"
               protocol: TCP
             - port: "4318"
+              protocol: TCP
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: monitoring-rollout-operator-webhook
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+spec:
+  description: "Allow kube-apiserver admission webhook calls to mimir-rollout-operator"
+  ## Cilium classifies the apiserver→pod webhook call as `remote-node` (the
+  ## packet's source identity on Cilium's overlay), not `kube-apiserver`, so
+  ## all three entities are needed for the policy to actually match.
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: rollout-operator
+      app.kubernetes.io/instance: mimir
+  ingress:
+    - fromEntities: [kube-apiserver, host, remote-node]
+      toPorts:
+        - ports:
+            - port: "8443"
               protocol: TCP
 ---
 apiVersion: cilium.io/v2
