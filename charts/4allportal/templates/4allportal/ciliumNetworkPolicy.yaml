@@ -50,7 +50,8 @@ spec:
     {{- end }}
     {{- end }}
     - toFQDNs:
-        - matchPattern: "repository.4allportal.net"
+        - matchName: "repository.4allportal.net"
+        - matchName: "api.4allportal.cloud"
       toPorts:
         - ports:
             - port: "443"
