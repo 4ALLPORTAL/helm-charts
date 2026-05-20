@@ -22,6 +22,8 @@ All charts are sourced from DHI (dhi.io) except flux2 (fluxcd-community).
 
 {{- define "base-cluster.versions.reflector.chart" -}}10.0.42{{- end -}}
 
+{{- define "base-cluster.versions.metricsServer.chart" -}}3.13.0{{- end -}}
+
 {{/* Observability stack. Mimir comes from the upstream grafana HelmRepository
      because DHI does not mirror it; all others are pinned DHI charts. */}}
 

@@ -139,6 +139,16 @@ spec:
               - url: {{ .Values.monitoring.uptimeRobot.heartbeatUrl | quote }}
                 send_resolved: false
             {{- end }}
+    ## Kafka — Mimir's ingest path writes the WAL through it (mimir-ingest-0
+     ## topic, 24h retention, ~1 GiB segments) even with zoneAwareReplication
+     ## disabled. Upstream default of 5Gi fills within days → CrashLoopBackOff
+     ## that doesn't recover on its own.
+    kafka:
+      persistence:
+        size: {{ .Values.monitoring.mimir.kafkaSize | quote }}
+        {{- with $sc }}
+        storageClass: {{ . | quote }}
+        {{- end }}
     ## Disable everything else — gateway/nginx (we hit the distributor service
     ## directly from Alloy/Grafana), all caches (small cluster, not needed).
     nginx:           { enabled: false }

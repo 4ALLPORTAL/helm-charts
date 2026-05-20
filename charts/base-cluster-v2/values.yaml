@@ -209,6 +209,22 @@ reflector:
       cpu: 200m
       memory: 128Mi
 
+## metrics-server — exposes the metrics.k8s.io API consumed by `kubectl top`,
+## k9s, and the HorizontalPodAutoscaler. Independent of the LGTM observability
+## stack; deployed in kube-system.
+metricsServer:
+  enabled: true
+  ## Most kubelets serve their stats endpoint with a self-signed cert. Set to
+  ## false only if you front kubelets with a CA the apiserver trusts.
+  kubeletInsecureTLS: true
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
 ## Sealed Secrets controller (DHI chart).
 sealedSecrets:
   enabled: true
@@ -242,6 +258,14 @@ monitoring:
     enabled: true
     retention: 720h          ## 30d
     size: 50Gi
+    ## Kafka PVC for Mimir's ingest-WAL. The mimir-distributed chart defaults
+    ## to 5Gi, which fills within ~3-4 days of moderate ingest and crashloops
+    ## kafka-0 with "log dir is already offline". Keep ≥ 20Gi.
+    ## Note: PVC volumeClaimTemplate size is immutable in the StatefulSet —
+    ## changing this only affects NEW clusters. For existing clusters expand
+    ## via `kubectl patch pvc kafka-data-mimir-kafka-0 ...` then delete the
+    ## pod to trigger filesystem resize.
+    kafkaSize: 20Gi
     resources:
       requests:
         cpu: 500m
