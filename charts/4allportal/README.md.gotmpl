@@ -127,3 +127,11 @@ No other changes to the database configuration are required.
 This release adds an egress rule for `api.4allportal.cloud` on port 443 to the Cilium network policy.
 
 No action required.
+
+## To 22.0.3
+
+This release adds support for referencing an external secret for backup credentials instead of providing plain-text values.
+
+When `.Values.backups.volumes.secretName` is set, the chart no longer creates an internal secret from the plain-text values `.Values.backups.volumes.password`, `.Values.backups.target.s3.accessKey`, and `.Values.backups.target.s3.secretKey`. The referenced secret must contain the keys `RESTIC_PASSWORD`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`.
+
+No action required if you are not using `.Values.backups.volumes.secretName`.
