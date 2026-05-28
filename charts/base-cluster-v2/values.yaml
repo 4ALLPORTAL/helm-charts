@@ -399,6 +399,39 @@ monitoring:
           cpu: 200m
           memory: 128Mi
 
+  ## IngressMonitorController (Stakater) — watches EndpointMonitor CRs
+  ## cluster-wide (the 4allportal chart ships one per ingress) and reconciles
+  ## them into UptimeRobot monitors, so deploying a portal auto-registers its
+  ## uptime check. Chart from the stakater HTTPS HelmRepository; image from
+  ## ghcr.io (OCI, not DHI-hardened). Independent of the uptimeRobot CronJob
+  ## above — listing the same endpoint in both can create duplicate monitors.
+  ingressMonitor:
+    enabled: false
+    ## Secret with key `config.yaml` holding the UptimeRobot provider config.
+    ## Required shape:
+    ##   providers:
+    ##     - name: UptimeRobot
+    ##       apiKey: <Main read-WRITE key>      # read-only keys cannot create monitors
+    ##       apiURL: https://api.uptimerobot.com/v2/   # mandatory, IMC has no default
+    ##       alertContacts: "<contact-id>_0_0"
+    ##   enableMonitorDeletion: false
+    ##   monitorNameTemplate: "{{.Namespace}}-{{.Name}}"
+    ##   resyncPeriod: 0
+    ## Reuse the config from the old base-cluster; sealed-secret recommended.
+    ## Required when enabled.
+    existingConfigSecret: ""
+    image:
+      ## Optional registry mirror, e.g. a Harbor proxy. Empty = chart default
+      ## ghcr.io/stakater/ingressmonitorcontroller.
+      registry: ""
+    resources:
+      requests:
+        cpu: 25m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 128Mi
+
 ## Internal speedtest health endpoint (Librespeed). Reached at
 ## https://<speedtest.host>.<clusterName>.<baseDomain>
 speedtest:

@@ -1,0 +1,73 @@
+{{- if and .Values.monitoring.enabled .Values.monitoring.ingressMonitor.enabled }}
+{{/*
+IngressMonitorController (Stakater) — watches EndpointMonitor CRs cluster-wide
+and reconciles them into UptimeRobot monitors. The 4allportal app chart ships
+one EndpointMonitor per ingress (urlFrom.ingressRef), so deploying a portal
+auto-registers its uptime check.
+
+Chart comes from the `stakater` HTTPS HelmRepository (not published as OCI);
+the image defaults to ghcr.io/stakater/ingressmonitorcontroller (OCI, not
+DHI-hardened — an accepted exception, see _versions.tpl). The CRD ships in the
+chart's crds/ dir and is installed by Flux.
+
+serviceMonitor stays disabled (this cluster has no Prometheus-Operator CRDs) and
+certManager stays disabled (its metrics-TLS cert + volume mount are gated on it).
+Provider config + UptimeRobot API key come from `existingConfigSecret`.
+*/}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: ingress-monitor-controller
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: ingressmonitorcontroller
+      version: {{ include "base-cluster.versions.ingressMonitor.chart" . | quote }}
+      sourceRef:
+        kind: HelmRepository
+        name: stakater
+        namespace: {{ .Release.Namespace }}
+  install:
+    crds: Create
+    remediation:
+      retries: -1
+  upgrade:
+    crds: CreateReplace
+    remediation:
+      retries: -1
+  values:
+    fullnameOverride: ingress-monitor-controller
+    {{- with .Values.global.imagePullSecretName }}
+    imagePullSecrets:
+      - name: {{ . }}
+    {{- end }}
+    {{- with .Values.monitoring.ingressMonitor.image.registry }}
+    image:
+      repository: {{ printf "%s/stakater/ingressmonitorcontroller" . | quote }}
+    {{- end }}
+    ## Watch all namespaces — portal EndpointMonitor CRs live in their own
+    ## namespaces (e.g. fourallportal-test), not in `monitoring`.
+    watchNamespaces: ""
+    ## Secret (key `config.yaml`) with the UptimeRobot provider + API key.
+    configSecretName: {{ required "monitoring.ingressMonitor.existingConfigSecret is required when ingressMonitor is enabled" .Values.monitoring.ingressMonitor.existingConfigSecret | quote }}
+    ## No Prometheus-Operator CRDs on this cluster — keep ServiceMonitor off.
+    serviceMonitor:
+      enabled: false
+    ## Metrics-TLS cert/volume are gated on this; off avoids a missing-secret mount.
+    certManager:
+      enabled: false
+    resources: {{- toYaml .Values.monitoring.ingressMonitor.resources | nindent 6 }}
+    podSecurityContext:
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop: [ALL]
+{{- end }}

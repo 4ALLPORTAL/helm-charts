@@ -5,7 +5,8 @@ Bump the constants here when upgrading a component, and the corresponding
 HelmRelease will pick it up. Pin EXACT versions — never `x.x.x` ranges — so
 chart bumps are explicit, reviewable PRs.
 
-All charts are sourced from DHI (dhi.io) except flux2 (fluxcd-community).
+All charts are sourced from DHI (dhi.io) except flux2 (fluxcd-community),
+mimir (grafana repo) and ingressMonitor (stakater repo).
 */}}
 
 {{- define "base-cluster.versions.cilium.chart" -}}1.19.3{{- end -}}
@@ -42,3 +43,9 @@ All charts are sourced from DHI (dhi.io) except flux2 (fluxcd-community).
 {{- define "base-cluster.versions.kubeStateMetrics.chart" -}}7.3.0{{- end -}}
 
 {{- define "base-cluster.versions.otelCollector.chart" -}}0.154.0{{- end -}}
+
+{{/* IngressMonitorController (Stakater) — reconciles EndpointMonitor CRs into
+     UptimeRobot monitors. Chart from the `stakater` HTTPS repo; image from
+     ghcr.io/stakater (not DHI-hardened). */}}
+
+{{- define "base-cluster.versions.ingressMonitor.chart" -}}2.2.13{{- end -}}

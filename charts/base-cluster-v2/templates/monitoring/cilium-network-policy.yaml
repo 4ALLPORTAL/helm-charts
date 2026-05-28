@@ -14,6 +14,7 @@ The per-role policies below add **external** allowances on top:
   otel-collector          — accepts OTLP from any cluster workload
   uptimerobot             — egress to api.uptimerobot.com only
   rollout-operator-webhook — kube-apiserver → mimir-rollout-operator admission webhook
+  ingress-monitor         — IMC: kube-apiserver watch + egress to api.uptimerobot.com
 */}}
 ---
 apiVersion: cilium.io/v2
@@ -254,4 +255,34 @@ spec:
           rules:
             dns:
               - matchPattern: "*"
+{{- if .Values.monitoring.ingressMonitor.enabled }}
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: monitoring-ingress-monitor
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+spec:
+  description: "IngressMonitorController — watches EndpointMonitors/ingresses via kube-apiserver, creates monitors at api.uptimerobot.com"
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/instance: ingress-monitor-controller
+  egress:
+    - toEntities: [kube-apiserver]
+    - toFQDNs:
+        - matchPattern: "api.uptimerobot.com"
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+    - toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+{{- end }}
 {{- end }}
