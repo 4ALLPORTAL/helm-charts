@@ -399,6 +399,16 @@ monitoring:
           cpu: 200m
           memory: 128Mi
 
+  ## Rook-Ceph — Grafana dashboards and dedicated Alloy scrape for ceph-mgr
+  ## Prometheus metrics (port 9283). Requires rook-ceph to be running with the
+  ## MGR Prometheus module enabled (default in all recent rook-ceph releases).
+  ## No NetworkPolicy changes needed — monitoring-collectors already allows
+  ## egress to cluster entities and rook-ceph is excluded from default-deny.
+  rookCeph:
+    enabled: false
+    ## Namespace where rook-ceph is deployed.
+    namespace: rook-ceph
+
   ## IngressMonitorController (Stakater) — watches EndpointMonitor CRs
   ## cluster-wide (the 4allportal chart ships one per ingress) and reconciles
   ## them into UptimeRobot monitors, so deploying a portal auto-registers its

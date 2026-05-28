@@ -169,4 +169,13 @@ spec:
               }
             }
           }
+
+          {{ if .Values.monitoring.rookCeph.enabled -}}
+          // ─── Rook-Ceph MGR → Mimir ──────────────────────────────────────
+          prometheus.scrape "rook_ceph_mgr" {
+            targets = [{"__address__" = "rook-ceph-mgr.{{ .Values.monitoring.rookCeph.namespace }}.svc.{{ $clusterDomain }}:9283"}]
+            forward_to      = [prometheus.remote_write.mimir.receiver]
+            scrape_interval = "60s"
+          }
+          {{- end }}
 {{- end }}

@@ -106,6 +106,20 @@ spec:
           gnetId: 17347
           revision: 9
           datasource: Mimir
+        {{- if .Values.monitoring.rookCeph.enabled }}
+        ceph-cluster:
+          gnetId: 2842
+          revision: 17
+          datasource: Mimir
+        ceph-osd:
+          gnetId: 5336
+          revision: 9
+          datasource: Mimir
+        ceph-pools:
+          gnetId: 5342
+          revision: 9
+          datasource: Mimir
+        {{- end }}
     service:
       type: ClusterIP
       port: 80
