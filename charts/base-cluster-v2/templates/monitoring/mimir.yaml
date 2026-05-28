@@ -123,9 +123,11 @@ spec:
         {{- with $sc }}
         storageClass: {{ . | quote }}
         {{- end }}
-      ## Routes the Watchdog alert to UptimeRobot's heartbeat URL. The URL
-      ## itself is set in values; when uptimeRobot is disabled, the receiver
-      ## stays empty (firing → no-op) so alertmanager still starts.
+      ## Routes the Watchdog alert to UptimeRobot's heartbeat URL. The webhook
+      ## fires whenever heartbeatUrl is set — independent of uptimeRobot.enabled
+      ## (which gates the monitor-reconciler CronJob + its API key). This lets
+      ## the heartbeat run on its own; when heartbeatUrl is empty the receiver
+      ## stays a no-op so alertmanager still starts.
       fallbackConfig: |
         route:
           receiver: uptimerobot-heartbeat
@@ -134,7 +136,7 @@ spec:
           repeat_interval: 5m
         receivers:
           - name: uptimerobot-heartbeat
-            {{- if and .Values.monitoring.uptimeRobot.enabled .Values.monitoring.uptimeRobot.heartbeatUrl }}
+            {{- if .Values.monitoring.uptimeRobot.heartbeatUrl }}
             webhook_configs:
               - url: {{ .Values.monitoring.uptimeRobot.heartbeatUrl | quote }}
                 send_resolved: false

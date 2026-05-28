@@ -380,7 +380,9 @@ monitoring:
     enabled: false
     existingSecret: ""
     ## Heartbeat URL the Watchdog alert pings via Alertmanager webhook. Format:
-    ## https://heartbeat.uptimerobot.com/<token>
+    ## https://heartbeat.uptimerobot.com/<token>. Setting this enables the
+    ## heartbeat on its own — `enabled` above is only needed for the external
+    ## monitor reconciler (which also requires `existingSecret`).
     heartbeatUrl: ""
     ## Monitors reconciled by the CronJob. friendlyName must be unique.
     ##   monitors:
