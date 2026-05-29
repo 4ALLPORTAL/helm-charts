@@ -23,9 +23,20 @@ This chart bootstraps the **foundation** of a Kubernetes cluster:
 - **Librespeed speedtest** — an internal endpoint at
   `https://speedtest.<cluster>.<domain>` that doubles as a connectivity smoke
   test.
+- **Sealed Secrets** — Bitnami controller for storing encrypted secrets in
+  Git (`sealedSecrets.enabled`).
+- **Reflector** — mirrors source Secrets/ConfigMaps into other namespaces
+  via annotations (`reflector.enabled`).
+- **metrics-server** — exposes `metrics.k8s.io` for `kubectl top` and HPAs
+  (`metricsServer.enabled`).
+- **Observability stack** — Grafana Alloy (collector) → Mimir/Loki/Tempo
+  backends + Grafana UI + OTEL Collector for traces; Mimir-internal
+  Alertmanager pings an UptimeRobot heartbeat. IngressMonitorController
+  auto-creates UptimeRobot monitors from `EndpointMonitor` CRs. Opt-in via
+  `monitoring.enabled`; each sub-component has its own toggle.
 
-**Out of scope** — monitoring, backups, RBAC scaffolding, descheduler,
-sealedsecrets, security scanning. These will land in separate charts/stories.
+**Out of scope** — backups, RBAC scaffolding, descheduler, security scanning.
+These will land in separate charts/stories.
 
 ## Versions
 
@@ -103,6 +114,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | git.instances | object | `{}` |  |
 | global.baseDomain | string | `""` |  |
 | global.certificates | object | `{}` |  |
+| global.clusterDomain | string | `"cluster.local"` |  |
 | global.clusterName | string | `""` |  |
 | global.imagePullSecretName | string | `""` |  |
 | global.imageRegistry | string | `""` |  |
@@ -197,6 +209,9 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.uptimeRobot.existingSecret | string | `""` |  |
 | monitoring.uptimeRobot.heartbeatUrl | string | `""` |  |
 | monitoring.uptimeRobot.monitors | list | `[]` |  |
+| monitoring.uptimeRobot.reconciler.image.digest | string | `""` |  |
+| monitoring.uptimeRobot.reconciler.image.repository | string | `"python"` |  |
+| monitoring.uptimeRobot.reconciler.image.tag | string | `"3.13"` |  |
 | monitoring.uptimeRobot.reconciler.resources.limits.cpu | string | `"200m"` |  |
 | monitoring.uptimeRobot.reconciler.resources.limits.memory | string | `"128Mi"` |  |
 | monitoring.uptimeRobot.reconciler.resources.requests.cpu | string | `"50m"` |  |
