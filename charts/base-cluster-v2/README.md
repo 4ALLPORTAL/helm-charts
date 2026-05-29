@@ -1,6 +1,6 @@
 # base-cluster-v2
 
-![Version: 1.0.2](https://img.shields.io/badge/Version-1.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.2](https://img.shields.io/badge/AppVersion-1.0.2-informational?style=flat-square)
+![Version: 1.4.0](https://img.shields.io/badge/Version-1.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.4.0](https://img.shields.io/badge/AppVersion-1.4.0-informational?style=flat-square)
 
 Foundational base cluster setup — Cilium CNI, FluxCD, Traefik ingress,
 cert-manager, ExternalDNS, and an internal Librespeed speedtest endpoint.
@@ -51,6 +51,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | ---- | ------ | --- |
 | jpkraemer-mg | <j.kraemer@4allportal.com> |  |
 | Dominic-Beer | <d.beer@4allportal.com> |  |
+| Christopher Schwarz | <c.schwarz@4allportal.com> |  |
 
 ## Values
 
@@ -111,6 +112,96 @@ The older chart remains in this repo for clusters that haven't migrated.
 | global.networkPolicy.dnsLabels."io.kubernetes.pod.namespace" | string | `"kube-system"` |  |
 | global.networkPolicy.dnsLabels.k8s-app | string | `"kube-dns"` |  |
 | global.networkPolicy.type | string | `"auto"` |  |
+| metricsServer.enabled | bool | `true` |  |
+| metricsServer.kubeletInsecureTLS | bool | `true` |  |
+| metricsServer.resources.limits.cpu | string | `"200m"` |  |
+| metricsServer.resources.limits.memory | string | `"256Mi"` |  |
+| metricsServer.resources.requests.cpu | string | `"50m"` |  |
+| metricsServer.resources.requests.memory | string | `"64Mi"` |  |
+| monitoring.alloy.enabled | bool | `true` |  |
+| monitoring.alloy.resources.limits.cpu | string | `"1"` |  |
+| monitoring.alloy.resources.limits.memory | string | `"1Gi"` |  |
+| monitoring.alloy.resources.requests.cpu | string | `"100m"` |  |
+| monitoring.alloy.resources.requests.memory | string | `"256Mi"` |  |
+| monitoring.enabled | bool | `false` |  |
+| monitoring.grafana.enabled | bool | `true` |  |
+| monitoring.grafana.existingAdminSecret | string | `""` |  |
+| monitoring.grafana.host | string | `"grafana"` |  |
+| monitoring.grafana.oidc.allowSignUp | bool | `true` |  |
+| monitoring.grafana.oidc.allowedDomains | string | `""` |  |
+| monitoring.grafana.oidc.apiUrl | string | `""` |  |
+| monitoring.grafana.oidc.authUrl | string | `""` |  |
+| monitoring.grafana.oidc.autoLogin | bool | `false` |  |
+| monitoring.grafana.oidc.clientAuthentication | string | `""` |  |
+| monitoring.grafana.oidc.clientId | string | `""` |  |
+| monitoring.grafana.oidc.disableLoginForm | bool | `false` |  |
+| monitoring.grafana.oidc.enabled | bool | `false` |  |
+| monitoring.grafana.oidc.existingSecret | string | `""` |  |
+| monitoring.grafana.oidc.name | string | `"SSO"` |  |
+| monitoring.grafana.oidc.oauthAllowInsecureEmailLookup | bool | `false` |  |
+| monitoring.grafana.oidc.roleAttributePath | string | `""` |  |
+| monitoring.grafana.oidc.scopes | string | `"openid profile email"` |  |
+| monitoring.grafana.oidc.tokenUrl | string | `""` |  |
+| monitoring.grafana.resources.limits.cpu | string | `"500m"` |  |
+| monitoring.grafana.resources.limits.memory | string | `"512Mi"` |  |
+| monitoring.grafana.resources.requests.cpu | string | `"100m"` |  |
+| monitoring.grafana.resources.requests.memory | string | `"256Mi"` |  |
+| monitoring.ingressMonitor.enabled | bool | `false` |  |
+| monitoring.ingressMonitor.existingConfigSecret | string | `""` |  |
+| monitoring.ingressMonitor.image.registry | string | `""` |  |
+| monitoring.ingressMonitor.resources.limits.cpu | string | `"200m"` |  |
+| monitoring.ingressMonitor.resources.limits.memory | string | `"128Mi"` |  |
+| monitoring.ingressMonitor.resources.requests.cpu | string | `"25m"` |  |
+| monitoring.ingressMonitor.resources.requests.memory | string | `"64Mi"` |  |
+| monitoring.kubeStateMetrics.enabled | bool | `true` |  |
+| monitoring.kubeStateMetrics.resources.limits.cpu | string | `"200m"` |  |
+| monitoring.kubeStateMetrics.resources.limits.memory | string | `"256Mi"` |  |
+| monitoring.kubeStateMetrics.resources.requests.cpu | string | `"50m"` |  |
+| monitoring.kubeStateMetrics.resources.requests.memory | string | `"64Mi"` |  |
+| monitoring.loki.enabled | bool | `true` |  |
+| monitoring.loki.resources.limits.cpu | string | `"1"` |  |
+| monitoring.loki.resources.limits.memory | string | `"2Gi"` |  |
+| monitoring.loki.resources.requests.cpu | string | `"250m"` |  |
+| monitoring.loki.resources.requests.memory | string | `"512Mi"` |  |
+| monitoring.loki.retention | string | `"336h"` |  |
+| monitoring.loki.size | string | `"50Gi"` |  |
+| monitoring.mimir.enabled | bool | `true` |  |
+| monitoring.mimir.kafkaSize | string | `"20Gi"` |  |
+| monitoring.mimir.resources.limits.cpu | string | `"2"` |  |
+| monitoring.mimir.resources.limits.memory | string | `"4Gi"` |  |
+| monitoring.mimir.resources.requests.cpu | string | `"500m"` |  |
+| monitoring.mimir.resources.requests.memory | string | `"1Gi"` |  |
+| monitoring.mimir.retention | string | `"720h"` |  |
+| monitoring.mimir.size | string | `"50Gi"` |  |
+| monitoring.nodeExporter.enabled | bool | `true` |  |
+| monitoring.nodeExporter.resources.limits.cpu | string | `"200m"` |  |
+| monitoring.nodeExporter.resources.limits.memory | string | `"128Mi"` |  |
+| monitoring.nodeExporter.resources.requests.cpu | string | `"50m"` |  |
+| monitoring.nodeExporter.resources.requests.memory | string | `"64Mi"` |  |
+| monitoring.otelCollector.enabled | bool | `true` |  |
+| monitoring.otelCollector.resources.limits.cpu | string | `"500m"` |  |
+| monitoring.otelCollector.resources.limits.memory | string | `"512Mi"` |  |
+| monitoring.otelCollector.resources.requests.cpu | string | `"100m"` |  |
+| monitoring.otelCollector.resources.requests.memory | string | `"128Mi"` |  |
+| monitoring.rookCeph.enabled | bool | `false` |  |
+| monitoring.rookCeph.namespace | string | `"rook-ceph"` |  |
+| monitoring.storageClass | string | `""` |  |
+| monitoring.tempo.enabled | bool | `true` |  |
+| monitoring.tempo.resources.limits.cpu | string | `"1"` |  |
+| monitoring.tempo.resources.limits.memory | string | `"2Gi"` |  |
+| monitoring.tempo.resources.requests.cpu | string | `"250m"` |  |
+| monitoring.tempo.resources.requests.memory | string | `"512Mi"` |  |
+| monitoring.tempo.retention | string | `"168h"` |  |
+| monitoring.tempo.size | string | `"20Gi"` |  |
+| monitoring.uptimeRobot.enabled | bool | `false` |  |
+| monitoring.uptimeRobot.existingSecret | string | `""` |  |
+| monitoring.uptimeRobot.heartbeatUrl | string | `""` |  |
+| monitoring.uptimeRobot.monitors | list | `[]` |  |
+| monitoring.uptimeRobot.reconciler.resources.limits.cpu | string | `"200m"` |  |
+| monitoring.uptimeRobot.reconciler.resources.limits.memory | string | `"128Mi"` |  |
+| monitoring.uptimeRobot.reconciler.resources.requests.cpu | string | `"50m"` |  |
+| monitoring.uptimeRobot.reconciler.resources.requests.memory | string | `"64Mi"` |  |
+| monitoring.uptimeRobot.reconciler.schedule | string | `"*/15 * * * *"` |  |
 | reflector.resources.limits.cpu | string | `"200m"` |  |
 | reflector.resources.limits.memory | string | `"128Mi"` |  |
 | reflector.resources.requests.cpu | string | `"50m"` |  |
