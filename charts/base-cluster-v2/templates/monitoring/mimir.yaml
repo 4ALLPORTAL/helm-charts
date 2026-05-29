@@ -1,0 +1,162 @@
+{{- if and .Values.monitoring.enabled .Values.monitoring.mimir.enabled }}
+{{/*
+Mimir — pulled from upstream `grafana` HelmRepository because DHI does not
+mirror mimir-distributed.
+
+This is a "smallest viable" deployment: every microservice runs replicas=1
+with built-in MinIO for blocks storage. The chart has no first-class
+monolithic mode; the closest reliable shape is "scale-everything-down".
+
+For multi-cluster aggregation, swap MinIO for shared S3 by overriding
+mimir.structuredConfig.blocks_storage.{backend,s3} via Flux postRenderers or
+a values patch.
+
+The internal Alertmanager routes the always-firing Watchdog alert (see
+watchdog-rule.yaml) to UptimeRobot via webhook.
+*/}}
+{{- $sc := .Values.monitoring.storageClass -}}
+{{- $res := .Values.monitoring.mimir.resources -}}
+{{- $size := .Values.monitoring.mimir.size -}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: mimir
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+spec:
+  interval: 5m
+  ## Mimir is slow to converge on first install (memberlist ring formation,
+  ## MinIO bucket creation, ingester WAL replay) — give it a generous window
+  ## and don't uninstall on timeout. `disableWait: true` makes Flux mark the
+  ## release ready once manifests apply; readiness is monitored at the pod
+  ## level via the kubelet probes instead.
+  timeout: 15m
+  chart:
+    spec:
+      chart: mimir-distributed
+      version: {{ include "base-cluster.versions.mimir.chart" . | quote }}
+      sourceRef:
+        kind: HelmRepository
+        name: grafana
+        namespace: {{ .Release.Namespace }}
+  install:
+    disableWait: true
+    remediation:
+      retries: 0
+  upgrade:
+    disableWait: true
+    remediation:
+      retries: 0
+  values:
+    mimir:
+      structuredConfig:
+        ## Single-tenant base-cluster install — disable multitenancy so writes
+        ## don't require the X-Scope-OrgID header. Mimir routes everything to
+        ## the synthetic `anonymous` tenant (matches our watchdog rule path).
+        multitenancy_enabled: false
+        limits:
+          compactor_blocks_retention_period: {{ .Values.monitoring.mimir.retention | quote }}
+        ruler:
+          ## Send firing alerts to the in-cluster Alertmanager.
+          alertmanager_url: http://mimir-alertmanager.monitoring.svc:8080/alertmanager
+        ruler_storage:
+          backend: local
+          local:
+            directory: /etc/mimir/rules
+    minio:
+      enabled: true
+      mode: standalone
+      persistence:
+        size: {{ $size }}
+        {{- with $sc }}
+        storageClass: {{ . | quote }}
+        {{- end }}
+    ## Stateless components — replicas=1, no persistence.
+    distributor:     { replicas: 1, resources: {{ toJson $res }}, zoneAwareReplication: { enabled: false } }
+    querier:         { replicas: 1, resources: {{ toJson $res }}, zoneAwareReplication: { enabled: false } }
+    query_frontend:  { replicas: 1, resources: {{ toJson $res }} }
+    query_scheduler: { replicas: 1, resources: {{ toJson $res }} }
+    compactor:       { replicas: 1, resources: {{ toJson $res }} }
+    ruler:
+      replicas: 1
+      resources: {{ toJson $res }}
+      ## Mount the Watchdog rule into the local rules directory; the file
+      ## lives under `anonymous` because auth_enabled=false maps every push
+      ## to that tenant.
+      extraVolumes:
+        - name: rules
+          configMap:
+            name: mimir-watchdog-rule
+      extraVolumeMounts:
+        - name: rules
+          mountPath: /etc/mimir/rules/anonymous
+    overrides_exporter: { replicas: 1, resources: {{ toJson $res }} }
+    ## Stateful components — replicas=1 with PVC.
+    ingester:
+      replicas: 1
+      resources: {{ toJson $res }}
+      zoneAwareReplication:
+        enabled: false
+      persistentVolume:
+        size: {{ $size }}
+        {{- with $sc }}
+        storageClass: {{ . | quote }}
+        {{- end }}
+    store_gateway:
+      replicas: 1
+      resources: {{ toJson $res }}
+      zoneAwareReplication:
+        enabled: false
+      persistentVolume:
+        size: {{ $size }}
+        {{- with $sc }}
+        storageClass: {{ . | quote }}
+        {{- end }}
+    alertmanager:
+      enabled: true
+      replicas: 1
+      zoneAwareReplication:
+        enabled: false
+      persistentVolume:
+        size: 2Gi
+        {{- with $sc }}
+        storageClass: {{ . | quote }}
+        {{- end }}
+      ## Routes the Watchdog alert to UptimeRobot's heartbeat URL. The webhook
+      ## fires whenever heartbeatUrl is set — independent of uptimeRobot.enabled
+      ## (which gates the monitor-reconciler CronJob + its API key). This lets
+      ## the heartbeat run on its own; when heartbeatUrl is empty the receiver
+      ## stays a no-op so alertmanager still starts.
+      fallbackConfig: |
+        route:
+          receiver: uptimerobot-heartbeat
+          group_wait: 0s
+          group_interval: 1m
+          repeat_interval: 5m
+        receivers:
+          - name: uptimerobot-heartbeat
+            {{- if .Values.monitoring.uptimeRobot.heartbeatUrl }}
+            webhook_configs:
+              - url: {{ .Values.monitoring.uptimeRobot.heartbeatUrl | quote }}
+                send_resolved: false
+            {{- end }}
+    ## Kafka — Mimir's ingest path writes the WAL through it (mimir-ingest-0
+     ## topic, 24h retention, ~1 GiB segments) even with zoneAwareReplication
+     ## disabled. Upstream default of 5Gi fills within days → CrashLoopBackOff
+     ## that doesn't recover on its own.
+    kafka:
+      persistence:
+        size: {{ .Values.monitoring.mimir.kafkaSize | quote }}
+        {{- with $sc }}
+        storageClass: {{ . | quote }}
+        {{- end }}
+    ## Disable everything else — gateway/nginx (we hit the distributor service
+    ## directly from Alloy/Grafana), all caches (small cluster, not needed).
+    nginx:           { enabled: false }
+    gateway:         { enabled: false }
+    chunks-cache:    { enabled: false }
+    results-cache:   { enabled: false }
+    metadata-cache:  { enabled: false }
+    index-cache:     { enabled: false }
+{{- end }}

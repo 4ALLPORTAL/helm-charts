@@ -1,0 +1,71 @@
+{{- if and .Values.monitoring.enabled .Values.monitoring.otelCollector.enabled }}
+{{/*
+OpenTelemetry Collector — Deployment that accepts OTLP traces from workloads
+on :4317 (gRPC) and :4318 (HTTP), enriches them with k8s attributes, and
+exports to Tempo.
+
+Workloads should target `otel-collector-opentelemetry-collector.monitoring.svc:4317`.
+*/}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: otel-collector
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: opentelemetry-collector-chart
+      version: {{ include "base-cluster.versions.otelCollector.chart" . | quote }}
+      sourceRef:
+        kind: HelmRepository
+        name: dhi
+        namespace: {{ .Release.Namespace }}
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  values:
+    {{- with .Values.global.imagePullSecretName }}
+    imagePullSecrets:
+      - name: {{ . }}
+    {{- end }}
+    mode: deployment
+    replicaCount: 1
+    resources: {{- toYaml .Values.monitoring.otelCollector.resources | nindent 6 }}
+    ## DHI's opentelemetry-collector image is the core distribution, not
+    ## contrib — k8sattributes processor isn't available. Workloads can
+    ## enrich spans themselves via the OTel SDK if needed.
+    presets:
+      kubernetesAttributes:
+        enabled: false
+    config:
+      receivers:
+        otlp:
+          protocols:
+            grpc:
+              endpoint: 0.0.0.0:4317
+            http:
+              endpoint: 0.0.0.0:4318
+      processors:
+        batch: {}
+        memory_limiter:
+          check_interval: 5s
+          limit_percentage: 80
+          spike_limit_percentage: 25
+      exporters:
+        otlp/tempo:
+          endpoint: tempo-tempo-chart.monitoring.svc:4317
+          tls:
+            insecure: true
+      service:
+        pipelines:
+          traces:
+            receivers:  [otlp]
+            processors: [memory_limiter, batch]
+            exporters:  [otlp/tempo]
+{{- end }}

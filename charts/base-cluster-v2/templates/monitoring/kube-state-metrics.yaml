@@ -1,0 +1,42 @@
+{{- if and .Values.monitoring.enabled .Values.monitoring.kubeStateMetrics.enabled }}
+{{/*
+kube-state-metrics — exposes Kubernetes object state (deployments, pods,
+nodes, etc.) as Prometheus metrics. Picked up by Alloy through the
+prometheus.io/scrape=true annotation on the Service.
+*/}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kube-state-metrics
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: kube-state-metrics-chart
+      version: {{ include "base-cluster.versions.kubeStateMetrics.chart" . | quote }}
+      sourceRef:
+        kind: HelmRepository
+        name: dhi
+        namespace: {{ .Release.Namespace }}
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  values:
+    {{- with .Values.global.imagePullSecretName }}
+    imagePullSecrets:
+      - name: {{ . }}
+    {{- end }}
+    resources: {{- toYaml .Values.monitoring.kubeStateMetrics.resources | nindent 6 }}
+    ## `prometheusScrape: true` already adds prometheus.io/scrape="true" to the
+    ## service; only add the port annotation to avoid duplicate-key errors.
+    prometheusScrape: true
+    service:
+      annotations:
+        prometheus.io/port: "8080"
+{{- end }}

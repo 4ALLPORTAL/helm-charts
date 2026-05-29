@@ -5,8 +5,9 @@ Cluster domain:    {{ $domain }}
 Wildcard cert:     cluster-wildcard-certificate (covers *.{{ $domain }})
 
 What happens next is driven by Flux:
-  - HelmReleases for cert-manager, Traefik, external-dns and the speedtest
-    are now in the cluster. Flux will reconcile each in turn.
+  - HelmReleases for cert-manager, Traefik and external-dns are now in the
+    cluster; the speedtest is a plain Deployment/Service/Ingress. Flux will
+    reconcile each in turn.
   - Watch progress with:
         flux get helmreleases -A
         flux get kustomizations -A

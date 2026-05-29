@@ -1,0 +1,47 @@
+{{- if and .Values.monitoring.enabled .Values.monitoring.nodeExporter.enabled }}
+{{/*
+Prometheus Node Exporter — host-level metrics. Runs as a DaemonSet on the
+host network so per-node CPU/memory/disk/network counters are exposed.
+
+The `prometheus.io/scrape=true` annotation makes Alloy pick it up
+automatically via the endpoints-discovery path.
+*/}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: node-exporter
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: node-exporter-chart
+      version: {{ include "base-cluster.versions.nodeExporter.chart" . | quote }}
+      sourceRef:
+        kind: HelmRepository
+        name: dhi
+        namespace: {{ .Release.Namespace }}
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  values:
+    {{- with .Values.global.imagePullSecretName }}
+    imagePullSecrets:
+      - name: {{ . }}
+    {{- end }}
+    resources: {{- toYaml .Values.monitoring.nodeExporter.resources | nindent 6 }}
+    service:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9100"
+    ## Standard hardening — bind to host network so each pod is reachable at
+    ## ${nodeIP}:9100 and counters reflect the actual host.
+    hostNetwork: true
+    tolerations:
+      - operator: Exists
+{{- end }}
