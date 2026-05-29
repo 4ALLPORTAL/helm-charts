@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 22.0.1](https://img.shields.io/badge/Version-22.0.1-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
+![Version: 22.0.3](https://img.shields.io/badge/Version-22.0.3-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -392,3 +392,17 @@ to:
 `.Values.fourAllPortal.database.existing.type: sqlserver`
 
 No other changes to the database configuration are required.
+
+## To 22.0.2
+
+This release adds an egress rule for `api.4allportal.cloud` on port 443 to the Cilium network policy.
+
+No action required.
+
+## To 22.0.3
+
+This release adds support for referencing an external secret for backup credentials instead of providing plain-text values.
+
+When `.Values.backups.volumes.secretName` is set, the chart no longer creates an internal secret from the plain-text values `.Values.backups.volumes.password`, `.Values.backups.target.s3.accessKey`, and `.Values.backups.target.s3.secretKey`. The referenced secret must contain the keys `RESTIC_PASSWORD`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`.
+
+No action required if you are not using `.Values.backups.volumes.secretName`.
