@@ -134,14 +134,26 @@ spec:
       auth.generic_oauth:
         enabled: true
         name: {{ $g.oidc.name | quote }}
-        client_id: {{ $g.oidc.clientId | quote }}
+        client_id: {{ required "monitoring.grafana.oidc.clientId is required when oidc is enabled" $g.oidc.clientId | quote }}
+        {{- with $g.oidc.clientAuthentication }}
+        client_authentication: {{ . | quote }}
+        {{- end }}
         scopes: {{ $g.oidc.scopes | quote }}
-        auth_url: {{ $g.oidc.authUrl | quote }}
-        token_url: {{ $g.oidc.tokenUrl | quote }}
-        api_url: {{ $g.oidc.apiUrl | quote }}
+        auth_url: {{ required "monitoring.grafana.oidc.authUrl is required when oidc is enabled" $g.oidc.authUrl | quote }}
+        token_url: {{ required "monitoring.grafana.oidc.tokenUrl is required when oidc is enabled" $g.oidc.tokenUrl | quote }}
+        api_url: {{ required "monitoring.grafana.oidc.apiUrl is required when oidc is enabled" $g.oidc.apiUrl | quote }}
         {{- with $g.oidc.allowedDomains }}
         allowed_domains: {{ . | quote }}
         {{- end }}
+        allow_sign_up: {{ $g.oidc.allowSignUp }}
+        auto_login: {{ $g.oidc.autoLogin }}
+        {{- with $g.oidc.roleAttributePath }}
+        role_attribute_path: {{ . | quote }}
+        {{- end }}
+      auth:
+        oauth_auto_login: {{ $g.oidc.autoLogin }}
+        disable_login_form: {{ $g.oidc.disableLoginForm }}
+        oauth_allow_insecure_email_lookup: {{ $g.oidc.oauthAllowInsecureEmailLookup }}
       {{- end }}
     {{- if and $g.oidc.enabled $g.oidc.existingSecret }}
     envFromSecret: {{ $g.oidc.existingSecret | quote }}

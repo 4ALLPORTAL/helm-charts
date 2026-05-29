@@ -308,18 +308,44 @@ monitoring:
     ## Required when grafana.enabled. Secret with keys `admin-user` and
     ## `admin-password`.
     existingAdminSecret: ""
-    ## OIDC SSO. When enabled, fill in clientId/clientSecret/authUrl/tokenUrl/
-    ## apiUrl. `existingSecret` may carry GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET.
+    ## OIDC SSO via Grafana's generic_oauth provider.
+    ## Renders the [auth.generic_oauth] + [auth] sections of grafana.ini.
+    ## When enabled, set clientId + endpoint URLs and supply the client secret
+    ## via `existingSecret` (env var GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET, picked
+    ## up automatically — Grafana's env override).
     oidc:
       enabled: false
+      ## Label shown on the Grafana login page.
       name: SSO
       clientId: ""
+      ## Secret with `GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET` key (envFrom).
       existingSecret: ""
+      ## Client auth method. Empty = Grafana default (`client_secret_basic`).
+      ## Entra ID requires `client_secret_post`.
+      clientAuthentication: ""
       scopes: "openid profile email"
       authUrl: ""
       tokenUrl: ""
       apiUrl: ""
+      ## Restrict logins to one or more email domains, space-separated.
       allowedDomains: ""
+      ## Auto-create the Grafana user record on first successful login.
+      allowSignUp: true
+      ## Skip Grafana's login page and redirect straight to the IdP.
+      ## Pair with `disableLoginForm` for an IdP-only experience.
+      autoLogin: false
+      ## Hide the admin/password fallback form.
+      disableLoginForm: false
+      ## Some IdPs (e.g. Entra ID) don't return a verified email; allow
+      ## lookup without the verification flag.
+      oauthAllowInsecureEmailLookup: false
+      ## JMESPath against id_token claims → Grafana org role.
+      ## Requires the IdP to issue a `groups` (or equivalent) claim in the
+      ## id_token (e.g. Entra: App Registration → Token configuration → Add
+      ## groups claim). Example:
+      ##   contains(groups, '<admin-gid>') && 'Admin' ||
+      ##   contains(groups, '<editor-gid>') && 'Editor' || 'Viewer'
+      roleAttributePath: ""
     resources:
       requests:
         cpu: 100m
