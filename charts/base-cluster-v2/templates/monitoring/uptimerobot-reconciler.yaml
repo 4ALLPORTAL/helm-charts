@@ -131,7 +131,11 @@ spec:
               type: RuntimeDefault
           containers:
             - name: reconcile
-              image: {{ printf "%s/python:latest" (default "dhi.io" .Values.global.imageRegistry) | quote }}
+              {{- $img := .Values.monitoring.uptimeRobot.reconciler.image }}
+              {{- $reg := default "dhi.io" .Values.global.imageRegistry }}
+              {{- $ref := printf "%s/%s:%s" $reg $img.repository $img.tag }}
+              {{- with $img.digest }}{{ $ref = printf "%s@%s" $ref . }}{{ end }}
+              image: {{ $ref | quote }}
               command: ["python3", "/etc/reconciler/reconcile.py"]
               resources: {{- toYaml .Values.monitoring.uptimeRobot.reconciler.resources | nindent 16 }}
               env:

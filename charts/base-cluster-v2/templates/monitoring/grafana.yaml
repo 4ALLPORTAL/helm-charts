@@ -86,6 +86,7 @@ spec:
               path: /var/lib/grafana/dashboards/default
     dashboards:
       default:
+        {{- if .Values.monitoring.mimir.enabled }}
         node-exporter-full:
           gnetId: 1860
           revision: 37
@@ -98,10 +99,6 @@ spec:
           gnetId: 15757
           revision: 43
           datasource: Mimir
-        loki-logs:
-          gnetId: 13639
-          revision: 2
-          datasource: Loki
         traefik:
           gnetId: 17347
           revision: 9
@@ -119,6 +116,13 @@ spec:
           gnetId: 5342
           revision: 9
           datasource: Mimir
+        {{- end }}
+        {{- end }}
+        {{- if .Values.monitoring.loki.enabled }}
+        loki-logs:
+          gnetId: 13639
+          revision: 2
+          datasource: Loki
         {{- end }}
     service:
       type: ClusterIP

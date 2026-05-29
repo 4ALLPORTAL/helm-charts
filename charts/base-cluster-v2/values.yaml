@@ -13,6 +13,10 @@ global:
   ## -- Override the image registry for all components. Useful for air-gapped
   ##    environments that mirror images to a private registry.
   imageRegistry: ""
+  ## -- In-cluster DNS suffix. Override if the cluster was bootstrapped with a
+  ##    non-default search domain (kubeadm `--service-dns-domain`, Talos
+  ##    `cluster.discovery.dnsDomain`). Used by Alloy to reach Loki/Mimir.
+  clusterDomain: cluster.local
   ## -- Additional cluster-wide cert-manager Certificates to issue. Map of
   ##    name -> { dnsNames: [...] }. Issued via the letsencrypt-prod issuer.
   certificates: {}
@@ -419,6 +423,13 @@ monitoring:
     monitors: []
     reconciler:
       schedule: "*/15 * * * *"
+      ## Image for the reconciliation CronJob. Defaults to DHI's hardened
+      ## python:3.13 (registry comes from global.imageRegistry, falling back
+      ## to dhi.io). Override `tag` or set `digest` to pin against drift.
+      image:
+        repository: python
+        tag: "3.13"
+        digest: ""
       resources:
         requests:
           cpu: 50m
