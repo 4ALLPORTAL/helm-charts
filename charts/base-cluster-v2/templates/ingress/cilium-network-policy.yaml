@@ -48,7 +48,12 @@ spec:
     matchLabels:
       app.kubernetes.io/name: external-dns-chart
   egress:
-    - toEntities: [kube-apiserver, world]
+    - toEntities: [kube-apiserver]
+    - toEntities: [world]
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
     - toPorts:
         - ports:
             - port: "53"
