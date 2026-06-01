@@ -8,7 +8,7 @@ apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   name: flux-controllers
-  namespace: {{ .Release.Namespace }}
+  namespace: flux-system
   labels: {{- include "base-cluster.labels" . | nindent 4 }}
     app.kubernetes.io/component: flux
 spec:
@@ -30,6 +30,8 @@ spec:
         - ports:
             - port: "53"
               protocol: UDP
+            - port: "53"
+              protocol: TCP
           rules:
             dns:
               - matchPattern: "*"
@@ -46,7 +48,7 @@ apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   name: flux-notification-webhook
-  namespace: {{ .Release.Namespace }}
+  namespace: flux-system
   labels: {{- include "base-cluster.labels" . | nindent 4 }}
     app.kubernetes.io/component: flux
 spec:

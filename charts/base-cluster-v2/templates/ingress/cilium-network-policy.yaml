@@ -32,6 +32,8 @@ spec:
         - ports:
             - port: "53"
               protocol: UDP
+            - port: "53"
+              protocol: TCP
           rules:
             dns:
               - matchPattern: "*"
@@ -48,11 +50,18 @@ spec:
     matchLabels:
       app.kubernetes.io/name: external-dns-chart
   egress:
-    - toEntities: [kube-apiserver, world]
+    - toEntities: [kube-apiserver]
+    - toEntities: [world]
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
     - toPorts:
         - ports:
             - port: "53"
               protocol: UDP
+            - port: "53"
+              protocol: TCP
           rules:
             dns:
               - matchPattern: "*"

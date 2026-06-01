@@ -41,7 +41,7 @@ spec:
   values:
     MTU: {{ .Values.cilium.mtu }}
     {{- with .Values.cilium.devices }}
-    devices: {{ . }}
+    devices: {{- toYaml . | nindent 6 }}
     {{- end }}
     cni:
       install: true
