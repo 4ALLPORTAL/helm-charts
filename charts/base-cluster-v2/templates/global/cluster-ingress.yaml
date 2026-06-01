@@ -10,7 +10,11 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: cluster
-  namespace: {{ .Release.Namespace }}
+  # Co-located with the cluster-wildcard-certificate Secret, which the
+  # cluster-certificate.yaml Certificate creates in the traefik namespace.
+  # Traefik only loads an Ingress TLS Secret from the Ingress's own namespace,
+  # so this must live in traefik, not the chart's release namespace.
+  namespace: traefik
   labels: {{- include "base-cluster.labels" . | nindent 4 }}
 spec:
   ingressClassName: traefik
