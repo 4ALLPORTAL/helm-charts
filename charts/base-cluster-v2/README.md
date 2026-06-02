@@ -3,8 +3,9 @@
 ![Version: 1.4.0](https://img.shields.io/badge/Version-1.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.4.0](https://img.shields.io/badge/AppVersion-1.4.0-informational?style=flat-square)
 
 Foundational base cluster setup — Cilium CNI, FluxCD, Traefik ingress,
-cert-manager, ExternalDNS, and an internal Librespeed speedtest endpoint.
-Successor to the base-cluster chart.
+cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
+full LGTM observability stack (Grafana, Loki, Mimir, Tempo, and Alloy-based
+metrics/log/trace collection). Successor to the base-cluster chart.
 
 **Homepage:** <https://4allportal.com>
 
