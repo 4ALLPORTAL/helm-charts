@@ -59,7 +59,7 @@ spec:
       resources: {{- toYaml .Values.monitoring.loki.resources | nindent 8 }}
       persistence:
         enabled: true
-        size: {{ .Values.monitoring.loki.size }}
+        size: {{ .Values.monitoring.loki.size | quote }}
         {{- with .Values.monitoring.storageClass }}
         storageClass: {{ . | quote }}
         {{- end }}

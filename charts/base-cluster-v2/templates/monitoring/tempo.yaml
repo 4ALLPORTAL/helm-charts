@@ -30,9 +30,8 @@ spec:
       retries: -1
   values:
     {{- with .Values.global.imagePullSecretName }}
-    serviceAccount:
-      imagePullSecrets:
-        - name: {{ . }}
+    imagePullSecrets:
+      - name: {{ . }}
     {{- end }}
     tempo:
       resources: {{- toYaml .Values.monitoring.tempo.resources | nindent 8 }}
@@ -51,7 +50,7 @@ spec:
             path: /var/tempo/traces
     persistence:
       enabled: true
-      size: {{ .Values.monitoring.tempo.size }}
+      size: {{ .Values.monitoring.tempo.size | quote }}
       {{- with .Values.monitoring.storageClass }}
       storageClass: {{ . | quote }}
       {{- end }}

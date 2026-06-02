@@ -99,7 +99,7 @@ metadata:
   name: uptimerobot-reconciler
   namespace: monitoring
   labels: {{- include "base-cluster.labels" . | nindent 4 }}
-    app.kubernetes.io/component: monitoring
+    app.kubernetes.io/component: uptimerobot-reconciler
 spec:
   schedule: {{ .Values.monitoring.uptimeRobot.reconciler.schedule | quote }}
   concurrencyPolicy: Forbid
@@ -112,8 +112,7 @@ spec:
       template:
         metadata:
           labels: {{- include "base-cluster.labels" . | nindent 12 }}
-            app.kubernetes.io/component: monitoring
-            app.kubernetes.io/instance: uptimerobot-reconciler
+            app.kubernetes.io/component: uptimerobot-reconciler
         spec:
           serviceAccountName: uptimerobot-reconciler
           automountServiceAccountToken: false

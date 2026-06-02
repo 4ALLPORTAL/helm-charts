@@ -1,11 +1,13 @@
 {{- if and .Values.monitoring.enabled .Values.monitoring.otelCollector.enabled }}
 {{/*
 OpenTelemetry Collector — Deployment that accepts OTLP traces from workloads
-on :4317 (gRPC) and :4318 (HTTP), enriches them with k8s attributes, and
-exports to Tempo.
+on :4317 (gRPC) and :4318 (HTTP) and exports them to Tempo. k8s-attribute
+enrichment is intentionally off (see the kubernetesAttributes preset below);
+the DHI image ships the core distribution without the k8sattributes processor.
 
 Workloads should target `otel-collector-opentelemetry-collector.monitoring.svc:4317`.
 */}}
+{{- $clusterDomain := include "base-cluster.clusterDomain" . -}}
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -59,7 +61,7 @@ spec:
           spike_limit_percentage: 25
       exporters:
         otlp/tempo:
-          endpoint: tempo-tempo-chart.monitoring.svc:4317
+          endpoint: tempo-tempo-chart.monitoring.svc.{{ $clusterDomain }}:4317
           tls:
             insecure: true
       service:

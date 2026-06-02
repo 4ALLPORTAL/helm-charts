@@ -6,7 +6,8 @@ HelmRelease will pick it up. Pin EXACT versions — never `x.x.x` ranges — so
 chart bumps are explicit, reviewable PRs.
 
 All charts are sourced from DHI (dhi.io) except flux2 (fluxcd-community),
-mimir (grafana repo) and ingressMonitor (stakater repo).
+reflector (emberstack repo), mimir (grafana repo) and ingressMonitor
+(stakater repo).
 */}}
 
 {{- define "base-cluster.versions.cilium.chart" -}}1.19.3{{- end -}}

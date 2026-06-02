@@ -27,7 +27,7 @@ with reflection annotations. kubernetes-reflector will propagate them automatica
   kubectl annotate secret dhi-pull-secret -n {{ .Release.Namespace }} \
     reflector.v1.k8s.emberstack.com/reflection-allowed=true \
     reflector.v1.k8s.emberstack.com/reflection-auto-enabled=true \
-    "reflector.v1.k8s.emberstack.com/reflection-auto-namespaces=cert-manager,traefik,sealed-secrets"
+    "reflector.v1.k8s.emberstack.com/reflection-auto-namespaces=cert-manager,traefik,sealed-secrets,kube-system,monitoring"
 
   kubectl create secret generic cloudflare-api-key \
     --from-literal=cloudflare_api_token=<token> \

@@ -17,6 +17,7 @@ watchdog-rule.yaml) to UptimeRobot via webhook.
 {{- $sc := .Values.monitoring.storageClass -}}
 {{- $res := .Values.monitoring.mimir.resources -}}
 {{- $size := .Values.monitoring.mimir.size -}}
+{{- $clusterDomain := include "base-cluster.clusterDomain" . -}}
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -59,7 +60,7 @@ spec:
           compactor_blocks_retention_period: {{ .Values.monitoring.mimir.retention | quote }}
         ruler:
           ## Send firing alerts to the in-cluster Alertmanager.
-          alertmanager_url: http://mimir-alertmanager.monitoring.svc:8080/alertmanager
+          alertmanager_url: http://mimir-alertmanager.monitoring.svc.{{ $clusterDomain }}:8080/alertmanager
         ruler_storage:
           backend: local
           local:
@@ -142,9 +143,9 @@ spec:
                 send_resolved: false
             {{- end }}
     ## Kafka — Mimir's ingest path writes the WAL through it (mimir-ingest-0
-     ## topic, 24h retention, ~1 GiB segments) even with zoneAwareReplication
-     ## disabled. Upstream default of 5Gi fills within days → CrashLoopBackOff
-     ## that doesn't recover on its own.
+    ## topic, 24h retention, ~1 GiB segments) even with zoneAwareReplication
+    ## disabled. Upstream default of 5Gi fills within days → CrashLoopBackOff
+    ## that doesn't recover on its own.
     kafka:
       persistence:
         size: {{ .Values.monitoring.mimir.kafkaSize | quote }}

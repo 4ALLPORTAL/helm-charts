@@ -13,6 +13,7 @@ OIDC SSO is opt-in via values.monitoring.grafana.oidc; when disabled the
 chart's default admin auth from `existingAdminSecret` is used.
 */}}
 {{- $g := .Values.monitoring.grafana -}}
+{{- $clusterDomain := include "base-cluster.clusterDomain" . -}}
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -211,7 +212,7 @@ data:
       - name: Mimir
         type: prometheus
         access: proxy
-        url: http://mimir-query-frontend.monitoring.svc:8080/prometheus
+        url: http://mimir-query-frontend.monitoring.svc.{{ $clusterDomain }}:8080/prometheus
         isDefault: true
         editable: false
         jsonData:
@@ -223,14 +224,14 @@ data:
       - name: Loki
         type: loki
         access: proxy
-        url: http://loki-loki-chart.monitoring.svc:3100
+        url: http://loki-loki-chart.monitoring.svc.{{ $clusterDomain }}:3100
         editable: false
       {{- end }}
       {{- if .Values.monitoring.tempo.enabled }}
       - name: Tempo
         type: tempo
         access: proxy
-        url: http://tempo-tempo-chart.monitoring.svc:3200
+        url: http://tempo-tempo-chart.monitoring.svc.{{ $clusterDomain }}:3200
         editable: false
       {{- end }}
 {{- end }}

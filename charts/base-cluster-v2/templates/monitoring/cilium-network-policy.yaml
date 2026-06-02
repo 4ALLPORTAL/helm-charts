@@ -35,7 +35,6 @@ spec:
     - toEndpoints:
         - matchLabels:
             io.kubernetes.pod.namespace: monitoring
-    - toEntities: [kube-apiserver, host]
     - toPorts:
         - ports:
             - port: "53"
@@ -55,6 +54,11 @@ metadata:
     app.kubernetes.io/component: monitoring
 spec:
   description: "Alloy / Node Exporter / kube-state-metrics — scrape cluster, write to storage"
+  ## NOTE: node-exporter is hostNetwork, so under Cilium it carries the `host`
+  ## identity and is NOT matched by the endpointSelector below — its scrape on
+  ## :9100 relies on the default host allowance. If Cilium's host firewall is
+  ## ever enabled, node-exporter needs a host policy. Alloy + KSM are normal
+  ## pods and do match.
   endpointSelector:
     matchExpressions:
       - key: app.kubernetes.io/instance
@@ -109,7 +113,7 @@ spec:
     - toEntities: [cluster, kube-apiserver]
     ## Mimir-internal Alertmanager webhook → UptimeRobot heartbeat URL.
     - toFQDNs:
-        - matchPattern: "*.uptimerobot.com"
+        - matchName: "heartbeat.uptimerobot.com"
       toPorts:
         - ports:
             - port: "443"
@@ -238,6 +242,7 @@ spec:
         - ports:
             - port: "8443"
               protocol: TCP
+{{- if .Values.monitoring.uptimeRobot.enabled }}
 ---
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
@@ -250,7 +255,7 @@ spec:
   description: "UptimeRobot reconciler CronJob — egress only to api.uptimerobot.com"
   endpointSelector:
     matchLabels:
-      app.kubernetes.io/instance: uptimerobot-reconciler
+      app.kubernetes.io/component: uptimerobot-reconciler
   egress:
     - toFQDNs:
         - matchPattern: "api.uptimerobot.com"
@@ -267,6 +272,7 @@ spec:
           rules:
             dns:
               - matchPattern: "*"
+{{- end }}
 {{- if .Values.monitoring.ingressMonitor.enabled }}
 ---
 apiVersion: cilium.io/v2
