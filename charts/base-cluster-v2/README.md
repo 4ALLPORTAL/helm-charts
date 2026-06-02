@@ -63,7 +63,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | ---- | ------ | --- |
 | jpkraemer-mg | <j.kraemer@4allportal.com> |  |
 | Dominic-Beer | <d.beer@4allportal.com> |  |
-| Christopher Schwarz | <c.schwarz@4allportal.com> |  |
+| C-schwarz-4ap | <c.schwarz@4allportal.com> |  |
 
 ## Values
 
