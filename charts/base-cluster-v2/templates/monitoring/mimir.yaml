@@ -44,11 +44,11 @@ spec:
   install:
     disableWait: true
     remediation:
-      retries: 0
+      retries: -1
   upgrade:
     disableWait: true
     remediation:
-      retries: 0
+      retries: -1
   values:
     mimir:
       structuredConfig:
