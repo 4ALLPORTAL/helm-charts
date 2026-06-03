@@ -5,8 +5,9 @@ Cluster domain:    {{ $domain }}
 Wildcard cert:     cluster-wildcard-certificate (covers *.{{ $domain }})
 
 What happens next is driven by Flux:
-  - HelmReleases for cert-manager, Traefik, external-dns and the speedtest
-    are now in the cluster. Flux will reconcile each in turn.
+  - HelmReleases for cert-manager, Traefik and external-dns are now in the
+    cluster; the speedtest is a plain Deployment/Service/Ingress. Flux will
+    reconcile each in turn.
   - Watch progress with:
         flux get helmreleases -A
         flux get kustomizations -A
@@ -26,7 +27,7 @@ with reflection annotations. kubernetes-reflector will propagate them automatica
   kubectl annotate secret dhi-pull-secret -n {{ .Release.Namespace }} \
     reflector.v1.k8s.emberstack.com/reflection-allowed=true \
     reflector.v1.k8s.emberstack.com/reflection-auto-enabled=true \
-    "reflector.v1.k8s.emberstack.com/reflection-auto-namespaces=cert-manager,traefik,sealed-secrets"
+    "reflector.v1.k8s.emberstack.com/reflection-auto-namespaces=cert-manager,traefik,sealed-secrets,kube-system,monitoring"
 
   kubectl create secret generic cloudflare-api-key \
     --from-literal=cloudflare_api_token=<token> \

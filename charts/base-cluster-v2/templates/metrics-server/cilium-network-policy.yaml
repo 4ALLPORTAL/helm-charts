@@ -1,0 +1,59 @@
+{{- $dd := .Values.global.networkPolicy.defaultDeny -}}
+{{- $kubeSystemGated := and $dd.enabled (not (has "kube-system" $dd.excludedNamespaces)) -}}
+{{- if and .Values.metricsServer.enabled (eq (include "base-cluster.networkPolicy.type" .) "cilium") $kubeSystemGated }}
+{{/*
+CiliumNetworkPolicy for metrics-server in kube-system.
+
+Only rendered when kube-system itself is gated by default-deny. If
+`global.networkPolicy.defaultDeny.excludedNamespaces` still contains
+"kube-system" (the chart default), no allow-policy is needed — and adding one
+would actually flip metrics-server into deny-by-default (Cilium's "any policy
+selecting the pod implies deny-by-default" rule).
+
+Egress  — kubelet :10250 on every node (host + remote-node) plus kube-apiserver
+          for the aggregation layer and DNS.
+Ingress — kube-apiserver (and the apiserver's source identity on Cilium's
+          overlay, classified as host / remote-node) to the metrics-server
+          containerPort 10250 so `kubectl top` / k9s queries land.
+
+DHI charts publish themselves under `app.kubernetes.io/name=<chart>-chart`, so
+the endpoint selector uses `metrics-server-chart`.
+*/}}
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: metrics-server
+  namespace: kube-system
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: metrics-server
+spec:
+  description: "metrics-server — scrape kubelets, serve aggregation-layer API to kube-apiserver"
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: metrics-server-chart
+  egress:
+    ## Kubelet stats endpoint on every node.
+    - toEntities: [host, remote-node]
+      toPorts:
+        - ports:
+            - port: "10250"
+              protocol: TCP
+    - toEntities: [kube-apiserver]
+    - toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+  ingress:
+    ## Aggregation-layer call from kube-apiserver. Cilium may classify the
+    ## packet's source as `host` or `remote-node` depending on overlay path,
+    ## so all three entities are listed.
+    - fromEntities: [kube-apiserver, host, remote-node]
+      toPorts:
+        - ports:
+            - port: "10250"
+              protocol: TCP
+{{- end }}

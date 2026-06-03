@@ -13,6 +13,10 @@ global:
   ## -- Override the image registry for all components. Useful for air-gapped
   ##    environments that mirror images to a private registry.
   imageRegistry: ""
+  ## -- In-cluster DNS suffix. Override if the cluster was bootstrapped with a
+  ##    non-default search domain (kubeadm `--service-dns-domain`, Talos
+  ##    `cluster.discovery.dnsDomain`). Used by Alloy to reach Loki/Mimir.
+  clusterDomain: cluster.local
   ## -- Additional cluster-wide cert-manager Certificates to issue. Map of
   ##    name -> { dnsNames: [...] }. Issued via the letsencrypt-prod issuer.
   certificates: {}
@@ -209,6 +213,22 @@ reflector:
       cpu: 200m
       memory: 128Mi
 
+## metrics-server — exposes the metrics.k8s.io API consumed by `kubectl top`,
+## k9s, and the HorizontalPodAutoscaler. Independent of the LGTM observability
+## stack; deployed in kube-system.
+metricsServer:
+  enabled: true
+  ## Most kubelets serve their stats endpoint with a self-signed cert. Set to
+  ## false only if you front kubelets with a CA the apiserver trusts.
+  kubeletInsecureTLS: true
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
 ## Sealed Secrets controller (DHI chart).
 sealedSecrets:
   enabled: true
@@ -221,6 +241,245 @@ sealedSecrets:
     limits:
       cpu: 250m
       memory: 256Mi
+
+## Observability stack — Grafana Alloy → Mimir + Loki + Tempo, OTEL Collector
+## for traces, Mimir-internal Alertmanager routes the Watchdog heartbeat to an
+## UptimeRobot heartbeat URL, and a CronJob reconciles UptimeRobot monitors via
+## the UptimeRobot API.
+##
+## Mimir is pulled from the upstream `grafana` HelmRepository because DHI does
+## not mirror it; everything else uses DHI-hardened charts.
+monitoring:
+  ## Master switch — when false, nothing in templates/monitoring/ is rendered
+  ## except the namespace's default-deny exclusion.
+  enabled: false
+  ## StorageClass for Mimir/Loki/Tempo PVCs. Empty = cluster default.
+  storageClass: ""
+
+  ## Mimir — single-binary (target=all). Persistent local PVC backend; swap to
+  ## object storage by overriding mimir.values.mimir.structuredConfig.
+  mimir:
+    enabled: true
+    retention: 720h          ## 30d
+    size: 50Gi
+    ## Kafka PVC for Mimir's ingest-WAL. The mimir-distributed chart defaults
+    ## to 5Gi, which fills within ~3-4 days of moderate ingest and crashloops
+    ## kafka-0 with "log dir is already offline". Keep ≥ 20Gi.
+    ## Note: PVC volumeClaimTemplate size is immutable in the StatefulSet —
+    ## changing this only affects NEW clusters. For existing clusters expand
+    ## via `kubectl patch pvc kafka-data-mimir-kafka-0 ...` then delete the
+    ## pod to trigger filesystem resize.
+    kafkaSize: 20Gi
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: "2"
+        memory: 4Gi
+
+  ## Loki — SingleBinary deployment, filesystem chunk store on PVC.
+  loki:
+    enabled: true
+    retention: 336h          ## 14d
+    size: 50Gi
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: "1"
+        memory: 2Gi
+
+  ## Tempo — monolithic, filesystem backend on PVC.
+  tempo:
+    enabled: true
+    retention: 168h          ## 7d
+    size: 20Gi
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: "1"
+        memory: 2Gi
+
+  ## Grafana — UI, sidecar datasource/dashboard discovery, ingress via Traefik.
+  grafana:
+    enabled: true
+    ## Hostname is published as <host>.<clusterName>.<baseDomain>.
+    host: grafana
+    ## Required when grafana.enabled. Secret with keys `admin-user` and
+    ## `admin-password`.
+    existingAdminSecret: ""
+    ## OIDC SSO via Grafana's generic_oauth provider.
+    ## Renders the [auth.generic_oauth] + [auth] sections of grafana.ini.
+    ## When enabled, set clientId + endpoint URLs and supply the client secret
+    ## via `existingSecret` (env var GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET, picked
+    ## up automatically — Grafana's env override).
+    oidc:
+      enabled: false
+      ## Label shown on the Grafana login page.
+      name: SSO
+      clientId: ""
+      ## Secret with `GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET` key (envFrom).
+      existingSecret: ""
+      ## Client auth method. Empty = Grafana default (`client_secret_basic`).
+      ## Entra ID requires `client_secret_post`.
+      clientAuthentication: ""
+      scopes: "openid profile email"
+      authUrl: ""
+      tokenUrl: ""
+      apiUrl: ""
+      ## Restrict logins to one or more email domains, space-separated.
+      allowedDomains: ""
+      ## Auto-create the Grafana user record on first successful login.
+      allowSignUp: true
+      ## Skip Grafana's login page and redirect straight to the IdP.
+      ## Pair with `disableLoginForm` for an IdP-only experience.
+      autoLogin: false
+      ## Hide the admin/password fallback form.
+      disableLoginForm: false
+      ## Some IdPs (e.g. Entra ID) don't return a verified email; allow
+      ## lookup without the verification flag.
+      oauthAllowInsecureEmailLookup: false
+      ## JMESPath against id_token claims → Grafana org role.
+      ## Requires the IdP to issue a `groups` (or equivalent) claim in the
+      ## id_token (e.g. Entra: App Registration → Token configuration → Add
+      ## groups claim). Example:
+      ##   contains(groups, '<admin-gid>') && 'Admin' ||
+      ##   contains(groups, '<editor-gid>') && 'Editor' || 'Viewer'
+      roleAttributePath: ""
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+  ## Alloy — unified collector. DaemonSet for node-local log/metric scraping,
+  ## Deployment for cluster-wide metric scraping.
+  alloy:
+    enabled: true
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi
+
+  ## Prometheus Node Exporter — host CPU/memory/disk/network metrics.
+  nodeExporter:
+    enabled: true
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 128Mi
+
+  ## kube-state-metrics — Kubernetes object metrics.
+  kubeStateMetrics:
+    enabled: true
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+
+  ## OTEL Collector — receives OTLP (gRPC :4317, HTTP :4318), exports to Tempo.
+  otelCollector:
+    enabled: true
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+  ## UptimeRobot — receives the Watchdog heartbeat and runs external uptime
+  ## probes. Both heartbeat and monitor reconciliation use the API key from
+  ## `existingSecret` (key `api_key`).
+  uptimeRobot:
+    enabled: false
+    existingSecret: ""
+    ## Heartbeat URL the Watchdog alert pings via Alertmanager webhook. Format:
+    ## https://heartbeat.uptimerobot.com/<token>. Setting this enables the
+    ## heartbeat on its own — `enabled` above is only needed for the external
+    ## monitor reconciler (which also requires `existingSecret`).
+    heartbeatUrl: ""
+    ## Monitors reconciled by the CronJob. friendlyName must be unique.
+    ##   monitors:
+    ##     - friendlyName: portal-prod
+    ##       url: https://portal.example.com
+    ##       type: 1            # 1=HTTP(S), 2=keyword, 3=ping, 4=port
+    ##       interval: 300      # seconds, min 60
+    monitors: []
+    reconciler:
+      schedule: "*/15 * * * *"
+      ## Image for the reconciliation CronJob. Defaults to DHI's hardened
+      ## python:3.13 (registry comes from global.imageRegistry, falling back
+      ## to dhi.io). Override `tag` or set `digest` to pin against drift.
+      image:
+        repository: python
+        tag: "3.13"
+        digest: ""
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          cpu: 200m
+          memory: 128Mi
+
+  ## Rook-Ceph — Grafana dashboards and dedicated Alloy scrape for ceph-mgr
+  ## Prometheus metrics (port 9283). Requires rook-ceph to be running with the
+  ## MGR Prometheus module enabled (default in all recent rook-ceph releases).
+  ## No NetworkPolicy changes needed — monitoring-collectors already allows
+  ## egress to cluster entities and rook-ceph is excluded from default-deny.
+  rookCeph:
+    enabled: false
+    ## Namespace where rook-ceph is deployed.
+    namespace: rook-ceph
+
+  ## IngressMonitorController (Stakater) — watches EndpointMonitor CRs
+  ## cluster-wide (the 4allportal chart ships one per ingress) and reconciles
+  ## them into UptimeRobot monitors, so deploying a portal auto-registers its
+  ## uptime check. Chart from the stakater HTTPS HelmRepository; image from
+  ## ghcr.io (OCI, not DHI-hardened). Independent of the uptimeRobot CronJob
+  ## above — listing the same endpoint in both can create duplicate monitors.
+  ingressMonitor:
+    enabled: false
+    ## Secret with key `config.yaml` holding the UptimeRobot provider config.
+    ## Required shape:
+    ##   providers:
+    ##     - name: UptimeRobot
+    ##       apiKey: <Main read-WRITE key>      # read-only keys cannot create monitors
+    ##       apiURL: https://api.uptimerobot.com/v2/   # mandatory, IMC has no default
+    ##       alertContacts: "<contact-id>_0_0"
+    ##   enableMonitorDeletion: false
+    ##   monitorNameTemplate: "{{.Namespace}}-{{.Name}}"
+    ##   resyncPeriod: 0
+    ## Reuse the config from the old base-cluster; sealed-secret recommended.
+    ## Required when enabled.
+    existingConfigSecret: ""
+    image:
+      ## Optional registry mirror, e.g. a Harbor proxy. Empty = chart default
+      ## ghcr.io/stakater/ingressmonitorcontroller.
+      registry: ""
+    resources:
+      requests:
+        cpu: 25m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 128Mi
 
 ## Internal speedtest health endpoint (Librespeed). Reached at
 ## https://<speedtest.host>.<clusterName>.<baseDomain>

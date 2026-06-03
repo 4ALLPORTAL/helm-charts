@@ -1,0 +1,7 @@
+# Cocogitto configuration.
+#
+# Skip merge commits (2+ parents) during `cog check`. We occasionally merge
+# `main` into long-running feature branches to resolve conflicts, and those
+# merge commits are not conventional commits — without this they fail the
+# `validate` CI check.
+ignore_merge_commits = true

@@ -23,9 +23,20 @@ This chart bootstraps the **foundation** of a Kubernetes cluster:
 - **Librespeed speedtest** — an internal endpoint at
   `https://speedtest.<cluster>.<domain>` that doubles as a connectivity smoke
   test.
+- **Sealed Secrets** — Bitnami controller for storing encrypted secrets in
+  Git (`sealedSecrets.enabled`).
+- **Reflector** — mirrors source Secrets/ConfigMaps into other namespaces
+  via annotations (`reflector.enabled`).
+- **metrics-server** — exposes `metrics.k8s.io` for `kubectl top` and HPAs
+  (`metricsServer.enabled`).
+- **Observability stack** — Grafana Alloy (collector) → Mimir/Loki/Tempo
+  backends + Grafana UI + OTEL Collector for traces; Mimir-internal
+  Alertmanager pings an UptimeRobot heartbeat. IngressMonitorController
+  auto-creates UptimeRobot monitors from `EndpointMonitor` CRs. Opt-in via
+  `monitoring.enabled`; each sub-component has its own toggle.
 
-**Out of scope** — monitoring, backups, RBAC scaffolding, descheduler,
-sealedsecrets, security scanning. These will land in separate charts/stories.
+**Out of scope** — backups, RBAC scaffolding, descheduler, security scanning.
+These will land in separate charts/stories.
 
 ## Versions
 
