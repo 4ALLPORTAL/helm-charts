@@ -406,3 +406,9 @@ This release adds support for referencing an external secret for backup credenti
 When `.Values.backups.volumes.secretName` is set, the chart no longer creates an internal secret from the plain-text values `.Values.backups.volumes.password`, `.Values.backups.target.s3.accessKey`, and `.Values.backups.target.s3.secretKey`. The referenced secret must contain the keys `RESTIC_PASSWORD`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`.
 
 No action required if you are not using `.Values.backups.volumes.secretName`.
+
+## To 22.0.4
+
+This release makes the 3d-renderer work under a hardened `readOnlyRootFilesystem: true` pod. A writable `emptyDir` is mounted at `/tmp` (hosting the Xvfb socket, the dbus system bus and chromium's user-data-dir) and `HOME` is set to `/tmp`. Without these the pod hung at startup and never became ready on port 8190.
+
+No action required.
