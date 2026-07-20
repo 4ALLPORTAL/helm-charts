@@ -96,7 +96,21 @@ spec:
             - name: config
               mountPath: /4allportal/data
             {{ end }}
-          env: {{- include "4allportal.tracing.jaeger.env" (dict "Chart" .Chart "Release" .Release "Values" .Values "local" .Values.dreiDRenderer.tracing) | nindent 12 }}
+            # Writable scratch required by the renderer image under
+            # readOnlyRootFilesystem: true. startup.sh puts the Xvfb socket
+            # (/tmp/.X11-unix), the dbus system bus (XDG_RUNTIME_DIR=/tmp/run),
+            # and chromium's --user-data-dir all under /tmp, so /tmp must be a
+            # writable emptyDir (the image intentionally avoids /run).
+            - name: tmp
+              mountPath: /tmp
+          env:
+            # HOME must be writable: chromium's crashpad/profile init writes here
+            # at startup and, on the read-only rootfs, the baked /home/chromuser is
+            # not writable -> chromium aborts with SIGTRAP before it ever renders.
+            # Point HOME at the writable /tmp emptyDir mounted above.
+            - name: HOME
+              value: "/tmp"
+            {{- include "4allportal.tracing.jaeger.env" (dict "Chart" .Chart "Release" .Release "Values" .Values "local" .Values.dreiDRenderer.tracing) | nindent 12 }}
           resources: {{- toYaml .Values.dreiDRenderer.resources | nindent 12 }}
       volumes:
         {{ if .Values.global.persistence.useCombinedVolumes }}
@@ -108,6 +122,9 @@ spec:
         - name: config
           {{- include "4allportal.fourallportal.persistence.config.mount" . | nindent 10 }}
         {{ end }}
+        - name: tmp
+          emptyDir:
+            sizeLimit: 512Mi
       {{- with .Values.dreiDRenderer.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}
       {{- end }}
