@@ -141,3 +141,11 @@ No action required if you are not using `.Values.backups.volumes.secretName`.
 This release makes the 3d-renderer work under a hardened `readOnlyRootFilesystem: true` pod. A writable `emptyDir` is mounted at `/tmp` (hosting the Xvfb socket, the dbus system bus and chromium's user-data-dir) and `HOME` is set to `/tmp`. Without these the pod hung at startup and never became ready on port 8190.
 
 No action required.
+
+## To 22.0.5
+
+This release makes changes to `.Values.samba.mounts` take effect. The samba pod template now carries a `checksum/config` annotation over the samba ConfigMap, so the pod is recreated whenever the generated samba configuration changes.
+
+The samba container imports its configuration into Samba's `net conf` registry **once at container start**, and that registry (in `/var/lib/samba`, an `emptyDir`) is what `smbd` actually serves. Without the annotation the pod was never restarted when the ConfigMap changed, so edits to a share's `users` list silently never reached the running server — a user added to an existing share kept getting access denied until the pod happened to restart for an unrelated reason.
+
+No action required. Note that the upgrade recreates the samba pod, which briefly interrupts active SMB connections.
