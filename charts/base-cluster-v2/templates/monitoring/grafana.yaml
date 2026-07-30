@@ -172,7 +172,6 @@ metadata:
   labels: {{- include "base-cluster.labels" . | nindent 4 }}
     app.kubernetes.io/component: monitoring
 spec:
-  ingressClassName: traefik
   tls:
     - hosts:
         - {{ include "base-cluster.grafana.host" . | quote }}
