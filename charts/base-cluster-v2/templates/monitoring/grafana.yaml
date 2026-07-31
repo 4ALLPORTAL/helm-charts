@@ -139,7 +139,6 @@ spec:
       auth.generic_oauth:
         enabled: true
         name: {{ $g.oidc.name | quote }}
-        client_id: {{ required "monitoring.grafana.oidc.clientId is required when oidc is enabled" $g.oidc.clientId | quote }}
         {{- with $g.oidc.clientAuthentication }}
         client_authentication: {{ . | quote }}
         {{- end }}
@@ -159,9 +158,7 @@ spec:
         oauth_auto_login: {{ $g.oidc.autoLogin }}
         disable_login_form: {{ $g.oidc.disableLoginForm }}
         oauth_allow_insecure_email_lookup: {{ $g.oidc.oauthAllowInsecureEmailLookup }}
-      {{- end }}
-    {{- if and $g.oidc.enabled $g.oidc.existingSecret }}
-    envFromSecret: {{ $g.oidc.existingSecret | quote }}
+    envFromSecret: {{ required "monitoring.grafana.oidc.existingSecret is required when oidc is enabled" $g.oidc.existingSecret | quote }}
     {{- end }}
 ---
 apiVersion: networking.k8s.io/v1

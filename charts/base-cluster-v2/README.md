@@ -1,6 +1,6 @@
 # base-cluster-v2
 
-![Version: 1.4.5](https://img.shields.io/badge/Version-1.4.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.4.5](https://img.shields.io/badge/AppVersion-1.4.5-informational?style=flat-square)
+![Version: 1.4.6](https://img.shields.io/badge/Version-1.4.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.4.6](https://img.shields.io/badge/AppVersion-1.4.6-informational?style=flat-square)
 
 Foundational base cluster setup — Cilium CNI, FluxCD, Traefik ingress,
 cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
@@ -146,7 +146,6 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.grafana.oidc.authUrl | string | `""` |  |
 | monitoring.grafana.oidc.autoLogin | bool | `false` |  |
 | monitoring.grafana.oidc.clientAuthentication | string | `""` |  |
-| monitoring.grafana.oidc.clientId | string | `""` |  |
 | monitoring.grafana.oidc.disableLoginForm | bool | `false` |  |
 | monitoring.grafana.oidc.enabled | bool | `false` |  |
 | monitoring.grafana.oidc.existingSecret | string | `""` |  |
