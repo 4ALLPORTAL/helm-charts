@@ -17,6 +17,13 @@ Endpoints (once Flux is reconciled and DNS is published):
   - Speedtest:  https://{{ include "base-cluster.speedtest.host" . }}
 {{- end }}
 
+{{- /* Namespaces that consume global.imagePullSecretName. Keep in sync with the
+       HelmReleases that inject imagePullSecrets — a namespace missing here means
+       the pull secret is referenced but never created there. */ -}}
+{{- $pullSecretNamespaces := list "cert-manager" "traefik" "sealed-secrets" "kube-system" "monitoring" -}}
+{{- if .Values.janitor.enabled -}}
+{{- $pullSecretNamespaces = append $pullSecretNamespaces "k8s-cleaner" -}}
+{{- end -}}
 Pre-install: create these two secrets ONCE in the {{ .Release.Namespace }} namespace
 with reflection annotations. kubernetes-reflector will propagate them automatically.
 
@@ -27,7 +34,7 @@ with reflection annotations. kubernetes-reflector will propagate them automatica
   kubectl annotate secret dhi-pull-secret -n {{ .Release.Namespace }} \
     reflector.v1.k8s.emberstack.com/reflection-allowed=true \
     reflector.v1.k8s.emberstack.com/reflection-auto-enabled=true \
-    "reflector.v1.k8s.emberstack.com/reflection-auto-namespaces=cert-manager,traefik,sealed-secrets,kube-system,monitoring"
+    "reflector.v1.k8s.emberstack.com/reflection-auto-namespaces={{ join "," $pullSecretNamespaces }}"
 
   kubectl create secret generic cloudflare-api-key \
     --from-literal=cloudflare_api_token=<token> \

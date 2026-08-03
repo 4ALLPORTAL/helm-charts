@@ -26,6 +26,14 @@ reflector (emberstack repo), mimir (grafana repo) and ingressMonitor
 
 {{- define "base-cluster.versions.metricsServer.chart" -}}3.13.0{{- end -}}
 
+{{/* Housekeeping. k8s-cleaner (janitor) from its ghcr.io OCI repo; descheduler
+     from the kubernetes-sigs HTTPS repo. Neither is DHI-hardened — mirror via
+     global.imageRegistry if required. */}}
+
+{{- define "base-cluster.versions.janitor.chart" -}}0.21.0{{- end -}}
+
+{{- define "base-cluster.versions.descheduler.chart" -}}0.33.0{{- end -}}
+
 {{/* Observability stack. Mimir comes from the upstream grafana HelmRepository
      because DHI does not mirror it; all others are pinned DHI charts. */}}
 

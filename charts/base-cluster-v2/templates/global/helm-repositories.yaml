@@ -8,12 +8,16 @@ OCI repos require type: oci; HTTPS repos omit the type field.
      carries the IngressMonitorController chart (not published as OCI; its image
      still comes from ghcr.io). All other observability charts (alloy, loki,
      tempo, grafana, node-exporter, KSM, opentelemetry-collector) come from
-     `dhi` as hardened images. */}}
+     `dhi` as hardened images. `descheduler` (kubernetes-sigs) and `k8s-cleaner`
+     (ghcr.io OCI, the janitor) are not DHI-hardened; mirror their images via
+     global.imageRegistry when needed. */}}
 {{- $repos := list
   (dict "name" "cilium"           "url" "https://helm.cilium.io/")
   (dict "name" "emberstack"       "url" "https://emberstack.github.io/helm-charts")
   (dict "name" "grafana"          "url" "https://grafana.github.io/helm-charts")
   (dict "name" "stakater"         "url" "https://stakater.github.io/stakater-charts")
+  (dict "name" "descheduler"      "url" "https://kubernetes-sigs.github.io/descheduler/")
+  (dict "name" "k8s-cleaner"      "url" "oci://ghcr.io/gianlucam76/charts"                  "type" "oci")
   (dict "name" "fluxcd-community" "url" "oci://ghcr.io/fluxcd-community/charts"            "type" "oci")
   (dict "name" "dhi"              "url" "oci://dhi.io"                                      "type" "oci" "secret" .Values.global.imagePullSecretName)
 -}}

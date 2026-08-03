@@ -205,6 +205,10 @@ externalDNS:
 ## Create source secrets once in flux-system with reflection annotations;
 ## reflector propagates them to cert-manager, traefik, and sealed-secrets.
 reflector:
+  ## Master switch. NOTE: cert-manager and sealed-secrets `dependsOn` reflector;
+  ## disabling it drops that dependency (they no longer wait for reflector) — so
+  ## if you turn this off you must pre-create their pull/API secrets yourself.
+  enabled: true
   resources:
     requests:
       cpu: 50m
@@ -241,6 +245,154 @@ sealedSecrets:
     limits:
       cpu: 250m
       memory: 256Mi
+
+## Janitor — k8s-cleaner (projectsveltos), a CRD-driven cleanup controller that
+## reconciles `Cleaner` custom resources. The Cleaner + Report CRDs are vendored
+## in this chart's crds/ directory (HelmRelease sets crds.install=false).
+##
+## Security note: the k8s-cleaner controller runs with a very broad ClusterRole
+## (it must be able to delete arbitrary kinds). The Cleaner rules below are the
+## guardrail — excludedNamespaces keeps that breadth off system namespaces.
+janitor:
+  enabled: true
+  ## Controller image. registry empty = global.imageRegistry, falling back to
+  ## docker.io. Point registry at a mirror for air-gapped clusters (the image is
+  ## not DHI-hardened).
+  image:
+    registry: ""
+    repository: projectsveltos/k8s-cleaner
+    tag: "v0.21.0"
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+  ## Garbage collection for deletions. Background makes the API server delete
+  ## dependents too — without it, deleting a completed Job *orphans* its Pod,
+  ## which then lingers forever as a Completed pod nobody owns. Only honoured for
+  ## rules that actually delete (action: Delete, i.e. dryRun=false).
+  deleteOptions:
+    propagationPolicy: Background
+  ## Report CRs. k8s-cleaner records what it matched or deleted only when the
+  ## Cleaner carries a CleanerReport notification — this is what makes dryRun
+  ## inspectable (`kubectl get reports.apps.projectsveltos.io`) and leaves an
+  ## audit trail for real deletions.
+  report:
+    enabled: true
+  ## Namespaces no Cleaner will ever touch (enforced inside each rule's Lua).
+  excludedNamespaces:
+    - kube-system
+    - flux-system
+  ## Individual cleanup policies. Each renders one Cleaner CR and is toggleable.
+  ## dryRun=true renders the CR with `action: Scan` instead of `action: Delete`:
+  ## the controller then only *reports* matches (see the Report CRs and its logs)
+  ## without deleting anything. The rules below ship with dryRun=false because
+  ## their selectors have been verified against a live cluster; start any rule
+  ## you add this way and only flip it once its Report CRs look right.
+  ##
+  ## minAgeHours keeps a debugging window: a resource is only deleted once it has
+  ## been in its terminal state for that long (Jobs: completionTime, Pods: last
+  ## container termination time, falling back to startTime/creationTimestamp).
+  ## 0 disables the age check — matches are deleted on the next run.
+  cleaners:
+    ## Completed (succeeded) Jobs.
+    ##
+    ## skipOwned leaves Jobs that carry an ownerReference alone — a CronJob
+    ## prunes its own history via successfulJobsHistoryLimit, and an operator
+    ## (rook's CephCluster, for one) recreates its Jobs on the next reconcile.
+    ## Deleting those only causes churn, so the rule targets what nothing owns.
+    ## Set false to reap every succeeded Job regardless of owner. Note that a
+    ## Helm-templated Job has no ownerReference and so is still eligible; that
+    ## is deliberate, since a lingering completed Job is a common cause of
+    ## "cannot patch Job" failures on the next helm upgrade.
+    completedJobs:
+      enabled: true
+      schedule: "0 2 * * *"
+      minAgeHours: 24
+      skipOwned: true
+      dryRun: false
+    ## Failed and Evicted Pods.
+    failedPods:
+      enabled: true
+      schedule: "*/30 * * * *"
+      minAgeHours: 24
+      dryRun: false
+    ## Succeeded (completed) Pods — off by default; the owning controller
+    ## usually reaps these, and TTL handles Job-owned pods.
+    succeededPods:
+      enabled: false
+      schedule: "*/30 * * * *"
+      minAgeHours: 24
+      dryRun: false
+  ## Extra values passed through to the k8s-cleaner chart.
+  values: {}
+
+## descheduler (kubernetes-sigs) — periodically evicts pods so the scheduler can
+## re-place them. Ported from the v1 base-cluster chart. Default OFF: it evicts
+## running pods and an over-aggressive policy causes churn — opt in per cluster.
+descheduler:
+  enabled: false
+  schedule: "*/15 * * * *"
+  ## Image override. registry empty = global.imageRegistry, else chart default
+  ## (registry.k8s.io). tag empty = chart appVersion.
+  image:
+    registry: ""
+    tag: ""
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+  ## deschedulerPolicy profiles (v1alpha2). Mirrors the intent of the v1
+  ## `strategies` set; tuned: podRestartThreshold=10 and higher LowNodeUtilization
+  ## thresholds (as in v1). See the descheduler docs for plugin semantics.
+  profiles:
+    - name: default
+      pluginConfig:
+        - name: DefaultEvictor
+          args:
+            ignorePvcPods: true
+            evictLocalStoragePods: true
+        - name: RemoveDuplicates
+        - name: RemovePodsHavingTooManyRestarts
+          args:
+            podRestartThreshold: 10
+            includingInitContainers: true
+        - name: RemovePodsViolatingNodeAffinity
+          args:
+            nodeAffinityType:
+              - requiredDuringSchedulingIgnoredDuringExecution
+        - name: RemovePodsViolatingNodeTaints
+        - name: RemovePodsViolatingInterPodAntiAffinity
+        - name: RemovePodsViolatingTopologySpreadConstraint
+        - name: LowNodeUtilization
+          args:
+            thresholds:
+              cpu: 50
+              memory: 50
+              pods: 50
+            targetThresholds:
+              cpu: 70
+              memory: 80
+              pods: 95
+      plugins:
+        balance:
+          enabled:
+            - RemoveDuplicates
+            - RemovePodsViolatingTopologySpreadConstraint
+            - LowNodeUtilization
+        deschedule:
+          enabled:
+            - RemovePodsHavingTooManyRestarts
+            - RemovePodsViolatingNodeTaints
+            - RemovePodsViolatingNodeAffinity
+            - RemovePodsViolatingInterPodAntiAffinity
+  ## Extra values passed through to the descheduler chart.
+  values: {}
 
 ## Observability stack — Grafana Alloy → Mimir + Loki + Tempo, OTEL Collector
 ## for traces, Mimir-internal Alertmanager routes the Watchdog heartbeat to an
