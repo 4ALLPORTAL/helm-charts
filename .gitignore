@@ -3,3 +3,7 @@
 .vscode
 .DS_Store
 /charts/*/charts
+## Local values used to render charts by hand. These tend to be copied from a
+## real cluster, so keep them out of this repo — it is public.
+/charts/*/ci/
+/vals.yaml
