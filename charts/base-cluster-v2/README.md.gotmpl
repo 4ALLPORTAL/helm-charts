@@ -30,15 +30,19 @@ This chart bootstraps the **foundation** of a Kubernetes cluster:
 - **metrics-server** — exposes `metrics.k8s.io` for `kubectl top` and HPAs
   (`metricsServer.enabled`).
 - **Janitor** — [k8s-cleaner](https://github.com/gianlucam76/k8s-cleaner), a
-  CRD-driven controller that deletes stale resources (completed Jobs, failed/
-  evicted Pods) on a schedule. Rules are `Cleaner` CRs generated from
-  `janitor.cleaners.*`; `janitor.excludedNamespaces` keeps them off system
-  namespaces (`janitor.enabled`). Each rule only acts once a resource has been
-  terminal for `minAgeHours` (default 24), so recent failures stay around long
-  enough to debug. Cron schedules are evaluated in UTC.
+  CRD-driven controller that deletes stale resources on a schedule: completed
+  Jobs and failed or evicted Pods by default, plus succeeded Pods via
+  `janitor.cleaners.succeededPods` (off, because the owning controller normally
+  reaps those). Rules are `Cleaner` CRs generated from `janitor.cleaners.*`;
+  `janitor.excludedNamespaces` keeps them off system namespaces
+  (`janitor.enabled`). Each rule only acts once a resource has been terminal for
+  `minAgeHours` (default 24), so recent failures stay around long enough to
+  debug. Cron schedules are evaluated in UTC.
 
-  Before enabling a rule on a new cluster, set `dryRun: true` — it renders the
-  Cleaner with `action: Scan`, which matches and reports without deleting:
+  Before enabling a rule on a new cluster, set
+  `janitor.cleaners.<rule>.dryRun: true` — the flag is per rule, there is no
+  chart-wide switch. It renders that Cleaner with `action: Scan`, which matches
+  and reports without deleting:
 
   ```console
   kubectl get reports.apps.projectsveltos.io
