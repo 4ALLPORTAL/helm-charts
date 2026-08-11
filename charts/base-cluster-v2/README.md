@@ -1,6 +1,6 @@
 # base-cluster-v2
 
-![Version: 1.4.6](https://img.shields.io/badge/Version-1.4.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.4.6](https://img.shields.io/badge/AppVersion-1.4.6-informational?style=flat-square)
+![Version: 1.5.0](https://img.shields.io/badge/Version-1.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
 
 Foundational base cluster setup — Cilium CNI, FluxCD, Traefik ingress,
 cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
@@ -30,13 +30,43 @@ This chart bootstraps the **foundation** of a Kubernetes cluster:
   via annotations (`reflector.enabled`).
 - **metrics-server** — exposes `metrics.k8s.io` for `kubectl top` and HPAs
   (`metricsServer.enabled`).
+- **Janitor** — [k8s-cleaner](https://github.com/gianlucam76/k8s-cleaner), a
+  CRD-driven controller that deletes stale resources on a schedule: completed
+  Jobs and failed or evicted Pods by default, plus succeeded Pods via
+  `janitor.cleaners.succeededPods` (off, because the owning controller normally
+  reaps those). Rules are `Cleaner` CRs generated from `janitor.cleaners.*`;
+  `janitor.excludedNamespaces` keeps them off system namespaces
+  (`janitor.enabled`). Each rule only acts once a resource has been terminal for
+  `minAgeHours` (default 24), so recent failures stay around long enough to
+  debug. Cron schedules are evaluated in UTC.
+
+  Before enabling a rule on a new cluster, set
+  `janitor.cleaners.<rule>.dryRun: true` — the flag is per rule, there is no
+  chart-wide switch. It renders that Cleaner with `action: Scan`, which matches
+  and reports without deleting:
+
+  ```console
+  kubectl get reports.apps.projectsveltos.io
+  kubectl get reports.apps.projectsveltos.io <cleaner-name> -o yaml   # matched resources
+  ```
+
+  Reports come from the `CleanerReport` notification that `janitor.report.enabled`
+  attaches to every rule; without it the controller records matches only in its
+  own log. A Report is a snapshot of the *last* run, not a log: it appears after
+  the rule's first run and is overwritten on every subsequent one, so
+  `resourceInfo: []` means "the last run matched nothing" — not "nothing was ever
+  cleaned". No Report at all means the rule has not run yet (confirm with
+  `.status.lastRunTime` on the Cleaner); use the controller log for history.
+- **descheduler** — kubernetes-sigs descheduler as a CronJob for pod
+  rebalancing. Off by default (it evicts running pods); enable per cluster via
+  `descheduler.enabled`.
 - **Observability stack** — Grafana Alloy (collector) → Mimir/Loki/Tempo
   backends + Grafana UI + OTEL Collector for traces; Mimir-internal
   Alertmanager pings an UptimeRobot heartbeat. IngressMonitorController
   auto-creates UptimeRobot monitors from `EndpointMonitor` CRs. Opt-in via
   `monitoring.enabled`; each sub-component has its own toggle.
 
-**Out of scope** — backups, RBAC scaffolding, descheduler, security scanning.
+**Out of scope** — backups, RBAC scaffolding, security scanning.
 These will land in separate charts/stories.
 
 ## Versions
@@ -100,6 +130,42 @@ The older chart remains in this repo for clusters that haven't migrated.
 | cilium.podCIDRMaskSize | int | `24` |  |
 | cilium.routingMode | string | `"tunnel"` |  |
 | cilium.tunnelProtocol | string | `"vxlan"` |  |
+| descheduler.enabled | bool | `false` |  |
+| descheduler.image.registry | string | `""` |  |
+| descheduler.image.tag | string | `""` |  |
+| descheduler.profiles[0].name | string | `"default"` |  |
+| descheduler.profiles[0].pluginConfig[0].args.evictLocalStoragePods | bool | `true` |  |
+| descheduler.profiles[0].pluginConfig[0].args.ignorePvcPods | bool | `true` |  |
+| descheduler.profiles[0].pluginConfig[0].name | string | `"DefaultEvictor"` |  |
+| descheduler.profiles[0].pluginConfig[1].name | string | `"RemoveDuplicates"` |  |
+| descheduler.profiles[0].pluginConfig[2].args.includingInitContainers | bool | `true` |  |
+| descheduler.profiles[0].pluginConfig[2].args.podRestartThreshold | int | `10` |  |
+| descheduler.profiles[0].pluginConfig[2].name | string | `"RemovePodsHavingTooManyRestarts"` |  |
+| descheduler.profiles[0].pluginConfig[3].args.nodeAffinityType[0] | string | `"requiredDuringSchedulingIgnoredDuringExecution"` |  |
+| descheduler.profiles[0].pluginConfig[3].name | string | `"RemovePodsViolatingNodeAffinity"` |  |
+| descheduler.profiles[0].pluginConfig[4].name | string | `"RemovePodsViolatingNodeTaints"` |  |
+| descheduler.profiles[0].pluginConfig[5].name | string | `"RemovePodsViolatingInterPodAntiAffinity"` |  |
+| descheduler.profiles[0].pluginConfig[6].name | string | `"RemovePodsViolatingTopologySpreadConstraint"` |  |
+| descheduler.profiles[0].pluginConfig[7].args.targetThresholds.cpu | int | `70` |  |
+| descheduler.profiles[0].pluginConfig[7].args.targetThresholds.memory | int | `80` |  |
+| descheduler.profiles[0].pluginConfig[7].args.targetThresholds.pods | int | `95` |  |
+| descheduler.profiles[0].pluginConfig[7].args.thresholds.cpu | int | `50` |  |
+| descheduler.profiles[0].pluginConfig[7].args.thresholds.memory | int | `50` |  |
+| descheduler.profiles[0].pluginConfig[7].args.thresholds.pods | int | `50` |  |
+| descheduler.profiles[0].pluginConfig[7].name | string | `"LowNodeUtilization"` |  |
+| descheduler.profiles[0].plugins.balance.enabled[0] | string | `"RemoveDuplicates"` |  |
+| descheduler.profiles[0].plugins.balance.enabled[1] | string | `"RemovePodsViolatingTopologySpreadConstraint"` |  |
+| descheduler.profiles[0].plugins.balance.enabled[2] | string | `"LowNodeUtilization"` |  |
+| descheduler.profiles[0].plugins.deschedule.enabled[0] | string | `"RemovePodsHavingTooManyRestarts"` |  |
+| descheduler.profiles[0].plugins.deschedule.enabled[1] | string | `"RemovePodsViolatingNodeTaints"` |  |
+| descheduler.profiles[0].plugins.deschedule.enabled[2] | string | `"RemovePodsViolatingNodeAffinity"` |  |
+| descheduler.profiles[0].plugins.deschedule.enabled[3] | string | `"RemovePodsViolatingInterPodAntiAffinity"` |  |
+| descheduler.resources.limits.cpu | string | `"200m"` |  |
+| descheduler.resources.limits.memory | string | `"128Mi"` |  |
+| descheduler.resources.requests.cpu | string | `"50m"` |  |
+| descheduler.resources.requests.memory | string | `"64Mi"` |  |
+| descheduler.schedule | string | `"*/15 * * * *"` |  |
+| descheduler.values | object | `{}` |  |
 | dns.domains | list | `[]` |  |
 | dns.email | string | `""` |  |
 | dns.existingSecret | string | `""` |  |
@@ -125,6 +191,32 @@ The older chart remains in this repo for clusters that haven't migrated.
 | global.networkPolicy.dnsLabels."io.kubernetes.pod.namespace" | string | `"kube-system"` |  |
 | global.networkPolicy.dnsLabels.k8s-app | string | `"kube-dns"` |  |
 | global.networkPolicy.type | string | `"auto"` |  |
+| janitor.cleaners.completedJobs.dryRun | bool | `false` |  |
+| janitor.cleaners.completedJobs.enabled | bool | `true` |  |
+| janitor.cleaners.completedJobs.minAgeHours | int | `24` |  |
+| janitor.cleaners.completedJobs.schedule | string | `"0 2 * * *"` |  |
+| janitor.cleaners.completedJobs.skipOwned | bool | `true` |  |
+| janitor.cleaners.failedPods.dryRun | bool | `false` |  |
+| janitor.cleaners.failedPods.enabled | bool | `true` |  |
+| janitor.cleaners.failedPods.minAgeHours | int | `24` |  |
+| janitor.cleaners.failedPods.schedule | string | `"*/30 * * * *"` |  |
+| janitor.cleaners.succeededPods.dryRun | bool | `false` |  |
+| janitor.cleaners.succeededPods.enabled | bool | `false` |  |
+| janitor.cleaners.succeededPods.minAgeHours | int | `24` |  |
+| janitor.cleaners.succeededPods.schedule | string | `"*/30 * * * *"` |  |
+| janitor.deleteOptions.propagationPolicy | string | `"Background"` |  |
+| janitor.enabled | bool | `true` |  |
+| janitor.excludedNamespaces[0] | string | `"kube-system"` |  |
+| janitor.excludedNamespaces[1] | string | `"flux-system"` |  |
+| janitor.image.registry | string | `""` |  |
+| janitor.image.repository | string | `"projectsveltos/k8s-cleaner"` |  |
+| janitor.image.tag | string | `"v0.21.0"` |  |
+| janitor.report.enabled | bool | `true` |  |
+| janitor.resources.limits.cpu | string | `"500m"` |  |
+| janitor.resources.limits.memory | string | `"256Mi"` |  |
+| janitor.resources.requests.cpu | string | `"50m"` |  |
+| janitor.resources.requests.memory | string | `"128Mi"` |  |
+| janitor.values | object | `{}` |  |
 | metricsServer.enabled | bool | `true` |  |
 | metricsServer.kubeletInsecureTLS | bool | `true` |  |
 | metricsServer.resources.limits.cpu | string | `"200m"` |  |
@@ -217,6 +309,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.uptimeRobot.reconciler.resources.requests.cpu | string | `"50m"` |  |
 | monitoring.uptimeRobot.reconciler.resources.requests.memory | string | `"64Mi"` |  |
 | monitoring.uptimeRobot.reconciler.schedule | string | `"*/15 * * * *"` |  |
+| reflector.enabled | bool | `true` |  |
 | reflector.resources.limits.cpu | string | `"200m"` |  |
 | reflector.resources.limits.memory | string | `"128Mi"` |  |
 | reflector.resources.requests.cpu | string | `"50m"` |  |

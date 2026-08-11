@@ -29,13 +29,43 @@ This chart bootstraps the **foundation** of a Kubernetes cluster:
   via annotations (`reflector.enabled`).
 - **metrics-server** — exposes `metrics.k8s.io` for `kubectl top` and HPAs
   (`metricsServer.enabled`).
+- **Janitor** — [k8s-cleaner](https://github.com/gianlucam76/k8s-cleaner), a
+  CRD-driven controller that deletes stale resources on a schedule: completed
+  Jobs and failed or evicted Pods by default, plus succeeded Pods via
+  `janitor.cleaners.succeededPods` (off, because the owning controller normally
+  reaps those). Rules are `Cleaner` CRs generated from `janitor.cleaners.*`;
+  `janitor.excludedNamespaces` keeps them off system namespaces
+  (`janitor.enabled`). Each rule only acts once a resource has been terminal for
+  `minAgeHours` (default 24), so recent failures stay around long enough to
+  debug. Cron schedules are evaluated in UTC.
+
+  Before enabling a rule on a new cluster, set
+  `janitor.cleaners.<rule>.dryRun: true` — the flag is per rule, there is no
+  chart-wide switch. It renders that Cleaner with `action: Scan`, which matches
+  and reports without deleting:
+
+  ```console
+  kubectl get reports.apps.projectsveltos.io
+  kubectl get reports.apps.projectsveltos.io <cleaner-name> -o yaml   # matched resources
+  ```
+
+  Reports come from the `CleanerReport` notification that `janitor.report.enabled`
+  attaches to every rule; without it the controller records matches only in its
+  own log. A Report is a snapshot of the *last* run, not a log: it appears after
+  the rule's first run and is overwritten on every subsequent one, so
+  `resourceInfo: []` means "the last run matched nothing" — not "nothing was ever
+  cleaned". No Report at all means the rule has not run yet (confirm with
+  `.status.lastRunTime` on the Cleaner); use the controller log for history.
+- **descheduler** — kubernetes-sigs descheduler as a CronJob for pod
+  rebalancing. Off by default (it evicts running pods); enable per cluster via
+  `descheduler.enabled`.
 - **Observability stack** — Grafana Alloy (collector) → Mimir/Loki/Tempo
   backends + Grafana UI + OTEL Collector for traces; Mimir-internal
   Alertmanager pings an UptimeRobot heartbeat. IngressMonitorController
   auto-creates UptimeRobot monitors from `EndpointMonitor` CRs. Opt-in via
   `monitoring.enabled`; each sub-component has its own toggle.
 
-**Out of scope** — backups, RBAC scaffolding, descheduler, security scanning.
+**Out of scope** — backups, RBAC scaffolding, security scanning.
 These will land in separate charts/stories.
 
 ## Versions

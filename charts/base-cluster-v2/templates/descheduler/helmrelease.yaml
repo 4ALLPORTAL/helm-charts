@@ -1,0 +1,57 @@
+{{- if .Values.descheduler.enabled }}
+{{/*
+descheduler (kubernetes-sigs) — periodically evicts pods so the scheduler can
+re-place them (rebalancing), ported from the v1 base-cluster chart. Runs as a
+CronJob. Default OFF: descheduler *evicts* pods and an over-aggressive policy
+has caused churn on production clusters — opt in per cluster.
+
+The policy uses the v1alpha2 `profiles` API (the old v1 `strategies` block was
+removed upstream). The default profile in values.yaml mirrors the intent of the
+v1 strategy set (RemoveDuplicates, RemovePodsViolating*, RemovePodsHavingTooMany
+Restarts, LowNodeUtilization).
+*/}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: descheduler
+  namespace: descheduler
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: descheduler
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: descheduler
+      version: {{ include "base-cluster.versions.descheduler.chart" . | quote }}
+      sourceRef:
+        kind: HelmRepository
+        name: descheduler
+        namespace: {{ .Release.Namespace }}
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  values:
+    kind: CronJob
+    schedule: {{ .Values.descheduler.schedule | quote }}
+    startingDeadlineSeconds: 120
+    {{- $reg := .Values.descheduler.image.registry | default .Values.global.imageRegistry }}
+    {{- if or $reg .Values.descheduler.image.tag }}
+    image:
+      {{- if $reg }}
+      repository: {{ printf "%s/descheduler/descheduler" (trimSuffix "/" $reg) | quote }}
+      {{- end }}
+      {{- with .Values.descheduler.image.tag }}
+      tag: {{ . | quote }}
+      {{- end }}
+    {{- end }}
+    resources: {{- toYaml .Values.descheduler.resources | nindent 6 }}
+    deschedulerPolicyAPIVersion: "descheduler/v1alpha2"
+    deschedulerPolicy:
+      profiles: {{- toYaml .Values.descheduler.profiles | nindent 8 }}
+    {{- with .Values.descheduler.values }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+{{- end }}

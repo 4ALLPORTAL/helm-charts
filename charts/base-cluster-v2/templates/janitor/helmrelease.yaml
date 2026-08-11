@@ -1,0 +1,60 @@
+{{- if .Values.janitor.enabled }}
+{{/*
+Janitor — k8s-cleaner (projectsveltos), a CRD-driven cleanup controller. The
+actual cleanup rules are the `Cleaner` CRs in cleaner-resources.yaml; this
+release just runs the controller that reconciles them.
+
+CRD lifecycle: the Cleaner + Report CRDs are vendored in this chart's `crds/`
+directory (so the Cleaner CRs below render before the controller reconciles),
+therefore `crds.install: false` here to avoid two owners. To upgrade, bump
+templates/_versions.tpl and refresh crds/k8s-cleaner.yaml from the same tag.
+
+Security note: the k8s-cleaner chart's controller ClusterRole is intentionally
+broad (all api groups / resources / verbs) — it must be able to delete arbitrary
+resource kinds. Keep the `Cleaner` CRs scoped (see excludedNamespaces) so that
+breadth is never exercised against system namespaces.
+*/}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: k8s-cleaner
+  namespace: k8s-cleaner
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: janitor
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: k8s-cleaner
+      version: {{ include "base-cluster.versions.janitor.chart" . | quote }}
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-cleaner
+        namespace: {{ .Release.Namespace }}
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  values:
+    crds:
+      # CRDs are vendored in this chart's crds/ directory. Keep this false to
+      # avoid two managers of the same CRD.
+      install: false
+    rbac:
+      create: true
+    controller:
+      image:
+        registry: {{ .Values.janitor.image.registry | default .Values.global.imageRegistry | default "docker.io" | quote }}
+        repository: {{ .Values.janitor.image.repository | quote }}
+        tag: {{ .Values.janitor.image.tag | quote }}
+      resources: {{- toYaml .Values.janitor.resources | nindent 8 }}
+    {{- with .Values.global.imagePullSecretName }}
+    imagePullSecrets:
+      - name: {{ . }}
+    {{- end }}
+    {{- with .Values.janitor.values }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+{{- end }}

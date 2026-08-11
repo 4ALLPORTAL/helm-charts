@@ -18,9 +18,11 @@ metadata:
     app.kubernetes.io/component: cert-manager
 spec:
   interval: 1m
+  {{- if .Values.reflector.enabled }}
   dependsOn:
     - name: reflector
       namespace: reflector
+  {{- end }}
   chart:
     spec:
       chart: cert-manager-chart

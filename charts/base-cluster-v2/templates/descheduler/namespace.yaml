@@ -1,9 +1,9 @@
-{{- if .Values.reflector.enabled }}
+{{- if .Values.descheduler.enabled }}
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: reflector
+  name: descheduler
   labels: {{- include "base-cluster.labels" . | nindent 4 }}
-    app.kubernetes.io/component: reflector
+    app.kubernetes.io/component: descheduler
     pod-security.kubernetes.io/enforce: baseline
 {{- end }}
