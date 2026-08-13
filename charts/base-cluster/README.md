@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 41.2.5](https://img.shields.io/badge/Version-41.2.5-informational?style=flat-square)
+![Version: 41.2.6](https://img.shields.io/badge/Version-41.2.6-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -101,6 +101,9 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | global.priorityClasses.defaultClasses.very-high.preemptionPolicy | string | `"PreemptLowerPriority"` |  |
 | global.priorityClasses.defaultClasses.very-high.value | int | `10000` |  |
 | janitor.enabled | bool | `true` |  |
+| janitor.excludeNamespaces[0] | string | `"kube-system"` |  |
+| janitor.excludeResources[0] | string | `"events"` |  |
+| janitor.excludeResources[1] | string | `"controllerrevisions"` |  |
 | monitoring.costAnalysis.currency | string | `"currencyEUR"` |  |
 | monitoring.costAnalysis.storageClassMapping | object | `{}` |  |
 | monitoring.deadMansSnitch.enabled | bool | `false` |  |
