@@ -103,11 +103,23 @@ annotations and the mirrored copies stop being updated:
       secretTemplate:
         annotations:
           reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+          reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "app-.*"
           reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+          reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "app-.*"
 ```
 
-Note that a wildcard matches exactly one label: `a.example.com` is covered,
-`a.b.example.com` is not.
+Name the target namespaces. A TLS Secret carries the private key, so leaving the
+namespace annotations off — which mirrors into every namespace, including
+`kube-system` — hands the wildcard's key to anyone who can read Secrets anywhere
+in the cluster.
+
+The namespace fields take a comma-separated list *or* a regular expression, so a
+pattern covers namespaces that do not exist yet and needs no upkeep as they are
+added. Reflector matches on the namespace name only; it does not read labels or
+annotations on the namespace itself.
+
+Note that a wildcard certificate matches exactly one label: `a.example.com` is
+covered, `a.b.example.com` is not.
 
 ## Network policies
 
