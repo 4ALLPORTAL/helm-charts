@@ -36,4 +36,7 @@ spec:
     kind: ClusterIssuer
     name: letsencrypt-prod
   dnsNames: {{- $cert.dnsNames | toYaml | nindent 4 }}
+  {{- with $cert.secretTemplate }}
+  secretTemplate: {{- toYaml . | nindent 4 }}
+  {{- end }}
 {{- end }}

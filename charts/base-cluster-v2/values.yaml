@@ -18,7 +18,13 @@ global:
   ##    `cluster.discovery.dnsDomain`). Used by Alloy to reach Loki/Mimir.
   clusterDomain: cluster.local
   ## -- Additional cluster-wide cert-manager Certificates to issue. Map of
-  ##    name -> { dnsNames: [...] }. Issued via the letsencrypt-prod issuer.
+  ##    name -> { dnsNames: [...], secretTemplate: {...} }. Issued via the
+  ##    letsencrypt-prod issuer.
+  ##
+  ##    secretTemplate is handed to cert-manager, which stamps its annotations
+  ##    and labels onto the issued Secret and keeps them across renewals — the
+  ##    supported way to have kubernetes-reflector mirror a wildcard into the
+  ##    namespaces that need it.
   certificates: {}
   ## NetworkPolicy mode.
   ##   auto   — emit CiliumNetworkPolicy if the API is present, otherwise nothing
