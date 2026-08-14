@@ -7594,6 +7594,24 @@ entries:
     version: 1.0.5
   base-cluster:
   - apiVersion: v2
+    created: "2026-08-14T09:40:28.781872095Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.27.0
+    description: A generic, base cluster setup
+    digest: 1085eee308aa061af506534b0dd32634a132bc6166d83a708575493cb799ed8e
+    home: https://4allportal.com
+    maintainers:
+    - email: j.kraemer@4allportal.com
+      name: jpkraemer-mg
+    - email: d.beer@4allportal.com
+      name: Dominic-Beer
+    name: base-cluster
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/base-cluster-41.2.6/base-cluster-41.2.6.tgz
+    version: 41.2.6
+  - apiVersion: v2
     created: "2026-03-18T10:49:19.212913604Z"
     dependencies:
     - name: common
@@ -9280,6 +9298,50 @@ entries:
     - https://github.com/4ALLPORTAL/helm-charts/releases/download/base-cluster-34.8.1/base-cluster-34.8.1.tgz
     version: 34.8.1
   base-cluster-v2:
+  - apiVersion: v2
+    appVersion: 1.6.0
+    created: "2026-08-14T09:40:28.890346624Z"
+    description: 'Foundational base cluster setup — Cilium CNI, FluxCD, Traefik ingress,
+      cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
+      full LGTM observability stack (Grafana, Loki, Mimir, Tempo, and Alloy-based
+      metrics/log/trace collection). Successor to the base-cluster chart. '
+    digest: d637f40ce36a1397d1bfa455711b79f698c114b308f89f52b19ac92f286eff06
+    home: https://4allportal.com
+    keywords:
+    - cilium
+    - cni
+    - wireguard
+    - flux
+    - fluxcd
+    - traefik
+    - cert-manager
+    - external-dns
+    - ingress
+    - base-cluster
+    - monitoring
+    - observability
+    - grafana
+    - loki
+    - mimir
+    - tempo
+    - prometheus
+    - alloy
+    - janitor
+    - k8s-cleaner
+    - descheduler
+    - reflector
+    maintainers:
+    - email: j.kraemer@4allportal.com
+      name: jpkraemer-mg
+    - email: d.beer@4allportal.com
+      name: Dominic-Beer
+    - email: c.schwarz@4allportal.com
+      name: C-schwarz-4ap
+    name: base-cluster-v2
+    type: application
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/base-cluster-v2-1.6.0/base-cluster-v2-1.6.0.tgz
+    version: 1.6.0
   - apiVersion: v2
     appVersion: 1.5.0
     created: "2026-08-11T11:22:58.666852638Z"
@@ -11033,4 +11095,4 @@ entries:
     urls:
     - https://github.com/4ALLPORTAL/helm-charts/releases/download/simple-website-1.0.0/simple-website-1.0.0.tgz
     version: 1.0.0
-generated: "2026-08-11T11:22:58.667163259Z"
+generated: "2026-08-14T09:40:28.89105286Z"
