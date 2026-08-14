@@ -1,6 +1,6 @@
 # base-cluster-v2
 
-![Version: 1.5.0](https://img.shields.io/badge/Version-1.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
+![Version: 1.6.0](https://img.shields.io/badge/Version-1.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.0](https://img.shields.io/badge/AppVersion-1.6.0-informational?style=flat-square)
 
 Foundational base cluster setup — Cilium CNI, FluxCD, Traefik ingress,
 cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
@@ -74,6 +74,40 @@ These will land in separate charts/stories.
 Component upstream versions are pinned exactly in
 `templates/_versions.tpl`. Bumping any component is an explicit edit to that
 file plus a chart version bump.
+
+## Certificates
+
+The cluster's own wildcard (`*.<clusterName>.<baseDomain>`) is issued into the
+`traefik` namespace and used by ingresses that bring no certificate of their own.
+
+`global.certificates` issues additional ones into the release namespace, keyed by
+name, with the Secret named `<key>-certificate`:
+
+```yaml
+global:
+  certificates:
+    example-com-wildcard:
+      dnsNames:
+        - example.com
+        - "*.example.com"
+```
+
+A Secret is only usable from the namespace it lives in, so a wildcard meant for
+workloads elsewhere has to be mirrored. `secretTemplate` is handed to
+cert-manager, which stamps its annotations and labels onto the issued Secret and
+keeps them across renewals — which is what makes kubernetes-reflector pick it up.
+Annotating the Secret by hand works until the first renewal quietly drops the
+annotations and the mirrored copies stop being updated:
+
+```yaml
+      secretTemplate:
+        annotations:
+          reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+          reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+```
+
+Note that a wildcard matches exactly one label: `a.example.com` is covered,
+`a.b.example.com` is not.
 
 ## Network policies
 
