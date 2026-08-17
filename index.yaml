@@ -9321,6 +9321,52 @@ entries:
     version: 34.8.1
   base-cluster-v2:
   - apiVersion: v2
+    appVersion: 1.7.0
+    created: "2026-08-17T10:52:25.715206946Z"
+    description: 'Foundational base cluster setup — Cilium CNI, FluxCD, Traefik ingress,
+      cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
+      full LGTM observability stack (Grafana, Loki, Mimir, Tempo, and Alloy-based
+      metrics/log/trace collection). Successor to the base-cluster chart. '
+    digest: 196e9894036b27e4dd9480d1cb0d1c0e29d953a86853fc675fcc1d2d3c8a2d98
+    home: https://4allportal.com
+    keywords:
+    - cilium
+    - cni
+    - wireguard
+    - flux
+    - fluxcd
+    - traefik
+    - cert-manager
+    - external-dns
+    - ingress
+    - base-cluster
+    - monitoring
+    - observability
+    - grafana
+    - loki
+    - mimir
+    - tempo
+    - prometheus
+    - alloy
+    - janitor
+    - k8s-cleaner
+    - descheduler
+    - reflector
+    - stash
+    - backup
+    maintainers:
+    - email: j.kraemer@4allportal.com
+      name: jpkraemer-mg
+    - email: d.beer@4allportal.com
+      name: Dominic-Beer
+    - email: c.schwarz@4allportal.com
+      name: C-schwarz-4ap
+    name: base-cluster-v2
+    type: application
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/base-cluster-v2-1.7.0/base-cluster-v2-1.7.0.tgz
+    version: 1.7.0
+  - apiVersion: v2
     appVersion: 1.6.0
     created: "2026-08-14T09:40:28.890346624Z"
     description: 'Foundational base cluster setup — Cilium CNI, FluxCD, Traefik ingress,
@@ -11117,4 +11163,4 @@ entries:
     urls:
     - https://github.com/4ALLPORTAL/helm-charts/releases/download/simple-website-1.0.0/simple-website-1.0.0.tgz
     version: 1.0.0
-generated: "2026-08-17T09:15:36.397776004Z"
+generated: "2026-08-17T10:52:25.71575889Z"
