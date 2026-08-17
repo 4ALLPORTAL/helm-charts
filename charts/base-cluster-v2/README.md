@@ -1,6 +1,6 @@
 # base-cluster-v2
 
-![Version: 1.6.0](https://img.shields.io/badge/Version-1.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.0](https://img.shields.io/badge/AppVersion-1.6.0-informational?style=flat-square)
+![Version: 1.7.0](https://img.shields.io/badge/Version-1.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.7.0](https://img.shields.io/badge/AppVersion-1.7.0-informational?style=flat-square)
 
 Foundational base cluster setup — Cilium CNI, FluxCD, Traefik ingress,
 cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
@@ -145,6 +145,17 @@ The older chart remains in this repo for clusters that haven't migrated.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| backup.enabled | bool | `false` |  |
+| backup.licenseSecretName | string | `""` |  |
+| backup.retryBackup.image.registry | string | `""` |  |
+| backup.retryBackup.image.repository | string | `"alpine/k8s"` |  |
+| backup.retryBackup.image.tag | string | `"1.35.2"` |  |
+| backup.retryBackup.resources.limits.cpu | string | `"100m"` |  |
+| backup.retryBackup.resources.limits.memory | string | `"64Mi"` |  |
+| backup.retryBackup.resources.requests.cpu | string | `"10m"` |  |
+| backup.retryBackup.resources.requests.memory | string | `"32Mi"` |  |
+| backup.retryBackup.schedule | string | `"30 0-8 * * *"` |  |
+| backup.values | object | `{}` |  |
 | certManager.caInjector.resources.limits.cpu | string | `"500m"` |  |
 | certManager.caInjector.resources.limits.memory | string | `"512Mi"` |  |
 | certManager.caInjector.resources.requests.cpu | string | `"250m"` |  |
