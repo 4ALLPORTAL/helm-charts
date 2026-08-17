@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 22.0.5](https://img.shields.io/badge/Version-22.0.5-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
+![Version: 22.0.6](https://img.shields.io/badge/Version-22.0.6-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -420,3 +420,15 @@ This release makes changes to `.Values.samba.mounts` take effect. The samba pod 
 The samba container imports its configuration into Samba's `net conf` registry **once at container start**, and that registry (in `/var/lib/samba`, an `emptyDir`) is what `smbd` actually serves. Without the annotation the pod was never restarted when the ConfigMap changed, so edits to a share's `users` list silently never reached the running server — a user added to an existing share kept getting access denied until the pod happened to restart for an unrelated reason.
 
 No action required. Note that the upgrade recreates the samba pod, which briefly interrupts active SMB connections.
+
+## To 22.0.6
+
+This release fixes the CiliumNetworkPolicy for systems using `.Values.fourAllPortal.database.operator`. The policy's egress rule for the database read `.Values.fourAllPortal.database.existing.host` unconditionally, and with the operator that value does not exist — `existing` defaults to `{}`, so `nil | splitList` aborted the render and the whole release failed to install.
+
+The rule is only about an external database, so it is now emitted only when `existing.host` is set. An external database keeps it unchanged, including a comma-separated list of hosts.
+
+This had gone unnoticed because the policy is only rendered where a `CiliumNetworkPolicy` CRD exists. On a cluster without Cilium the whole template is skipped, so an operator-backed system installed fine; on one with Cilium it never could.
+
+**If you use the operator on a Cilium cluster**, the chart cannot emit an egress rule for your database — the host lives in the Secret the operator issues at runtime, not in the values. Allow that egress at cluster level.
+
+No action required otherwise.
