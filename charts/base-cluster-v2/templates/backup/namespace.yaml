@@ -1,0 +1,9 @@
+{{- if .Values.backup.enabled }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: stash
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backup
+    pod-security.kubernetes.io/enforce: baseline
+{{- end }}
