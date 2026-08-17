@@ -29,6 +29,7 @@ spec:
             - port: "8190"
               protocol: TCP
     {{- end }}
+    {{- if .Values.fourAllPortal.database.existing.host }}
     - toFQDNs:
         {{ range $host := (.Values.fourAllPortal.database.existing.host | splitList "," ) }}
         - matchName: {{ $host | quote }}
@@ -37,6 +38,7 @@ spec:
         - ports:
             - port: {{ .Values.fourAllPortal.database.existing.port | quote }}
               protocol: TCP
+    {{- end }}
     {{- if or .Values.fourAllPortal.tracing.enabled .Values.global.tracing.enabled }}
     - toPorts:
         - ports:
