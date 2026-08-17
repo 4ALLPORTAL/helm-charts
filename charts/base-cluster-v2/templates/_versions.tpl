@@ -34,6 +34,11 @@ reflector (emberstack repo), mimir (grafana repo) and ingressMonitor
 
 {{- define "base-cluster.versions.descheduler.chart" -}}0.33.0{{- end -}}
 
+{{/* Stash (AppsCode) backup operator, from the `appscode` HTTPS repo. Not
+     DHI-hardened. */}}
+
+{{- define "base-cluster.versions.stash.chart" -}}v2025.10.17{{- end -}}
+
 {{/* Observability stack. Mimir comes from the upstream grafana HelmRepository
      because DHI does not mirror it; all others are pinned DHI charts. */}}
 

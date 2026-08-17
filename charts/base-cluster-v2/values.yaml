@@ -400,6 +400,33 @@ descheduler:
   ## Extra values passed through to the descheduler chart.
   values: {}
 
+## Stash (AppsCode) — CRD-driven volume/DB backup operator, ported from the v1
+## base-cluster chart. Default OFF: requires a Stash license secret to be
+## pre-created (see backup.licenseSecretName) before enabling.
+backup:
+  enabled: false
+  ## -- Name of a pre-existing license Secret for Stash Community, in the
+  ##    `stash` namespace. Get one at https://appscode.com/issues/new (free).
+  licenseSecretName: ""
+  ## Retry CronJob — Stash BackupSessions that failed overnight (e.g. due to a
+  ## transient network blip) are recreated once the next morning so they get
+  ## another attempt instead of waiting for the next scheduled window.
+  retryBackup:
+    schedule: "30 0-8 * * *"
+    image:
+      registry: ""
+      repository: alpine/k8s
+      tag: "1.35.2"
+    resources:
+      requests:
+        cpu: 10m
+        memory: 32Mi
+      limits:
+        cpu: 100m
+        memory: 64Mi
+  ## Extra values passed through to the stash-community chart.
+  values: {}
+
 ## Observability stack — Grafana Alloy → Mimir + Loki + Tempo, OTEL Collector
 ## for traces, Mimir-internal Alertmanager routes the Watchdog heartbeat to an
 ## UptimeRobot heartbeat URL, and a CronJob reconciles UptimeRobot monitors via
