@@ -161,3 +161,11 @@ This had gone unnoticed because the policy is only rendered where a `CiliumNetwo
 **If you use the operator on a Cilium cluster**, the chart cannot emit an egress rule for your database — the host lives in the Secret the operator issues at runtime, not in the values. Allow that egress at cluster level.
 
 No action required otherwise.
+
+## To 22.0.7
+
+This release gives the 3D renderer and webdav pods the image pull secrets from `.Values.global.imagePullSecrets`. They had none: the secrets were only ever attached to the backend's ServiceAccount, and neither of those two pods uses a service account.
+
+It went unnoticed for as long as those images came from a registry that serves reads anonymously. On a registry that requires authentication both pods sit in `ImagePullBackOff` and the release never becomes ready — while the backend, which does have the secret, comes up fine.
+
+No action required. If you were working around this by attaching the secret to the namespace's `default` ServiceAccount, that is no longer needed.

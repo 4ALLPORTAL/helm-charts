@@ -44,6 +44,7 @@ spec:
       {{- include "4allportal.webdav.priorityClassName" $ | nindent 6 }}
       {{- .Values.dreiDRenderer.securityOptions | toYaml | nindent 6 }}
       automountServiceAccountToken: false
+      {{- include "4allportal.imagePullSecrets" $ | nindent 6 }}
       securityContext: {{- .Values.dreiDRenderer.securityContext | toYaml | nindent 8 }}
       enableServiceLinks: false
       containers:
