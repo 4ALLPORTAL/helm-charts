@@ -1,0 +1,162 @@
+{{- if .Values.monitoring.enabled }}
+{{/*
+grafana/k8s-monitoring — replaces the hand-rolled Alloy DaemonSet (removed in
+CL-1056) with the Alloy Operator, split into role-specific collectors:
+  alloy-metrics — clustered StatefulSet (`presets: [clustered]`). Runs
+                  annotationAutodiscovery (Pod + Service annotation scraping,
+                  replaces the old scrape_pods/scrape_endpoints blocks),
+                  clusterMetrics, hostMetrics and prometheusOperatorObjects
+                  (ServiceMonitor/PodMonitor/Probe — see
+                  crds/prometheus-operator-objects.yaml, consumed today by
+                  the 4allportal backend's ServiceMonitor and by
+                  rook-ceph-servicemonitor.yaml). Note: `extraConfig` on a
+                  collector is a no-op here — the Alloy Operator's CR spec
+                  strips it (`collector.alloy.extraFields` in the
+                  k8s-monitoring chart); it only works on the plain
+                  ConfigMap render path this chart doesn't use. A
+                  ServiceMonitor/PodMonitor is the way to add an arbitrary
+                  scrape target to an operator-managed collector. Clustering shards
+                  targets across replicas instead of every replica scraping
+                  everything, which is what fixes both the pod-metrics
+                  duplication *and* the ticket's noted `endpoints`
+                  fan-out follow-up — Services/Endpoints aren't node-local,
+                  but they don't need to be once sharding replaces per-node
+                  duplication.
+  alloy-logs    — DaemonSet (`presets: [daemonset, filesystem-log-reader]`).
+                  Tails /var/log/pods on its own node via podLogsViaLoki —
+                  this also fixes the doc/reality mismatch the old config
+                  had: it claimed to read hostPath logs but actually used
+                  the Kubernetes API log source.
+
+kube-state-metrics and node-exporter are no longer separate HelmReleases —
+they're deployed as this chart's `telemetryServices`, feeding `clusterMetrics`
+/ `hostMetrics` respectively.
+
+Not DHI-hardened (DHI mirrors neither k8s-monitoring nor the Alloy Operator
+images — checked at CL-1056 time); sourced from the `grafana` HelmRepository,
+same as Mimir.
+*/}}
+{{- $clusterDomain := include "base-cluster.clusterDomain" . -}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: k8s-monitoring
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: k8s-monitoring
+      version: {{ include "base-cluster.versions.k8sMonitoring.chart" . | quote }}
+      sourceRef:
+        kind: HelmRepository
+        name: grafana
+        namespace: {{ .Release.Namespace }}
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  values:
+    cluster:
+      name: {{ .Values.global.clusterName | quote }}
+
+    {{- with .Values.global.imagePullSecretName }}
+    global:
+      image:
+        pullSecrets:
+          - name: {{ . }}
+      imagePullSecrets:
+        - name: {{ . }}
+    {{- end }}
+
+    collectors:
+      alloy-metrics:
+        presets: [clustered]
+        alloy:
+          resources: {{- toYaml .Values.monitoring.k8sMonitoring.resources | nindent 12 }}
+      alloy-logs:
+        presets: [daemonset, filesystem-log-reader]
+        alloy:
+          resources: {{- toYaml .Values.monitoring.k8sMonitoring.resources | nindent 12 }}
+
+    destinations:
+      {{- if .Values.monitoring.mimir.enabled }}
+      mimir:
+        type: prometheus
+        url: http://mimir-distributor.monitoring.svc.{{ $clusterDomain }}:8080/api/v1/push
+        tenantId: anonymous
+      {{- end }}
+      {{- if .Values.monitoring.loki.enabled }}
+      loki:
+        type: loki
+        url: http://loki-loki-chart.monitoring.svc.{{ $clusterDomain }}:3100/loki/api/v1/push
+      {{- end }}
+
+    {{- if .Values.monitoring.mimir.enabled }}
+    annotationAutodiscovery:
+      enabled: true
+      collector: alloy-metrics
+
+    prometheusOperatorObjects:
+      enabled: true
+      collector: alloy-metrics
+
+    clusterMetrics:
+      enabled: true
+      collector: alloy-metrics
+      ## job labels pinned to the kube-prometheus-stack convention
+      ## (`node-exporter`, `kube-state-metrics`, `cadvisor`, `kubelet`) rather
+      ## than grafana/k8s-monitoring's own `integrations/kubernetes/*`
+      ## default — that's what community dashboards (e.g. Node Exporter
+      ## Full, kube-prometheus-mixin) hard-filter or default their `job`
+      ## variable to, discovered when a Grafana panel showed only pre-cutover
+      ## data after this migration (CL-1056).
+      kube-state-metrics:
+        enabled: {{ .Values.monitoring.kubeStateMetrics.enabled }}
+        jobLabel: kube-state-metrics
+      cadvisor:
+        jobLabel: cadvisor
+      kubelet:
+        jobLabel: kubelet
+
+    {{- if .Values.monitoring.nodeExporter.enabled }}
+    hostMetrics:
+      enabled: true
+      collector: alloy-metrics
+      linuxHosts:
+        enabled: true
+        jobLabel: node-exporter
+        ## The default allow-list (`useDefaultAllowList`, ~12 metrics) is too
+        ## narrow for community dashboards like Node Exporter Full — it drops
+        ## node_uname_info (the dashboard's `job`/`instance` variable seed),
+        ## node_load*, node_disk_*, node_netstat_* entirely, so panels stayed
+        ## empty even after the jobLabel fix above. useIntegrationAllowList
+        ## pulls in the chart's bundled list matching Grafana's own Node
+        ## Exporter integration dashboard instead.
+        metricsTuning:
+          useIntegrationAllowList: true
+    {{- end }}
+    {{- end }}
+
+    {{- if or .Values.monitoring.kubeStateMetrics.enabled .Values.monitoring.nodeExporter.enabled }}
+    telemetryServices:
+      {{- if .Values.monitoring.kubeStateMetrics.enabled }}
+      kube-state-metrics:
+        deploy: true
+      {{- end }}
+      {{- if .Values.monitoring.nodeExporter.enabled }}
+      node-exporter:
+        deploy: true
+      {{- end }}
+    {{- end }}
+
+    {{- if .Values.monitoring.loki.enabled }}
+    podLogsViaLoki:
+      enabled: true
+      collector: alloy-logs
+    {{- end }}
+{{- end }}

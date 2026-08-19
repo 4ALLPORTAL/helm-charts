@@ -16,9 +16,13 @@ global:
     ingressLabels:
       io.kubernetes.pod.namespace: ingress
       app.kubernetes.io/name: traefik
+    ## base-cluster-v2's metrics scraper as of CL-1056 is grafana/k8s-monitoring
+    ## (Alloy Operator) rather than a `prometheus`-labelled pod — its Alloy
+    ## pods (both the alloy-metrics and alloy-logs roles) carry
+    ## app.kubernetes.io/name=alloy regardless of collector role.
     metricsLabels:
       io.kubernetes.pod.namespace: monitoring
-      app.kubernetes.io/name: prometheus
+      app.kubernetes.io/name: alloy
     dnsLabels:
       io.kubernetes.pod.namespace: kube-system
       k8s-app: kube-dns

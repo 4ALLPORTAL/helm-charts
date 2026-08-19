@@ -8,7 +8,7 @@ labels rather than `app.kubernetes.io/instance`, and similar sub-charts
 would otherwise need bespoke selectors.
 
 The per-role policies below add **external** allowances on top:
-  collectors              — Alloy, Node Exporter, KSM (scrape cluster pods)
+  collectors              — Alloy (metrics+logs), Node Exporter, KSM (scrape cluster pods)
   storage                 — Mimir, Loki, Tempo (egress to UptimeRobot heartbeat)
   grafana                 — Traefik ingress + world:443 for plugins/OIDC
   otel-collector          — accepts OTLP from any cluster workload
@@ -53,17 +53,28 @@ metadata:
   labels: {{- include "base-cluster.labels" . | nindent 4 }}
     app.kubernetes.io/component: monitoring
 spec:
-  description: "Alloy / Node Exporter / kube-state-metrics — scrape cluster, write to storage"
+  description: "Alloy (metrics+logs) / Node Exporter / kube-state-metrics — scrape cluster, write to storage"
   ## NOTE: node-exporter is hostNetwork, so under Cilium it carries the `host`
   ## identity and is NOT matched by the endpointSelector below — its scrape on
   ## :9100 relies on the default host allowance. If Cilium's host firewall is
   ## ever enabled, node-exporter needs a host policy. Alloy + KSM are normal
   ## pods and do match.
+  ##
+  ## Since CL-1056, Alloy is Alloy-Operator-managed (grafana/k8s-monitoring)
+  ## instead of a single hand-rolled HelmRelease named `alloy`: the operator
+  ## renders each collector's workload with `app.kubernetes.io/instance` set
+  ## to the owning Alloy CR's name (`<release>-alloy-<role>`), which differs
+  ## from the `k8s-monitoring` HelmRelease's own Helm-templated resources
+  ## (kube-state-metrics, node-exporter, alloy-operator itself — all
+  ## `app.kubernetes.io/instance: k8s-monitoring`). Alloy-metrics clustering
+  ## gossip between replicas doesn't need a dedicated allowance here — it's
+  ## already covered by `monitoring-intra-ns`'s any-port intra-namespace
+  ## catch-all above.
   endpointSelector:
     matchExpressions:
       - key: app.kubernetes.io/instance
         operator: In
-        values: [alloy, node-exporter, kube-state-metrics]
+        values: [k8s-monitoring, k8s-monitoring-alloy-metrics, k8s-monitoring-alloy-logs]
   egress:
     - toEntities: [cluster, kube-apiserver, host]
     - toEndpoints:

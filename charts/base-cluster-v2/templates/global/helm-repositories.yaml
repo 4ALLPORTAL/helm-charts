@@ -4,13 +4,15 @@ deploys. Adding a new component? Add its chart repo here, then reference it
 from the component's HelmRelease.
 OCI repos require type: oci; HTTPS repos omit the type field.
 */}}
-{{/* `grafana` carries Mimir; DHI does not mirror mimir-distributed. `stakater`
+{{/* `grafana` carries Mimir and k8s-monitoring (which bundles the Alloy
+     Operator as a sub-chart dependency) — DHI mirrors neither. `stakater`
      carries the IngressMonitorController chart (not published as OCI; its image
-     still comes from ghcr.io). All other observability charts (alloy, loki,
-     tempo, grafana, node-exporter, KSM, opentelemetry-collector) come from
-     `dhi` as hardened images. `descheduler` (kubernetes-sigs), `k8s-cleaner`
-     (ghcr.io OCI, the janitor) and `appscode` (Stash backup operator) are not
-     DHI-hardened; mirror their images via global.imageRegistry when needed. */}}
+     still comes from ghcr.io). loki, tempo and grafana come from `dhi` as
+     hardened images; alloy/node-exporter/kube-state-metrics no longer have
+     their own HelmReleases as of CL-1056 (folded into k8s-monitoring).
+     `descheduler` (kubernetes-sigs), `k8s-cleaner` (ghcr.io OCI, the janitor)
+     and `appscode` (Stash backup operator) are not DHI-hardened; mirror their
+     images via global.imageRegistry when needed. */}}
 {{- $repos := list
   (dict "name" "cilium"           "url" "https://helm.cilium.io/")
   (dict "name" "emberstack"       "url" "https://emberstack.github.io/helm-charts")
