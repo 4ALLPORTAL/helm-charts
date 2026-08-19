@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 22.0.8](https://img.shields.io/badge/Version-22.0.8-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
+![Version: 22.0.7](https://img.shields.io/badge/Version-22.0.7-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -206,7 +206,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | global.networkPolicy.dnsLabels.k8s-app | string | `"kube-dns"` |  |
 | global.networkPolicy.ingressLabels."app.kubernetes.io/name" | string | `"traefik"` |  |
 | global.networkPolicy.ingressLabels."io.kubernetes.pod.namespace" | string | `"ingress"` |  |
-| global.networkPolicy.metricsLabels."app.kubernetes.io/name" | string | `"alloy-metrics"` |  |
+| global.networkPolicy.metricsLabels."app.kubernetes.io/name" | string | `"prometheus"` |  |
 | global.networkPolicy.metricsLabels."io.kubernetes.pod.namespace" | string | `"monitoring"` |  |
 | global.networkPolicy.type | string | `"auto"` |  |
 | global.persistence.enabled | bool | `true` |  |
