@@ -433,8 +433,7 @@ backup:
 ## reconciles UptimeRobot monitors via the UptimeRobot API.
 ##
 ## Mimir and k8s-monitoring are pulled from the upstream `grafana`
-## HelmRepository because DHI does not mirror either; everything else uses
-## DHI-hardened charts.
+## HelmRepository; everything else uses DHI-hardened charts.
 monitoring:
   ## Master switch — when false, nothing in templates/monitoring/ is rendered
   ## except the namespace's default-deny exclusion.
@@ -543,14 +542,10 @@ monitoring:
         cpu: 500m
         memory: 512Mi
 
-  ## k8s-monitoring (Alloy Operator) — replaces the old hand-rolled Alloy
-  ## DaemonSet (CL-1056: pod discovery wasn't node-scoped, duplicating logs
-  ## and pod metrics once per node). Splits collection into `alloy-metrics`
-  ## (clustered — annotation/ServiceMonitor/PodMonitor/Probe scraping) and
-  ## `alloy-logs` (DaemonSet — node-local pod log tailing via podLogsViaLoki).
-  ## `resources` is applied to both collector roles; per-role tuning isn't
-  ## exposed as a separate knob here since neither role has shown a need for
-  ## different sizing yet.
+  ## k8s-monitoring (Alloy Operator) — `alloy-metrics` (clustered —
+  ## annotation/ServiceMonitor/PodMonitor/Probe scraping) and `alloy-logs`
+  ## (DaemonSet — node-local pod log tailing via podLogsViaLoki).
+  ## `resources` applies to both collector roles.
   k8sMonitoring:
     resources:
       requests:
@@ -560,15 +555,13 @@ monitoring:
         cpu: "1"
         memory: 1Gi
 
-  ## Prometheus Node Exporter — host CPU/memory/disk/network metrics. Deployed
-  ## as a k8s-monitoring telemetryService (feeds hostMetrics.linuxHosts); its
-  ## resources aren't exposed as an override by the upstream chart.
+  ## Prometheus Node Exporter — host CPU/memory/disk/network metrics.
+  ## Deployed as a k8s-monitoring telemetryService.
   nodeExporter:
     enabled: true
 
-  ## kube-state-metrics — Kubernetes object metrics. Deployed as a
-  ## k8s-monitoring telemetryService (feeds clusterMetrics); its resources
-  ## aren't exposed as an override by the upstream chart.
+  ## kube-state-metrics — Kubernetes object metrics.
+  ## Deployed as a k8s-monitoring telemetryService.
   kubeStateMetrics:
     enabled: true
 

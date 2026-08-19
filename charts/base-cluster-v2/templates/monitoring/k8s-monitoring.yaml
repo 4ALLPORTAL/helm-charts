@@ -1,40 +1,17 @@
 {{- if .Values.monitoring.enabled }}
 {{/*
-grafana/k8s-monitoring — replaces the hand-rolled Alloy DaemonSet (removed in
-CL-1056) with the Alloy Operator, split into role-specific collectors:
-  alloy-metrics — clustered StatefulSet (`presets: [clustered]`). Runs
-                  annotationAutodiscovery (Pod + Service annotation scraping,
-                  replaces the old scrape_pods/scrape_endpoints blocks),
-                  clusterMetrics, hostMetrics and prometheusOperatorObjects
-                  (ServiceMonitor/PodMonitor/Probe — see
-                  crds/prometheus-operator-objects.yaml, consumed today by
-                  the 4allportal backend's ServiceMonitor and by
-                  rook-ceph-servicemonitor.yaml). Note: `extraConfig` on a
-                  collector is a no-op here — the Alloy Operator's CR spec
-                  strips it (`collector.alloy.extraFields` in the
-                  k8s-monitoring chart); it only works on the plain
-                  ConfigMap render path this chart doesn't use. A
-                  ServiceMonitor/PodMonitor is the way to add an arbitrary
-                  scrape target to an operator-managed collector. Clustering shards
-                  targets across replicas instead of every replica scraping
-                  everything, which is what fixes both the pod-metrics
-                  duplication *and* the ticket's noted `endpoints`
-                  fan-out follow-up — Services/Endpoints aren't node-local,
-                  but they don't need to be once sharding replaces per-node
-                  duplication.
-  alloy-logs    — DaemonSet (`presets: [daemonset, filesystem-log-reader]`).
-                  Tails /var/log/pods on its own node via podLogsViaLoki —
-                  this also fixes the doc/reality mismatch the old config
-                  had: it claimed to read hostPath logs but actually used
-                  the Kubernetes API log source.
+grafana/k8s-monitoring, via the Alloy Operator, split into role-specific
+collectors: `alloy-metrics` (clustered — annotationAutodiscovery,
+clusterMetrics, hostMetrics, prometheusOperatorObjects; CRDs in
+crds/prometheus-operator-objects.yaml) and `alloy-logs` (DaemonSet —
+podLogsViaLoki). `extraConfig` on a collector is a no-op with the Alloy
+Operator (stripped by `collector.alloy.extraFields`); use a
+ServiceMonitor/PodMonitor instead (see rook-ceph-servicemonitor.yaml).
 
-kube-state-metrics and node-exporter are no longer separate HelmReleases —
-they're deployed as this chart's `telemetryServices`, feeding `clusterMetrics`
-/ `hostMetrics` respectively.
+kube-state-metrics and node-exporter are deployed as this chart's
+`telemetryServices`, feeding `clusterMetrics`/`hostMetrics`.
 
-Not DHI-hardened (DHI mirrors neither k8s-monitoring nor the Alloy Operator
-images — checked at CL-1056 time); sourced from the `grafana` HelmRepository,
-same as Mimir.
+Not DHI-hardened; sourced from the `grafana` HelmRepository, same as Mimir.
 */}}
 {{- $clusterDomain := include "base-cluster.clusterDomain" . -}}
 apiVersion: helm.toolkit.fluxcd.io/v2
@@ -108,13 +85,9 @@ spec:
     clusterMetrics:
       enabled: true
       collector: alloy-metrics
-      ## job labels pinned to the kube-prometheus-stack convention
-      ## (`node-exporter`, `kube-state-metrics`, `cadvisor`, `kubelet`) rather
-      ## than grafana/k8s-monitoring's own `integrations/kubernetes/*`
-      ## default — that's what community dashboards (e.g. Node Exporter
-      ## Full, kube-prometheus-mixin) hard-filter or default their `job`
-      ## variable to, discovered when a Grafana panel showed only pre-cutover
-      ## data after this migration (CL-1056).
+      ## Job labels pinned to the kube-prometheus-stack convention, which is
+      ## what community dashboards (Node Exporter Full, kube-prometheus-mixin)
+      ## expect, rather than grafana/k8s-monitoring's own `integrations/*`.
       kube-state-metrics:
         enabled: {{ .Values.monitoring.kubeStateMetrics.enabled }}
         jobLabel: kube-state-metrics
@@ -130,13 +103,9 @@ spec:
       linuxHosts:
         enabled: true
         jobLabel: node-exporter
-        ## The default allow-list (`useDefaultAllowList`, ~12 metrics) is too
-        ## narrow for community dashboards like Node Exporter Full — it drops
-        ## node_uname_info (the dashboard's `job`/`instance` variable seed),
-        ## node_load*, node_disk_*, node_netstat_* entirely, so panels stayed
-        ## empty even after the jobLabel fix above. useIntegrationAllowList
-        ## pulls in the chart's bundled list matching Grafana's own Node
-        ## Exporter integration dashboard instead.
+        ## The default allow-list is too narrow for community dashboards
+        ## like Node Exporter Full (drops node_uname_info, node_load*,
+        ## node_disk_*, node_netstat_*); pull in the integration list instead.
         metricsTuning:
           useIntegrationAllowList: true
     {{- end }}

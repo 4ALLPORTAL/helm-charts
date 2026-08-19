@@ -60,16 +60,10 @@ spec:
   ## ever enabled, node-exporter needs a host policy. Alloy + KSM are normal
   ## pods and do match.
   ##
-  ## Since CL-1056, Alloy is Alloy-Operator-managed (grafana/k8s-monitoring)
-  ## instead of a single hand-rolled HelmRelease named `alloy`: the operator
-  ## renders each collector's workload with `app.kubernetes.io/instance` set
-  ## to the owning Alloy CR's name (`<release>-alloy-<role>`), which differs
-  ## from the `k8s-monitoring` HelmRelease's own Helm-templated resources
-  ## (kube-state-metrics, node-exporter, alloy-operator itself — all
-  ## `app.kubernetes.io/instance: k8s-monitoring`). Alloy-metrics clustering
-  ## gossip between replicas doesn't need a dedicated allowance here — it's
-  ## already covered by `monitoring-intra-ns`'s any-port intra-namespace
-  ## catch-all above.
+  ## The Alloy Operator names each collector's workload after its Alloy CR
+  ## (`<release>-alloy-<role>`), separate from the `k8s-monitoring` release's
+  ## own Helm-templated resources (kube-state-metrics, node-exporter,
+  ## alloy-operator — all `app.kubernetes.io/instance: k8s-monitoring`).
   endpointSelector:
     matchExpressions:
       - key: app.kubernetes.io/instance

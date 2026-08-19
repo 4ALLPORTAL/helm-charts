@@ -52,12 +52,9 @@ ingressMonitor (stakater repo), janitor (ghcr.io OCI), descheduler
 
 {{- define "base-cluster.versions.grafana.chart" -}}12.3.2{{- end -}}
 
-{{/* k8s-monitoring bundles the Alloy Operator (which splits collection into
-     alloy-metrics/alloy-singleton/alloy-logs) plus kube-state-metrics and
-     node-exporter as its own telemetryServices toggles — this replaces what
-     used to be four separate HelmReleases (alloy, node-exporter,
-     kube-state-metrics run as a hand-rolled Alloy DaemonSet config). See
-     CL-1056. */}}
+{{/* k8s-monitoring bundles the Alloy Operator (alloy-metrics/alloy-singleton/
+     alloy-logs) plus kube-state-metrics and node-exporter as its own
+     telemetryServices toggles. */}}
 
 {{- define "base-cluster.versions.k8sMonitoring.chart" -}}4.4.0{{- end -}}
 

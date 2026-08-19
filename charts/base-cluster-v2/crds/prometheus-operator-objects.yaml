@@ -4,7 +4,7 @@
 # PodMonitor, Probe. Do NOT copy the full upstream CRD bundle — it also ships
 # Prometheus/Alertmanager/ThanosRuler/PrometheusRule/ScrapeConfig/
 # AlertmanagerConfig/PrometheusAgent, none of which anything in this chart
-# reconciles (see CL-1056). Shipped here so first-install ordering is
+# reconciles. Shipped here so first-install ordering is
 # predictable; the k8s-monitoring HelmRelease disables its own CRD management.
 # On bump:
 #   1) bump base-cluster.versions.k8sMonitoring.chart in templates/_versions.tpl

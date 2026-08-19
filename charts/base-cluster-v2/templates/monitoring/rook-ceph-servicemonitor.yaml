@@ -1,15 +1,5 @@
 {{- if and .Values.monitoring.enabled .Values.monitoring.rookCeph.enabled }}
-{{/*
-Rook-Ceph MGR → Mimir, via prometheusOperatorObjects rather than Alloy's
-`extraConfig` (the old hand-rolled approach, and what CL-1056's first draft
-carried over): `extraConfig` only gets woven into the plain ConfigMap render
-path (`collectors.extraConfig.alloy` in the k8s-monitoring chart) — the
-Alloy Operator's own CR spec explicitly strips it
-(`collector.alloy.extraFields`), so it's silently a no-op on an
-operator-managed collector like `alloy-metrics`. A ServiceMonitor is what
-prometheusOperatorObjects (already enabled on alloy-metrics for the
-4allportal backend) actually watches.
-*/}}
+{{/* Rook-Ceph MGR → Mimir, via prometheusOperatorObjects on alloy-metrics. */}}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
