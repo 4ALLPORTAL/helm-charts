@@ -206,7 +206,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | global.networkPolicy.dnsLabels.k8s-app | string | `"kube-dns"` |  |
 | global.networkPolicy.ingressLabels."app.kubernetes.io/name" | string | `"traefik"` |  |
 | global.networkPolicy.ingressLabels."io.kubernetes.pod.namespace" | string | `"ingress"` |  |
-| global.networkPolicy.metricsLabels."app.kubernetes.io/name" | string | `"alloy"` |  |
+| global.networkPolicy.metricsLabels."app.kubernetes.io/name" | string | `"alloy-metrics"` |  |
 | global.networkPolicy.metricsLabels."io.kubernetes.pod.namespace" | string | `"monitoring"` |  |
 | global.networkPolicy.type | string | `"auto"` |  |
 | global.persistence.enabled | bool | `true` |  |
