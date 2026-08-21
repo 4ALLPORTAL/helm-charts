@@ -1,6 +1,6 @@
 # base-cluster-v2
 
-![Version: 1.7.0](https://img.shields.io/badge/Version-1.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.7.0](https://img.shields.io/badge/AppVersion-1.7.0-informational?style=flat-square)
+![Version: 1.8.0](https://img.shields.io/badge/Version-1.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.8.0](https://img.shields.io/badge/AppVersion-1.8.0-informational?style=flat-square)
 
 Foundational base cluster setup — Cilium CNI, FluxCD, Traefik ingress,
 cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
@@ -60,11 +60,13 @@ This chart bootstraps the **foundation** of a Kubernetes cluster:
 - **descheduler** — kubernetes-sigs descheduler as a CronJob for pod
   rebalancing. Off by default (it evicts running pods); enable per cluster via
   `descheduler.enabled`.
-- **Observability stack** — Grafana Alloy (collector) → Mimir/Loki/Tempo
-  backends + Grafana UI + OTEL Collector for traces; Mimir-internal
-  Alertmanager pings an UptimeRobot heartbeat. IngressMonitorController
-  auto-creates UptimeRobot monitors from `EndpointMonitor` CRs. Opt-in via
-  `monitoring.enabled`; each sub-component has its own toggle.
+- **Observability stack** — grafana/k8s-monitoring (Alloy Operator, split
+  into a clustered `alloy-metrics` collector and a node-local `alloy-logs`
+  DaemonSet) → Mimir/Loki/Tempo backends + Grafana UI + OTEL Collector for
+  traces; Mimir-internal Alertmanager pings an UptimeRobot heartbeat.
+  IngressMonitorController auto-creates UptimeRobot monitors from
+  `EndpointMonitor` CRs. Opt-in via `monitoring.enabled`; each sub-component
+  has its own toggle.
 
 **Out of scope** — backups, RBAC scaffolding, security scanning.
 These will land in separate charts/stories.
@@ -280,11 +282,6 @@ The older chart remains in this repo for clusters that haven't migrated.
 | metricsServer.resources.limits.memory | string | `"256Mi"` |  |
 | metricsServer.resources.requests.cpu | string | `"50m"` |  |
 | metricsServer.resources.requests.memory | string | `"64Mi"` |  |
-| monitoring.alloy.enabled | bool | `true` |  |
-| monitoring.alloy.resources.limits.cpu | string | `"1"` |  |
-| monitoring.alloy.resources.limits.memory | string | `"1Gi"` |  |
-| monitoring.alloy.resources.requests.cpu | string | `"100m"` |  |
-| monitoring.alloy.resources.requests.memory | string | `"256Mi"` |  |
 | monitoring.enabled | bool | `false` |  |
 | monitoring.grafana.enabled | bool | `true` |  |
 | monitoring.grafana.existingAdminSecret | string | `""` |  |
@@ -314,11 +311,11 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.ingressMonitor.resources.limits.memory | string | `"128Mi"` |  |
 | monitoring.ingressMonitor.resources.requests.cpu | string | `"25m"` |  |
 | monitoring.ingressMonitor.resources.requests.memory | string | `"64Mi"` |  |
+| monitoring.k8sMonitoring.resources.limits.cpu | string | `"1"` |  |
+| monitoring.k8sMonitoring.resources.limits.memory | string | `"1Gi"` |  |
+| monitoring.k8sMonitoring.resources.requests.cpu | string | `"100m"` |  |
+| monitoring.k8sMonitoring.resources.requests.memory | string | `"256Mi"` |  |
 | monitoring.kubeStateMetrics.enabled | bool | `true` |  |
-| monitoring.kubeStateMetrics.resources.limits.cpu | string | `"200m"` |  |
-| monitoring.kubeStateMetrics.resources.limits.memory | string | `"256Mi"` |  |
-| monitoring.kubeStateMetrics.resources.requests.cpu | string | `"50m"` |  |
-| monitoring.kubeStateMetrics.resources.requests.memory | string | `"64Mi"` |  |
 | monitoring.loki.enabled | bool | `true` |  |
 | monitoring.loki.resources.limits.cpu | string | `"1"` |  |
 | monitoring.loki.resources.limits.memory | string | `"2Gi"` |  |
@@ -335,10 +332,6 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.mimir.retention | string | `"720h"` |  |
 | monitoring.mimir.size | string | `"50Gi"` |  |
 | monitoring.nodeExporter.enabled | bool | `true` |  |
-| monitoring.nodeExporter.resources.limits.cpu | string | `"200m"` |  |
-| monitoring.nodeExporter.resources.limits.memory | string | `"128Mi"` |  |
-| monitoring.nodeExporter.resources.requests.cpu | string | `"50m"` |  |
-| monitoring.nodeExporter.resources.requests.memory | string | `"64Mi"` |  |
 | monitoring.otelCollector.enabled | bool | `true` |  |
 | monitoring.otelCollector.resources.limits.cpu | string | `"500m"` |  |
 | monitoring.otelCollector.resources.limits.memory | string | `"512Mi"` |  |

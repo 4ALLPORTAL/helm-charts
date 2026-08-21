@@ -6,8 +6,9 @@ HelmRelease will pick it up. Pin EXACT versions — never `x.x.x` ranges — so
 chart bumps are explicit, reviewable PRs.
 
 All charts are sourced from DHI (dhi.io) except flux2 (fluxcd-community),
-reflector (emberstack repo), mimir (grafana repo) and ingressMonitor
-(stakater repo).
+reflector (emberstack repo), mimir and k8sMonitoring (grafana repo),
+ingressMonitor (stakater repo), janitor (ghcr.io OCI), descheduler
+(kubernetes-sigs repo) and stash (appscode repo).
 */}}
 
 {{- define "base-cluster.versions.cilium.chart" -}}1.19.3{{- end -}}
@@ -39,10 +40,9 @@ reflector (emberstack repo), mimir (grafana repo) and ingressMonitor
 
 {{- define "base-cluster.versions.stash.chart" -}}v2025.10.17{{- end -}}
 
-{{/* Observability stack. Mimir comes from the upstream grafana HelmRepository
-     because DHI does not mirror it; all others are pinned DHI charts. */}}
-
-{{- define "base-cluster.versions.alloy.chart" -}}1.8.1{{- end -}}
+{{/* Observability stack. Mimir and k8s-monitoring come from the upstream
+     grafana HelmRepository because DHI does not mirror either; all others
+     are pinned DHI charts. */}}
 
 {{- define "base-cluster.versions.mimir.chart" -}}6.0.6{{- end -}}
 
@@ -52,9 +52,11 @@ reflector (emberstack repo), mimir (grafana repo) and ingressMonitor
 
 {{- define "base-cluster.versions.grafana.chart" -}}12.3.2{{- end -}}
 
-{{- define "base-cluster.versions.nodeExporter.chart" -}}4.55.0{{- end -}}
+{{/* k8s-monitoring bundles the Alloy Operator (alloy-metrics/alloy-singleton/
+     alloy-logs) plus kube-state-metrics and node-exporter as its own
+     telemetryServices toggles. */}}
 
-{{- define "base-cluster.versions.kubeStateMetrics.chart" -}}7.3.0{{- end -}}
+{{- define "base-cluster.versions.k8sMonitoring.chart" -}}4.4.0{{- end -}}
 
 {{- define "base-cluster.versions.otelCollector.chart" -}}0.154.0{{- end -}}
 

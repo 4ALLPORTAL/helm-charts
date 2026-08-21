@@ -427,13 +427,13 @@ backup:
   ## Extra values passed through to the stash-community chart.
   values: {}
 
-## Observability stack — Grafana Alloy → Mimir + Loki + Tempo, OTEL Collector
-## for traces, Mimir-internal Alertmanager routes the Watchdog heartbeat to an
-## UptimeRobot heartbeat URL, and a CronJob reconciles UptimeRobot monitors via
-## the UptimeRobot API.
+## Observability stack — grafana/k8s-monitoring (Alloy Operator) → Mimir +
+## Loki + Tempo, OTEL Collector for traces, Mimir-internal Alertmanager routes
+## the Watchdog heartbeat to an UptimeRobot heartbeat URL, and a CronJob
+## reconciles UptimeRobot monitors via the UptimeRobot API.
 ##
-## Mimir is pulled from the upstream `grafana` HelmRepository because DHI does
-## not mirror it; everything else uses DHI-hardened charts.
+## Mimir and k8s-monitoring are pulled from the upstream `grafana`
+## HelmRepository; everything else uses DHI-hardened charts.
 monitoring:
   ## Master switch — when false, nothing in templates/monitoring/ is rendered
   ## except the namespace's default-deny exclusion.
@@ -542,10 +542,11 @@ monitoring:
         cpu: 500m
         memory: 512Mi
 
-  ## Alloy — unified collector. DaemonSet for node-local log/metric scraping,
-  ## Deployment for cluster-wide metric scraping.
-  alloy:
-    enabled: true
+  ## k8s-monitoring (Alloy Operator) — `alloy-metrics` (clustered —
+  ## annotation/ServiceMonitor/PodMonitor/Probe scraping) and `alloy-logs`
+  ## (DaemonSet — node-local pod log tailing via podLogsViaLoki).
+  ## `resources` applies to both collector roles.
+  k8sMonitoring:
     resources:
       requests:
         cpu: 100m
@@ -555,26 +556,14 @@ monitoring:
         memory: 1Gi
 
   ## Prometheus Node Exporter — host CPU/memory/disk/network metrics.
+  ## Deployed as a k8s-monitoring telemetryService.
   nodeExporter:
     enabled: true
-    resources:
-      requests:
-        cpu: 50m
-        memory: 64Mi
-      limits:
-        cpu: 200m
-        memory: 128Mi
 
   ## kube-state-metrics — Kubernetes object metrics.
+  ## Deployed as a k8s-monitoring telemetryService.
   kubeStateMetrics:
     enabled: true
-    resources:
-      requests:
-        cpu: 50m
-        memory: 64Mi
-      limits:
-        cpu: 200m
-        memory: 256Mi
 
   ## OTEL Collector — receives OTLP (gRPC :4317, HTTP :4318), exports to Tempo.
   otelCollector:

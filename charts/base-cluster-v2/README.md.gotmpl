@@ -59,11 +59,13 @@ This chart bootstraps the **foundation** of a Kubernetes cluster:
 - **descheduler** — kubernetes-sigs descheduler as a CronJob for pod
   rebalancing. Off by default (it evicts running pods); enable per cluster via
   `descheduler.enabled`.
-- **Observability stack** — Grafana Alloy (collector) → Mimir/Loki/Tempo
-  backends + Grafana UI + OTEL Collector for traces; Mimir-internal
-  Alertmanager pings an UptimeRobot heartbeat. IngressMonitorController
-  auto-creates UptimeRobot monitors from `EndpointMonitor` CRs. Opt-in via
-  `monitoring.enabled`; each sub-component has its own toggle.
+- **Observability stack** — grafana/k8s-monitoring (Alloy Operator, split
+  into a clustered `alloy-metrics` collector and a node-local `alloy-logs`
+  DaemonSet) → Mimir/Loki/Tempo backends + Grafana UI + OTEL Collector for
+  traces; Mimir-internal Alertmanager pings an UptimeRobot heartbeat.
+  IngressMonitorController auto-creates UptimeRobot monitors from
+  `EndpointMonitor` CRs. Opt-in via `monitoring.enabled`; each sub-component
+  has its own toggle.
 
 **Out of scope** — backups, RBAC scaffolding, security scanning.
 These will land in separate charts/stories.
