@@ -1,8 +1,8 @@
 # base-cluster-v2
 
-![Version: 1.8.0](https://img.shields.io/badge/Version-1.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.8.0](https://img.shields.io/badge/AppVersion-1.8.0-informational?style=flat-square)
+![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
-Foundational base cluster setup — Cilium CNI, FluxCD, Traefik ingress,
+Foundational base cluster setup — FluxCD, Traefik ingress,
 cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
 full LGTM observability stack (Grafana, Loki, Mimir, Tempo, and Alloy-based
 metrics/log/trace collection). Successor to the base-cluster chart.
@@ -170,25 +170,6 @@ The older chart remains in this repo for clusters that haven't migrated.
 | certManager.webhook.resources.limits.memory | string | `"512Mi"` |  |
 | certManager.webhook.resources.requests.cpu | string | `"250m"` |  |
 | certManager.webhook.resources.requests.memory | string | `"512Mi"` |  |
-| cilium.bgpControlPlane.enabled | bool | `false` |  |
-| cilium.bpfMasquerade | bool | `false` |  |
-| cilium.cgroup.autoMount | bool | `true` |  |
-| cilium.cgroup.hostRoot | string | `"/sys/fs/cgroup"` |  |
-| cilium.devices | string | `""` |  |
-| cilium.encryption.enabled | bool | `true` |  |
-| cilium.hubble.enabled | bool | `true` |  |
-| cilium.hubble.relay.enabled | bool | `true` |  |
-| cilium.hubble.ui.enabled | bool | `true` |  |
-| cilium.install | bool | `true` |  |
-| cilium.k8sServiceHost | string | `""` |  |
-| cilium.k8sServicePort | int | `6443` |  |
-| cilium.kubeProxyReplacement | bool | `true` |  |
-| cilium.mtu | int | `1450` |  |
-| cilium.operator.replicas | int | `2` |  |
-| cilium.podCIDR | string | `"10.244.0.0/16"` |  |
-| cilium.podCIDRMaskSize | int | `24` |  |
-| cilium.routingMode | string | `"tunnel"` |  |
-| cilium.tunnelProtocol | string | `"vxlan"` |  |
 | descheduler.enabled | bool | `false` |  |
 | descheduler.image.registry | string | `""` |  |
 | descheduler.image.tag | string | `""` |  |
