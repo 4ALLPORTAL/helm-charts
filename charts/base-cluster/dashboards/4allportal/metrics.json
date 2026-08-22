@@ -65,13 +65,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "avg(m_4allportal_number_of_assets_total{service=\"$4ALLPORTAL-4allportal-backend\"})",
+          "expr": "avg(m_4allportal_number_of_assets{service=\"$4ALLPORTAL-4allportal-backend\"})",
           "hide": false,
           "legendFormat": "Number of assets",
           "refId": "A"
         },
         {
-          "expr": "avg(m_4allportal_number_of_deleted_assets_total{service=\"$4ALLPORTAL-4allportal-backend\"})",
+          "expr": "avg(m_4allportal_number_of_deleted_assets{service=\"$4ALLPORTAL-4allportal-backend\"})",
           "hide": false,
           "legendFormat": "Deleted Assets",
           "refId": "B"
@@ -148,12 +148,12 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "max(m_4allportal_active_sessions_total{service=\"$4ALLPORTAL-4allportal-backend\"})",
+          "expr": "max(m_4allportal_active_sessions{service=\"$4ALLPORTAL-4allportal-backend\"})",
           "legendFormat": "Active Sessions",
           "refId": "A"
         },
         {
-          "expr": "max(m_4allportal_active_user_total{service=\"$4ALLPORTAL-4allportal-backend\"})",
+          "expr": "max(m_4allportal_active_user{service=\"$4ALLPORTAL-4allportal-backend\"})",
           "legendFormat": "Unique Users",
           "refId": "B"
         }
@@ -217,7 +217,7 @@
       "strokeWidth": 1,
       "targets": [
         {
-          "expr": "sum(avg(m_4allportal_filetype_total{service=\"$4ALLPORTAL-4allportal-backend\"}) by (FileType,FileTypeCat)) by (FileTypeCat)",
+          "expr": "sum(avg(m_4allportal_filetype{service=\"$4ALLPORTAL-4allportal-backend\"}) by (FileType,FileTypeCat)) by (FileTypeCat)",
           "legendFormat": "{{FileTypeCat}}",
           "refId": "A"
         }
@@ -267,7 +267,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "avg(rate(m_4allportal_number_of_assets_total{service=\"$4ALLPORTAL-4allportal-backend\"}[5m]))",
+          "expr": "avg(m_4allportal_number_of_uploads{service=\"$4ALLPORTAL-4allportal-backend\"})",
           "legendFormat": "Upload",
           "refId": "A"
         }
@@ -289,7 +289,7 @@
       "yaxes": [
         {
           "format": "short",
-          "label": "Uploads / Second",
+          "label": "Uploads / Day",
           "logBase": 1,
           "show": true
         },
@@ -380,7 +380,7 @@
             "uid": "prometheus"
           },
           "exemplar": true,
-          "expr": "max(rate(m_4allportal_requests_total{service=\"$4ALLPORTAL-4allportal-backend\"}[4h]) != 0) by(Status)",
+          "expr": "max(rate(m_4allportal_requests{service=\"$4ALLPORTAL-4allportal-backend\"}[4h]) != 0) by(Status)",
           "interval": "",
           "legendFormat": "{{Status}}",
           "refId": "A"
@@ -418,7 +418,7 @@
       "strokeWidth": 1,
       "targets": [
         {
-          "expr": "avg(m_4allportal_filetype_total{service=\"$4ALLPORTAL-4allportal-backend\"}) by (FileType)",
+          "expr": "avg(m_4allportal_filetype{service=\"$4ALLPORTAL-4allportal-backend\"}) by (FileType)",
           "legendFormat": "{{FileType}}",
           "refId": "A"
         }
@@ -468,7 +468,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "max(http_server_requests_seconds_max{pod=~\"$4ALLPORTAL-4allportal-backend.*\"}) by (method,pod)",
+          "expr": "max(http_server_requests_duration_seconds_max{pod=~\"$4ALLPORTAL-4allportal-backend.*\"}) by (method,pod)",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{pod}}/{{method}}",
@@ -546,7 +546,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "m_4allportal_database_duration_seconds_seconds_max{pod=~\"$4ALLPORTAL-4allportal-backend.*\"}",
+          "expr": "m_4allportal_database_duration_seconds_max{pod=~\"$4ALLPORTAL-4allportal-backend.*\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{pod}}",
@@ -790,7 +790,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(http_server_requests_seconds_count{pod=~\"$4ALLPORTAL-4allportal-backend.*\"}[1m])) by (status, pod)",
+          "expr": "sum(rate(http_server_requests_duration_seconds_count{pod=~\"$4ALLPORTAL-4allportal-backend.*\"}[1m])) by (status, pod)",
           "legendFormat": "{{pod}}: {{status}}",
           "refId": "A"
         }
@@ -1175,113 +1175,6 @@
       "yaxis": {
         "align": false
       }
-    },
-    {
-      "fieldConfig": {
-        "defaults": {
-          "custom": {
-            "align": "auto",
-            "displayMode": "auto"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Value"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "dateTimeAsIso"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Age"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "dateTimeFromNow"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 12,
-        "y": 65
-      },
-      "id": 32,
-      "options": {
-        "footer": {
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": false
-        },
-        "showHeader": true
-      },
-      "pluginVersion": "8.3.4",
-      "targets": [
-        {
-          "exemplar": false,
-          "expr": "avg(m_4allportal_4apps_version_timestamp_seconds_total{service=\"$4ALLPORTAL-4allportal-backend\"}) by (App,Version) * 1000",
-          "format": "table",
-          "instant": true,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "title": "4APPs",
-      "transformations": [
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Time": true
-            },
-            "indexByName": {},
-            "renameByName": {
-              "Value": "Age"
-            }
-          }
-        },
-        {
-          "id": "sortBy",
-          "options": {
-            "fields": {},
-            "sort": [
-              {
-                "field": "App"
-              }
-            ]
-          }
-        }
-      ],
-      "type": "table"
     },
     {
       "collapsed": false,
