@@ -43,4 +43,7 @@ spec:
     resources:
       limits:
         memory: 1Gi
+    kubejanitor:
+      excludeResources: {{ .Values.janitor.excludeResources | toJson }}
+      excludeNamespaces: {{ .Values.janitor.excludeNamespaces | toJson }}
   {{- end -}}

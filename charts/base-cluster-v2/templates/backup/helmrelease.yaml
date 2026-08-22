@@ -1,0 +1,64 @@
+{{- if .Values.backup.enabled -}}
+{{/*
+Stash (AppsCode) — CRD-driven backup operator for PVCs/DBs, ported from the
+v1 base-cluster chart. Requires a license Secret (community edition is free,
+see values.yaml for where to get one) pre-created in the `stash` namespace
+before this HelmRelease reconciles.
+
+Unlike v1, this runs in its own `stash` namespace rather than kube-system,
+matching every other component in this chart.
+
+Metrics: monitoring.agent "prometheus.io/builtin" adds prometheus.io/scrape
+annotations (picked up by Alloy, see templates/monitoring/alloy.yaml) instead
+of ServiceMonitor CRs — this chart has no prometheus-operator installed.
+
+Pinned to the current upstream release (v2025.10.17), not the v2024.02.13 the
+v1 chart used — that was ~2 years stale. `pushgateway`, `security.createPSPs`
+and `stash-community.enableAnalytics` from the v1 values were dropped here;
+none of those keys exist in the chart anymore as of this version.
+*/}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: stash
+  namespace: stash
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backup
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: stash
+      version: {{ include "base-cluster.versions.stash.chart" . | quote }}
+      sourceRef:
+        kind: HelmRepository
+        name: appscode
+        namespace: {{ .Release.Namespace }}
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  values:
+    global:
+      {{- with .Values.global.imageRegistry }}
+      registry: {{ printf "%s/stashed" . | quote }}
+      {{- end }}
+      licenseSecretName: {{ required "backup.licenseSecretName is required when backup.enabled is true" .Values.backup.licenseSecretName | quote }}
+    features:
+      community: true
+    stash-community:
+      criticalAddon: true
+      monitoring:
+        agent: {{ .Values.monitoring.enabled | ternary "prometheus.io/builtin" "none" | quote }}
+        backup: true
+        operator: true
+      apiserver:
+        enableValidatingWebhook: false
+        servingCerts:
+          generate: true
+    {{- with .Values.backup.values }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+{{- end -}}

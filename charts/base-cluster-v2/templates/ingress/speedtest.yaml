@@ -211,7 +211,6 @@ metadata:
   annotations:
     traefik.ingress.kubernetes.io/router.middlewares: speedtest-no-compression@file
 spec:
-  ingressClassName: traefik
   tls:
     - hosts:
         - {{ include "base-cluster.speedtest.host" . | quote }}

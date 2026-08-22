@@ -1,0 +1,25 @@
+{{- if eq (include "base-cluster.networkPolicy.type" .) "cilium" }}
+{{/*
+Allow cilium-health connectivity checks under the default-deny. The default-deny
+selects the reserved:health endpoint (it has no namespace label, so a NotIn
+namespace match catches it), so without this the node-to-node health probes
+(remote-node -> health :4240) are Policy-denied and `cilium-health status` reads
+1/N. Verbatim from the Cilium docs (Health Endpoint example). If health still does
+not reach full N/N, add `host` alongside `remote-node`.
+*/}}
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: cilium-health-checks
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+spec:
+  endpointSelector:
+    matchLabels:
+      'reserved:health': ''
+  ingress:
+    - fromEntities:
+        - remote-node
+  egress:
+    - toEntities:
+        - remote-node
+{{- end }}

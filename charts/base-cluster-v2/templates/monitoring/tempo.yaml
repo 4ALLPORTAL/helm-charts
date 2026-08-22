@@ -30,8 +30,9 @@ spec:
       retries: -1
   values:
     {{- with .Values.global.imagePullSecretName }}
-    imagePullSecrets:
-      - name: {{ . }}
+    serviceAccount:
+      imagePullSecrets:
+        - name: {{ . }}
     {{- end }}
     tempo:
       resources: {{- toYaml .Values.monitoring.tempo.resources | nindent 8 }}

@@ -1,8 +1,8 @@
 # base-cluster-v2
 
-![Version: 1.4.2](https://img.shields.io/badge/Version-1.4.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.4.2](https://img.shields.io/badge/AppVersion-1.4.2-informational?style=flat-square)
+![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
-Foundational base cluster setup — Cilium CNI, FluxCD, Traefik ingress,
+Foundational base cluster setup — FluxCD, Traefik ingress,
 cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
 full LGTM observability stack (Grafana, Loki, Mimir, Tempo, and Alloy-based
 metrics/log/trace collection). Successor to the base-cluster chart.
@@ -30,13 +30,45 @@ This chart bootstraps the **foundation** of a Kubernetes cluster:
   via annotations (`reflector.enabled`).
 - **metrics-server** — exposes `metrics.k8s.io` for `kubectl top` and HPAs
   (`metricsServer.enabled`).
-- **Observability stack** — Grafana Alloy (collector) → Mimir/Loki/Tempo
-  backends + Grafana UI + OTEL Collector for traces; Mimir-internal
-  Alertmanager pings an UptimeRobot heartbeat. IngressMonitorController
-  auto-creates UptimeRobot monitors from `EndpointMonitor` CRs. Opt-in via
-  `monitoring.enabled`; each sub-component has its own toggle.
+- **Janitor** — [k8s-cleaner](https://github.com/gianlucam76/k8s-cleaner), a
+  CRD-driven controller that deletes stale resources on a schedule: completed
+  Jobs and failed or evicted Pods by default, plus succeeded Pods via
+  `janitor.cleaners.succeededPods` (off, because the owning controller normally
+  reaps those). Rules are `Cleaner` CRs generated from `janitor.cleaners.*`;
+  `janitor.excludedNamespaces` keeps them off system namespaces
+  (`janitor.enabled`). Each rule only acts once a resource has been terminal for
+  `minAgeHours` (default 24), so recent failures stay around long enough to
+  debug. Cron schedules are evaluated in UTC.
 
-**Out of scope** — backups, RBAC scaffolding, descheduler, security scanning.
+  Before enabling a rule on a new cluster, set
+  `janitor.cleaners.<rule>.dryRun: true` — the flag is per rule, there is no
+  chart-wide switch. It renders that Cleaner with `action: Scan`, which matches
+  and reports without deleting:
+
+  ```console
+  kubectl get reports.apps.projectsveltos.io
+  kubectl get reports.apps.projectsveltos.io <cleaner-name> -o yaml   # matched resources
+  ```
+
+  Reports come from the `CleanerReport` notification that `janitor.report.enabled`
+  attaches to every rule; without it the controller records matches only in its
+  own log. A Report is a snapshot of the *last* run, not a log: it appears after
+  the rule's first run and is overwritten on every subsequent one, so
+  `resourceInfo: []` means "the last run matched nothing" — not "nothing was ever
+  cleaned". No Report at all means the rule has not run yet (confirm with
+  `.status.lastRunTime` on the Cleaner); use the controller log for history.
+- **descheduler** — kubernetes-sigs descheduler as a CronJob for pod
+  rebalancing. Off by default (it evicts running pods); enable per cluster via
+  `descheduler.enabled`.
+- **Observability stack** — grafana/k8s-monitoring (Alloy Operator, split
+  into a clustered `alloy-metrics` collector and a node-local `alloy-logs`
+  DaemonSet) → Mimir/Loki/Tempo backends + Grafana UI + OTEL Collector for
+  traces; Mimir-internal Alertmanager pings an UptimeRobot heartbeat.
+  IngressMonitorController auto-creates UptimeRobot monitors from
+  `EndpointMonitor` CRs. Opt-in via `monitoring.enabled`; each sub-component
+  has its own toggle.
+
+**Out of scope** — backups, RBAC scaffolding, security scanning.
 These will land in separate charts/stories.
 
 ## Versions
@@ -44,6 +76,52 @@ These will land in separate charts/stories.
 Component upstream versions are pinned exactly in
 `templates/_versions.tpl`. Bumping any component is an explicit edit to that
 file plus a chart version bump.
+
+## Certificates
+
+The cluster's own wildcard (`*.<clusterName>.<baseDomain>`) is issued into the
+`traefik` namespace and used by ingresses that bring no certificate of their own.
+
+`global.certificates` issues additional ones into the release namespace, keyed by
+name, with the Secret named `<key>-certificate`:
+
+```yaml
+global:
+  certificates:
+    example-com-wildcard:
+      dnsNames:
+        - example.com
+        - "*.example.com"
+```
+
+A Secret is only usable from the namespace it lives in, so a wildcard meant for
+workloads elsewhere has to be mirrored. `secretTemplate` is handed to
+cert-manager, which stamps its annotations and labels onto the issued Secret and
+keeps them across renewals — which is what makes kubernetes-reflector pick it up.
+Annotating the Secret by hand works until the first renewal quietly drops the
+annotations and the mirrored copies stop being updated:
+
+```yaml
+      secretTemplate:
+        annotations:
+          reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+          reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "app-.*"
+          reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+          reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "app-.*"
+```
+
+Name the target namespaces. A TLS Secret carries the private key, so leaving the
+namespace annotations off — which mirrors into every namespace, including
+`kube-system` — hands the wildcard's key to anyone who can read Secrets anywhere
+in the cluster.
+
+The namespace fields take a comma-separated list *or* a regular expression, so a
+pattern covers namespaces that do not exist yet and needs no upkeep as they are
+added. Reflector matches on the namespace name only; it does not read labels or
+annotations on the namespace itself.
+
+Note that a wildcard certificate matches exactly one label: `a.example.com` is
+covered, `a.b.example.com` is not.
 
 ## Network policies
 
@@ -69,6 +147,17 @@ The older chart remains in this repo for clusters that haven't migrated.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| backup.enabled | bool | `false` |  |
+| backup.licenseSecretName | string | `""` |  |
+| backup.retryBackup.image.registry | string | `""` |  |
+| backup.retryBackup.image.repository | string | `"alpine/k8s"` |  |
+| backup.retryBackup.image.tag | string | `"1.35.2"` |  |
+| backup.retryBackup.resources.limits.cpu | string | `"100m"` |  |
+| backup.retryBackup.resources.limits.memory | string | `"64Mi"` |  |
+| backup.retryBackup.resources.requests.cpu | string | `"10m"` |  |
+| backup.retryBackup.resources.requests.memory | string | `"32Mi"` |  |
+| backup.retryBackup.schedule | string | `"30 0-8 * * *"` |  |
+| backup.values | object | `{}` |  |
 | certManager.caInjector.resources.limits.cpu | string | `"500m"` |  |
 | certManager.caInjector.resources.limits.memory | string | `"512Mi"` |  |
 | certManager.caInjector.resources.requests.cpu | string | `"250m"` |  |
@@ -81,25 +170,42 @@ The older chart remains in this repo for clusters that haven't migrated.
 | certManager.webhook.resources.limits.memory | string | `"512Mi"` |  |
 | certManager.webhook.resources.requests.cpu | string | `"250m"` |  |
 | certManager.webhook.resources.requests.memory | string | `"512Mi"` |  |
-| cilium.bgpControlPlane.enabled | bool | `false` |  |
-| cilium.bpfMasquerade | bool | `false` |  |
-| cilium.cgroup.autoMount | bool | `true` |  |
-| cilium.cgroup.hostRoot | string | `"/sys/fs/cgroup"` |  |
-| cilium.devices | string | `""` |  |
-| cilium.encryption.enabled | bool | `true` |  |
-| cilium.hubble.enabled | bool | `true` |  |
-| cilium.hubble.relay.enabled | bool | `true` |  |
-| cilium.hubble.ui.enabled | bool | `true` |  |
-| cilium.install | bool | `true` |  |
-| cilium.k8sServiceHost | string | `""` |  |
-| cilium.k8sServicePort | int | `6443` |  |
-| cilium.kubeProxyReplacement | bool | `true` |  |
-| cilium.mtu | int | `1450` |  |
-| cilium.operator.replicas | int | `2` |  |
-| cilium.podCIDR | string | `"10.244.0.0/16"` |  |
-| cilium.podCIDRMaskSize | int | `24` |  |
-| cilium.routingMode | string | `"tunnel"` |  |
-| cilium.tunnelProtocol | string | `"vxlan"` |  |
+| descheduler.enabled | bool | `false` |  |
+| descheduler.image.registry | string | `""` |  |
+| descheduler.image.tag | string | `""` |  |
+| descheduler.profiles[0].name | string | `"default"` |  |
+| descheduler.profiles[0].pluginConfig[0].args.evictLocalStoragePods | bool | `true` |  |
+| descheduler.profiles[0].pluginConfig[0].args.ignorePvcPods | bool | `true` |  |
+| descheduler.profiles[0].pluginConfig[0].name | string | `"DefaultEvictor"` |  |
+| descheduler.profiles[0].pluginConfig[1].name | string | `"RemoveDuplicates"` |  |
+| descheduler.profiles[0].pluginConfig[2].args.includingInitContainers | bool | `true` |  |
+| descheduler.profiles[0].pluginConfig[2].args.podRestartThreshold | int | `10` |  |
+| descheduler.profiles[0].pluginConfig[2].name | string | `"RemovePodsHavingTooManyRestarts"` |  |
+| descheduler.profiles[0].pluginConfig[3].args.nodeAffinityType[0] | string | `"requiredDuringSchedulingIgnoredDuringExecution"` |  |
+| descheduler.profiles[0].pluginConfig[3].name | string | `"RemovePodsViolatingNodeAffinity"` |  |
+| descheduler.profiles[0].pluginConfig[4].name | string | `"RemovePodsViolatingNodeTaints"` |  |
+| descheduler.profiles[0].pluginConfig[5].name | string | `"RemovePodsViolatingInterPodAntiAffinity"` |  |
+| descheduler.profiles[0].pluginConfig[6].name | string | `"RemovePodsViolatingTopologySpreadConstraint"` |  |
+| descheduler.profiles[0].pluginConfig[7].args.targetThresholds.cpu | int | `70` |  |
+| descheduler.profiles[0].pluginConfig[7].args.targetThresholds.memory | int | `80` |  |
+| descheduler.profiles[0].pluginConfig[7].args.targetThresholds.pods | int | `95` |  |
+| descheduler.profiles[0].pluginConfig[7].args.thresholds.cpu | int | `50` |  |
+| descheduler.profiles[0].pluginConfig[7].args.thresholds.memory | int | `50` |  |
+| descheduler.profiles[0].pluginConfig[7].args.thresholds.pods | int | `50` |  |
+| descheduler.profiles[0].pluginConfig[7].name | string | `"LowNodeUtilization"` |  |
+| descheduler.profiles[0].plugins.balance.enabled[0] | string | `"RemoveDuplicates"` |  |
+| descheduler.profiles[0].plugins.balance.enabled[1] | string | `"RemovePodsViolatingTopologySpreadConstraint"` |  |
+| descheduler.profiles[0].plugins.balance.enabled[2] | string | `"LowNodeUtilization"` |  |
+| descheduler.profiles[0].plugins.deschedule.enabled[0] | string | `"RemovePodsHavingTooManyRestarts"` |  |
+| descheduler.profiles[0].plugins.deschedule.enabled[1] | string | `"RemovePodsViolatingNodeTaints"` |  |
+| descheduler.profiles[0].plugins.deschedule.enabled[2] | string | `"RemovePodsViolatingNodeAffinity"` |  |
+| descheduler.profiles[0].plugins.deschedule.enabled[3] | string | `"RemovePodsViolatingInterPodAntiAffinity"` |  |
+| descheduler.resources.limits.cpu | string | `"200m"` |  |
+| descheduler.resources.limits.memory | string | `"128Mi"` |  |
+| descheduler.resources.requests.cpu | string | `"50m"` |  |
+| descheduler.resources.requests.memory | string | `"64Mi"` |  |
+| descheduler.schedule | string | `"*/15 * * * *"` |  |
+| descheduler.values | object | `{}` |  |
 | dns.domains | list | `[]` |  |
 | dns.email | string | `""` |  |
 | dns.existingSecret | string | `""` |  |
@@ -125,17 +231,38 @@ The older chart remains in this repo for clusters that haven't migrated.
 | global.networkPolicy.dnsLabels."io.kubernetes.pod.namespace" | string | `"kube-system"` |  |
 | global.networkPolicy.dnsLabels.k8s-app | string | `"kube-dns"` |  |
 | global.networkPolicy.type | string | `"auto"` |  |
+| janitor.cleaners.completedJobs.dryRun | bool | `false` |  |
+| janitor.cleaners.completedJobs.enabled | bool | `true` |  |
+| janitor.cleaners.completedJobs.minAgeHours | int | `24` |  |
+| janitor.cleaners.completedJobs.schedule | string | `"0 2 * * *"` |  |
+| janitor.cleaners.completedJobs.skipOwned | bool | `true` |  |
+| janitor.cleaners.failedPods.dryRun | bool | `false` |  |
+| janitor.cleaners.failedPods.enabled | bool | `true` |  |
+| janitor.cleaners.failedPods.minAgeHours | int | `24` |  |
+| janitor.cleaners.failedPods.schedule | string | `"*/30 * * * *"` |  |
+| janitor.cleaners.succeededPods.dryRun | bool | `false` |  |
+| janitor.cleaners.succeededPods.enabled | bool | `false` |  |
+| janitor.cleaners.succeededPods.minAgeHours | int | `24` |  |
+| janitor.cleaners.succeededPods.schedule | string | `"*/30 * * * *"` |  |
+| janitor.deleteOptions.propagationPolicy | string | `"Background"` |  |
+| janitor.enabled | bool | `true` |  |
+| janitor.excludedNamespaces[0] | string | `"kube-system"` |  |
+| janitor.excludedNamespaces[1] | string | `"flux-system"` |  |
+| janitor.image.registry | string | `""` |  |
+| janitor.image.repository | string | `"projectsveltos/k8s-cleaner"` |  |
+| janitor.image.tag | string | `"v0.21.0"` |  |
+| janitor.report.enabled | bool | `true` |  |
+| janitor.resources.limits.cpu | string | `"500m"` |  |
+| janitor.resources.limits.memory | string | `"256Mi"` |  |
+| janitor.resources.requests.cpu | string | `"50m"` |  |
+| janitor.resources.requests.memory | string | `"128Mi"` |  |
+| janitor.values | object | `{}` |  |
 | metricsServer.enabled | bool | `true` |  |
 | metricsServer.kubeletInsecureTLS | bool | `true` |  |
 | metricsServer.resources.limits.cpu | string | `"200m"` |  |
 | metricsServer.resources.limits.memory | string | `"256Mi"` |  |
 | metricsServer.resources.requests.cpu | string | `"50m"` |  |
 | metricsServer.resources.requests.memory | string | `"64Mi"` |  |
-| monitoring.alloy.enabled | bool | `true` |  |
-| monitoring.alloy.resources.limits.cpu | string | `"1"` |  |
-| monitoring.alloy.resources.limits.memory | string | `"1Gi"` |  |
-| monitoring.alloy.resources.requests.cpu | string | `"100m"` |  |
-| monitoring.alloy.resources.requests.memory | string | `"256Mi"` |  |
 | monitoring.enabled | bool | `false` |  |
 | monitoring.grafana.enabled | bool | `true` |  |
 | monitoring.grafana.existingAdminSecret | string | `""` |  |
@@ -146,7 +273,6 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.grafana.oidc.authUrl | string | `""` |  |
 | monitoring.grafana.oidc.autoLogin | bool | `false` |  |
 | monitoring.grafana.oidc.clientAuthentication | string | `""` |  |
-| monitoring.grafana.oidc.clientId | string | `""` |  |
 | monitoring.grafana.oidc.disableLoginForm | bool | `false` |  |
 | monitoring.grafana.oidc.enabled | bool | `false` |  |
 | monitoring.grafana.oidc.existingSecret | string | `""` |  |
@@ -166,11 +292,11 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.ingressMonitor.resources.limits.memory | string | `"128Mi"` |  |
 | monitoring.ingressMonitor.resources.requests.cpu | string | `"25m"` |  |
 | monitoring.ingressMonitor.resources.requests.memory | string | `"64Mi"` |  |
+| monitoring.k8sMonitoring.resources.limits.cpu | string | `"1"` |  |
+| monitoring.k8sMonitoring.resources.limits.memory | string | `"1Gi"` |  |
+| monitoring.k8sMonitoring.resources.requests.cpu | string | `"100m"` |  |
+| monitoring.k8sMonitoring.resources.requests.memory | string | `"256Mi"` |  |
 | monitoring.kubeStateMetrics.enabled | bool | `true` |  |
-| monitoring.kubeStateMetrics.resources.limits.cpu | string | `"200m"` |  |
-| monitoring.kubeStateMetrics.resources.limits.memory | string | `"256Mi"` |  |
-| monitoring.kubeStateMetrics.resources.requests.cpu | string | `"50m"` |  |
-| monitoring.kubeStateMetrics.resources.requests.memory | string | `"64Mi"` |  |
 | monitoring.loki.enabled | bool | `true` |  |
 | monitoring.loki.resources.limits.cpu | string | `"1"` |  |
 | monitoring.loki.resources.limits.memory | string | `"2Gi"` |  |
@@ -187,10 +313,6 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.mimir.retention | string | `"720h"` |  |
 | monitoring.mimir.size | string | `"50Gi"` |  |
 | monitoring.nodeExporter.enabled | bool | `true` |  |
-| monitoring.nodeExporter.resources.limits.cpu | string | `"200m"` |  |
-| monitoring.nodeExporter.resources.limits.memory | string | `"128Mi"` |  |
-| monitoring.nodeExporter.resources.requests.cpu | string | `"50m"` |  |
-| monitoring.nodeExporter.resources.requests.memory | string | `"64Mi"` |  |
 | monitoring.otelCollector.enabled | bool | `true` |  |
 | monitoring.otelCollector.resources.limits.cpu | string | `"500m"` |  |
 | monitoring.otelCollector.resources.limits.memory | string | `"512Mi"` |  |
@@ -218,6 +340,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.uptimeRobot.reconciler.resources.requests.cpu | string | `"50m"` |  |
 | monitoring.uptimeRobot.reconciler.resources.requests.memory | string | `"64Mi"` |  |
 | monitoring.uptimeRobot.reconciler.schedule | string | `"*/15 * * * *"` |  |
+| reflector.enabled | bool | `true` |  |
 | reflector.resources.limits.cpu | string | `"200m"` |  |
 | reflector.resources.limits.memory | string | `"128Mi"` |  |
 | reflector.resources.requests.cpu | string | `"50m"` |  |
