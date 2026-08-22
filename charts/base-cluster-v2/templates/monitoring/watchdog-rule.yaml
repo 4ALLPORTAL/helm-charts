@@ -1,0 +1,34 @@
+{{- if and .Values.monitoring.enabled .Values.monitoring.mimir.enabled }}
+{{/*
+Watchdog alert — always firing. Mimir's ruler evaluates it, the firing alert
+goes to the in-cluster Alertmanager, which forwards it via webhook to
+UptimeRobot's heartbeat URL.
+
+If the heartbeat stops arriving, UptimeRobot pages — that's our "is the
+alerting pipeline alive?" signal.
+
+The ConfigMap is mounted into the Mimir ruler at /etc/mimir/rules/anonymous/
+(see mimir.yaml). Filename matters: Mimir expects one file per rule group.
+*/}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mimir-watchdog-rule
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+data:
+  watchdog.yaml: |
+    groups:
+      - name: watchdog
+        interval: 30s
+        rules:
+          - alert: Watchdog
+            expr: vector(1)
+            for: 0s
+            labels:
+              severity: none
+            annotations:
+              summary: "Alerting pipeline heartbeat"
+              description: "This alert is always firing. If it stops, the pipeline is broken."
+{{- end }}

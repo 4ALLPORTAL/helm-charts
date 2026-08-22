@@ -1,0 +1,46 @@
+{{- if .Values.metricsServer.enabled }}
+{{/*
+metrics-server — registers the metrics.k8s.io APIService and scrapes kubelet
+summary endpoints (:10250). Required for `kubectl top`, k9s metrics columns,
+and CPU/memory-based HorizontalPodAutoscalers.
+
+Deployed in kube-system (Kubernetes convention) from the DHI-hardened chart.
+*/}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: metrics-server
+  namespace: kube-system
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: metrics-server
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: metrics-server-chart
+      version: {{ include "base-cluster.versions.metricsServer.chart" . | quote }}
+      sourceRef:
+        kind: HelmRepository
+        name: dhi
+        namespace: {{ .Release.Namespace }}
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  values:
+    {{- with .Values.global.imagePullSecretName }}
+    imagePullSecrets:
+      - name: {{ . }}
+    {{- end }}
+    apiService:
+      create: true
+    {{- if .Values.metricsServer.kubeletInsecureTLS }}
+    ## Appended to the chart's defaultArgs (which already include
+    ## --kubelet-preferred-address-types and --metric-resolution).
+    args:
+      - --kubelet-insecure-tls
+    {{- end }}
+    resources: {{- toYaml .Values.metricsServer.resources | nindent 6 }}
+{{- end }}

@@ -1,0 +1,63 @@
+{{- if .Values.backup.enabled -}}
+{{/*
+Ported from the v1 base-cluster chart. Stash BackupSessions that failed
+overnight (e.g. a transient network blip) are recreated with a fresh name so
+they get one more attempt instead of waiting for the next scheduled window.
+*/}}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: stash-retry-backup
+  namespace: stash
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backup
+spec:
+  concurrencyPolicy: Forbid
+  schedule: {{ .Values.backup.retryBackup.schedule | quote }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          securityContext:
+            runAsGroup: 1000
+            runAsUser: 1000
+            runAsNonRoot: true
+            fsGroup: 1000
+            seccompProfile:
+              type: RuntimeDefault
+          automountServiceAccountToken: true
+          serviceAccountName: stash-retry-backup
+          restartPolicy: Never
+          {{- $reg := .Values.backup.retryBackup.image.registry | default .Values.global.imageRegistry | default "docker.io" }}
+          containers:
+            - name: stash-retry-backup
+              image: {{ printf "%s/%s:%s" (trimSuffix "/" $reg) .Values.backup.retryBackup.image.repository .Values.backup.retryBackup.image.tag | quote }}
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                privileged: false
+                readOnlyRootFilesystem: true
+              command:
+                - bash
+              args:
+                - -ex
+                - -c
+                - |
+                  kubectl get backupsession -A -o json | \
+                    jq -r '.items[] | select(.status.phase == "Failed") | del(.status) | .metadata.name=(.metadata.name | sub("\\d+$"; (now | strftime("%s"))))' \
+                    > /tmp/backupsessions.json
+
+                  if [ -s /tmp/backupsessions.json ]; then
+                    kubectl create -f /tmp/backupsessions.json
+                  fi
+              resources: {{- toYaml .Values.backup.retryBackup.resources | nindent 16 }}
+              volumeMounts:
+                - mountPath: /tmp
+                  name: tmp
+          volumes:
+            - name: tmp
+              emptyDir:
+                medium: Memory
+{{- end -}}

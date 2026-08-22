@@ -1,0 +1,9 @@
+{{- if .Values.janitor.enabled }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: k8s-cleaner
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: janitor
+    pod-security.kubernetes.io/enforce: restricted
+{{- end }}

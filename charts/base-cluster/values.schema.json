@@ -306,6 +306,18 @@
       "properties": {
         "enabled": {
           "type": "boolean"
+        },
+        "excludeResources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "excludeNamespaces": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "additionalProperties": false

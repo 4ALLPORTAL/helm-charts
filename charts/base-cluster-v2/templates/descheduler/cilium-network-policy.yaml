@@ -1,0 +1,26 @@
+{{- if and .Values.descheduler.enabled (eq (include "base-cluster.networkPolicy.type" .) "cilium") }}
+{{/*
+descheduler talks only to the Kubernetes API (list nodes/pods, create evictions)
+and DNS.
+*/}}
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: descheduler
+  namespace: descheduler
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: descheduler
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: descheduler
+  egress:
+    - toEntities: [kube-apiserver]
+    - toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+{{- end }}

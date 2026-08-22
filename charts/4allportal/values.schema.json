@@ -1060,11 +1060,11 @@
                   "type": "integer"
                 },
                 "type": {
-                  "type": "string",
-                  "enum": [
-                    "mysql",
-                    "mariadb",
-                    "mssql"
+                  "oneOf": [
+                    { "const": "mysql" },
+                    { "const": "mariadb" },
+                    { "const": "sqlserver" },
+                    { "const": "mssql", "deprecated": true }
                   ]
                 },
                 "user": {
