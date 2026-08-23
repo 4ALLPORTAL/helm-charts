@@ -1,0 +1,25 @@
+{{- if and .Values.backup.enabled (eq (include "base-cluster.networkPolicy.type" .) "cilium") }}
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: stash
+  namespace: stash
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backup
+spec:
+  {{- /* Backup jobs that actually push data to off-cluster storage (S3, GCS, ...)
+       run as Jobs in the target application's own namespace, not here — this
+       policy only covers the stash-community operator/webhook/pushgateway. */}}
+  endpointSelector: {}
+  ingress:
+    - fromEntities: [cluster]
+  egress:
+    - toEntities: [kube-apiserver, cluster]
+    - toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+{{- end }}

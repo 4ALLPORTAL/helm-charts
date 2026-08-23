@@ -17,6 +17,8 @@ spec:
     metadata:
       labels: {{- include "common.labels.stable" $ | nindent 8 }}
         app.kubernetes.io/component: samba
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/samba/configmap.yaml") $ | sha256sum }}
     spec:
       {{- include "4allportal.samba.priorityClassName" $ | nindent 6 }}
       containers:

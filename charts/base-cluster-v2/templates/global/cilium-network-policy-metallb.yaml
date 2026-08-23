@@ -1,0 +1,85 @@
+{{- if eq (include "base-cluster.networkPolicy.type" .) "cilium" }}
+{{/*
+CiliumNetworkPolicies for MetalLB. The controller needs apiserver access and
+webhook ingress. Speakers need apiserver access, memberlist between peers
+(7946 TCP+UDP), and host entity access for L2/ARP announcements.
+*/}}
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: metallb-controller
+  namespace: metallb-system
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: metallb
+      app.kubernetes.io/component: controller
+  egress:
+    - toEntities: [kube-apiserver]
+    - toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+  ingress:
+    - fromEntities: [kube-apiserver, remote-node, host]
+      toPorts:
+        - ports:
+            - port: "9443"
+              protocol: TCP
+            - port: "7472"
+              protocol: TCP
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: metallb-speaker
+  namespace: metallb-system
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: metallb
+      app.kubernetes.io/component: speaker
+  egress:
+    - toEntities: [kube-apiserver, host]
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: metallb
+            app.kubernetes.io/component: speaker
+      toPorts:
+        - ports:
+            - port: "7946"
+              protocol: TCP
+            - port: "7946"
+              protocol: UDP
+    - toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+  ingress:
+    - fromEntities: [host]
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: metallb
+            app.kubernetes.io/component: speaker
+      toPorts:
+        - ports:
+            - port: "7946"
+              protocol: TCP
+            - port: "7946"
+              protocol: UDP
+    - fromEntities: [cluster]
+      toPorts:
+        - ports:
+            - port: "7472"
+              protocol: TCP
+            - port: "7473"
+              protocol: TCP
+{{- end }}

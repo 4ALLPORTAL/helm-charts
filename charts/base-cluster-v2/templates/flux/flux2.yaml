@@ -1,0 +1,87 @@
+{{/*
+Optional self-bootstrap: install the flux2 community chart from within this
+chart. Only emitted when flux.install=true. The default deployment path is
+`flux bootstrap` followed by this chart, so this template usually renders
+nothing.
+
+Note the chicken-and-egg implication: when flux.install=true, this template
+emits a HelmRelease that is itself reconciled by Flux — so first install
+needs Flux already running OR a manual `helm install` of just the flux2
+chart to seed the controller. In practice, prefer `flux bootstrap`.
+*/}}
+{{- if .Values.flux.install }}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: flux2
+  namespace: flux-system
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: flux
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: flux2
+      version: {{ include "base-cluster.versions.flux2.chart" . | quote }}
+      sourceRef:
+        kind: HelmRepository
+        name: fluxcd-community
+        namespace: {{ .Release.Namespace }}
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  values:
+    securityContext: &fluxSecurityContext
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
+      capabilities:
+        drop: [ALL]
+    helmController:
+      {{- with .Values.global.imageRegistry }}
+      image: {{ printf "%s/fluxcd/helm-controller" . | quote }}
+      {{- end }}
+      {{- with .Values.flux.resources }}
+      resources: {{- . | toYaml | nindent 8 }}
+      {{- end }}
+      securityContext: *fluxSecurityContext
+    sourceController:
+      {{- with .Values.global.imageRegistry }}
+      image: {{ printf "%s/fluxcd/source-controller" . | quote }}
+      {{- end }}
+      {{- with .Values.flux.resources }}
+      resources: {{- . | toYaml | nindent 8 }}
+      {{- end }}
+      securityContext: *fluxSecurityContext
+    kustomizeController:
+      {{- with .Values.global.imageRegistry }}
+      image: {{ printf "%s/fluxcd/kustomize-controller" . | quote }}
+      {{- end }}
+      {{- with .Values.flux.resources }}
+      resources: {{- . | toYaml | nindent 8 }}
+      {{- end }}
+      securityContext: *fluxSecurityContext
+    notificationController:
+      {{- with .Values.global.imageRegistry }}
+      image: {{ printf "%s/fluxcd/notification-controller" . | quote }}
+      {{- end }}
+      {{- with .Values.flux.resources }}
+      resources: {{- . | toYaml | nindent 8 }}
+      {{- end }}
+      securityContext: *fluxSecurityContext
+    imageAutomationController:
+      {{- with .Values.global.imageRegistry }}
+      image: {{ printf "%s/fluxcd/image-automation-controller" . | quote }}
+      {{- end }}
+      securityContext: *fluxSecurityContext
+    imageReflectorController:
+      {{- with .Values.global.imageRegistry }}
+      image: {{ printf "%s/fluxcd/image-reflector-controller" . | quote }}
+      {{- end }}
+      securityContext: *fluxSecurityContext
+{{- end }}

@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 21.0.0](https://img.shields.io/badge/Version-21.0.0-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
+![Version: 22.0.7](https://img.shields.io/badge/Version-22.0.7-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -102,12 +102,9 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.database.maxPoolSize | int | `90` |  |
 | fourAllPortal.database.minPoolSize | int | `5` |  |
 | fourAllPortal.database.numHelperThreads | int | `5` |  |
-| fourAllPortal.database.operator.databaseName | string | `"CHANGEME"` |  |
 | fourAllPortal.database.operator.databaseRef | string | `"CHANGEME"` |  |
 | fourAllPortal.database.operator.enabled | bool | `false` |  |
-| fourAllPortal.database.operator.password | string | `"CHANGEME"` |  |
 | fourAllPortal.database.operator.secretName | string | `""` |  |
-| fourAllPortal.database.operator.user | string | `"CHANGEME"` |  |
 | fourAllPortal.debug | bool | `false` |  |
 | fourAllPortal.env | object | `{}` |  |
 | fourAllPortal.fourApps | object | `{}` |  |
@@ -359,3 +356,87 @@ configuration options for an existing Database using `fourAllPortal.database.exi
 a database operator using `fourAllPortal.database.operator`
 This release also removes the embedded MySQL Backup functionality. From now on, backups need to be
 handled by different tools for the database.
+
+## To 22.0.0
+
+This release adds support for the new **4allportal database operator**.
+
+> **Important**
+> The old database operator is **not compatible** with this release.
+> If it is still in use, 4allportal will **not** be able to find the required secrets.
+
+### Changes
+
+The following fields are now **optional**:
+
+- `.Values.fourAllPortal.database.operator.user`
+- `.Values.fourAllPortal.database.operator.databaseName`
+- `.Values.fourAllPortal.database.operator.password`
+
+If these values are not set, the operator will **automatically generate them** and store the data in a **new Kubernetes Secret**, which is then used by 4allportal.
+
+## To 22.0.1
+
+This release renames the database type `mssql` to `sqlserver` to align with the correct naming convention.
+
+The value `mssql` introduced in 20.12.0 is now **deprecated** but continues to work as an alias for `sqlserver`. Support for `mssql` will be removed in a future major release.
+
+### Recommended Action
+
+Update your values from:
+
+`.Values.fourAllPortal.database.existing.type: mssql`
+
+to:
+
+`.Values.fourAllPortal.database.existing.type: sqlserver`
+
+No other changes to the database configuration are required.
+
+## To 22.0.2
+
+This release adds an egress rule for `api.4allportal.cloud` on port 443 to the Cilium network policy.
+
+No action required.
+
+## To 22.0.3
+
+This release adds support for referencing an external secret for backup credentials instead of providing plain-text values.
+
+When `.Values.backups.volumes.secretName` is set, the chart no longer creates an internal secret from the plain-text values `.Values.backups.volumes.password`, `.Values.backups.target.s3.accessKey`, and `.Values.backups.target.s3.secretKey`. The referenced secret must contain the keys `RESTIC_PASSWORD`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`.
+
+No action required if you are not using `.Values.backups.volumes.secretName`.
+
+## To 22.0.4
+
+This release makes the 3d-renderer work under a hardened `readOnlyRootFilesystem: true` pod. A writable `emptyDir` is mounted at `/tmp` (hosting the Xvfb socket, the dbus system bus and chromium's user-data-dir) and `HOME` is set to `/tmp`. Without these the pod hung at startup and never became ready on port 8190.
+
+No action required.
+
+## To 22.0.5
+
+This release makes changes to `.Values.samba.mounts` take effect. The samba pod template now carries a `checksum/config` annotation over the samba ConfigMap, so the pod is recreated whenever the generated samba configuration changes.
+
+The samba container imports its configuration into Samba's `net conf` registry **once at container start**, and that registry (in `/var/lib/samba`, an `emptyDir`) is what `smbd` actually serves. Without the annotation the pod was never restarted when the ConfigMap changed, so edits to a share's `users` list silently never reached the running server — a user added to an existing share kept getting access denied until the pod happened to restart for an unrelated reason.
+
+No action required. Note that the upgrade recreates the samba pod, which briefly interrupts active SMB connections.
+
+## To 22.0.6
+
+This release fixes the CiliumNetworkPolicy for systems using `.Values.fourAllPortal.database.operator`. The policy's egress rule for the database read `.Values.fourAllPortal.database.existing.host` unconditionally, and with the operator that value does not exist — `existing` defaults to `{}`, so `nil | splitList` aborted the render and the whole release failed to install.
+
+The rule is only about an external database, so it is now emitted only when `existing.host` is set. An external database keeps it unchanged, including a comma-separated list of hosts.
+
+This had gone unnoticed because the policy is only rendered where a `CiliumNetworkPolicy` CRD exists. On a cluster without Cilium the whole template is skipped, so an operator-backed system installed fine; on one with Cilium it never could.
+
+**If you use the operator on a Cilium cluster**, the chart cannot emit an egress rule for your database — the host lives in the Secret the operator issues at runtime, not in the values. Allow that egress at cluster level.
+
+No action required otherwise.
+
+## To 22.0.7
+
+This release gives the 3D renderer and webdav pods the image pull secrets from `.Values.global.imagePullSecrets`. They had none: the secrets were only ever attached to the backend's ServiceAccount, and neither of those two pods uses a service account.
+
+It went unnoticed for as long as those images came from a registry that serves reads anonymously. On a registry that requires authentication both pods sit in `ImagePullBackOff` and the release never becomes ready — while the backend, which does have the secret, comes up fine.
+
+No action required. If you were working around this by attaching the secret to the namespace's `default` ServiceAccount, that is no longer needed.

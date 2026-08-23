@@ -1,0 +1,76 @@
+{{- $domain := include "base-cluster.domain" . -}}
+{{- /* Namespaces that consume global.imagePullSecretName. Keep in sync with the
+       HelmReleases that inject imagePullSecrets — a namespace missing here means
+       the pull secret is referenced but never created there. Defined up here so
+       the whitespace trimming stays out of the rendered text below. */ -}}
+{{- $pullSecret := .Values.global.imagePullSecretName -}}
+{{- $pullSecretNamespaces := list "cert-manager" "traefik" "sealed-secrets" "kube-system" "monitoring" -}}
+{{- if .Values.janitor.enabled -}}
+{{- $pullSecretNamespaces = append $pullSecretNamespaces "k8s-cleaner" -}}
+{{- end -}}
+base-cluster-v2 has been installed for cluster "{{ .Values.global.clusterName }}".
+
+Cluster domain:    {{ $domain }}
+Wildcard cert:     cluster-wildcard-certificate (covers *.{{ $domain }})
+
+What happens next is driven by Flux:
+  - HelmReleases for cert-manager, Traefik and external-dns are now in the
+    cluster; the speedtest is a plain Deployment/Service/Ingress. Flux will
+    reconcile each in turn.
+  - Watch progress with:
+        flux get helmreleases -A
+        flux get kustomizations -A
+
+Endpoints (once Flux is reconciled and DNS is published):
+{{- if .Values.speedtest.enabled }}
+  - Speedtest:  https://{{ include "base-cluster.speedtest.host" . }}
+{{- end }}
+
+{{- if .Values.reflector.enabled }}
+
+Pre-install: create the secrets below ONCE in the {{ .Release.Namespace }} namespace
+with reflection annotations. kubernetes-reflector will propagate them automatically.
+{{- if $pullSecret }}
+
+  kubectl create secret docker-registry {{ $pullSecret }} \
+    --docker-server=dhi.io \
+    --docker-username=<user> --docker-password=<token> \
+    -n {{ .Release.Namespace }}
+  kubectl annotate secret {{ $pullSecret }} -n {{ .Release.Namespace }} \
+    reflector.v1.k8s.emberstack.com/reflection-allowed=true \
+    reflector.v1.k8s.emberstack.com/reflection-auto-enabled=true \
+    "reflector.v1.k8s.emberstack.com/reflection-auto-namespaces={{ join "," $pullSecretNamespaces }}"
+{{- end }}
+
+  kubectl create secret generic cloudflare-api-key \
+    --from-literal=cloudflare_api_token=<token> \
+    -n {{ .Release.Namespace }}
+  kubectl annotate secret cloudflare-api-key -n {{ .Release.Namespace }} \
+    reflector.v1.k8s.emberstack.com/reflection-allowed=true \
+    reflector.v1.k8s.emberstack.com/reflection-auto-enabled=true \
+    "reflector.v1.k8s.emberstack.com/reflection-auto-namespaces=cert-manager,traefik"
+{{- else }}
+
+Pre-install: reflector.enabled is false, so nothing propagates secrets between
+namespaces — create them in every namespace that consumes them, or the
+HelmReleases below will reference a secret that does not exist there.
+{{- if $pullSecret }}
+
+  for ns in {{ join " " $pullSecretNamespaces }}; do
+    kubectl create secret docker-registry {{ $pullSecret }} \
+      --docker-server=dhi.io \
+      --docker-username=<user> --docker-password=<token> \
+      -n "$ns"
+  done
+{{- end }}
+
+  for ns in cert-manager traefik; do
+    kubectl create secret generic cloudflare-api-key \
+      --from-literal=cloudflare_api_token=<token> \
+      -n "$ns"
+  done
+{{- end }}
+
+If this is a first install and you see ClusterIssuer errors for ~1-2 minutes,
+that is expected: cert-manager needs a moment to come up before the issuer can
+be reconciled. Flux will retry automatically.

@@ -1,0 +1,145 @@
+{{- if .Values.janitor.enabled }}
+{{/*
+Cluster-scoped Cleaner CRs — the actual cleanup policies. Each is independently
+toggleable and honours janitor.excludedNamespaces (enforced inside the Lua
+`evaluate` so system namespaces are never touched). The Cleaner CRD is vendored
+in this chart's crds/, so these render safely on first install.
+
+Every rule also enforces cleaners.<name>.minAgeHours so a resource is only
+deleted once it has been terminal for that long — otherwise a pod that crashed
+seconds ago would be reaped before anyone can look at it.
+*/}}
+{{- $excluded := "" }}
+{{- range .Values.janitor.excludedNamespaces }}{{ $excluded = printf "%s[%q]=true," $excluded . }}{{- end }}
+{{- if .Values.janitor.cleaners.completedJobs.enabled }}
+apiVersion: apps.projectsveltos.io/v1alpha1
+kind: Cleaner
+metadata:
+  name: janitor-completed-jobs
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: janitor
+spec:
+  schedule: {{ .Values.janitor.cleaners.completedJobs.schedule | quote }}
+{{- /* dryRun maps to the CRD's action: Scan — the controller only reports
+       matches (see the Report CRs) instead of deleting. There is no
+       spec.dryRun field in apps.projectsveltos.io/v1alpha1. */}}
+  action: {{ ternary "Scan" "Delete" .Values.janitor.cleaners.completedJobs.dryRun }}
+{{- with .Values.janitor.deleteOptions }}
+  deleteOptions: {{- toYaml . | nindent 4 }}
+{{- end }}
+{{- if .Values.janitor.report.enabled }}{{ include "base-cluster.janitor.notifications" . | nindent 2 }}{{- end }}
+  resourcePolicySet:
+    resourceSelectors:
+      - kind: Job
+        group: "batch"
+        version: v1
+        evaluate: |
+          {{- include "base-cluster.janitor.luaHelpers" . | nindent 10 }}
+          function evaluate()
+            hs = {}
+            hs.matching = false
+            local excluded = { {{ $excluded }} }
+            if obj.metadata.namespace ~= nil and excluded[obj.metadata.namespace] then
+              return hs
+            end
+{{- if .Values.janitor.cleaners.completedJobs.skipOwned }}
+            if hasOwner(obj) then
+              return hs
+            end
+{{- end }}
+            if obj.status ~= nil and obj.status.succeeded ~= nil and obj.status.succeeded > 0 then
+              local terminal = toEpoch(obj.status.completionTime)
+              if terminal == nil then
+                terminal = toEpoch(obj.metadata.creationTimestamp)
+              end
+              if olderThan(terminal, {{ .Values.janitor.cleaners.completedJobs.minAgeHours }}) then
+                hs.matching = true
+                hs.message = "succeeded job, terminal for over {{ .Values.janitor.cleaners.completedJobs.minAgeHours }}h"
+              end
+            end
+            return hs
+          end
+{{- end }}
+{{- if .Values.janitor.cleaners.failedPods.enabled }}
+---
+apiVersion: apps.projectsveltos.io/v1alpha1
+kind: Cleaner
+metadata:
+  name: janitor-failed-pods
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: janitor
+spec:
+  schedule: {{ .Values.janitor.cleaners.failedPods.schedule | quote }}
+{{- /* dryRun maps to the CRD's action: Scan — the controller only reports
+       matches (see the Report CRs) instead of deleting. There is no
+       spec.dryRun field in apps.projectsveltos.io/v1alpha1. */}}
+  action: {{ ternary "Scan" "Delete" .Values.janitor.cleaners.failedPods.dryRun }}
+{{- with .Values.janitor.deleteOptions }}
+  deleteOptions: {{- toYaml . | nindent 4 }}
+{{- end }}
+{{- if .Values.janitor.report.enabled }}{{ include "base-cluster.janitor.notifications" . | nindent 2 }}{{- end }}
+  resourcePolicySet:
+    resourceSelectors:
+      - kind: Pod
+        group: ""
+        version: v1
+        evaluate: |
+          {{- include "base-cluster.janitor.luaHelpers" . | nindent 10 }}
+          function evaluate()
+            hs = {}
+            hs.matching = false
+            local excluded = { {{ $excluded }} }
+            if obj.metadata.namespace ~= nil and excluded[obj.metadata.namespace] then
+              return hs
+            end
+            if obj.status ~= nil and (obj.status.phase == "Failed" or obj.status.reason == "Evicted") then
+              if olderThan(podTerminalEpoch(obj), {{ .Values.janitor.cleaners.failedPods.minAgeHours }}) then
+                hs.matching = true
+                hs.message = "failed/evicted pod, terminal for over {{ .Values.janitor.cleaners.failedPods.minAgeHours }}h"
+              end
+            end
+            return hs
+          end
+{{- end }}
+{{- if .Values.janitor.cleaners.succeededPods.enabled }}
+---
+apiVersion: apps.projectsveltos.io/v1alpha1
+kind: Cleaner
+metadata:
+  name: janitor-succeeded-pods
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: janitor
+spec:
+  schedule: {{ .Values.janitor.cleaners.succeededPods.schedule | quote }}
+{{- /* dryRun maps to the CRD's action: Scan — the controller only reports
+       matches (see the Report CRs) instead of deleting. There is no
+       spec.dryRun field in apps.projectsveltos.io/v1alpha1. */}}
+  action: {{ ternary "Scan" "Delete" .Values.janitor.cleaners.succeededPods.dryRun }}
+{{- with .Values.janitor.deleteOptions }}
+  deleteOptions: {{- toYaml . | nindent 4 }}
+{{- end }}
+{{- if .Values.janitor.report.enabled }}{{ include "base-cluster.janitor.notifications" . | nindent 2 }}{{- end }}
+  resourcePolicySet:
+    resourceSelectors:
+      - kind: Pod
+        group: ""
+        version: v1
+        evaluate: |
+          {{- include "base-cluster.janitor.luaHelpers" . | nindent 10 }}
+          function evaluate()
+            hs = {}
+            hs.matching = false
+            local excluded = { {{ $excluded }} }
+            if obj.metadata.namespace ~= nil and excluded[obj.metadata.namespace] then
+              return hs
+            end
+            if obj.status ~= nil and obj.status.phase == "Succeeded" then
+              if olderThan(podTerminalEpoch(obj), {{ .Values.janitor.cleaners.succeededPods.minAgeHours }}) then
+                hs.matching = true
+                hs.message = "succeeded pod, terminal for over {{ .Values.janitor.cleaners.succeededPods.minAgeHours }}h"
+              end
+            end
+            return hs
+          end
+{{- end }}
+{{- end }}

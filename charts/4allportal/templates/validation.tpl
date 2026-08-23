@@ -27,7 +27,9 @@
 {{- end -}}
 
 {{- if eq .Values.samba.enabled true -}}
+{{- if and (eq .Values.samba.secret.name "") (eq .Values.samba.secret.key "") -}}
 {{- if eq .Values.samba.adminPassword "CHANGEME" -}}
 {{- fail "You need to change samba.adminPassword" -}}
+{{- end -}}
 {{- end -}}
 {{- end -}}

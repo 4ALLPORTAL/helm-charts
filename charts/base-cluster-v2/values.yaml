@@ -1,0 +1,624 @@
+## Global settings shared across all components.
+global:
+  ## -- Required. Base DNS domain. The cluster's wildcard cert and ingress
+  ##    hostnames are published under <clusterName>.<baseDomain>.
+  baseDomain: ""
+  ## -- Required. Short identifier of this cluster, used as a sub-zone and as
+  ##    the external-dns txtOwnerId so multiple clusters can share a zone.
+  clusterName: ""
+  ## -- Name of a pre-existing dockerconfigjson Secret for pulling DHI images.
+  ##    Must exist in: flux-system, cert-manager, traefik (and sealed-secrets
+  ##    if enabled) BEFORE installing this chart.
+  imagePullSecretName: ""
+  ## -- Override the image registry for all components. Useful for air-gapped
+  ##    environments that mirror images to a private registry.
+  imageRegistry: ""
+  ## -- In-cluster DNS suffix. Override if the cluster was bootstrapped with a
+  ##    non-default search domain (kubeadm `--service-dns-domain`, Talos
+  ##    `cluster.discovery.dnsDomain`). Used by Alloy to reach Loki/Mimir.
+  clusterDomain: cluster.local
+  ## -- Additional cluster-wide cert-manager Certificates to issue. Map of
+  ##    name -> { dnsNames: [...], secretTemplate: {...} }. Issued via the
+  ##    letsencrypt-prod issuer.
+  ##
+  ##    secretTemplate is handed to cert-manager, which stamps its annotations
+  ##    and labels onto the issued Secret and keeps them across renewals — the
+  ##    supported way to have kubernetes-reflector mirror a wildcard into the
+  ##    namespaces that need it.
+  certificates: {}
+  ## NetworkPolicy mode.
+  ##   auto   — emit CiliumNetworkPolicy if the API is present, otherwise nothing
+  ##   cilium — always emit CiliumNetworkPolicy
+  ##   none   — emit nothing
+  networkPolicy:
+    type: auto
+    ## Cluster-wide default-deny policy. Requires per-namespace allow policies
+    ## to be in place first. kube-system and rook-ceph are excluded because
+    ## blocking them risks total cluster failure.
+    defaultDeny:
+      enabled: true
+      excludedNamespaces:
+        - kube-system
+        - rook-ceph
+    ## Endpoint selectors used in NetworkPolicies. Override if your cluster's
+    ## kube-dns / Prometheus pods are labelled differently.
+    dnsLabels:
+      io.kubernetes.pod.namespace: kube-system
+      k8s-app: kube-dns
+
+## FluxCD bootstrap.
+##
+## NOTE: in most clusters Flux is bootstrapped out-of-band with `flux bootstrap`
+## *before* this chart is installed; the chart only emits HelmReleases that
+## Flux then reconciles. Set `install: true` for a greenfield install where
+## this chart should also deploy the flux2 controllers.
+flux:
+  install: false
+  ## Resource requests/limits applied to all Flux controllers when install=true.
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+## Per-tenant Flux GitRepository + Kustomization sources. Each entry produces
+## one GitRepository and one Kustomization in the chart's namespace.
+##
+## Example:
+##   instances:
+##     apps:
+##       url: ssh://git@git.example.com/platform/apps.git
+##       existingSecret: flux-apps-git
+##       gitInterval: 1m
+##       path: ./clusters/gt-office
+git:
+  instances: {}
+
+## DNS provider used by both cert-manager (DNS01 solver) and external-dns.
+## Currently only Cloudflare is wired up.
+dns:
+  ## Required when cert-manager is enabled. The Cloudflare account email.
+  email: ""
+  ## Required. Name of an existing secret in the chart's namespace containing
+  ## key `cloudflare_api_token`. Mounted by both cert-manager and external-dns.
+  existingSecret: ""
+  ## Optional. Restrict the issuer's DNS01 solver to these zones. Empty = all.
+  domains: []
+
+## Traefik ingress controller.
+traefik:
+  log:
+    level: WARN
+  service:
+    ## On Talos with no LoadBalancer provider yet, set type=ClusterIP and
+    ## populate `traefik.ingressIP` so external-dns publishes a record pointing
+    ## at the node/HA-VIP. With MetalLB or Cilium L2Announcements, leave as
+    ## LoadBalancer.
+    type: LoadBalancer
+    loadBalancerIP: ""
+    externalIPs: []
+  ## When set, --providers.kubernetesIngress.ingressEndpoint.ip is forced to
+  ## this value (used when Service has no externally-routable VIP yet).
+  ingressIP: ""
+  minReplicas: 2
+  maxReplicas: 8
+  resources:
+    requests:
+      cpu: "1"
+      memory: 250Mi
+    limits:
+      cpu: "4"
+      memory: 500Mi
+  ## Extra TLS cipher suites appended to the safe defaults.
+  cipherSuites: []
+  ## Extra Traefik CLI arguments.
+  additionalArguments: []
+
+## cert-manager (DHI chart).
+##
+## CRDs are shipped in this chart's `crds/` directory so first-install ordering
+## works (Helm applies CRDs before templates). The HelmRelease has crds.enabled=
+## false to avoid double-management; bumping cert-manager requires also
+## refreshing crds/cert-manager.yaml in this chart.
+certManager:
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  caInjector:
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+  webhook:
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: "1"
+        memory: 512Mi
+
+## external-dns (DHI chart).
+externalDNS:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+## kubernetes-reflector — mirrors Secrets across namespaces automatically.
+## Create source secrets once in flux-system with reflection annotations;
+## reflector propagates them to cert-manager, traefik, and sealed-secrets.
+reflector:
+  ## Master switch. NOTE: cert-manager and sealed-secrets `dependsOn` reflector;
+  ## disabling it drops that dependency (they no longer wait for reflector) — so
+  ## if you turn this off you must pre-create their pull/API secrets yourself.
+  enabled: true
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+## metrics-server — exposes the metrics.k8s.io API consumed by `kubectl top`,
+## k9s, and the HorizontalPodAutoscaler. Independent of the LGTM observability
+## stack; deployed in kube-system.
+metricsServer:
+  enabled: true
+  ## Most kubelets serve their stats endpoint with a self-signed cert. Set to
+  ## false only if you front kubelets with a CA the apiserver trusts.
+  kubeletInsecureTLS: true
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+## Sealed Secrets controller (DHI chart).
+sealedSecrets:
+  enabled: true
+  ## Extra values passed through to the sealed-secrets chart.
+  values: {}
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+## Janitor — k8s-cleaner (projectsveltos), a CRD-driven cleanup controller that
+## reconciles `Cleaner` custom resources. The Cleaner + Report CRDs are vendored
+## in this chart's crds/ directory (HelmRelease sets crds.install=false).
+##
+## Security note: the k8s-cleaner controller runs with a very broad ClusterRole
+## (it must be able to delete arbitrary kinds). The Cleaner rules below are the
+## guardrail — excludedNamespaces keeps that breadth off system namespaces.
+janitor:
+  enabled: true
+  ## Controller image. registry empty = global.imageRegistry, falling back to
+  ## docker.io. Point registry at a mirror for air-gapped clusters (the image is
+  ## not DHI-hardened).
+  image:
+    registry: ""
+    repository: projectsveltos/k8s-cleaner
+    tag: "v0.21.0"
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+  ## Garbage collection for deletions. Background makes the API server delete
+  ## dependents too — without it, deleting a completed Job *orphans* its Pod,
+  ## which then lingers forever as a Completed pod nobody owns. Only honoured for
+  ## rules that actually delete (action: Delete, i.e. dryRun=false).
+  deleteOptions:
+    propagationPolicy: Background
+  ## Report CRs. k8s-cleaner records what it matched or deleted only when the
+  ## Cleaner carries a CleanerReport notification — this is what makes dryRun
+  ## inspectable (`kubectl get reports.apps.projectsveltos.io`) and leaves an
+  ## audit trail for real deletions.
+  report:
+    enabled: true
+  ## Namespaces no Cleaner will ever touch (enforced inside each rule's Lua).
+  excludedNamespaces:
+    - kube-system
+    - flux-system
+  ## Individual cleanup policies. Each renders one Cleaner CR and is toggleable.
+  ## dryRun=true renders the CR with `action: Scan` instead of `action: Delete`:
+  ## the controller then only *reports* matches (see the Report CRs and its logs)
+  ## without deleting anything. The rules below ship with dryRun=false because
+  ## their selectors have been verified against a live cluster; start any rule
+  ## you add this way and only flip it once its Report CRs look right.
+  ##
+  ## minAgeHours keeps a debugging window: a resource is only deleted once it has
+  ## been in its terminal state for that long (Jobs: completionTime, Pods: last
+  ## container termination time, falling back to startTime/creationTimestamp).
+  ## 0 disables the age check — matches are deleted on the next run.
+  cleaners:
+    ## Completed (succeeded) Jobs.
+    ##
+    ## skipOwned leaves Jobs that carry an ownerReference alone — a CronJob
+    ## prunes its own history via successfulJobsHistoryLimit, and an operator
+    ## (rook's CephCluster, for one) recreates its Jobs on the next reconcile.
+    ## Deleting those only causes churn, so the rule targets what nothing owns.
+    ## Set false to reap every succeeded Job regardless of owner. Note that a
+    ## Helm-templated Job has no ownerReference and so is still eligible; that
+    ## is deliberate, since a lingering completed Job is a common cause of
+    ## "cannot patch Job" failures on the next helm upgrade.
+    completedJobs:
+      enabled: true
+      schedule: "0 2 * * *"
+      minAgeHours: 24
+      skipOwned: true
+      dryRun: false
+    ## Failed and Evicted Pods.
+    failedPods:
+      enabled: true
+      schedule: "*/30 * * * *"
+      minAgeHours: 24
+      dryRun: false
+    ## Succeeded (completed) Pods — off by default; the owning controller
+    ## usually reaps these, and TTL handles Job-owned pods.
+    succeededPods:
+      enabled: false
+      schedule: "*/30 * * * *"
+      minAgeHours: 24
+      dryRun: false
+  ## Extra values passed through to the k8s-cleaner chart.
+  values: {}
+
+## descheduler (kubernetes-sigs) — periodically evicts pods so the scheduler can
+## re-place them. Ported from the v1 base-cluster chart. Default OFF: it evicts
+## running pods and an over-aggressive policy causes churn — opt in per cluster.
+descheduler:
+  enabled: false
+  schedule: "*/15 * * * *"
+  ## Image override. registry empty = global.imageRegistry, else chart default
+  ## (registry.k8s.io). tag empty = chart appVersion.
+  image:
+    registry: ""
+    tag: ""
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+  ## deschedulerPolicy profiles (v1alpha2). Mirrors the intent of the v1
+  ## `strategies` set; tuned: podRestartThreshold=10 and higher LowNodeUtilization
+  ## thresholds (as in v1). See the descheduler docs for plugin semantics.
+  profiles:
+    - name: default
+      pluginConfig:
+        - name: DefaultEvictor
+          args:
+            ignorePvcPods: true
+            evictLocalStoragePods: true
+        - name: RemoveDuplicates
+        - name: RemovePodsHavingTooManyRestarts
+          args:
+            podRestartThreshold: 10
+            includingInitContainers: true
+        - name: RemovePodsViolatingNodeAffinity
+          args:
+            nodeAffinityType:
+              - requiredDuringSchedulingIgnoredDuringExecution
+        - name: RemovePodsViolatingNodeTaints
+        - name: RemovePodsViolatingInterPodAntiAffinity
+        - name: RemovePodsViolatingTopologySpreadConstraint
+        - name: LowNodeUtilization
+          args:
+            thresholds:
+              cpu: 50
+              memory: 50
+              pods: 50
+            targetThresholds:
+              cpu: 70
+              memory: 80
+              pods: 95
+      plugins:
+        balance:
+          enabled:
+            - RemoveDuplicates
+            - RemovePodsViolatingTopologySpreadConstraint
+            - LowNodeUtilization
+        deschedule:
+          enabled:
+            - RemovePodsHavingTooManyRestarts
+            - RemovePodsViolatingNodeTaints
+            - RemovePodsViolatingNodeAffinity
+            - RemovePodsViolatingInterPodAntiAffinity
+  ## Extra values passed through to the descheduler chart.
+  values: {}
+
+## Stash (AppsCode) — CRD-driven volume/DB backup operator, ported from the v1
+## base-cluster chart. Default OFF: requires a Stash license secret to be
+## pre-created (see backup.licenseSecretName) before enabling.
+backup:
+  enabled: false
+  ## -- Name of a pre-existing license Secret for Stash Community, in the
+  ##    `stash` namespace. Get one at https://appscode.com/issues/new (free).
+  licenseSecretName: ""
+  ## Retry CronJob — Stash BackupSessions that failed overnight (e.g. due to a
+  ## transient network blip) are recreated once the next morning so they get
+  ## another attempt instead of waiting for the next scheduled window.
+  retryBackup:
+    schedule: "30 0-8 * * *"
+    image:
+      registry: ""
+      repository: alpine/k8s
+      tag: "1.36.2"
+    resources:
+      requests:
+        cpu: 10m
+        memory: 32Mi
+      limits:
+        cpu: 100m
+        memory: 64Mi
+  ## Extra values passed through to the stash-community chart.
+  values: {}
+
+## Observability stack — grafana/k8s-monitoring (Alloy Operator) → Mimir +
+## Loki + Tempo, OTEL Collector for traces, Mimir-internal Alertmanager routes
+## the Watchdog heartbeat to an UptimeRobot heartbeat URL, and a CronJob
+## reconciles UptimeRobot monitors via the UptimeRobot API.
+##
+## Mimir and k8s-monitoring are pulled from the upstream `grafana`
+## HelmRepository; everything else uses DHI-hardened charts.
+monitoring:
+  ## Master switch — when false, nothing in templates/monitoring/ is rendered
+  ## except the namespace's default-deny exclusion.
+  enabled: false
+  ## StorageClass for Mimir/Loki/Tempo PVCs. Empty = cluster default.
+  storageClass: ""
+
+  ## Mimir — single-binary (target=all). Persistent local PVC backend; swap to
+  ## object storage by overriding mimir.values.mimir.structuredConfig.
+  mimir:
+    enabled: true
+    retention: 720h          ## 30d
+    size: 50Gi
+    ## Kafka PVC for Mimir's ingest-WAL. The mimir-distributed chart defaults
+    ## to 5Gi, which fills within ~3-4 days of moderate ingest and crashloops
+    ## kafka-0 with "log dir is already offline". Keep ≥ 20Gi.
+    ## Note: PVC volumeClaimTemplate size is immutable in the StatefulSet —
+    ## changing this only affects NEW clusters. For existing clusters expand
+    ## via `kubectl patch pvc kafka-data-mimir-kafka-0 ...` then delete the
+    ## pod to trigger filesystem resize.
+    kafkaSize: 20Gi
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: "2"
+        memory: 4Gi
+
+  ## Loki — SingleBinary deployment, filesystem chunk store on PVC.
+  loki:
+    enabled: true
+    retention: 336h          ## 14d
+    size: 50Gi
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: "1"
+        memory: 2Gi
+
+  ## Tempo — monolithic, filesystem backend on PVC.
+  tempo:
+    enabled: true
+    retention: 168h          ## 7d
+    size: 20Gi
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: "1"
+        memory: 2Gi
+
+  ## Grafana — UI, sidecar datasource/dashboard discovery, ingress via Traefik.
+  grafana:
+    enabled: true
+    ## Hostname is published as <host>.<clusterName>.<baseDomain>.
+    host: grafana
+    ## Required when grafana.enabled. Secret with keys `admin-user` and
+    ## `admin-password`.
+    existingAdminSecret: ""
+    ## OIDC SSO via Grafana's generic_oauth provider.
+    ## Renders the [auth.generic_oauth] + [auth] sections of grafana.ini.
+    ## When enabled, set endpoint URLs and supply the client secret via `existingSecret`
+    ## (env vars GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET and GF_AUTH_GENERIC_OAUTH_CLIENT_ID
+    ## picked up automatically — Grafana's env override).
+    oidc:
+      enabled: false
+      ## Label shown on the Grafana login page.
+      name: SSO
+      ## Secret with `GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET` and `GF_AUTH_GENERIC_OAUTH_CLIENT_ID` keys (envFrom).
+      existingSecret: ""
+      ## Client auth method. Empty = Grafana default (`client_secret_basic`).
+      ## Entra ID requires `client_secret_post`.
+      clientAuthentication: ""
+      scopes: "openid profile email"
+      authUrl: ""
+      tokenUrl: ""
+      apiUrl: ""
+      ## Restrict logins to one or more email domains, space-separated.
+      allowedDomains: ""
+      ## Auto-create the Grafana user record on first successful login.
+      allowSignUp: true
+      ## Skip Grafana's login page and redirect straight to the IdP.
+      ## Pair with `disableLoginForm` for an IdP-only experience.
+      autoLogin: false
+      ## Hide the admin/password fallback form.
+      disableLoginForm: false
+      ## Some IdPs (e.g. Entra ID) don't return a verified email; allow
+      ## lookup without the verification flag.
+      oauthAllowInsecureEmailLookup: false
+      ## JMESPath against id_token claims → Grafana org role.
+      ## Requires the IdP to issue a `groups` (or equivalent) claim in the
+      ## id_token (e.g. Entra: App Registration → Token configuration → Add
+      ## groups claim). Example:
+      ##   contains(groups, '<admin-gid>') && 'Admin' ||
+      ##   contains(groups, '<editor-gid>') && 'Editor' || 'Viewer'
+      roleAttributePath: ""
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+  ## k8s-monitoring (Alloy Operator) — `alloy-metrics` (clustered —
+  ## annotation/ServiceMonitor/PodMonitor/Probe scraping) and `alloy-logs`
+  ## (DaemonSet — node-local pod log tailing via podLogsViaLoki).
+  ## `resources` applies to both collector roles.
+  k8sMonitoring:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi
+
+  ## Prometheus Node Exporter — host CPU/memory/disk/network metrics.
+  ## Deployed as a k8s-monitoring telemetryService.
+  nodeExporter:
+    enabled: true
+
+  ## kube-state-metrics — Kubernetes object metrics.
+  ## Deployed as a k8s-monitoring telemetryService.
+  kubeStateMetrics:
+    enabled: true
+
+  ## OTEL Collector — receives OTLP (gRPC :4317, HTTP :4318), exports to Tempo.
+  otelCollector:
+    enabled: true
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+  ## UptimeRobot — receives the Watchdog heartbeat and runs external uptime
+  ## probes. Both heartbeat and monitor reconciliation use the API key from
+  ## `existingSecret` (key `api_key`).
+  uptimeRobot:
+    enabled: false
+    existingSecret: ""
+    ## Heartbeat URL the Watchdog alert pings via Alertmanager webhook. Format:
+    ## https://heartbeat.uptimerobot.com/<token>. Setting this enables the
+    ## heartbeat on its own — `enabled` above is only needed for the external
+    ## monitor reconciler (which also requires `existingSecret`).
+    heartbeatUrl: ""
+    ## Monitors reconciled by the CronJob. friendlyName must be unique.
+    ##   monitors:
+    ##     - friendlyName: portal-prod
+    ##       url: https://portal.example.com
+    ##       type: 1            # 1=HTTP(S), 2=keyword, 3=ping, 4=port
+    ##       interval: 300      # seconds, min 60
+    monitors: []
+    reconciler:
+      schedule: "*/15 * * * *"
+      ## Image for the reconciliation CronJob. Defaults to DHI's hardened
+      ## python:3.13 (registry comes from global.imageRegistry, falling back
+      ## to dhi.io). Override `tag` or set `digest` to pin against drift.
+      image:
+        repository: python
+        tag: "3.13"
+        digest: ""
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          cpu: 200m
+          memory: 128Mi
+
+  ## Rook-Ceph — Grafana dashboards and dedicated Alloy scrape for ceph-mgr
+  ## Prometheus metrics (port 9283). Requires rook-ceph to be running with the
+  ## MGR Prometheus module enabled (default in all recent rook-ceph releases).
+  ## No NetworkPolicy changes needed — monitoring-collectors already allows
+  ## egress to cluster entities and rook-ceph is excluded from default-deny.
+  rookCeph:
+    enabled: false
+    ## Namespace where rook-ceph is deployed.
+    namespace: rook-ceph
+
+  ## IngressMonitorController (Stakater) — watches EndpointMonitor CRs
+  ## cluster-wide (the 4allportal chart ships one per ingress) and reconciles
+  ## them into UptimeRobot monitors, so deploying a portal auto-registers its
+  ## uptime check. Chart from the stakater HTTPS HelmRepository; image from
+  ## ghcr.io (OCI, not DHI-hardened). Independent of the uptimeRobot CronJob
+  ## above — listing the same endpoint in both can create duplicate monitors.
+  ingressMonitor:
+    enabled: false
+    ## Secret with key `config.yaml` holding the UptimeRobot provider config.
+    ## Required shape:
+    ##   providers:
+    ##     - name: UptimeRobot
+    ##       apiKey: <Main read-WRITE key>      # read-only keys cannot create monitors
+    ##       apiURL: https://api.uptimerobot.com/v2/   # mandatory, IMC has no default
+    ##       alertContacts: "<contact-id>_0_0"
+    ##   enableMonitorDeletion: false
+    ##   monitorNameTemplate: "{{.Namespace}}-{{.Name}}"
+    ##   resyncPeriod: 0
+    ## Reuse the config from the old base-cluster; sealed-secret recommended.
+    ## Required when enabled.
+    existingConfigSecret: ""
+    image:
+      ## Optional registry mirror, e.g. a Harbor proxy. Empty = chart default
+      ## ghcr.io/stakater/ingressmonitorcontroller.
+      registry: ""
+    resources:
+      requests:
+        cpu: 25m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 128Mi
+
+## Internal speedtest health endpoint (Librespeed). Reached at
+## https://<speedtest.host>.<clusterName>.<baseDomain>
+speedtest:
+  enabled: true
+  host: speedtest
+  replicas: 2
+  image:
+    registry: ghcr.io
+    repository: librespeed/speedtest
+    tag: "6.2.1"
+    digest: "sha256:871ec7a1c908e7c9288e51e074b321088a297c37fc672a4c882b0309f61ddef7"
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi

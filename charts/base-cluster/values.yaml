@@ -48,12 +48,12 @@ global:
     image:
       registry: docker.io
       repository: alpine/k8s
-      tag: "1.33.4"
+      tag: "1.36.2"
   helm:
     image:
       registry: docker.io
       repository: alpine/helm
-      tag: "3.18.5"
+      tag: "4.1.3"
   imageRegistry: ""
 
 flux:
@@ -90,6 +90,11 @@ sealedsecrets:
 
 janitor:
   enabled: true
+  excludeResources:
+    - events
+    - controllerrevisions
+  excludeNamespaces:
+    - kube-system
 
 monitoring:
   ingress:

@@ -1,0 +1,28 @@
+{{- if and .Values.janitor.enabled (eq (include "base-cluster.networkPolicy.type" .) "cilium") }}
+{{/*
+k8s-cleaner talks only to the Kubernetes API (to list/watch/delete resources)
+and DNS. Metrics (:8443) are ingress-only and default-denied here; enabling the
+chart's ServiceMonitor would additionally require an ingress rule from the
+monitoring namespace.
+*/}}
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: k8s-cleaner
+  namespace: k8s-cleaner
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: janitor
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: k8s-cleaner
+  egress:
+    - toEntities: [kube-apiserver]
+    - toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+{{- end }}
