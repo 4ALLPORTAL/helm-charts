@@ -334,7 +334,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.uptimeRobot.monitors | list | `[]` |  |
 | monitoring.uptimeRobot.reconciler.image.digest | string | `""` |  |
 | monitoring.uptimeRobot.reconciler.image.repository | string | `"python"` |  |
-| monitoring.uptimeRobot.reconciler.image.tag | string | `"3.13"` |  |
+| monitoring.uptimeRobot.reconciler.image.tag | string | `"3.14"` |  |
 | monitoring.uptimeRobot.reconciler.resources.limits.cpu | string | `"200m"` |  |
 | monitoring.uptimeRobot.reconciler.resources.limits.memory | string | `"128Mi"` |  |
 | monitoring.uptimeRobot.reconciler.resources.requests.cpu | string | `"50m"` |  |
