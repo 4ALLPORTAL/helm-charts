@@ -25,6 +25,8 @@ jobs:
 
       - name: Conventional commit check
         uses: cocogitto/cocogitto-action@v4
+        with:
+          command: 'check'
 
       - name: Validate PR Name
         run: .github/scripts/validate-pullrequest.sh
