@@ -4,5 +4,10 @@
   ],
   "assigneesFromCodeOwners": true,
   "assigneesSampleSize": 1,
-  "bumpVersion": "patch"
+  "bumpVersion": "patch",
+  "pinDigests": true,
+  "separateMinorPatch": true,
+  "separateMultipleMajor": true,
+  "prHourlyLimit": 0,
+  "prConcurrentLimit": 0
 }
