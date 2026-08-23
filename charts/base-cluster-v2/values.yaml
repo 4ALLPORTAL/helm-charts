@@ -217,7 +217,7 @@ janitor:
   image:
     registry: ""
     repository: projectsveltos/k8s-cleaner
-    tag: "v0.21.0"
+    tag: "v0.23.0"
   resources:
     requests:
       cpu: 50m
