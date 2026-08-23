@@ -12,3 +12,5 @@ jobs:
 
       - name: Conventional commits check
         uses: oknozor/cocogitto-action@v4
+        with:
+          command: check
