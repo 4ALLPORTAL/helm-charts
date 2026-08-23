@@ -551,7 +551,7 @@ monitoring:
       ## to dhi.io). Override `tag` or set `digest` to pin against drift.
       image:
         repository: python
-        tag: "3.13"
+        tag: "3.14"
         digest: ""
       resources:
         requests:
