@@ -217,7 +217,7 @@ janitor:
   image:
     registry: ""
     repository: projectsveltos/k8s-cleaner
-    tag: "v0.21.0"
+    tag: "v0.23.0"
   resources:
     requests:
       cpu: 50m
@@ -366,7 +366,7 @@ backup:
     image:
       registry: ""
       repository: alpine/k8s
-      tag: "1.35.2"
+      tag: "1.36.2"
     resources:
       requests:
         cpu: 10m
@@ -551,7 +551,7 @@ monitoring:
       ## to dhi.io). Override `tag` or set `digest` to pin against drift.
       image:
         repository: python
-        tag: "3.13"
+        tag: "3.14"
         digest: ""
       resources:
         requests:

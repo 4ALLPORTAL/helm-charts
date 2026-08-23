@@ -1,6 +1,6 @@
 # base-cluster-v2
 
-![Version: 2.0.1](https://img.shields.io/badge/Version-2.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
+![Version: 2.0.4](https://img.shields.io/badge/Version-2.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
 
 Foundational base cluster setup — FluxCD, Traefik ingress,
 cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
@@ -151,7 +151,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | backup.licenseSecretName | string | `""` |  |
 | backup.retryBackup.image.registry | string | `""` |  |
 | backup.retryBackup.image.repository | string | `"alpine/k8s"` |  |
-| backup.retryBackup.image.tag | string | `"1.35.2"` |  |
+| backup.retryBackup.image.tag | string | `"1.36.2"` |  |
 | backup.retryBackup.resources.limits.cpu | string | `"100m"` |  |
 | backup.retryBackup.resources.limits.memory | string | `"64Mi"` |  |
 | backup.retryBackup.resources.requests.cpu | string | `"10m"` |  |
@@ -250,7 +250,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | janitor.excludedNamespaces[1] | string | `"flux-system"` |  |
 | janitor.image.registry | string | `""` |  |
 | janitor.image.repository | string | `"projectsveltos/k8s-cleaner"` |  |
-| janitor.image.tag | string | `"v0.21.0"` |  |
+| janitor.image.tag | string | `"v0.23.0"` |  |
 | janitor.report.enabled | bool | `true` |  |
 | janitor.resources.limits.cpu | string | `"500m"` |  |
 | janitor.resources.limits.memory | string | `"256Mi"` |  |
@@ -334,7 +334,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.uptimeRobot.monitors | list | `[]` |  |
 | monitoring.uptimeRobot.reconciler.image.digest | string | `""` |  |
 | monitoring.uptimeRobot.reconciler.image.repository | string | `"python"` |  |
-| monitoring.uptimeRobot.reconciler.image.tag | string | `"3.13"` |  |
+| monitoring.uptimeRobot.reconciler.image.tag | string | `"3.14"` |  |
 | monitoring.uptimeRobot.reconciler.resources.limits.cpu | string | `"200m"` |  |
 | monitoring.uptimeRobot.reconciler.resources.limits.memory | string | `"128Mi"` |  |
 | monitoring.uptimeRobot.reconciler.resources.requests.cpu | string | `"50m"` |  |

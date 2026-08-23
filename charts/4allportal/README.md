@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 22.0.7](https://img.shields.io/badge/Version-22.0.7-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
+![Version: 22.0.8](https://img.shields.io/badge/Version-22.0.8-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -223,7 +223,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | samba.enabled | bool | `false` |  |
 | samba.image.registry | string | `"quay.io"` |  |
 | samba.image.repository | string | `"samba.org/samba-server"` |  |
-| samba.image.tag | string | `"v0.6"` |  |
+| samba.image.tag | string | `"v0.9"` |  |
 | samba.livenessProbe.enabled | bool | `false` |  |
 | samba.mounts | object | `{}` |  |
 | samba.nodeSelector | object | `{}` |  |
