@@ -250,7 +250,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | janitor.excludedNamespaces[1] | string | `"flux-system"` |  |
 | janitor.image.registry | string | `""` |  |
 | janitor.image.repository | string | `"projectsveltos/k8s-cleaner"` |  |
-| janitor.image.tag | string | `"v0.21.0"` |  |
+| janitor.image.tag | string | `"v0.23.0"` |  |
 | janitor.report.enabled | bool | `true` |  |
 | janitor.resources.limits.cpu | string | `"500m"` |  |
 | janitor.resources.limits.memory | string | `"256Mi"` |  |
