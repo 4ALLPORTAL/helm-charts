@@ -106,8 +106,12 @@ spec:
         ## The default allow-list is too narrow for community dashboards
         ## like Node Exporter Full (drops node_uname_info, node_load*,
         ## node_disk_*, node_netstat_*); pull in the integration list instead.
+        ## That list still drops node_time_seconds (used for the dashboard's
+        ## Uptime panel), so add it back explicitly.
         metricsTuning:
           useIntegrationAllowList: true
+          includeMetrics:
+            - node_time_seconds
     {{- end }}
     {{- end }}
 
