@@ -213,6 +213,13 @@ data:
         editable: false
         jsonData:
           httpHeaderName1: X-Scope-OrgID
+          ## Must match k8s-monitoring's global.scrapeInterval (60s, unset here so
+          ## it uses that chart's own default). Without this, Grafana assumes the
+          ## datasource default of 15s and computes $__rate_interval ~60s, which is
+          ## too tight to reliably catch 2 samples per actual 60s scrape — causing
+          ## every rate()/irate()-based panel (CPU, Network Traffic, Disk IOps, ...)
+          ## to render "No data".
+          timeInterval: 60s
         secureJsonData:
           httpHeaderValue1: anonymous
       {{- end }}
