@@ -4,5 +4,49 @@
   ],
   "assigneesFromCodeOwners": true,
   "assigneesSampleSize": 1,
-  "bumpVersion": "patch"
+  "pinDigests": true,
+  "separateMinorPatch": true,
+  "separateMultipleMajor": true,
+  "prHourlyLimit": 0,
+  "prConcurrentLimit": 0,
+  "packageRules": [
+    {
+      "description": "Auto-merge patch-level dependency updates only",
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "automerge": true,
+      "platformAutomerge": true
+    },
+    {
+      "description": "Bump the touched chart's own Chart.yaml by one patch whenever Renovate updates any dependency inside that chart's folder (covers Chart.yaml deps and base-cluster-v2's subchart versions in templates/_versions.tpl alike)",
+      "matchFileNames": [
+        "charts/**"
+      ],
+      "bumpVersions": [
+        {
+          "name": "chart version",
+          "filePatterns": [
+            "{{{ replace 'charts/([^/]+).*' 'charts/$1/Chart.yaml' packageFileDir }}}"
+          ],
+          "matchStrings": [
+            "(?m)^version:\\s+(?<version>\\S+)"
+          ],
+          "bumpType": "patch"
+        }
+      ]
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "base-cluster-v2 subchart versions pinned in templates/_versions.tpl",
+      "managerFilePatterns": [
+        "/^charts/base-cluster-v2/templates/_versions\\.tpl$/"
+      ],
+      "matchStrings": [
+        "renovate:\\s*datasource=(?<datasource>\\S+)\\s+depName=(?<depName>\\S+)(?:\\s+packageName=(?<packageName>\\S+))?(?:\\s+registryUrl=(?<registryUrl>\\S+))?(?:\\s+versioning=(?<versioning>\\S+))?[\\s\\S]*?-}}(?<currentValue>[^{]+?){{-\\s*end"
+      ]
+    }
+  ]
 }
