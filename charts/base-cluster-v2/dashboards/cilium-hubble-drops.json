@@ -1,0 +1,205 @@
+{
+  "id": null,
+  "uid": "cilium-hubble-drops",
+  "title": "Cilium / Hubble Network Policy Drops",
+  "description": "Packets dropped by CiliumNetworkPolicy, and the underlying policy-verdict/port view from Hubble. This is what would have shown the Traefik-port-9100, Flux-metrics-port and cert-manager-metrics-port CNP gaps immediately, instead of by manual debugging. Note: the drop/policy metrics carry source/destination *namespace* labels, not ports — hubble_port_distribution_total below is cluster-wide traffic by port, not joined to drops by port; ask for hubble.metrics 'labelsContext=destination_port' as a follow-up if per-port drop breakdown is needed.",
+  "tags": ["cilium", "hubble", "networkpolicy"],
+  "timezone": "utc",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "1m",
+  "time": { "from": "now-6h", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Drops in last 5m",
+      "type": "stat",
+      "datasource": "Mimir",
+      "gridPos": { "h": 4, "w": 8, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "sum(increase(hubble_drop_total[5m])) or vector(0)",
+          "legendFormat": "drops"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 1 },
+              { "color": "red", "value": 50 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 2,
+      "title": "Distinct (source, destination) pairs dropping right now",
+      "type": "stat",
+      "datasource": "Mimir",
+      "gridPos": { "h": 4, "w": 8, "x": 8, "y": 0 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "count(sum by (source, destination) (increase(hubble_drop_total[15m]) > 0)) or vector(0)",
+          "legendFormat": "pairs"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 1 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 3,
+      "title": "Policy-denied verdicts in last 5m",
+      "type": "stat",
+      "datasource": "Mimir",
+      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 0 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "sum(increase(hubble_policy_verdicts_total{action=\"dropped\"}[5m])) or vector(0)",
+          "legendFormat": "denied"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 1 },
+              { "color": "red", "value": 50 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 4,
+      "title": "Drops over time, by reason",
+      "type": "timeseries",
+      "datasource": "Mimir",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 4 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "sum by (reason) (rate(hubble_drop_total[5m]))",
+          "legendFormat": "{{reason}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "bars", "fillOpacity": 40 }
+        }
+      }
+    },
+    {
+      "id": 5,
+      "title": "Policy-denied verdicts over time, by direction",
+      "type": "timeseries",
+      "datasource": "Mimir",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 12 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "sum by (direction, source, destination) (rate(hubble_policy_verdicts_total{action=\"dropped\"}[5m]))",
+          "legendFormat": "{{direction}}: {{source}} -> {{destination}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "bars", "fillOpacity": 40 }
+        }
+      }
+    },
+    {
+      "id": 6,
+      "title": "Drops by source/destination namespace (last 15m)",
+      "type": "table",
+      "datasource": "Mimir",
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 20 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "sum by (source, destination, protocol, reason) (increase(hubble_drop_total[15m]))",
+          "format": "table",
+          "instant": true
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": { "Time": true },
+            "renameByName": { "Value": "drops (15m)" }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": { "sort": [{ "field": "drops (15m)", "desc": true }] }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "cellOptions": { "type": "color-background" } },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 1 },
+              { "color": "red", "value": 20 }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "drops (15m)" },
+            "properties": [{ "id": "custom.cellOptions", "value": { "type": "color-background" } }]
+          }
+        ]
+      }
+    },
+    {
+      "id": 7,
+      "title": "Cluster-wide traffic by destination port (top, last 15m)",
+      "description": "Not joined to drops by port — Hubble's drop/policy metrics here don't carry a port label. Cross-reference by eye against the tables above (same time window).",
+      "type": "table",
+      "datasource": "Mimir",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 30 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "topk(20, sum by (port, protocol) (increase(hubble_port_distribution_total[15m])))",
+          "format": "table",
+          "instant": true
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": { "Time": true },
+            "renameByName": { "Value": "flows (15m)" }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": { "sort": [{ "field": "flows (15m)", "desc": true }] }
+        }
+      ]
+    }
+  ]
+}

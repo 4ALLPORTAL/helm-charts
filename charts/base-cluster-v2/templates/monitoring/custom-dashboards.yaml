@@ -1,0 +1,54 @@
+{{- if and .Values.monitoring.enabled .Values.monitoring.mimir.enabled }}
+{{/*
+Hand-authored dashboards (as opposed to the gnetId community dashboards in
+grafana.yaml), picked up by the same Grafana sidecar via grafana_dashboard: "1".
+Each ConfigMap ships the raw dashboard JSON from ./dashboards/*.json unmodified.
+*/}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-node-clock-skew
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+    grafana_dashboard: "1"
+data:
+  node-clock-skew.json: |-
+{{ .Files.Get "dashboards/node-clock-skew.json" | indent 4 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-backup-job-health
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+    grafana_dashboard: "1"
+data:
+  backup-job-health.json: |-
+{{ .Files.Get "dashboards/backup-job-health.json" | indent 4 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-flux-reconcile-health
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+    grafana_dashboard: "1"
+data:
+  flux-reconcile-health.json: |-
+{{ .Files.Get "dashboards/flux-reconcile-health.json" | indent 4 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-cilium-hubble-drops
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+    grafana_dashboard: "1"
+data:
+  cilium-hubble-drops.json: |-
+{{ .Files.Get "dashboards/cilium-hubble-drops.json" | indent 4 }}
+{{- end }}
