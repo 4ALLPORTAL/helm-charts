@@ -121,7 +121,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.hpa.minReplicas | int | `2` |  |
 | fourAllPortal.image.registry | string | `"registry.4allportal.net"` |  |
 | fourAllPortal.image.repository | string | `"4allportal"` |  |
-| fourAllPortal.image.tag | string | `"3.10.62"` |  |
+| fourAllPortal.image.tag | string | `"6.3.1"` |  |
 | fourAllPortal.ingress.additionalHosts | object | `{}` |  |
 | fourAllPortal.ingress.annotations | object | `{}` |  |
 | fourAllPortal.ingress.enabled | bool | `false` |  |
