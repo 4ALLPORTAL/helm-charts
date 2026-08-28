@@ -61,6 +61,16 @@ spec:
       imagePullSecrets:
         - name: {{ . }}
     {{- end }}
+    # The chart's built-in metrics.prometheus support only sets the legacy
+    # prometheus.io/* pod annotations. Alloy's k8s-monitoring annotation
+    # autodiscovery (see CL-1056) only looks for k8s.grafana.com/*, so both
+    # sets need to coexist for the Grafana Traefik dashboard to get data.
+    podAnnotations:
+      k8s.grafana.com/scrape: "true"
+      k8s.grafana.com/job: "traefik"
+      k8s.grafana.com/metrics.portNumber: "9100"
+      k8s.grafana.com/metrics.path: /metrics
+
     providers:
       kubernetesCRD:
         enabled: true
