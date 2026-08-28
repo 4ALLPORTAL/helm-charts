@@ -51,4 +51,16 @@ metadata:
 data:
   cilium-hubble-drops.json: |-
 {{ .Files.Get "dashboards/cilium-hubble-drops.json" | indent 4 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-mysql-innodb-cluster-health
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+    grafana_dashboard: "1"
+data:
+  mysql-innodb-cluster-health.json: |-
+{{ .Files.Get "dashboards/mysql-innodb-cluster-health.json" | indent 4 }}
 {{- end }}

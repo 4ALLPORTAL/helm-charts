@@ -1,0 +1,205 @@
+{
+  "id": null,
+  "uid": "mysql-innodb-cluster-health",
+  "title": "MySQL InnoDB Cluster Health",
+  "description": "Per-member Group Replication state plus standard mysqld_exporter metrics. The mysql-operator (kopf-based) exposes no Prometheus metrics of its own and can silently stop reconciling without any of this going red (see the 2026-08-28 incident: operator alive/Ready but not processing pod events for ~15h) — kube_pod_container_status_ready is the closest available proxy, since the operator sets the mysql.oracle.com/ready readiness gate. A container stuck NotReady for a long time despite the pod itself running is the signal to go check the operator, not just the pod.",
+  "tags": ["mysql", "innodb-cluster", "mysql-operator"],
+  "timezone": "utc",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "1m",
+  "time": { "from": "now-6h", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Members not Ready (mysql.oracle.com/ready gate)",
+      "type": "stat",
+      "datasource": "Mimir",
+      "gridPos": { "h": 4, "w": 8, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "count(kube_pod_container_status_ready{namespace=~\"innodb.*|mysql.*\", container=\"mysql\"} == 0) or vector(0)",
+          "legendFormat": "not ready"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 1 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 2,
+      "title": "Group Replication members ONLINE",
+      "description": "No fixed 'healthy' count — some clusters here run single-instance (no GR peers), others run 3-member GR. Read this per-cluster in the table below, not as one cluster-wide number.",
+      "type": "stat",
+      "datasource": "Mimir",
+      "gridPos": { "h": 4, "w": 8, "x": 8, "y": 0 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "count(mysql_perf_schema_replication_group_member_info{member_state=\"ONLINE\"}) or vector(0)",
+          "legendFormat": "online"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "green", "value": 1 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 3,
+      "title": "Container restarts (last 6h)",
+      "type": "stat",
+      "datasource": "Mimir",
+      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 0 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "sum(increase(kube_pod_container_status_restarts_total{namespace=~\"innodb.*|mysql.*\"}[6h])) or vector(0)",
+          "legendFormat": "restarts"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 1 },
+              { "color": "red", "value": 5 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 4,
+      "title": "Pod readiness per member, over time",
+      "description": "0 = NotReady. A member stuck at 0 for minutes, not seconds, while its pod is otherwise Running is the mysql-operator-not-reconciling pattern from the 2026-08-28 incident.",
+      "type": "timeseries",
+      "datasource": "Mimir",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 4 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "kube_pod_container_status_ready{namespace=~\"innodb.*|mysql.*\", container=\"mysql\"}",
+          "legendFormat": "{{namespace}}/{{pod}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 1,
+          "custom": { "drawStyle": "line", "fillOpacity": 0, "stepMode": "after" }
+        }
+      }
+    },
+    {
+      "id": 5,
+      "title": "Group Replication member state, by member",
+      "type": "table",
+      "datasource": "Mimir",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 12 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "max by (member_host, member_role, member_state) (mysql_perf_schema_replication_group_member_info)",
+          "format": "table",
+          "instant": true
+        }
+      ],
+      "transformations": [
+        { "id": "organize", "options": { "excludeByName": { "Time": true, "Value": true } } }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Threads connected",
+      "type": "timeseries",
+      "datasource": "Mimir",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 20 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "mysql_global_status_threads_connected",
+          "legendFormat": "{{namespace}}/{{pod}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 5 } }
+      }
+    },
+    {
+      "id": 7,
+      "title": "Queries/sec",
+      "type": "timeseries",
+      "datasource": "Mimir",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 20 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "rate(mysql_global_status_queries[5m])",
+          "legendFormat": "{{namespace}}/{{pod}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 5 } }
+      }
+    },
+    {
+      "id": 8,
+      "title": "InnoDB buffer pool utilization",
+      "type": "timeseries",
+      "datasource": "Mimir",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 28 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "mysql_global_status_innodb_buffer_pool_bytes_data / mysql_global_variables_innodb_buffer_pool_size",
+          "legendFormat": "{{namespace}}/{{pod}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "custom": { "drawStyle": "line", "fillOpacity": 5 }
+        }
+      }
+    },
+    {
+      "id": 9,
+      "title": "Uptime",
+      "type": "timeseries",
+      "datasource": "Mimir",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 28 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "mysql_global_status_uptime",
+          "legendFormat": "{{namespace}}/{{pod}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "custom": { "drawStyle": "line", "fillOpacity": 5 }
+        }
+      }
+    }
+  ]
+}
