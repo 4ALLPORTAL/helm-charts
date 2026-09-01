@@ -73,18 +73,32 @@ spec:
     rbac:
       enabled: true
 
+    {{- /*
+    The Traefik chart takes Service addressing from `service.spec` only -- it has
+    no top-level `loadBalancerIP` key and drops one without error. Both the
+    shorthand `traefik.service.loadBalancerIP` and the `traefik.service.spec`
+    passthrough are folded into a single spec map here, passthrough last so a
+    cluster can override any default, `externalTrafficPolicy` included.
+    */}}
+    {{- $spec := dict }}
+    {{- if ne .Values.traefik.service.type "ClusterIP" }}
+    {{- $spec = dict "externalTrafficPolicy" "Local" }}
+    {{- end }}
+    {{- with .Values.traefik.service.loadBalancerIP }}
+    {{- $spec = merge (dict "loadBalancerIP" .) $spec }}
+    {{- end }}
+    {{- with .Values.traefik.service.spec }}
+    {{- $spec = merge (deepCopy .) $spec }}
+    {{- end }}
+
     service:
       enabled: true
       type: {{ .Values.traefik.service.type | quote }}
-      {{- with .Values.traefik.service.loadBalancerIP }}
-      loadBalancerIP: {{ . | quote }}
-      {{- end }}
       {{- with .Values.traefik.service.externalIPs }}
       externalIPs: {{- . | toYaml | nindent 8 }}
       {{- end }}
-      {{- if ne .Values.traefik.service.type "ClusterIP" }}
-      spec:
-        externalTrafficPolicy: Local
+      {{- with $spec }}
+      spec: {{- toYaml . | nindent 8 }}
       {{- end }}
 
     logs:
