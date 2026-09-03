@@ -6,7 +6,7 @@ description: |
   full LGTM observability stack (Grafana, Loki, Mimir, Tempo, and Alloy-based
   metrics/log/trace collection). Successor to the base-cluster chart.
 type: application
-version: 2.0.9
+version: 2.0.6
 appVersion: "1.36.4"
 home: https://4allportal.com
 maintainers:
