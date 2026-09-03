@@ -9,6 +9,22 @@
   "version": 1,
   "refresh": "1m",
   "time": { "from": "now-6h", "to": "now" },
+  "templating": {
+    "list": [
+      {
+        "name": "namespace",
+        "label": "Cluster",
+        "type": "query",
+        "datasource": "Mimir",
+        "query": "label_values(kube_pod_container_status_ready{namespace=~\"innodb.*|mysql.*\", container=\"mysql\"}, namespace)",
+        "refresh": 2,
+        "multi": true,
+        "includeAll": true,
+        "current": { "text": "All", "value": "$__all" },
+        "sort": 1
+      }
+    ]
+  },
   "panels": [
     {
       "id": 1,
@@ -19,7 +35,7 @@
       "targets": [
         {
           "datasource": "Mimir",
-          "expr": "count(kube_pod_container_status_ready{namespace=~\"innodb.*|mysql.*\", container=\"mysql\"} == 0) or vector(0)",
+          "expr": "count(kube_pod_container_status_ready{namespace=~\"$namespace\", container=\"mysql\"} == 0) or vector(0)",
           "legendFormat": "not ready"
         }
       ],
@@ -38,14 +54,14 @@
     {
       "id": 2,
       "title": "Group Replication members ONLINE",
-      "description": "No fixed 'healthy' count — some clusters here run single-instance (no GR peers), others run 3-member GR. Read this per-cluster in the table below, not as one cluster-wide number.",
+      "description": "No fixed 'healthy' count — some clusters here run single-instance (no GR peers), others run 3-member GR. Use the Cluster dropdown to pick one namespace, or read the table below when 'All' is selected.",
       "type": "stat",
       "datasource": "Mimir",
       "gridPos": { "h": 4, "w": 8, "x": 8, "y": 0 },
       "targets": [
         {
           "datasource": "Mimir",
-          "expr": "count(mysql_perf_schema_replication_group_member_info{member_state=\"ONLINE\"}) or vector(0)",
+          "expr": "count(mysql_perf_schema_replication_group_member_info{namespace=~\"$namespace\", member_state=\"ONLINE\"}) or vector(0)",
           "legendFormat": "online"
         }
       ],
@@ -70,7 +86,7 @@
       "targets": [
         {
           "datasource": "Mimir",
-          "expr": "sum(increase(kube_pod_container_status_restarts_total{namespace=~\"innodb.*|mysql.*\"}[6h])) or vector(0)",
+          "expr": "sum(increase(kube_pod_container_status_restarts_total{namespace=~\"$namespace\"}[6h])) or vector(0)",
           "legendFormat": "restarts"
         }
       ],
@@ -97,7 +113,7 @@
       "targets": [
         {
           "datasource": "Mimir",
-          "expr": "kube_pod_container_status_ready{namespace=~\"innodb.*|mysql.*\", container=\"mysql\"}",
+          "expr": "kube_pod_container_status_ready{namespace=~\"$namespace\", container=\"mysql\"}",
           "legendFormat": "{{namespace}}/{{pod}}"
         }
       ],
@@ -118,7 +134,7 @@
       "targets": [
         {
           "datasource": "Mimir",
-          "expr": "max by (member_host, member_role, member_state) (mysql_perf_schema_replication_group_member_info)",
+          "expr": "max by (namespace, member_host, member_role, member_state) (mysql_perf_schema_replication_group_member_info{namespace=~\"$namespace\"})",
           "format": "table",
           "instant": true
         }
@@ -136,7 +152,7 @@
       "targets": [
         {
           "datasource": "Mimir",
-          "expr": "mysql_global_status_threads_connected",
+          "expr": "mysql_global_status_threads_connected{namespace=~\"$namespace\"}",
           "legendFormat": "{{namespace}}/{{pod}}"
         }
       ],
@@ -153,7 +169,7 @@
       "targets": [
         {
           "datasource": "Mimir",
-          "expr": "rate(mysql_global_status_queries[5m])",
+          "expr": "rate(mysql_global_status_queries{namespace=~\"$namespace\"}[5m])",
           "legendFormat": "{{namespace}}/{{pod}}"
         }
       ],
@@ -170,7 +186,7 @@
       "targets": [
         {
           "datasource": "Mimir",
-          "expr": "mysql_global_status_innodb_buffer_pool_bytes_data / mysql_global_variables_innodb_buffer_pool_size",
+          "expr": "mysql_global_status_innodb_buffer_pool_bytes_data{namespace=~\"$namespace\"} / mysql_global_variables_innodb_buffer_pool_size{namespace=~\"$namespace\"}",
           "legendFormat": "{{namespace}}/{{pod}}"
         }
       ],
@@ -190,7 +206,7 @@
       "targets": [
         {
           "datasource": "Mimir",
-          "expr": "mysql_global_status_uptime",
+          "expr": "mysql_global_status_uptime{namespace=~\"$namespace\"}",
           "legendFormat": "{{namespace}}/{{pod}}"
         }
       ],
