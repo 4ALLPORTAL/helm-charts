@@ -1,0 +1,126 @@
+{
+  "id": null,
+  "uid": "flux-reconcile-health",
+  "title": "Flux Reconcile Health",
+  "description": "Reconcile activity and staleness per Flux object (GitRepository/HelmRepository/HelmChart/HelmRelease/Kustomization), from the controllers' own gotk_reconcile_duration_seconds histogram. Note: Flux no longer exposes a per-object Ready/Not-Ready gauge, so this dashboard can only show that an object has STOPPED reconciling (staleness), not that it is reconciling-but-failing. For true Ready=False visibility, kube-state-metrics would need a custom-resource-state config for the Flux CRDs — not set up yet.",
+  "tags": ["flux", "fluxcd", "gitops"],
+  "timezone": "utc",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "1m",
+  "time": { "from": "now-6h", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Objects with no reconcile sample in > 15m",
+      "description": "A Flux object whose reconcile loop has stopped advancing entirely (crash, deadlock, watch failure) — not the same as a Ready=False object that is still actively reconciling and failing.",
+      "type": "stat",
+      "datasource": "Mimir",
+      "gridPos": { "h": 4, "w": 8, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "count(max by (kind, exported_namespace, name) (time() - timestamp(gotk_reconcile_duration_seconds_count)) > 900) or vector(0)",
+          "legendFormat": "stale"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 1 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 2,
+      "title": "Reconcile rate by kind",
+      "type": "timeseries",
+      "datasource": "Mimir",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 4 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "sum by (kind) (rate(gotk_reconcile_duration_seconds_count[10m]))",
+          "legendFormat": "{{kind}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "line", "fillOpacity": 5 }
+        }
+      }
+    },
+    {
+      "id": 3,
+      "title": "Reconcile duration p95 by kind",
+      "type": "timeseries",
+      "datasource": "Mimir",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 12 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "histogram_quantile(0.95, sum by (le, kind) (rate(gotk_reconcile_duration_seconds_bucket[10m])))",
+          "legendFormat": "{{kind}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "custom": { "drawStyle": "line", "fillOpacity": 5 }
+        }
+      }
+    },
+    {
+      "id": 4,
+      "title": "Time since last reconcile sample, per object",
+      "type": "table",
+      "datasource": "Mimir",
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 20 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "max by (kind, exported_namespace, name) (time() - timestamp(gotk_reconcile_duration_seconds_count))",
+          "format": "table",
+          "instant": true
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": { "Time": true },
+            "renameByName": {
+              "exported_namespace": "namespace",
+              "Value": "seconds since last reconcile"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "sort": [{ "field": "seconds since last reconcile", "desc": true }]
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "custom": { "cellOptions": { "type": "color-background" } },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 900 },
+              { "color": "red", "value": 3600 }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
