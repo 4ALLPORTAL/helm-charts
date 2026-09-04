@@ -412,6 +412,37 @@ monitoring:
       limits:
         cpu: "2"
         memory: 4Gi
+    ## Extra ruler rule groups, as filename -> rule group YAML. There is no
+    ## PrometheusRule CRD on a base-cluster install: the ruler runs with
+    ## `ruler_storage.backend: local` and reads one file per group out of
+    ## /etc/mimir/rules/anonymous, so each key here becomes another file in the
+    ## same ConfigMap as the Watchdog rule. This is the only way to add an
+    ## alert rule to a cluster running this chart.
+    ##   extraRuleGroups:
+    ##     backup.yaml: |
+    ##       groups:
+    ##         - name: backup
+    ##           rules:
+    ##             - alert: BackupStale
+    ##               expr: ...
+    extraRuleGroups: {}
+    ## Name of an existing Secret holding the Alertmanager fallback config under
+    ## the key `alertmanager_fallback_config.yaml`. Use it when that config
+    ## carries a credential — an SMTP password, say. Mimir rejects every `*_file`
+    ## field in an Alertmanager config (grafana/mimir#5359), so a secret has to
+    ## appear literally in the config, which means the config itself has to be
+    ## the secret; there is no way to keep it in values and out of git.
+    ## When empty the chart renders its own ConfigMap, which routes the Watchdog
+    ## alert to the UptimeRobot heartbeat and delivers nothing else anywhere.
+    alertmanagerConfigSecret: ""
+    ## Extra hosts the Mimir pods may reach, for Alertmanager receivers. The
+    ## storage CiliumNetworkPolicy otherwise permits only the UptimeRobot
+    ## heartbeat, so on a default-deny cluster a receiver pointing anywhere else
+    ## is silently dropped — the alert fires and no notification is ever sent.
+    ##   alertmanagerEgressFQDNs:
+    ##     - name: mail.example.com
+    ##       port: "587"
+    alertmanagerEgressFQDNs: []
 
   ## Loki — SingleBinary deployment, filesystem chunk store on PVC.
   loki:
