@@ -1,8 +1,8 @@
 {{- if eq (include "base-cluster.networkPolicy.type" .) "cilium" }}
 {{/*
 Minimal CiliumNetworkPolicies for cert-manager. Egress to the kube-apiserver
-and DNS is allowed; ingress is locked down except for Prometheus scraping the
-metrics port and the apiserver/host reaching the webhook.
+and DNS is allowed; ingress is locked down except for the metrics port
+(scraped by Alloy) and the apiserver/host reaching the webhook.
 */}}
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
@@ -16,6 +16,12 @@ spec:
     matchLabels:
       app.kubernetes.io/name: cert-manager-chart
       app.kubernetes.io/instance: cert-manager
+  ingress:
+    - fromEntities: [cluster]
+      toPorts:
+        - ports:
+            - port: "9402"
+              protocol: TCP
   egress:
     - toEntities: [kube-apiserver, world]
     - toPorts:

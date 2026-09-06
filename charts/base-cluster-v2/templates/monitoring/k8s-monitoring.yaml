@@ -91,6 +91,16 @@ spec:
       kube-state-metrics:
         enabled: {{ .Values.monitoring.kubeStateMetrics.enabled }}
         jobLabel: kube-state-metrics
+        ## The integration allow-list drops kube_pod_container_status_ready
+        ## (and the pod-level equivalent) — needed to tell "pod stuck
+        ## NotReady" apart from "container crashlooping" for workloads like
+        ## the mysql-operator's InnoDBCluster pods, whose readiness gate is
+        ## set by an external controller rather than a liveness/readiness
+        ## probe.
+        metricsTuning:
+          includeMetrics:
+            - kube_pod_container_status_ready
+            - kube_pod_status_ready
       cadvisor:
         jobLabel: cadvisor
       kubelet:
