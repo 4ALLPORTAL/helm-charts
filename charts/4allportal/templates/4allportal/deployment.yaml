@@ -247,8 +247,8 @@ spec:
             - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
               value: {{ $bootstrap | quote }}
             {{- end }}
-            {{- if and $bootstrap (not (hasKey $env "SPRING_KAFKA_PROPERTIES_GROUP_ID")) }}
-            - name: SPRING_KAFKA_PROPERTIES_GROUP_ID
+            {{- if and $bootstrap (not (hasKey $env "SPRING_KAFKA_CONSUMER_GROUP_ID")) }}
+            - name: SPRING_KAFKA_CONSUMER_GROUP_ID
               value: {{ include "4allportal.kafka.groupId" . | quote }}
             {{- end }}
 
