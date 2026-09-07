@@ -163,6 +163,13 @@ fourAllPortal:
     acquireIncrement: 5
     existing: {}
 
+  kafka:
+    brokers: []
+    consumer:
+      groupId: ""
+    networkPolicy:
+      matchLabels: {}
+
   env: {}
 
   ingress:

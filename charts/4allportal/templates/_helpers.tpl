@@ -242,3 +242,35 @@ none
 {{- end -}}
 {{ $out | toYaml }}
 {{- end -}}
+
+{{/*
+Comma separated bootstrap server list, assembled from fourAllPortal.kafka.brokers.
+Empty when no broker is configured, which is what leaves Kafka switched off.
+*/}}
+{{- define "4allportal.kafka.bootstrapServers" -}}
+{{- $servers := list -}}
+{{- range (((.Values.fourAllPortal).kafka).brokers | default list) -}}
+{{- $servers = append $servers (printf "%s:%v" .address (.port | default 9092)) -}}
+{{- end -}}
+{{- join "," $servers -}}
+{{- end -}}
+
+{{/*
+Consumer group id. Defaults to <namespace>.<deployment> so that instances sharing a
+broker do not share a group. Changing it later starts a new group.
+*/}}
+{{- define "4allportal.kafka.groupId" -}}
+{{- $consumer := ((.Values.fourAllPortal).kafka).consumer | default dict -}}
+{{- $consumer.groupId | default (printf "%s.%s-backend" .Release.Namespace (include "common.names.fullname" .)) -}}
+{{- end -}}
+
+{{/*
+Distinct broker ports, used by the network policy.
+*/}}
+{{- define "4allportal.kafka.ports" -}}
+{{- $ports := list -}}
+{{- range (((.Values.fourAllPortal).kafka).brokers | default list) -}}
+{{- $ports = append $ports (printf "%v" (.port | default 9092)) -}}
+{{- end -}}
+{{- $ports | uniq | toYaml -}}
+{{- end -}}
