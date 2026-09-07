@@ -304,7 +304,10 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.loki.resources.requests.memory | string | `"512Mi"` |  |
 | monitoring.loki.retention | string | `"336h"` |  |
 | monitoring.loki.size | string | `"50Gi"` |  |
+| monitoring.mimir.alertmanagerConfigSecret | string | `""` |  |
+| monitoring.mimir.alertmanagerEgressFQDNs | list | `[]` |  |
 | monitoring.mimir.enabled | bool | `true` |  |
+| monitoring.mimir.extraRuleGroups | object | `{}` |  |
 | monitoring.mimir.kafkaSize | string | `"20Gi"` |  |
 | monitoring.mimir.resources.limits.cpu | string | `"2"` |  |
 | monitoring.mimir.resources.limits.memory | string | `"4Gi"` |  |
