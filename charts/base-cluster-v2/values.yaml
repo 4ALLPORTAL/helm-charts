@@ -97,6 +97,19 @@ traefik:
     ## at the node/HA-VIP. With MetalLB or Cilium L2Announcements, leave as
     ## LoadBalancer.
     type: LoadBalancer
+    ## Annotations stamped onto the Service. With MetalLB, prefer pinning the VIP
+    ## here over `spec.loadBalancerIP` (deprecated, single-valued) -- the
+    ## annotation is the only way to pin a dual-stack v4,v6 pair. e.g.:
+    ##   metallb.io/loadBalancerIPs: "1.2.3.4"           # single IP
+    ##   metallb.io/loadBalancerIPs: "1.2.3.4,2000::1"   # dual-stack v4,v6
+    annotations: {}
+    ## Merged into the Service's `spec` -- the only place the Traefik chart reads
+    ## addressing from. `externalTrafficPolicy: Local` is the chart's default and
+    ## anything set here wins over it. Cannot carry `type`, `selector` or `ports`.
+    ##   spec:
+    ##     loadBalancerIP: 203.0.113.1
+    spec: {}
+    ## Shorthand for `service.spec.loadBalancerIP`; `spec` wins if both are set.
     loadBalancerIP: ""
     externalIPs: []
   ## When set, --providers.kubernetesIngress.ingressEndpoint.ip is forced to
