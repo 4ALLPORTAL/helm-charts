@@ -11,10 +11,10 @@ annotation on the line directly above its define. DHI (dhi.io) is a private
 OCI registry — Renovate needs hostRules credentials for dhi.io to resolve
 those tags.
 
-All charts are sourced from DHI (dhi.io) except flux2 (fluxcd-community),
-reflector (emberstack repo), mimir and k8sMonitoring (grafana repo),
-ingressMonitor (stakater repo), janitor (ghcr.io OCI), descheduler
-(kubernetes-sigs repo) and stash (appscode repo).
+All charts are sourced from DHI (dhi.io) except cilium (helm.cilium.io),
+flux2 (fluxcd-community), reflector (emberstack repo), mimir and k8sMonitoring
+(grafana repo), ingressMonitor (stakater repo), janitor (ghcr.io OCI),
+descheduler (kubernetes-sigs repo) and stash (appscode repo).
 */}}
 
 {{- /* renovate: datasource=helm depName=cilium registryUrl=https://helm.cilium.io/ */ -}}
