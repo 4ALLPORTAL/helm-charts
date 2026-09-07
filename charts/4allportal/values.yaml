@@ -165,6 +165,8 @@ fourAllPortal:
 
   kafka:
     bootstrapServers: ""
+    networkPolicy:
+      port: 9092
 
   env: {}
 

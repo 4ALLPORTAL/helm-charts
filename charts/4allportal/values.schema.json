@@ -410,6 +410,15 @@
                     "bootstrapServers": {
                       "description": "Address of the Kafka bootstrap service, empty disables Kafka",
                       "type": "string"
+                    },
+                    "networkPolicy": {
+                      "type": "object",
+                      "properties": {
+                        "port": {
+                          "description": "Broker port opened by the egress rule",
+                          "type": "integer"
+                        }
+                      }
                     }
                   }
                 }

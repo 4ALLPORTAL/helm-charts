@@ -131,6 +131,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.ingress.ingressClassName | string | `""` |  |
 | fourAllPortal.initContainers | list | `[]` |  |
 | fourAllPortal.kafka.bootstrapServers | string | `""` |  |
+| fourAllPortal.kafka.networkPolicy.port | int | `9092` |  |
 | fourAllPortal.livenessProbe.enabled | bool | `true` |  |
 | fourAllPortal.livenessProbe.failureThreshold | int | `3` |  |
 | fourAllPortal.livenessProbe.initialDelaySeconds | int | `30` |  |
@@ -490,7 +491,8 @@ behaviour.
 An entry in `.Values.fourAllPortal.env` still wins over the generated variable, so instances that
 already set `SPRING_KAFKA_BOOTSTRAP_SERVERS` there keep working unchanged.
 
-The egress rule covers a broker running inside the cluster on the standard port. A broker outside
-the cluster, or one on a different port, needs to be allowed at cluster level.
+The egress rule covers a broker running inside the cluster. Its port defaults to 9092 and can be
+changed with `.Values.fourAllPortal.kafka.networkPolicy.port`. A broker outside the cluster needs to
+be allowed at cluster level.
 
 No action required.

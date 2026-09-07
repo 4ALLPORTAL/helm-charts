@@ -56,7 +56,7 @@ spec:
         - cluster
       toPorts:
         - ports:
-            - port: "9092"
+            - port: {{ .Values.fourAllPortal.kafka.networkPolicy.port | quote }}
               protocol: TCP
     {{- end }}
     - toFQDNs:
