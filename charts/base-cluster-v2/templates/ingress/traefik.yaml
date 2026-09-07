@@ -94,6 +94,9 @@ spec:
     service:
       enabled: true
       type: {{ .Values.traefik.service.type | quote }}
+      {{- with .Values.traefik.service.annotations }}
+      annotations: {{- . | toYaml | nindent 8 }}
+      {{- end }}
       {{- with .Values.traefik.service.externalIPs }}
       externalIPs: {{- . | toYaml | nindent 8 }}
       {{- end }}
