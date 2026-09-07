@@ -424,7 +424,9 @@
                           "port": {
                             "type": "integer",
                             "description": "Broker port, also used by the egress rule",
-                            "default": 9092
+                            "default": 9092,
+                            "minimum": 1,
+                            "maximum": 65535
                           }
                         }
                       }
