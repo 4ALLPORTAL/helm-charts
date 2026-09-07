@@ -1,6 +1,6 @@
 # base-cluster-v2
 
-![Version: 2.0.6](https://img.shields.io/badge/Version-2.0.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
+![Version: 2.1.0](https://img.shields.io/badge/Version-2.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
 
 Foundational base cluster setup — FluxCD, Traefik ingress,
 cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
@@ -372,6 +372,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | traefik.resources.limits.memory | string | `"500Mi"` |  |
 | traefik.resources.requests.cpu | string | `"1"` |  |
 | traefik.resources.requests.memory | string | `"250Mi"` |  |
+| traefik.service.annotations | object | `{}` |  |
 | traefik.service.externalIPs | list | `[]` |  |
 | traefik.service.loadBalancerIP | string | `""` |  |
 | traefik.service.spec | object | `{}` |  |
