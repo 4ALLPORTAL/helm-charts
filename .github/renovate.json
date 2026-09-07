@@ -22,10 +22,11 @@
       "platformAutomerge": true
     },
     {
-      "description": "Bump the touched chart's own Chart.yaml by one patch whenever Renovate updates any dependency inside that chart's folder (covers Chart.yaml deps and base-cluster-v2's subchart versions in templates/_versions.tpl alike)",
+      "description": "Bump the touched chart's own Chart.yaml by one patch whenever Renovate updates any dependency inside that chart's folder (covers Chart.yaml deps and base-cluster-v2's subchart versions in templates/_versions.tpl alike). additionalBranchPrefix keeps each chart dir on its own branch so a shared dep never bumps only one of several Chart.yamls.",
       "matchFileNames": [
         "charts/**"
       ],
+      "additionalBranchPrefix": "{{packageFileDir}}",
       "bumpVersions": [
         {
           "name": "chart version",
