@@ -486,12 +486,18 @@ telemetry to Kafka, which so far had to be wired up through `.Values.fourAllPort
 List your bootstrap endpoints under `.Values.fourAllPortal.kafka.brokers`, each an address with an
 optional port that defaults to 9092. The chart joins them into `SPRING_KAFKA_BOOTSTRAP_SERVERS`
 and, where network policies apply, opens egress to the broker pods selected by
-`.Values.fourAllPortal.kafka.networkPolicy.matchLabels` on the ports from that same list. For a
-Strimzi cluster those are the labels of the bootstrap Service's own selector.
+`.Values.fourAllPortal.kafka.networkPolicy.matchLabels` on the ports from that same list.
+
+On a cluster with Cilium policies the labels are required alongside the brokers and the chart
+refuses to render without them, rather than rendering every other egress rule and dropping Kafka.
+For a Strimzi cluster use the bootstrap Service's own selector, and include
+`io.kubernetes.pod.namespace`: Cilium defaults `toEndpoints` to the policy's own namespace, and the
+broker usually lives in another one.
 
 It also sets a consumer group id, defaulting to `<namespace>.<deployment>`, so that instances
 sharing a broker do not end up in one group. Override it with
 `.Values.fourAllPortal.kafka.consumer.groupId`.
 
 No action required. An empty broker list leaves Kafka switched off, which is the previous
-behaviour, and an entry in `.Values.fourAllPortal.env` still wins over the generated variables.
+behaviour, and `.Values.fourAllPortal.env` still works as an escape hatch. Configuring the same
+thing in both places is rejected at render time rather than silently resolved.

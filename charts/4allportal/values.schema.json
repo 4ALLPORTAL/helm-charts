@@ -419,7 +419,8 @@
                         ],
                         "properties": {
                           "address": {
-                            "type": "string"
+                            "type": "string",
+                            "minLength": 1
                           },
                           "port": {
                             "type": "integer",
@@ -436,7 +437,7 @@
                       "additionalProperties": false,
                       "properties": {
                         "groupId": {
-                          "description": "Consumer group id, defaults to <namespace>.<deployment>",
+                          "description": "Consumer group id, defaults to <namespace>.<deployment>. It doubles as the offset commit key, so keep it stable: a value carrying a chart version or image tag resets the position on every upgrade.",
                           "type": "string"
                         }
                       }
@@ -447,7 +448,10 @@
                       "properties": {
                         "matchLabels": {
                           "description": "Labels selecting the Kafka broker pods for the egress rule",
-                          "type": "object"
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string"
+                          }
                         }
                       }
                     }
