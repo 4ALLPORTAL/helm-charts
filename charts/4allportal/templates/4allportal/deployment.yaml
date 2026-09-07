@@ -241,6 +241,11 @@ spec:
             - name: DERIVATESERVICE_PORT
               value: "8181"
 
+            {{- if .Values.fourAllPortal.kafka.bootstrapServers }}
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: {{ .Values.fourAllPortal.kafka.bootstrapServers | quote }}
+            {{- end }}
+
             {{- range $name, $value := .Values.fourAllPortal.env }}
             {{- if not (regexMatch "(DERIVATESERVICE(_PORT|(_DEBUG)?_JAVA_OPTIONS)|JAVA_OPTS)" $name) }}
             - name: {{ $name }}

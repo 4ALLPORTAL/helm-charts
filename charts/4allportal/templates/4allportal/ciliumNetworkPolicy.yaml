@@ -51,6 +51,14 @@ spec:
         - matchName: {{ .Values.fourAllPortal.tracing.jaeger.agent.host | default .Values.global.tracing.jaeger.agent.host }}
     {{- end }}
     {{- end }}
+    {{- if .Values.fourAllPortal.kafka.bootstrapServers }}
+    - toEntities:
+        - cluster
+      toPorts:
+        - ports:
+            - port: "9092"
+              protocol: TCP
+    {{- end }}
     - toFQDNs:
         - matchName: "repository.4allportal.net"
         - matchName: "api.4allportal.cloud"

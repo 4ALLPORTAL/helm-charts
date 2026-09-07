@@ -402,6 +402,16 @@
                     }
                   },
                   "additionalProperties": false
+                },
+                "kafka": {
+                  "type": "object",
+                  "description": "Kafka connection used for change events and UX telemetry",
+                  "properties": {
+                    "bootstrapServers": {
+                      "description": "Address of the Kafka bootstrap service, empty disables Kafka",
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }

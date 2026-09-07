@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 22.0.10](https://img.shields.io/badge/Version-22.0.10-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
+![Version: 22.1.0](https://img.shields.io/badge/Version-22.1.0-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -130,6 +130,7 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.ingress.host | string | `""` |  |
 | fourAllPortal.ingress.ingressClassName | string | `""` |  |
 | fourAllPortal.initContainers | list | `[]` |  |
+| fourAllPortal.kafka.bootstrapServers | string | `""` |  |
 | fourAllPortal.livenessProbe.enabled | bool | `true` |  |
 | fourAllPortal.livenessProbe.failureThreshold | int | `3` |  |
 | fourAllPortal.livenessProbe.initialDelaySeconds | int | `30` |  |
@@ -440,3 +441,56 @@ This release gives the 3D renderer and webdav pods the image pull secrets from `
 It went unnoticed for as long as those images came from a registry that serves reads anonymously. On a registry that requires authentication both pods sit in `ImagePullBackOff` and the release never becomes ready — while the backend, which does have the secret, comes up fine.
 
 No action required. If you were working around this by attaching the secret to the namespace's `default` ServiceAccount, that is no longer needed.
+
+## To 22.0.8
+
+This release updates the samba image from `v0.6` to `v0.9`.
+
+No action required.
+
+## To 22.0.9
+
+This release adds a CiliumNetworkPolicy for the stash backup pods. They had none, so on a Cilium
+cluster every backup run was blocked at the network level while the rest of the release came up
+fine.
+
+The policy allows the backup pod to reach the kube-apiserver, DNS, the stash operator in the
+`stash` namespace on port 56789, and the S3 backup target. The target is derived from
+`.Values.backups.target.s3.endpoint`: a bare IP becomes a `toCIDR` rule, a hostname becomes a
+`toFQDNs` rule covering the host and its subdomains, and the port is taken from the endpoint or
+defaults to 443 for `https://` and 80 for `http://`.
+
+The policy is only rendered when volume backups are enabled and the cluster uses Cilium.
+
+No action required.
+
+## To 22.0.10
+
+This release makes SMB shares usable from macOS. The generated samba configuration now loads the
+`fruit` and `streams_xattr` VFS modules next to `fileid` and configures them for macOS clients:
+resource forks and Finder metadata are stored in xattr streams, AppleDouble sidecar files are no
+longer vetoed away, and empty ones are cleaned up.
+
+Without this, macOS clients lost Finder metadata and littered shares with `._` files.
+
+No action required. The change only affects newly written metadata; existing sidecar files stay as
+they are.
+
+## To 22.1.0
+
+This release adds a first-class Kafka connection. The 4ALLPORTAL emits change events and UX
+telemetry to Kafka, which previously had to be wired up through `.Values.fourAllPortal.env`.
+
+Set `.Values.fourAllPortal.kafka.bootstrapServers` to the address of your Kafka bootstrap service,
+for example `my-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092`. The chart then sets
+`SPRING_KAFKA_BOOTSTRAP_SERVERS` on the backend and, on a Cilium cluster, opens egress to the
+cluster on port 9092. Leaving the value empty keeps Kafka disabled, which is the previous
+behaviour.
+
+An entry in `.Values.fourAllPortal.env` still wins over the generated variable, so instances that
+already set `SPRING_KAFKA_BOOTSTRAP_SERVERS` there keep working unchanged.
+
+The egress rule covers a broker running inside the cluster on the standard port. A broker outside
+the cluster, or one on a different port, needs to be allowed at cluster level.
+
+No action required.

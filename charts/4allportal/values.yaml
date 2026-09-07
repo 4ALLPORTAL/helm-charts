@@ -163,6 +163,9 @@ fourAllPortal:
     acquireIncrement: 5
     existing: {}
 
+  kafka:
+    bootstrapServers: ""
+
   env: {}
 
   ingress:
