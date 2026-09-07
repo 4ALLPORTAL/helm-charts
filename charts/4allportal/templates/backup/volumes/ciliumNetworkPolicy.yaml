@@ -1,0 +1,81 @@
+{{- define "fourallportal.backup.volumeEgress" -}}
+{{- $ctx := .ctx -}}
+- toEntities:
+    - kube-apiserver
+- toEndpoints:
+    - matchLabels: {{- include "common.tplvalues.render" (dict "value" (include "common.dict.filterEmptyValues" $ctx.Values.global.networkPolicy.dnsLabels) "context" $ctx) | nindent 8 }}
+  toPorts:
+    - ports:
+        - port: "53"
+          protocol: UDP
+        - port: "53"
+          protocol: TCP
+      rules:
+        dns:
+          - matchPattern: "*"
+- toEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: stash
+  toPorts:
+    - ports:
+        - port: "56789"
+          protocol: TCP
+{{- if .host }}
+- {{ if .isIP }}toCIDR:
+    - {{ printf "%s/32" .host }}
+  {{ else }}toFQDNs:
+    - matchName: {{ .host | quote }}
+    - matchPattern: {{ printf "*.%s" .host | quote }}
+  {{ end }}toPorts:
+    - ports:
+        - port: {{ .port | quote }}
+          protocol: TCP
+{{- end }}
+{{- end -}}
+{{- if and (or $.Values.global.persistence.enabled $.Values.fourAllPortal.persistence.assets.enabled $.Values.fourAllPortal.persistence.storage.enabled) .Values.backups.volumes.enabled (eq (include "common.networkPolicy.type" .) "cilium") }}
+{{- $endpoint := $.Values.backups.target.s3.endpoint | default "" -}}
+{{- $scheme := regexFind "^https?://" $endpoint -}}
+{{- $hostport := splitList "/" (regexReplaceAll "^https?://" $endpoint "") | first -}}
+{{- $host := $hostport -}}
+{{- $port := ternary "80" "443" (eq $scheme "http://") -}}
+{{- if contains ":" $hostport -}}
+{{-   $host = $hostport | splitList ":" | first -}}
+{{-   $port = $hostport | splitList ":" | last -}}
+{{- end -}}
+{{- $isIP := regexMatch "^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$" $host -}}
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: "{{ include "common.names.fullname" . }}-backup"
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: volume
+    app.kubernetes.io/part-of: backup
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/component: stash-backup
+      app.kubernetes.io/managed-by: stash.appscode.com
+      # Release-scoped: Stash propagates this from the BackupConfiguration
+      # (common.labels.standard), so the policy only selects THIS system's
+      # backup pods even when several 4ALLPORTAL releases share a namespace.
+      app.kubernetes.io/instance: {{ .Release.Name | quote }}
+  egress:
+    {{- include "fourallportal.backup.volumeEgress" (dict "ctx" $ "host" $host "port" $port "isIP" $isIP) | nindent 4 }}
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: "{{ include "common.names.fullname" . }}-restore"
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: volume
+    app.kubernetes.io/part-of: backup
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/component: stash-restore
+      app.kubernetes.io/managed-by: stash.appscode.com
+  egress:
+    {{- include "fourallportal.backup.volumeEgress" (dict "ctx" $ "host" $host "port" $port "isIP" $isIP) | nindent 4 }}
+{{- end }}
