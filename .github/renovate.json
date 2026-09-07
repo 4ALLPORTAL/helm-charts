@@ -9,6 +9,9 @@
   "separateMultipleMajor": true,
   "prHourlyLimit": 0,
   "prConcurrentLimit": 0,
+  "gitIgnoredAuthors": [
+    "41898282+github-actions[bot]@users.noreply.github.com"
+  ],
   "packageRules": [
     {
       "description": "Auto-merge patch-level dependency updates only",
@@ -45,7 +48,7 @@
         "/^charts/base-cluster-v2/templates/_versions\\.tpl$/"
       ],
       "matchStrings": [
-        "renovate:\\s*datasource=(?<datasource>\\S+)\\s+depName=(?<depName>\\S+)(?:\\s+packageName=(?<packageName>\\S+))?(?:\\s+registryUrl=(?<registryUrl>\\S+))?(?:\\s+versioning=(?<versioning>\\S+))?[\\s\\S]*?-}}(?<currentValue>[^{]+?){{-\\s*end"
+        "renovate:\\s*datasource=(?<datasource>\\S+)\\s+depName=(?<depName>\\S+)(?:\\s+packageName=(?<packageName>\\S+))?(?:\\s+registryUrl=(?<registryUrl>\\S+))?(?:\\s+versioning=(?<versioning>\\S+))?[^\\n]*\\n\\{\\{-\\s*define\\s+\"[^\"]+\"\\s*-\\}\\}(?<currentValue>[^{]+?)\\{\\{-\\s*end"
       ]
     }
   ]
