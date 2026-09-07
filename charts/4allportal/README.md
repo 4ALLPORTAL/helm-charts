@@ -130,8 +130,9 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | fourAllPortal.ingress.host | string | `""` |  |
 | fourAllPortal.ingress.ingressClassName | string | `""` |  |
 | fourAllPortal.initContainers | list | `[]` |  |
-| fourAllPortal.kafka.bootstrapServers | string | `""` |  |
-| fourAllPortal.kafka.networkPolicy.port | int | `9092` |  |
+| fourAllPortal.kafka.brokers | list | `[]` |  |
+| fourAllPortal.kafka.consumer.groupId | string | `""` |  |
+| fourAllPortal.kafka.networkPolicy.matchLabels | object | `{}` |  |
 | fourAllPortal.livenessProbe.enabled | bool | `true` |  |
 | fourAllPortal.livenessProbe.failureThreshold | int | `3` |  |
 | fourAllPortal.livenessProbe.initialDelaySeconds | int | `30` |  |
@@ -482,17 +483,50 @@ they are.
 This release adds a first-class Kafka connection. The 4ALLPORTAL emits change events and UX
 telemetry to Kafka, which previously had to be wired up through `.Values.fourAllPortal.env`.
 
-Set `.Values.fourAllPortal.kafka.bootstrapServers` to the address of your Kafka bootstrap service,
-for example `my-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092`. The chart then sets
-`SPRING_KAFKA_BOOTSTRAP_SERVERS` on the backend and, on a Cilium cluster, opens egress to the
-cluster on port 9092. Leaving the value empty keeps Kafka disabled, which is the previous
-behaviour.
+List the bootstrap endpoints of your cluster under `.Values.fourAllPortal.kafka.brokers`. The chart
+joins them into `SPRING_KAFKA_BOOTSTRAP_SERVERS` and, where network policies apply, opens egress to
+the broker pods selected by `.Values.fourAllPortal.kafka.networkPolicy.matchLabels` on the ports
+taken from the same list, so the port is never stated twice.
 
-An entry in `.Values.fourAllPortal.env` still wins over the generated variable, so instances that
-already set `SPRING_KAFKA_BOOTSTRAP_SERVERS` there keep working unchanged.
+```yaml
+fourAllPortal:
+  kafka:
+    brokers:
+      - address: my-cluster-kafka-bootstrap.kafka.svc.cluster.local
+        port: 9092
+    networkPolicy:
+      matchLabels:
+        io.kubernetes.pod.namespace: kafka
+        strimzi.io/cluster: my-cluster
+        strimzi.io/name: my-cluster-kafka
+        strimzi.io/broker-role: "true"
+```
 
-The egress rule covers a broker running inside the cluster. Its port defaults to 9092 and can be
-changed with `.Values.fourAllPortal.kafka.networkPolicy.port`. A broker outside the cluster needs to
-be allowed at cluster level.
+For a Strimzi cluster those are the labels of the bootstrap Service's own selector. They match the
+broker pods, which are also what the client talks to after the metadata response, so the single
+rule covers the bootstrap connection and the per-broker connections alike.
+
+`brokers` is a list of entry points into **one** cluster, the same way `bootstrap.servers` is. It
+does not connect the 4ALLPORTAL to several Kafka clusters.
+
+An empty list leaves Kafka switched off. The 4ALLPORTAL ships `spring.kafka.bootstrap-servers`
+empty and gates its Kafka beans on that property being set, so no broker configured really does
+mean no Kafka client, not a fallback to a default address.
+
+An entry in `.Values.fourAllPortal.env` still wins: when it carries
+`SPRING_KAFKA_BOOTSTRAP_SERVERS` the chart does not emit its own, so the variable is never rendered
+twice. Note that the egress rule is still built from `matchLabels`, so an override that points at a
+different cluster needs those adjusted too.
+
+### Consumer group
+
+The chart also sets `SPRING_KAFKA_PROPERTIES_GROUP_ID`, defaulting to
+`<namespace>.<deployment>`. Instances sharing a broker would otherwise share one consumer group and
+steal each other's partitions, because the group id falls back to the application name, which is
+the same for every 4ALLPORTAL.
+
+It can be pinned with `.Values.fourAllPortal.kafka.consumer.groupId`. Changing it on a running
+installation starts a new consumer group, which resumes according to `auto.offset.reset` rather
+than at the committed offset.
 
 No action required.

@@ -406,17 +406,46 @@
                 "kafka": {
                   "type": "object",
                   "description": "Kafka connection used for change events and UX telemetry",
+                  "additionalProperties": false,
                   "properties": {
-                    "bootstrapServers": {
-                      "description": "Address of the Kafka bootstrap service, empty disables Kafka",
-                      "type": "string"
+                    "brokers": {
+                      "description": "Bootstrap endpoints of the Kafka cluster. Empty leaves Kafka switched off.",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "address"
+                        ],
+                        "properties": {
+                          "address": {
+                            "type": "string"
+                          },
+                          "port": {
+                            "type": "integer",
+                            "description": "Broker port, also used by the egress rule",
+                            "default": 9092
+                          }
+                        }
+                      }
+                    },
+                    "consumer": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "groupId": {
+                          "description": "Consumer group id, defaults to <namespace>.<deployment>",
+                          "type": "string"
+                        }
+                      }
                     },
                     "networkPolicy": {
                       "type": "object",
+                      "additionalProperties": false,
                       "properties": {
-                        "port": {
-                          "description": "Broker port opened by the egress rule",
-                          "type": "integer"
+                        "matchLabels": {
+                          "description": "Labels selecting the Kafka broker pods for the egress rule",
+                          "type": "object"
                         }
                       }
                     }

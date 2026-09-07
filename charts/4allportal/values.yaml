@@ -164,9 +164,11 @@ fourAllPortal:
     existing: {}
 
   kafka:
-    bootstrapServers: ""
+    brokers: []
+    consumer:
+      groupId: ""
     networkPolicy:
-      port: 9092
+      matchLabels: {}
 
   env: {}
 
