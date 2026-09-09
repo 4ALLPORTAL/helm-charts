@@ -2,12 +2,23 @@
 Traefik ingress controller.
 
 A small Traefik file-provider config (ConfigMap) declares two static middlewares:
-  - compress:                 default gzip compression on every websecure response
+  - compress:                 gzip compression on every websecure response whose
+                              Content-Type is one of `includedContentTypes`, so
+                              asset renditions (JPEG, TIFF, MP4, PDF, ZIP) are
+                              passed through instead of burning CPU on already
+                              compressed bytes
   - speedtest-no-compression: identity transfer-encoding for the speedtest path,
                               so iperf-style throughput measurements aren't
                               skewed by gzip
 The ConfigMap is mounted into Traefik via the chart's `volumes` value and
 referenced by `--providers.file.filename`.
+
+`includedContentTypes` is an allow-list -- a response whose media type is missing
+from it is never compressed -- so it is deliberately kept short and obvious
+rather than exhaustive. Types only ever seen in sub-kilobyte responses are left
+out on purpose: `minResponseBodyBytes` defaults to 1024, so those never reach the
+compressor anyway. Wildcards are not supported, every type has to be spelled out.
+`includedContentTypes` and `excludedContentTypes` are mutually exclusive.
 */}}
 apiVersion: v1
 kind: ConfigMap
@@ -20,6 +31,23 @@ data:
   config.toml: |-
     [http.middlewares]
       [http.middlewares.compress.compress]
+        includedContentTypes = [
+          # both JS types are listed because which one a bundle is served as
+          # depends on the origin, and guessing wrong ships it uncompressed
+          "text/html",
+          "text/css",
+          "text/javascript",
+          "application/javascript",
+          # API responses
+          "application/json",
+          "text/xml",
+          "application/xml",
+          # bulk exports and text sidecars
+          "text/plain",
+          "text/csv",
+          # the one image/* worth compressing -- icon sprites gzip to ~25%
+          "image/svg+xml",
+        ]
       [http.middlewares.speedtest-no-compression.headers.customRequestHeaders]
         Accept-Encoding = "identity"
       [http.middlewares.speedtest-no-compression.headers.customResponseHeaders]
