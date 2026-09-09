@@ -45,6 +45,15 @@ global:
     dnsLabels:
       io.kubernetes.pod.namespace: kube-system
       k8s-app: kube-dns
+    ## MetalLB's metrics ports, opened to the monitoring namespace so the
+    ## collector can scrape the controller and the speakers. A value rather
+    ## than a constant because MetalLB is released independently of this chart:
+    ## it moved these ports when it switched to secure metrics, and a hardcoded
+    ## list silently stops matching. Must equal the MetalLB release's
+    ## `prometheus.metricsPort` (plus the FRR exporter's, in FRR mode).
+    metallbMetricsPorts:
+      - "9120"
+      - "9121"
 
 ## FluxCD bootstrap.
 ##
