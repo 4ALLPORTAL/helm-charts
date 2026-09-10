@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 41.2.11](https://img.shields.io/badge/Version-41.2.11-informational?style=flat-square)
+![Version: 41.3.0](https://img.shields.io/badge/Version-41.3.0-informational?style=flat-square)
 
 A generic, base cluster setup
 
@@ -229,7 +229,7 @@ This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/install
 | traefik.maxReplicas | int | `8` |  |
 | traefik.minReplicas | int | `2` |  |
 | traefik.resources.limits.cpu | string | `"4"` |  |
-| traefik.resources.limits.memory | string | `"500Mi"` |  |
+| traefik.resources.limits.memory | string | `"2Gi"` |  |
 | traefik.resources.requests.cpu | string | `"1"` |  |
 | traefik.resources.requests.memory | string | `"250Mi"` |  |
 
