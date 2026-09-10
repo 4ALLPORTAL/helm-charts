@@ -374,7 +374,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | traefik.maxReplicas | int | `8` |  |
 | traefik.minReplicas | int | `2` |  |
 | traefik.resources.limits.cpu | string | `"4"` |  |
-| traefik.resources.limits.memory | string | `"500Mi"` |  |
+| traefik.resources.limits.memory | string | `"2Gi"` |  |
 | traefik.resources.requests.cpu | string | `"1"` |  |
 | traefik.resources.requests.memory | string | `"250Mi"` |  |
 | traefik.service.annotations | object | `{}` |  |
