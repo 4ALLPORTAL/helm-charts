@@ -71,7 +71,10 @@ traefik:
       memory: 250Mi
     limits:
       cpu: "4"
-      memory: 500Mi
+      ## Peak memory tracks concurrent in-flight responses rather than request
+      ## rate, because the compressor allocates per response. 500Mi was OOM-
+      ## killed repeatedly under normal asset-download load.
+      memory: 2Gi
   minReplicas: 2
   maxReplicas: 8
   cipherSuites: []
