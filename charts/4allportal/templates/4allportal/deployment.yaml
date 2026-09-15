@@ -241,6 +241,17 @@ spec:
             - name: DERIVATESERVICE_PORT
               value: "8181"
 
+            {{- $bootstrap := include "4allportal.kafka.bootstrapServers" . }}
+            {{- $env := .Values.fourAllPortal.env | default dict }}
+            {{- if and $bootstrap (not (hasKey $env "SPRING_KAFKA_BOOTSTRAP_SERVERS")) }}
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: {{ $bootstrap | quote }}
+            {{- end }}
+            {{- if and $bootstrap (not (hasKey $env "SPRING_KAFKA_CONSUMER_GROUP_ID")) }}
+            - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+              value: {{ include "4allportal.kafka.groupId" . | quote }}
+            {{- end }}
+
             {{- range $name, $value := .Values.fourAllPortal.env }}
             {{- if not (regexMatch "(DERIVATESERVICE(_PORT|(_DEBUG)?_JAVA_OPTIONS)|JAVA_OPTS)" $name) }}
             - name: {{ $name }}

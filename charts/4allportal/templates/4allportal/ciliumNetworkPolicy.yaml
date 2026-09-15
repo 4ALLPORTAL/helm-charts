@@ -51,6 +51,17 @@ spec:
         - matchName: {{ .Values.fourAllPortal.tracing.jaeger.agent.host | default .Values.global.tracing.jaeger.agent.host }}
     {{- end }}
     {{- end }}
+    {{- $kafkaLabels := (((.Values.fourAllPortal).kafka).networkPolicy | default dict).matchLabels | default dict }}
+    {{- if and $kafkaLabels (((.Values.fourAllPortal).kafka).brokers) }}
+    - toEndpoints:
+        - matchLabels: {{- include "common.tplvalues.render" (dict "value" (include "common.dict.filterEmptyValues" $kafkaLabels) "context" $) | nindent 12 }}
+      toPorts:
+        - ports:
+          {{- range (include "4allportal.kafka.ports" . | fromYamlArray) }}
+            - port: {{ . | quote }}
+              protocol: TCP
+          {{- end }}
+    {{- end }}
     - toFQDNs:
         - matchName: "repository.4allportal.net"
         - matchName: "api.4allportal.cloud"

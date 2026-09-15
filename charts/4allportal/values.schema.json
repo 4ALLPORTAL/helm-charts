@@ -402,6 +402,60 @@
                     }
                   },
                   "additionalProperties": false
+                },
+                "kafka": {
+                  "type": "object",
+                  "description": "Kafka connection used for change events and UX telemetry",
+                  "additionalProperties": false,
+                  "properties": {
+                    "brokers": {
+                      "description": "Bootstrap endpoints of the Kafka cluster. Empty leaves Kafka switched off.",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "address"
+                        ],
+                        "properties": {
+                          "address": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "port": {
+                            "type": "integer",
+                            "description": "Broker port, also used by the egress rule",
+                            "default": 9092,
+                            "minimum": 1,
+                            "maximum": 65535
+                          }
+                        }
+                      }
+                    },
+                    "consumer": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "groupId": {
+                          "description": "Consumer group id, defaults to <namespace>.<deployment>. It doubles as the offset commit key, so keep it stable: a value carrying a chart version or image tag resets the position on every upgrade.",
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "networkPolicy": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "matchLabels": {
+                          "description": "Labels selecting the Kafka broker pods for the egress rule",
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
