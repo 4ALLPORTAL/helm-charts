@@ -54,14 +54,14 @@
     {
       "id": 2,
       "title": "Group Replication members ONLINE",
-      "description": "No fixed 'healthy' count — some clusters here run single-instance (no GR peers), others run 3-member GR. Use the Cluster dropdown to pick one namespace, or read the table below when 'All' is selected.",
+      "description": "No fixed 'healthy' count — some clusters here run single-instance (no GR peers), others run 3-member GR. Use the Cluster dropdown to pick one namespace, or read the table below when 'All' is selected. Counted per distinct member_host: every member of the group reports the whole group, so a raw count() multiplies members by exporters.",
       "type": "stat",
       "datasource": "Mimir",
       "gridPos": { "h": 4, "w": 8, "x": 8, "y": 0 },
       "targets": [
         {
           "datasource": "Mimir",
-          "expr": "count(mysql_perf_schema_replication_group_member_info{namespace=~\"$namespace\", member_state=\"ONLINE\"}) or vector(0)",
+          "expr": "count(group by (namespace, member_host) (mysql_perf_schema_replication_group_member_info{namespace=~\"$namespace\", member_state=\"ONLINE\"})) or vector(0)",
           "legendFormat": "online"
         }
       ],
