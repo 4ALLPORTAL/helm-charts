@@ -4,15 +4,21 @@
   ],
   "assigneesFromCodeOwners": true,
   "assigneesSampleSize": 1,
-  "pinDigests": true,
+  "dependencyDashboard": true,
   "separateMinorPatch": true,
-  "separateMultipleMajor": true,
-  "prHourlyLimit": 0,
-  "prConcurrentLimit": 0,
+  "prHourlyLimit": 10,
+  "prConcurrentLimit": 15,
   "gitIgnoredAuthors": [
     "41898282+github-actions[bot]@users.noreply.github.com"
   ],
   "packageRules": [
+    {
+      "description": "Pin digests only for GitHub Actions (SHA-pin every uses:); avoids arming digest pinning on the helm/chart managers",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "pinDigests": true
+    },
     {
       "description": "Auto-merge patch-level dependency updates only",
       "matchUpdateTypes": [
@@ -26,7 +32,7 @@
       "matchFileNames": [
         "charts/**"
       ],
-      "additionalBranchPrefix": "{{packageFileDir}}",
+      "additionalBranchPrefix": "{{{ replace '/' '-' packageFileDir }}}-",
       "bumpVersions": [
         {
           "name": "chart version",
