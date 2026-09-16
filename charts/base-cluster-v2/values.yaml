@@ -669,7 +669,7 @@ speedtest:
   image:
     registry: ghcr.io
     repository: librespeed/speedtest
-    tag: "6.2.1"
+    tag: "6.3.0"
     digest: "sha256:871ec7a1c908e7c9288e51e074b321088a297c37fc672a4c882b0309f61ddef7"
   resources:
     requests:
