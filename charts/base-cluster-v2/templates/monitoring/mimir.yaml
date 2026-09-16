@@ -188,10 +188,20 @@ spec:
         {{- with $sc }}
         storageClass: {{ . | quote }}
         {{- end }}
-    ## Disable everything else — gateway/nginx (we hit the distributor service
-    ## directly from Alloy/Grafana), all caches (small cluster, not needed).
+    ## Routes by path: rule and alert paths to the ruler, the rest of
+    ## /prometheus to the query-frontend, /alertmanager to the alertmanager.
+    ## Grafana derives every alerting endpoint from one datasource URL, so
+    ## without this no URL answers both queries and rules. Reads only — Alloy
+    ## writes to the distributor directly.
+    gateway:
+      enabled: true
+      replicas: 1
+      resources:
+        requests: { cpu: 10m, memory: 32Mi }
+        limits:   { cpu: 200m, memory: 128Mi }
+    ## Keep: NOTES.txt reads `.Values.nginx` when the gateway is disabled.
     nginx:           { enabled: false }
-    gateway:         { enabled: false }
+    ## Caches off — small cluster, not needed.
     chunks-cache:    { enabled: false }
     results-cache:   { enabled: false }
     metadata-cache:  { enabled: false }
