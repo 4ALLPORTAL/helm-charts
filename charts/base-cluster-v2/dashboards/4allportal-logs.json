@@ -1,0 +1,235 @@
+{
+  "id": null,
+  "uid": "4allportal-logs",
+  "title": "4ALLPORTAL Logs",
+  "description": "4ALLPORTAL backend logs per namespace/pod. Ported from EU-2-internal. `pod` is structured metadata under Alloy/Loki, so it is filtered after the stream selector, and its values come from Mimir.",
+  "tags": [
+    "4allportal",
+    "logs"
+  ],
+  "timezone": "utc",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "1m",
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "templating": {
+    "list": [
+      {
+        "name": "namespace",
+        "label": "Namespace",
+        "type": "query",
+        "datasource": "Loki",
+        "query": {
+          "label": "namespace",
+          "stream": "{app_kubernetes_io_name=\"4allportal\"}",
+          "type": 1,
+          "refId": "namespace"
+        },
+        "definition": "label_values({app_kubernetes_io_name=\"4allportal\"}, namespace)",
+        "refresh": 1,
+        "sort": 1,
+        "includeAll": false,
+        "multi": false,
+        "current": {},
+        "options": []
+      },
+      {
+        "name": "pod",
+        "label": "Pod",
+        "type": "query",
+        "datasource": "Mimir",
+        "query": {
+          "qryType": 1,
+          "refId": "pod",
+          "query": "label_values(jvm_threads_states_threads{namespace=\"$namespace\"}, pod)"
+        },
+        "definition": "label_values(jvm_threads_states_threads{namespace=\"$namespace\"}, pod)",
+        "refresh": 2,
+        "sort": 1,
+        "includeAll": true,
+        "multi": true,
+        "allValue": ".+",
+        "current": {},
+        "options": []
+      },
+      {
+        "name": "search",
+        "label": "Search",
+        "type": "textbox",
+        "query": "",
+        "current": {
+          "text": "",
+          "value": ""
+        },
+        "options": [],
+        "description": "Case-insensitive substring filter, empty shows everything"
+      }
+    ]
+  },
+  "annotations": {
+    "list": []
+  },
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Log events by level",
+      "id": 10,
+      "datasource": "Loki",
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "logs/s",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 70,
+            "lineWidth": 0,
+            "showPoints": "never",
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            },
+            "axisPlacement": "auto"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ERROR"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "red"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "WARN"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "orange"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": "Loki",
+          "queryType": "range",
+          "legendFormat": "{{level}}",
+          "expr": "sum by (level) (rate({namespace=\"$namespace\", container=\"4allportal\"} |~ \"(?i)$search\" | pod=~\"${pod:regex}\" | json | __error__ != \"JSONParserErr\" [$__interval]))"
+        }
+      ]
+    },
+    {
+      "type": "logs",
+      "title": "Error Logs",
+      "id": 1,
+      "datasource": "Loki",
+      "gridPos": {
+        "h": 19,
+        "w": 12,
+        "x": 0,
+        "y": 6
+      },
+      "options": {
+        "showTime": false,
+        "showLabels": true,
+        "showCommonLabels": false,
+        "wrapLogMessage": true,
+        "prettifyLogMessage": false,
+        "enableLogDetails": true,
+        "dedupStrategy": "none",
+        "sortOrder": "Descending"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": "Loki",
+          "queryType": "range",
+          "expr": "{namespace=\"$namespace\", container=\"4allportal\"} |~ \"(?i)$search\" | pod=~\"${pod:regex}\" | json | __error__ != \"JSONParserErr\" | level=\"ERROR\" | line_format \"{{ if .msg }}{{.ts}} [{{.level}}] {{.thread}} {{.logger}} - {{.msg}}{{ else }}{{ __line__ }}{{ end }}\""
+        }
+      ]
+    },
+    {
+      "type": "logs",
+      "title": "All Logs",
+      "id": 2,
+      "datasource": "Loki",
+      "gridPos": {
+        "h": 19,
+        "w": 12,
+        "x": 12,
+        "y": 6
+      },
+      "options": {
+        "showTime": false,
+        "showLabels": true,
+        "showCommonLabels": false,
+        "wrapLogMessage": true,
+        "prettifyLogMessage": false,
+        "enableLogDetails": true,
+        "dedupStrategy": "none",
+        "sortOrder": "Descending"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": "Loki",
+          "queryType": "range",
+          "expr": "{namespace=\"$namespace\", container=\"4allportal\"} |~ \"(?i)$search\" | pod=~\"${pod:regex}\" | json | __error__ != \"JSONParserErr\" | line_format \"{{ if .msg }}{{.ts}} [{{.level}}] {{.thread}} {{.logger}} - {{.msg}}{{ else }}{{ __line__ }}{{ end }}\""
+        }
+      ]
+    }
+  ],
+  "editable": true,
+  "links": [
+    {
+      "icon": "dashboard",
+      "includeVars": true,
+      "targetBlank": true,
+      "title": "View Metrics",
+      "type": "link",
+      "url": "/d/4allportal-metrics/4allportal-metrics",
+      "tags": [],
+      "asDropdown": false,
+      "keepTime": true
+    }
+  ]
+}
