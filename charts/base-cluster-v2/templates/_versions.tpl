@@ -18,7 +18,7 @@ descheduler (kubernetes-sigs repo) and stash (appscode repo).
 */}}
 
 {{- /* renovate: datasource=helm depName=cilium registryUrl=https://helm.cilium.io/ */ -}}
-{{- define "base-cluster.versions.cilium.chart" -}}1.19.3{{- end -}}
+{{- define "base-cluster.versions.cilium.chart" -}}1.19.8{{- end -}}
 
 {{- /* renovate: datasource=docker depName=flux2 packageName=ghcr.io/fluxcd-community/charts/flux2 */ -}}
 {{- define "base-cluster.versions.flux2.chart" -}}2.18.3{{- end -}}
