@@ -46,18 +46,19 @@
       {
         "allValue": null,
         "current": {
-          "text": "prod",
-          "value": "prod"
+          "selected": false,
+          "text": "etcd",
+          "value": "etcd"
         },
         "datasource": "Mimir",
-        "hide": 2,
+        "hide": 0,
         "includeAll": false,
         "label": "cluster",
         "multi": false,
         "name": "cluster",
         "options": [],
         "query": "label_values(etcd_server_has_leader, job)",
-        "refresh": 2,
+        "refresh": 1,
         "regex": "",
         "sort": 2,
         "tagValuesQuery": "",

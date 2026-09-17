@@ -44,7 +44,11 @@
     "list": [
       {
         "allValue": null,
-        "current": {},
+        "current": {
+          "selected": false,
+          "text": "etcd",
+          "value": "etcd"
+        },
         "datasource": "Mimir",
         "definition": "label_values(etcd_cluster_version,job)",
         "description": null,
@@ -70,7 +74,15 @@
       },
       {
         "allValue": null,
-        "current": {},
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
         "datasource": "Mimir",
         "definition": "label_values({job=\"$job\"}, instance)",
         "description": null,
@@ -1664,14 +1676,14 @@
       "pluginVersion": "8.2.5",
       "targets": [
         {
-          "expr": "rate(etcd_debugging_mvcc_put_total{instance=~\"$instance\",job=~\"$job\"}[5m])",
+          "expr": "rate(etcd_mvcc_put_total{instance=~\"$instance\",job=~\"$job\"}[5m])",
           "format": "time_series",
           "legendFormat": "{{ instance }} puts/s",
           "refId": "A",
           "datasource": "Mimir"
         },
         {
-          "expr": "rate(etcd_debugging_mvcc_delete_total{instance=~\"$instance\",job=~\"$job\"}[5m])",
+          "expr": "rate(etcd_mvcc_delete_total{instance=~\"$instance\",job=~\"$job\"}[5m])",
           "format": "time_series",
           "legendFormat": "{{ instance }} deletes/s",
           "refId": "B",
