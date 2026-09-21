@@ -163,6 +163,15 @@ covered by `rbac.readableApiGroups`:
 - **Secrets** are absent from every tier but `tenant-admin`. Adding `""` to
   `rbac.readableApiGroups` would hand out every Secret in the cluster; extend
   the enumerated core rule instead.
+
+  For the two cluster tiers and `tenant-viewer` that exclusion is absolute.
+  For `tenant-developer` it is not, and no RBAC rule can make it so: anyone who
+  can create a workload in a namespace can mount that namespace's Secrets into
+  a pod and read them from there. What the tier does buy is that `kubectl get
+  secret` fails, a Secret cannot be read or modified by accident, and the
+  roundabout route leaves a Pod spec behind in the audit log. Where a
+  credential must be unreachable, put it in a namespace whose developers are
+  not bound — the namespace is the boundary, the tier is not.
 - **`escalate`, `bind` and `impersonate`** appear nowhere. `tenant-admin` can
   create RoleBindings, but the RBAC authorizer refuses a binding that grants
   more than the binder already holds — so it can delegate its own permissions
