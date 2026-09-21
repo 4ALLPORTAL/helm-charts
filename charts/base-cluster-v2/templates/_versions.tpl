@@ -36,7 +36,7 @@ descheduler (kubernetes-sigs repo) and stash (appscode repo).
 {{- define "base-cluster.versions.sealedSecrets.chart" -}}0.36.6{{- end -}}
 
 {{- /* renovate: datasource=helm depName=reflector registryUrl=https://emberstack.github.io/helm-charts */ -}}
-{{- define "base-cluster.versions.reflector.chart" -}}10.0.42{{- end -}}
+{{- define "base-cluster.versions.reflector.chart" -}}10.0.65{{- end -}}
 
 {{- /* renovate: datasource=docker depName=metrics-server-chart packageName=dhi.io/metrics-server-chart */ -}}
 {{- define "base-cluster.versions.metricsServer.chart" -}}3.13.0{{- end -}}
