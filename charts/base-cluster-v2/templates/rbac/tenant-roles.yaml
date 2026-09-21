@@ -1,0 +1,235 @@
+{{/*
+Tenant roles — ClusterRole in kind, namespace-scoped by the RoleBinding, the
+way the built-in admin/edit/view work: one definition instead of N per-namespace
+copies. `secrets` appears only in tenant-admin.
+*/}}
+{{- if and .Values.rbac.enabled .Values.rbac.createRoles }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: base-cluster:tenant-viewer
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: rbac
+rules:
+  - apiGroups: [""]
+    resources:
+      - configmaps
+      - endpoints
+      - events
+      - limitranges
+      - persistentvolumeclaims
+      - pods
+      - pods/log
+      - pods/status
+      - podtemplates
+      - replicationcontrollers
+      - resourcequotas
+      - serviceaccounts
+      - services
+    verbs: ["get", "list", "watch"]
+  {{- with .Values.rbac.readableApiGroups }}
+  - apiGroups: {{ toYaml . | nindent 6 }}
+    resources: ["*"]
+    verbs: ["get", "list", "watch"]
+  {{- end }}
+  {{- with .Values.rbac.extraRules.tenantViewer }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
+---
+{{/*
+tenant-developer — owns the application inside its namespace. No secrets, no
+network policies, no roles/rolebindings/serviceaccounts/quotas.
+*/}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: base-cluster:tenant-developer
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: rbac
+rules:
+  - apiGroups: [""]
+    resources:
+      - configmaps
+      - endpoints
+      - events
+      - limitranges
+      - persistentvolumeclaims
+      - pods
+      - pods/log
+      - pods/status
+      - podtemplates
+      - replicationcontrollers
+      - resourcequotas
+      - serviceaccounts
+      - services
+    verbs: ["get", "list", "watch"]
+  {{- with .Values.rbac.readableApiGroups }}
+  - apiGroups: {{ toYaml . | nindent 6 }}
+    resources: ["*"]
+    verbs: ["get", "list", "watch"]
+  {{- end }}
+  - apiGroups: [""]
+    resources:
+      - configmaps
+      - persistentvolumeclaims
+      - pods
+      - services
+    verbs: ["create", "delete", "deletecollection", "patch", "update"]
+  - apiGroups: [""]
+    resources: ["pods/eviction"]
+    verbs: ["create"]
+  - apiGroups: ["apps"]
+    resources:
+      - daemonsets
+      - deployments
+      - deployments/scale
+      - replicasets
+      - replicasets/scale
+      - statefulsets
+      - statefulsets/scale
+    verbs: ["create", "delete", "patch", "update"]
+  - apiGroups: ["batch"]
+    resources: ["cronjobs", "jobs"]
+    verbs: ["create", "delete", "patch", "update"]
+  - apiGroups: ["autoscaling"]
+    resources: ["horizontalpodautoscalers"]
+    verbs: ["create", "delete", "patch", "update"]
+  - apiGroups: ["policy"]
+    resources: ["poddisruptionbudgets"]
+    verbs: ["create", "delete", "patch", "update"]
+  ## Sealing is one-way: add a credential without reading the existing ones.
+  - apiGroups: ["bitnami.com"]
+    resources: ["sealedsecrets"]
+    verbs: ["create", "delete", "patch", "update"]
+  - apiGroups: ["helm.toolkit.fluxcd.io"]
+    resources: ["helmreleases"]
+    verbs: ["patch", "update"]
+  - apiGroups: ["kustomize.toolkit.fluxcd.io"]
+    resources: ["kustomizations"]
+    verbs: ["patch", "update"]
+  - apiGroups: ["source.toolkit.fluxcd.io"]
+    resources: ["buckets", "gitrepositories", "helmcharts", "helmrepositories", "ocirepositories"]
+    verbs: ["patch", "update"]
+  - apiGroups: ["image.toolkit.fluxcd.io"]
+    resources: ["imagepolicies", "imagerepositories", "imageupdateautomations"]
+    verbs: ["patch", "update"]
+  {{- if .Values.rbac.tenant.developer.allowIngress }}
+  ## An Ingress claims a cluster-global hostname from a namespaced object.
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["ingresses"]
+    verbs: ["create", "delete", "patch", "update"]
+  {{- end }}
+  {{- if .Values.rbac.tenant.developer.allowExec }}
+  - apiGroups: [""]
+    resources: ["pods/attach", "pods/exec"]
+    verbs: ["create", "get"]
+  {{- end }}
+  {{- if .Values.rbac.tenant.developer.allowPortForward }}
+  - apiGroups: [""]
+    resources: ["pods/portforward"]
+    verbs: ["create", "get"]
+  {{- end }}
+  {{- with .Values.rbac.extraRules.tenantDeveloper }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
+---
+{{/*
+tenant-admin — the developer tier plus the namespace's Secrets, ServiceAccounts
+and Roles/RoleBindings. Safe without `escalate`: the authorizer refuses a
+binding granting more than the binder holds. Still no network policies or quotas.
+*/}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: base-cluster:tenant-admin
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: rbac
+rules:
+  - apiGroups: [""]
+    resources:
+      - configmaps
+      - endpoints
+      - events
+      - limitranges
+      - persistentvolumeclaims
+      - pods
+      - pods/log
+      - pods/status
+      - podtemplates
+      - replicationcontrollers
+      - resourcequotas
+      - secrets
+      - serviceaccounts
+      - services
+    verbs: ["get", "list", "watch"]
+  {{- with .Values.rbac.readableApiGroups }}
+  - apiGroups: {{ toYaml . | nindent 6 }}
+    resources: ["*"]
+    verbs: ["get", "list", "watch"]
+  {{- end }}
+  - apiGroups: [""]
+    resources:
+      - configmaps
+      - persistentvolumeclaims
+      - pods
+      - secrets
+      - serviceaccounts
+      - services
+    verbs: ["create", "delete", "deletecollection", "patch", "update"]
+  - apiGroups: [""]
+    resources: ["pods/eviction"]
+    verbs: ["create"]
+  - apiGroups: ["apps"]
+    resources:
+      - daemonsets
+      - deployments
+      - deployments/scale
+      - replicasets
+      - replicasets/scale
+      - statefulsets
+      - statefulsets/scale
+    verbs: ["create", "delete", "patch", "update"]
+  - apiGroups: ["batch"]
+    resources: ["cronjobs", "jobs"]
+    verbs: ["create", "delete", "patch", "update"]
+  - apiGroups: ["autoscaling"]
+    resources: ["horizontalpodautoscalers"]
+    verbs: ["create", "delete", "patch", "update"]
+  - apiGroups: ["policy"]
+    resources: ["poddisruptionbudgets"]
+    verbs: ["create", "delete", "patch", "update"]
+  - apiGroups: ["bitnami.com"]
+    resources: ["sealedsecrets"]
+    verbs: ["create", "delete", "patch", "update"]
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["ingresses"]
+    verbs: ["create", "delete", "patch", "update"]
+  - apiGroups: ["rbac.authorization.k8s.io"]
+    resources: ["rolebindings", "roles"]
+    verbs: ["create", "delete", "patch", "update"]
+  - apiGroups: ["helm.toolkit.fluxcd.io"]
+    resources: ["helmreleases"]
+    verbs: ["create", "delete", "patch", "update"]
+  - apiGroups: ["kustomize.toolkit.fluxcd.io"]
+    resources: ["kustomizations"]
+    verbs: ["create", "delete", "patch", "update"]
+  - apiGroups: ["source.toolkit.fluxcd.io"]
+    resources: ["buckets", "gitrepositories", "helmcharts", "helmrepositories", "ocirepositories"]
+    verbs: ["create", "delete", "patch", "update"]
+  - apiGroups: ["image.toolkit.fluxcd.io"]
+    resources: ["imagepolicies", "imagerepositories", "imageupdateautomations"]
+    verbs: ["create", "delete", "patch", "update"]
+  {{- if .Values.rbac.tenant.admin.allowExec }}
+  - apiGroups: [""]
+    resources: ["pods/attach", "pods/exec"]
+    verbs: ["create", "get"]
+  {{- end }}
+  {{- if .Values.rbac.tenant.admin.allowPortForward }}
+  - apiGroups: [""]
+    resources: ["pods/portforward"]
+    verbs: ["create", "get"]
+  {{- end }}
+  {{- with .Values.rbac.extraRules.tenantAdmin }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
+{{- end }}

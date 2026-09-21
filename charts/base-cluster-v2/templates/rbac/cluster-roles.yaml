@@ -1,0 +1,133 @@
+{{/*
+Cluster-scoped baseline roles. RBAC has no deny rule, so `secrets` is excluded
+by never being granted — which is why the core ("") group is enumerated instead
+of wildcarded. See the RBAC section of the README.
+*/}}
+{{- if and .Values.rbac.enabled .Values.rbac.createRoles }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: base-cluster:cluster-reader
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: rbac
+rules:
+  - apiGroups: [""]
+    resources:
+      - configmaps
+      - endpoints
+      - events
+      - limitranges
+      - namespaces
+      - nodes
+      - persistentvolumeclaims
+      - persistentvolumes
+      - pods
+      - pods/log
+      - pods/status
+      - podtemplates
+      - replicationcontrollers
+      - resourcequotas
+      - serviceaccounts
+      - services
+    verbs: ["get", "list", "watch"]
+  ## Adding "" here would defeat the Secret exclusion — extend the core rule.
+  {{- with .Values.rbac.readableApiGroups }}
+  - apiGroups: {{ toYaml . | nindent 6 }}
+    resources: ["*"]
+    verbs: ["get", "list", "watch"]
+  {{- end }}
+  {{- with .Values.rbac.extraRules.clusterReader }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
+---
+{{/*
+cluster-operator — day-2 operations. Repeats the reader rules because RBAC has
+no role inheritance, then adds writes.
+*/}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: base-cluster:cluster-operator
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: rbac
+rules:
+  - apiGroups: [""]
+    resources:
+      - configmaps
+      - endpoints
+      - events
+      - limitranges
+      - namespaces
+      - nodes
+      - persistentvolumeclaims
+      - persistentvolumes
+      - pods
+      - pods/log
+      - pods/status
+      - podtemplates
+      - replicationcontrollers
+      - resourcequotas
+      - serviceaccounts
+      - services
+    verbs: ["get", "list", "watch"]
+  {{- with .Values.rbac.readableApiGroups }}
+  - apiGroups: {{ toYaml . | nindent 6 }}
+    resources: ["*"]
+    verbs: ["get", "list", "watch"]
+  {{- end }}
+  ## `kubectl drain` goes through eviction, so PodDisruptionBudgets still apply.
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["delete", "deletecollection"]
+  - apiGroups: [""]
+    resources: ["pods/eviction"]
+    verbs: ["create"]
+  ## Cordon/uncordon; `patch` also covers the labels and taints a drain needs.
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["patch", "update"]
+  ## Restart and scale. No create/delete: workloads arrive through Flux.
+  - apiGroups: ["apps"]
+    resources:
+      - daemonsets
+      - deployments
+      - deployments/scale
+      - replicasets
+      - replicasets/scale
+      - statefulsets
+      - statefulsets/scale
+    verbs: ["patch", "update"]
+  - apiGroups: ["batch"]
+    resources: ["cronjobs", "jobs"]
+    verbs: ["create", "delete", "patch", "update"]
+  ## `flux reconcile`/`suspend` are patches. No delete — that orphans what the
+  ## object manages.
+  - apiGroups: ["helm.toolkit.fluxcd.io"]
+    resources: ["helmreleases"]
+    verbs: ["patch", "update"]
+  - apiGroups: ["kustomize.toolkit.fluxcd.io"]
+    resources: ["kustomizations"]
+    verbs: ["patch", "update"]
+  - apiGroups: ["source.toolkit.fluxcd.io"]
+    resources: ["buckets", "gitrepositories", "helmcharts", "helmrepositories", "ocirepositories"]
+    verbs: ["patch", "update"]
+  - apiGroups: ["image.toolkit.fluxcd.io"]
+    resources: ["imagepolicies", "imagerepositories", "imageupdateautomations"]
+    verbs: ["patch", "update"]
+  - apiGroups: ["notification.toolkit.fluxcd.io"]
+    resources: ["alerts", "providers", "receivers"]
+    verbs: ["patch", "update"]
+  {{- if .Values.rbac.cluster.operator.allowExec }}
+  - apiGroups: [""]
+    resources: ["pods/attach", "pods/exec"]
+    verbs: ["create", "get"]
+  {{- end }}
+  {{- if .Values.rbac.cluster.operator.allowPortForward }}
+  - apiGroups: [""]
+    resources: ["pods/portforward"]
+    verbs: ["create", "get"]
+  {{- end }}
+  {{- with .Values.rbac.extraRules.clusterOperator }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
+{{- end }}

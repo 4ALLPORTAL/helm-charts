@@ -1,0 +1,29 @@
+{{/*
+One RoleBinding per (namespace, tier) that names a subject. The namespaces must
+already exist — a binding in a missing one fails the release, which is correct:
+a typo'd namespace would otherwise protect nothing.
+*/}}
+{{- if .Values.rbac.enabled }}
+{{- $root := . }}
+{{- range $namespace, $tiers := .Values.rbac.tenants }}
+{{- range $tier := list "admin" "developer" "viewer" }}
+{{- $subjects := index $tiers $tier }}
+{{- if include "base-cluster.rbac.hasSubjects" $subjects }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ printf "base-cluster:tenant-%s" $tier }}
+  namespace: {{ $namespace }}
+  labels: {{- include "base-cluster.labels" $root | nindent 4 }}
+    app.kubernetes.io/component: rbac
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ printf "base-cluster:tenant-%s" $tier }}
+subjects:
+  {{- include "base-cluster.rbac.subjects" (dict "subjects" $subjects "namespace" $namespace) | trim | nindent 2 }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

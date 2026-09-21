@@ -97,3 +97,46 @@ empty selector match in the rendered output.
 {{- end -}}
 {{ $out | toYaml }}
 {{- end -}}
+
+{{/*
+Render an RBAC subject list from a {groups, users, serviceAccounts} dict.
+
+ServiceAccount entries are either "name" — resolved against the namespace
+passed in as .namespace — or "namespace/name" for a subject living elsewhere.
+
+Usage: include "base-cluster.rbac.subjects" (dict "subjects" $s "namespace" $ns)
+*/}}
+{{- define "base-cluster.rbac.subjects" -}}
+{{- $subjects := .subjects | default dict -}}
+{{- $ns := .namespace -}}
+{{- range $group := $subjects.groups | default list }}
+- apiGroup: rbac.authorization.k8s.io
+  kind: Group
+  name: {{ $group | quote }}
+{{- end }}
+{{- range $user := $subjects.users | default list }}
+- apiGroup: rbac.authorization.k8s.io
+  kind: User
+  name: {{ $user | quote }}
+{{- end }}
+{{- range $sa := $subjects.serviceAccounts | default list }}
+{{- $parts := splitList "/" $sa }}
+{{- if eq (len $parts) 2 }}
+- kind: ServiceAccount
+  name: {{ index $parts 1 | quote }}
+  namespace: {{ index $parts 0 | quote }}
+{{- else }}
+- kind: ServiceAccount
+  name: {{ $sa | quote }}
+  namespace: {{ $ns | quote }}
+{{- end }}
+{{- end }}
+{{- end -}}
+
+{{/*
+True when a {groups, users, serviceAccounts} dict names at least one subject.
+*/}}
+{{- define "base-cluster.rbac.hasSubjects" -}}
+{{- $s := . | default dict -}}
+{{- if or $s.groups $s.users $s.serviceAccounts -}}true{{- end -}}
+{{- end -}}
