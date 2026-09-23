@@ -1,6 +1,6 @@
 # base-cluster-v2
 
-![Version: 2.0.5](https://img.shields.io/badge/Version-2.0.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
+![Version: 2.3.15](https://img.shields.io/badge/Version-2.3.15-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
 
 Foundational base cluster setup — FluxCD, Traefik ingress,
 cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
@@ -151,7 +151,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | backup.licenseSecretName | string | `""` |  |
 | backup.retryBackup.image.registry | string | `""` |  |
 | backup.retryBackup.image.repository | string | `"alpine/k8s"` |  |
-| backup.retryBackup.image.tag | string | `"1.36.2"` |  |
+| backup.retryBackup.image.tag | string | `"1.37.0"` |  |
 | backup.retryBackup.resources.limits.cpu | string | `"100m"` |  |
 | backup.retryBackup.resources.limits.memory | string | `"64Mi"` |  |
 | backup.retryBackup.resources.requests.cpu | string | `"10m"` |  |
@@ -230,6 +230,8 @@ The older chart remains in this repo for clusters that haven't migrated.
 | global.networkPolicy.defaultDeny.excludedNamespaces[1] | string | `"rook-ceph"` |  |
 | global.networkPolicy.dnsLabels."io.kubernetes.pod.namespace" | string | `"kube-system"` |  |
 | global.networkPolicy.dnsLabels.k8s-app | string | `"kube-dns"` |  |
+| global.networkPolicy.metallbMetricsPorts[0] | string | `"9120"` |  |
+| global.networkPolicy.metallbMetricsPorts[1] | string | `"9121"` |  |
 | global.networkPolicy.type | string | `"auto"` |  |
 | janitor.cleaners.completedJobs.dryRun | bool | `false` |  |
 | janitor.cleaners.completedJobs.enabled | bool | `true` |  |
@@ -250,7 +252,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | janitor.excludedNamespaces[1] | string | `"flux-system"` |  |
 | janitor.image.registry | string | `""` |  |
 | janitor.image.repository | string | `"projectsveltos/k8s-cleaner"` |  |
-| janitor.image.tag | string | `"v0.23.0"` |  |
+| janitor.image.tag | string | `"v0.24.0"` |  |
 | janitor.report.enabled | bool | `true` |  |
 | janitor.resources.limits.cpu | string | `"500m"` |  |
 | janitor.resources.limits.memory | string | `"256Mi"` |  |
@@ -304,7 +306,10 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.loki.resources.requests.memory | string | `"512Mi"` |  |
 | monitoring.loki.retention | string | `"336h"` |  |
 | monitoring.loki.size | string | `"50Gi"` |  |
+| monitoring.mimir.alertmanagerConfigSecret | string | `""` |  |
+| monitoring.mimir.alertmanagerEgressFQDNs | list | `[]` |  |
 | monitoring.mimir.enabled | bool | `true` |  |
+| monitoring.mimir.extraRuleGroups | object | `{}` |  |
 | monitoring.mimir.kafkaSize | string | `"20Gi"` |  |
 | monitoring.mimir.resources.limits.cpu | string | `"2"` |  |
 | monitoring.mimir.resources.limits.memory | string | `"4Gi"` |  |
@@ -356,7 +361,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | speedtest.image.digest | string | `"sha256:871ec7a1c908e7c9288e51e074b321088a297c37fc672a4c882b0309f61ddef7"` |  |
 | speedtest.image.registry | string | `"ghcr.io"` |  |
 | speedtest.image.repository | string | `"librespeed/speedtest"` |  |
-| speedtest.image.tag | string | `"6.2.1"` |  |
+| speedtest.image.tag | string | `"6.3.0"` |  |
 | speedtest.replicas | int | `2` |  |
 | speedtest.resources.limits.cpu | string | `"200m"` |  |
 | speedtest.resources.limits.memory | string | `"128Mi"` |  |
@@ -369,11 +374,13 @@ The older chart remains in this repo for clusters that haven't migrated.
 | traefik.maxReplicas | int | `8` |  |
 | traefik.minReplicas | int | `2` |  |
 | traefik.resources.limits.cpu | string | `"4"` |  |
-| traefik.resources.limits.memory | string | `"500Mi"` |  |
+| traefik.resources.limits.memory | string | `"2Gi"` |  |
 | traefik.resources.requests.cpu | string | `"1"` |  |
 | traefik.resources.requests.memory | string | `"250Mi"` |  |
+| traefik.service.annotations | object | `{}` |  |
 | traefik.service.externalIPs | list | `[]` |  |
 | traefik.service.loadBalancerIP | string | `""` |  |
+| traefik.service.spec | object | `{}` |  |
 | traefik.service.type | string | `"LoadBalancer"` |  |
 
 ----------------------------------------------

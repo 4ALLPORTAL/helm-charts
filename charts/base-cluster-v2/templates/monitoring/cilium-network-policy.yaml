@@ -123,6 +123,16 @@ spec:
         - ports:
             - port: "443"
               protocol: TCP
+    {{- range .Values.monitoring.mimir.alertmanagerEgressFQDNs }}
+    ## Extra Alertmanager receiver target. Without a rule here the notification
+    ## is dropped by default-deny and the alert fires into nothing.
+    - toFQDNs:
+        - matchName: {{ .name | quote }}
+      toPorts:
+        - ports:
+            - port: {{ .port | quote }}
+              protocol: TCP
+    {{- end }}
     - toPorts:
         - ports:
             - port: "53"

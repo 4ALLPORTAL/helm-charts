@@ -48,12 +48,12 @@ global:
     image:
       registry: docker.io
       repository: alpine/k8s
-      tag: "1.36.2"
+      tag: "1.37.0"
   helm:
     image:
       registry: docker.io
       repository: alpine/helm
-      tag: "4.2.4"
+      tag: "4.3.0"
   imageRegistry: ""
 
 flux:
@@ -71,7 +71,10 @@ traefik:
       memory: 250Mi
     limits:
       cpu: "4"
-      memory: 500Mi
+      ## Peak memory tracks concurrent in-flight responses rather than request
+      ## rate, because the compressor allocates per response. 500Mi was OOM-
+      ## killed repeatedly under normal asset-download load.
+      memory: 2Gi
   minReplicas: 2
   maxReplicas: 8
   cipherSuites: []

@@ -10,7 +10,7 @@ name: Sync CODEOWNERS and Docs
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v7
         with:
@@ -32,8 +32,8 @@ jobs:
       - name: Commit updated Docs and CODEOWNERS
         run: |
           if ! git diff --exit-code; then
-            git config user.name "$GITHUB_ACTOR"
-            git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
             if ! git diff --exit-code --quiet .github/CODEOWNERS; then
               git commit -m "chore: Update 'CODEOWNERS'" .github/CODEOWNERS

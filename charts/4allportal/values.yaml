@@ -30,7 +30,7 @@ fourAllPortal:
   image:
     registry: registry.4allportal.net
     repository: 4allportal
-    tag: 3.10.62
+    tag: 6.5.2
 
   replicas: 2
 
@@ -162,6 +162,13 @@ fourAllPortal:
     numHelperThreads: 5
     acquireIncrement: 5
     existing: {}
+
+  kafka:
+    brokers: []
+    consumer:
+      groupId: ""
+    networkPolicy:
+      matchLabels: {}
 
   env: {}
 

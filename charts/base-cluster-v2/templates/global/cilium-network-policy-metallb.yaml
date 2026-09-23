@@ -3,6 +3,10 @@
 CiliumNetworkPolicies for MetalLB. The controller needs apiserver access and
 webhook ingress. Speakers need apiserver access, memberlist between peers
 (7946 TCP+UDP), and host entity access for L2/ARP announcements.
+
+Both also have to admit a metrics scrape, and the collector is an ordinary pod
+that matches none of the entities used above -- so it is named by namespace,
+on the ports in global.networkPolicy.metallbMetricsPorts.
 */}}
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
@@ -30,8 +34,17 @@ spec:
         - ports:
             - port: "9443"
               protocol: TCP
-            - port: "7472"
+    ## The controller is not hostNetwork, so this policy is what gates its
+    ## scrape -- unlike the speakers below, where the host identity bypasses it.
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: monitoring
+      toPorts:
+        - ports:
+            {{- range .Values.global.networkPolicy.metallbMetricsPorts }}
+            - port: {{ . | quote }}
               protocol: TCP
+            {{- end }}
 ---
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
@@ -75,11 +88,13 @@ spec:
               protocol: TCP
             - port: "7946"
               protocol: UDP
-    - fromEntities: [cluster]
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: monitoring
       toPorts:
         - ports:
-            - port: "7472"
+            {{- range .Values.global.networkPolicy.metallbMetricsPorts }}
+            - port: {{ . | quote }}
               protocol: TCP
-            - port: "7473"
-              protocol: TCP
+            {{- end }}
 {{- end }}

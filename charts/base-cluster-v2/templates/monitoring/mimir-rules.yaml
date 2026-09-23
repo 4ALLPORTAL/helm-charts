@@ -1,0 +1,43 @@
+{{- if and .Values.monitoring.enabled .Values.monitoring.mimir.enabled }}
+{{/*
+Mimir ruler rule groups.
+
+There is no PrometheusRule CRD on a base-cluster install. The ruler runs with
+`ruler_storage.backend: local` and reads one file per rule group out of
+/etc/mimir/rules/anonymous — the `anonymous` tenant because multitenancy is
+off, so every push maps there. This ConfigMap is that directory, so a cluster
+adds rules by adding keys via monitoring.mimir.extraRuleGroups.
+
+The Watchdog rule always fires. Mimir's ruler evaluates it, the alert goes to
+the in-cluster Alertmanager, which forwards it to UptimeRobot's heartbeat URL.
+If the heartbeat stops arriving, UptimeRobot pages — that is the "is the
+alerting pipeline alive?" signal, and it is the reason a cluster's Alertmanager
+config must keep routing Watchdog to the heartbeat receiver and everything else
+somewhere a human reads.
+*/}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mimir-rules
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+data:
+  watchdog.yaml: |
+    groups:
+      - name: watchdog
+        interval: 30s
+        rules:
+          - alert: Watchdog
+            expr: vector(1)
+            for: 0s
+            labels:
+              severity: none
+            annotations:
+              summary: "Alerting pipeline heartbeat"
+              description: "This alert is always firing. If it stops, the pipeline is broken."
+{{- range $file, $group := .Values.monitoring.mimir.extraRuleGroups }}
+  {{ $file }}: |
+{{ $group | trim | indent 4 }}
+{{- end }}
+{{- end }}

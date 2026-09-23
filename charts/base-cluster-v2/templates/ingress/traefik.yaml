@@ -2,12 +2,23 @@
 Traefik ingress controller.
 
 A small Traefik file-provider config (ConfigMap) declares two static middlewares:
-  - compress:                 default gzip compression on every websecure response
+  - compress:                 gzip compression on every websecure response whose
+                              Content-Type is one of `includedContentTypes`, so
+                              asset renditions (JPEG, TIFF, MP4, PDF, ZIP) are
+                              passed through instead of burning CPU on already
+                              compressed bytes
   - speedtest-no-compression: identity transfer-encoding for the speedtest path,
                               so iperf-style throughput measurements aren't
                               skewed by gzip
 The ConfigMap is mounted into Traefik via the chart's `volumes` value and
 referenced by `--providers.file.filename`.
+
+`includedContentTypes` is an allow-list -- a response whose media type is missing
+from it is never compressed -- so it is deliberately kept short and obvious
+rather than exhaustive. Types only ever seen in sub-kilobyte responses are left
+out on purpose: `minResponseBodyBytes` defaults to 1024, so those never reach the
+compressor anyway. Wildcards are not supported, every type has to be spelled out.
+`includedContentTypes` and `excludedContentTypes` are mutually exclusive.
 */}}
 apiVersion: v1
 kind: ConfigMap
@@ -20,6 +31,23 @@ data:
   config.toml: |-
     [http.middlewares]
       [http.middlewares.compress.compress]
+        includedContentTypes = [
+          # both JS types are listed because which one a bundle is served as
+          # depends on the origin, and guessing wrong ships it uncompressed
+          "text/html",
+          "text/css",
+          "text/javascript",
+          "application/javascript",
+          # API responses
+          "application/json",
+          "text/xml",
+          "application/xml",
+          # bulk exports and text sidecars
+          "text/plain",
+          "text/csv",
+          # the one image/* worth compressing -- icon sprites gzip to ~25%
+          "image/svg+xml",
+        ]
       [http.middlewares.speedtest-no-compression.headers.customRequestHeaders]
         Accept-Encoding = "identity"
       [http.middlewares.speedtest-no-compression.headers.customResponseHeaders]
@@ -73,18 +101,35 @@ spec:
     rbac:
       enabled: true
 
+    {{- /*
+    The Traefik chart takes Service addressing from `service.spec` only -- it has
+    no top-level `loadBalancerIP` key and drops one without error. Both the
+    shorthand `traefik.service.loadBalancerIP` and the `traefik.service.spec`
+    passthrough are folded into a single spec map here, passthrough last so a
+    cluster can override any default, `externalTrafficPolicy` included.
+    */}}
+    {{- $spec := dict }}
+    {{- if ne .Values.traefik.service.type "ClusterIP" }}
+    {{- $spec = dict "externalTrafficPolicy" "Local" }}
+    {{- end }}
+    {{- with .Values.traefik.service.loadBalancerIP }}
+    {{- $spec = merge (dict "loadBalancerIP" .) $spec }}
+    {{- end }}
+    {{- with .Values.traefik.service.spec }}
+    {{- $spec = merge (deepCopy .) $spec }}
+    {{- end }}
+
     service:
       enabled: true
       type: {{ .Values.traefik.service.type | quote }}
-      {{- with .Values.traefik.service.loadBalancerIP }}
-      loadBalancerIP: {{ . | quote }}
+      {{- with .Values.traefik.service.annotations }}
+      annotations: {{- . | toYaml | nindent 8 }}
       {{- end }}
       {{- with .Values.traefik.service.externalIPs }}
       externalIPs: {{- . | toYaml | nindent 8 }}
       {{- end }}
-      {{- if ne .Values.traefik.service.type "ClusterIP" }}
-      spec:
-        externalTrafficPolicy: Local
+      {{- with $spec }}
+      spec: {{- toYaml . | nindent 8 }}
       {{- end }}
 
     logs:

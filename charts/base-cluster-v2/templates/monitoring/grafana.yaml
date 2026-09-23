@@ -208,10 +208,15 @@ data:
       - name: Mimir
         type: prometheus
         access: proxy
-        url: http://mimir-query-frontend.monitoring.svc.{{ $clusterDomain }}:8080/prometheus
+        ## The gateway, not the query-frontend — the latter 404s the rule and
+        ## alert endpoints Grafana derives from this URL. See mimir.yaml.
+        url: http://mimir-gateway.monitoring.svc.{{ $clusterDomain }}:80/prometheus
         isDefault: true
         editable: false
         jsonData:
+          prometheusType: Mimir
+          manageAlerts: true
+          alertmanagerUid: mimir-alertmanager
           httpHeaderName1: X-Scope-OrgID
           ## Must match k8s-monitoring's global.scrapeInterval (60s, unset here so
           ## it uses that chart's own default). Without this, Grafana assumes the
@@ -220,6 +225,25 @@ data:
           ## every rate()/irate()-based panel (CPU, Network Traffic, Disk IOps, ...)
           ## to render "No data".
           timeInterval: 60s
+        secureJsonData:
+          httpHeaderValue1: anonymous
+      ## Contact points, notification policies and silences — Alertmanager
+      ## config and state, which the Mimir datasource cannot serve.
+      ##
+      ## Silences are safe to create here. Editing contact points or policies is
+      ## not: Grafana then stores a tenant config that permanently shadows
+      ## monitoring.mimir.alertmanagerConfigSecret.
+      - name: Mimir Alertmanager
+        ## Pinned so alertmanagerUid above can name it.
+        uid: mimir-alertmanager
+        type: alertmanager
+        access: proxy
+        url: http://mimir-gateway.monitoring.svc.{{ $clusterDomain }}:80
+        editable: false
+        jsonData:
+          implementation: mimir
+          handleGrafanaManagedAlerts: false
+          httpHeaderName1: X-Scope-OrgID
         secureJsonData:
           httpHeaderValue1: anonymous
       {{- end }}

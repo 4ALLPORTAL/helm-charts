@@ -9,6 +9,21 @@ data:
   config.toml: |-
     [http.middlewares]
       [http.middlewares.compress.compress]
+        # Allow-list: a media type missing here is never compressed. Kept short
+        # on purpose -- types only seen in sub-kilobyte responses are skipped
+        # because minResponseBodyBytes defaults to 1024. No wildcards.
+        includedContentTypes = [
+          "text/html",
+          "text/css",
+          "text/javascript",
+          "application/javascript",
+          "application/json",
+          "text/xml",
+          "application/xml",
+          "text/plain",
+          "text/csv",
+          "image/svg+xml",
+        ]
       [http.middlewares.speedtest-no-compression.headers.customRequestHeaders]
         Accept-Encoding = "identity"
       [http.middlewares.speedtest-no-compression.headers.customResponseHeaders]
