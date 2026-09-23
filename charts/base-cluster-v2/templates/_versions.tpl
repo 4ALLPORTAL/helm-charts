@@ -46,7 +46,7 @@ descheduler (kubernetes-sigs repo) and stash (appscode repo).
      global.imageRegistry if required. */}}
 
 {{- /* renovate: datasource=docker depName=k8s-cleaner packageName=ghcr.io/gianlucam76/charts/k8s-cleaner */ -}}
-{{- define "base-cluster.versions.janitor.chart" -}}0.23.0{{- end -}}
+{{- define "base-cluster.versions.janitor.chart" -}}0.24.0{{- end -}}
 
 {{- /* renovate: datasource=helm depName=descheduler registryUrl=https://kubernetes-sigs.github.io/descheduler/ */ -}}
 {{- define "base-cluster.versions.descheduler.chart" -}}0.36.0{{- end -}}
