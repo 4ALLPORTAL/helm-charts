@@ -6,6 +6,12 @@ a typo'd namespace would otherwise protect nothing.
 {{- if .Values.rbac.enabled }}
 {{- $root := . }}
 {{- range $namespace, $tiers := .Values.rbac.tenants }}
+{{- $tiers = $tiers | default dict }}
+{{- range $key, $_ := $tiers }}
+{{- if not (has $key (list "admin" "developer" "viewer")) }}
+{{- fail (printf "rbac.tenants.%s.%s: unknown tier, expected admin, developer or viewer" $namespace $key) }}
+{{- end }}
+{{- end }}
 {{- range $tier := list "admin" "developer" "viewer" }}
 {{- $subjects := index $tiers $tier }}
 {{- if include "base-cluster.rbac.hasSubjects" $subjects }}
