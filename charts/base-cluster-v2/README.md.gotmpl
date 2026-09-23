@@ -143,7 +143,7 @@ subject list under `rbac` ships empty.
 | --- | --- | --- |
 | `cluster-admin` (built-in) | ClusterRoleBinding | everything. Bound only from `rbac.cluster.admin`, which is empty by default |
 | `base-cluster:cluster-reader` | ClusterRoleBinding | read-only cluster-wide, **no Secrets** |
-| `base-cluster:cluster-operator` | ClusterRoleBinding | the reader rules, plus restart/scale workloads, evict pods, cordon nodes, `flux reconcile`/`suspend` |
+| `base-cluster:cluster-operator` | ClusterRoleBinding | the reader rules, plus restart/scale workloads, evict pods, cordon nodes, `flux reconcile`/`suspend`. **Equivalent to cluster-admin**, see below |
 | `base-cluster:tenant-admin` | RoleBinding per namespace | the namespace, including its Secrets, ServiceAccounts and RoleBindings |
 | `base-cluster:tenant-developer` | RoleBinding per namespace | the namespace's workloads, exec and port-forward — **no Secrets** |
 | `base-cluster:tenant-viewer` | RoleBinding per namespace | read-only in the namespace, **no Secrets** |
@@ -156,7 +156,8 @@ the binding. A Role per tenant would be N copies drifting apart.
 
 RBAC has no deny rule, so a permission is excluded by never being granted. The
 exclusions below are the ones that would otherwise turn a tier into
-cluster-admin by a side door, and they are why the core (`""`) API group is
+cluster-admin by a side door — for every tier except `cluster-operator`, which
+is one already (see the next section). They are why the core (`""`) API group is
 enumerated resource by resource in the templates while every other group is
 covered by `rbac.readableApiGroups`:
 
@@ -164,7 +165,7 @@ covered by `rbac.readableApiGroups`:
   `rbac.readableApiGroups` would hand out every Secret in the cluster; extend
   the enumerated core rule instead.
 
-  For the two cluster tiers and `tenant-viewer` that exclusion is absolute.
+  For `cluster-reader` and `tenant-viewer` that exclusion is absolute.
   For `tenant-developer` it is not, and no RBAC rule can make it so: anyone who
   can create a workload in a namespace can mount that namespace's Secrets into
   a pod and read them from there. What the tier does buy is that `kubectl get
@@ -185,6 +186,16 @@ covered by `rbac.readableApiGroups`:
   namespace both are on, where the blast radius is the tenant's own.
 - **CRDs, admission webhooks, ResourceQuotas and LimitRanges** stay with the
   platform team in every tier.
+- **Flux objects are read-only in every tenant tier.** Without the Flux
+  multi-tenancy lockdown the controllers apply them as cluster-admin, so a
+  tenant that could write one could grant itself anything.
+
+### `cluster-operator` is cluster-admin in practice
+
+RBAC cannot narrow a `patch` to one field. Patching a workload rewrites its pod
+template, a Job can run under any ServiceAccount and mount any Secret, and a
+patched Flux object can point at any source. The tier guards against accidents,
+not abuse — bind it only to people you would trust with `cluster-admin`.
 
 ### Binding groups
 
@@ -213,9 +224,11 @@ The tenant namespaces must already exist; the chart binds into them, it does
 not create them. A RoleBinding naming a missing namespace fails the release,
 which beats rendering a binding that silently protects nothing.
 
-Leaving `rbac.cluster.admin` empty locks nobody out. The Talos/kubeadm admin
-kubeconfig authenticates as `system:masters`, which the authorizer honours
-ahead of RBAC — that stays the break-glass path.
+Leaving `rbac.cluster.admin` empty locks nobody out. The Talos admin
+kubeconfig (`talosctl kubeconfig`) and kubeadm's `super-admin.conf` authenticate
+as `system:masters`, which the authorizer honours ahead of RBAC — that stays the
+break-glass path. kubeadm's `admin.conf` does not: since v1.29 it authenticates
+as `kubeadm:cluster-admins`, which depends on RBAC.
 
 ## Successor to `base-cluster`
 
