@@ -1,0 +1,51 @@
+{{/*
+Cluster-scoped bindings. A tier with no subjects emits no binding at all — an
+empty ClusterRoleBinding grants nothing and only suggests someone is bound.
+*/}}
+{{- if .Values.rbac.enabled }}
+{{- if include "base-cluster.rbac.hasSubjects" .Values.rbac.cluster.admin }}
+{{/* The only blanket cluster-admin. Ships empty; `system:masters` stays break-glass. */}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: base-cluster:cluster-admin
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: rbac
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  {{- include "base-cluster.rbac.subjects" (dict "subjects" .Values.rbac.cluster.admin "namespace" .Release.Namespace) | trim | nindent 2 }}
+---
+{{- end }}
+{{- if include "base-cluster.rbac.hasSubjects" .Values.rbac.cluster.operator }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: base-cluster:cluster-operator
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: rbac
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: base-cluster:cluster-operator
+subjects:
+  {{- include "base-cluster.rbac.subjects" (dict "subjects" .Values.rbac.cluster.operator "namespace" .Release.Namespace) | trim | nindent 2 }}
+---
+{{- end }}
+{{- if include "base-cluster.rbac.hasSubjects" .Values.rbac.cluster.reader }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: base-cluster:cluster-reader
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: rbac
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: base-cluster:cluster-reader
+subjects:
+  {{- include "base-cluster.rbac.subjects" (dict "subjects" .Values.rbac.cluster.reader "namespace" .Release.Namespace) | trim | nindent 2 }}
+{{- end }}
+{{- end }}

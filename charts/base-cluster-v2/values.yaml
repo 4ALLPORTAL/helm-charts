@@ -678,3 +678,126 @@ speedtest:
     limits:
       cpu: 200m
       memory: 128Mi
+
+## RBAC baseline — cluster-scoped and tenant-scoped roles, plus the bindings
+## that attach them to your identity provider's groups.
+##
+## Nobody is bound by default. Every subject list below ships empty, so
+## installing this chart adds roles and changes no one's access; a cluster
+## grants access by filling them in. Until OIDC authentication is wired up
+## (kube-apiserver --oidc-groups-claim), `groups` has nothing to match and the
+## `users` lists are the way in.
+rbac:
+  ## -- Master switch for the whole RBAC component.
+  enabled: true
+  ## -- Emit the ClusterRole definitions. false binds subjects to roles defined
+  ##    elsewhere; the bindings below still render.
+  createRoles: true
+
+  ## Cluster-wide tiers. All subject lists ship empty — installing the chart
+  ## changes nobody's access. `system:masters` stays the break-glass path.
+  cluster:
+    ## Binds the built-in `cluster-admin`. Prefer `operator`.
+    admin:
+      groups: []
+      users: []
+      ## ServiceAccounts as "<namespace>/<name>", or a bare name for one in the
+      ## release namespace.
+      serviceAccounts: []
+    ## Day-2 operations: read everything except Secrets, restart and scale
+    ## workloads, evict pods, cordon nodes, reconcile and suspend Flux.
+    operator:
+      groups: []
+      users: []
+      serviceAccounts: []
+      ## -- pods/exec and pods/attach cluster-wide. Off: a shell in any pod
+      ##    reads every Secret mounted anywhere.
+      allowExec: false
+      ## -- pods/portforward cluster-wide. Off: it reaches every service.
+      allowPortForward: false
+    ## Read-only across the cluster. Secrets excluded.
+    reader:
+      groups: []
+      users: []
+      serviceAccounts: []
+
+  ## Shaping of the shared tenant ClusterRoles — cluster-wide decisions, not
+  ## per-tenant ones.
+  tenant:
+    admin:
+      ## -- pods/exec and pods/attach inside the bound namespace.
+      allowExec: true
+      ## -- pods/portforward inside the bound namespace.
+      allowPortForward: true
+    developer:
+      allowExec: true
+      allowPortForward: true
+      ## -- Manage Ingress objects. An Ingress claims a cluster-global
+      ##    hostname; false where the platform team allocates those.
+      allowIngress: true
+
+  ## -- Group → role mapping, per namespace. The namespaces must already
+  ##    exist. Entra ID delivers group *object IDs*, so these are GUIDs there.
+  ##
+  ##    Example:
+  ##      tenants:
+  ##        team-a:
+  ##          admin:
+  ##            groups: ["8f1c...-....-....-....-............"]
+  ##          developer:
+  ##            users: ["j.doe@example.com"]
+  ##          viewer:
+  ##            groups: ["2b90...-....-....-....-............"]
+  tenants: {}
+
+  ## -- ServiceAccounts to create for in-cluster automation. List of
+  ##    {name, namespace, annotations, automountServiceAccountToken}; automount
+  ##    defaults to false. Bind by naming "<namespace>/<name>" above.
+  serviceAccounts: []
+
+  ## -- API groups the read-only rules cover with `get/list/watch` on all
+  ##    resources. Never add "" here — the core group is enumerated in the
+  ##    templates so `secrets` stays out of every tier but tenant-admin.
+  readableApiGroups:
+    - admissionregistration.k8s.io
+    - apiextensions.k8s.io
+    - apiregistration.k8s.io
+    - apps
+    - autoscaling
+    - batch
+    - bitnami.com
+    - cdi.kubevirt.io
+    - ceph.rook.io
+    - cert-manager.io
+    - certificates.k8s.io
+    - cilium.io
+    - coordination.k8s.io
+    - discovery.k8s.io
+    - events.k8s.io
+    - helm.toolkit.fluxcd.io
+    - image.toolkit.fluxcd.io
+    - kubevirt.io
+    - kustomize.toolkit.fluxcd.io
+    - metrics.k8s.io
+    - monitoring.coreos.com
+    - mysql.oracle.com
+    - networking.k8s.io
+    - node.k8s.io
+    - notification.toolkit.fluxcd.io
+    - objectbucket.io
+    - policy
+    - rbac.authorization.k8s.io
+    - scheduling.k8s.io
+    - snapshot.storage.k8s.io
+    - source.toolkit.fluxcd.io
+    - stash.appscode.com
+    - storage.k8s.io
+
+  ## -- Extra `{apiGroups, resources, verbs}` rules appended per role, for
+  ##    cluster-specific resources the baseline does not know about.
+  extraRules:
+    clusterReader: []
+    clusterOperator: []
+    tenantAdmin: []
+    tenantDeveloper: []
+    tenantViewer: []

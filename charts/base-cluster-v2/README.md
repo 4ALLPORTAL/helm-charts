@@ -1,11 +1,12 @@
 # base-cluster-v2
 
-![Version: 2.3.15](https://img.shields.io/badge/Version-2.3.15-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
+![Version: 2.4.0](https://img.shields.io/badge/Version-2.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
 
 Foundational base cluster setup — FluxCD, Traefik ingress,
 cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
 full LGTM observability stack (Grafana, Loki, Mimir, Tempo, and Alloy-based
-metrics/log/trace collection). Successor to the base-cluster chart.
+metrics/log/trace collection), and a least-privilege RBAC baseline.
+Successor to the base-cluster chart.
 
 **Homepage:** <https://4allportal.com>
 
@@ -67,9 +68,13 @@ This chart bootstraps the **foundation** of a Kubernetes cluster:
   IngressMonitorController auto-creates UptimeRobot monitors from
   `EndpointMonitor` CRs. Opt-in via `monitoring.enabled`; each sub-component
   has its own toggle.
+- **RBAC baseline** — least-privilege ClusterRoles for platform staff and for
+  tenant namespaces, bound to your identity provider's groups from values
+  (`rbac.enabled`). See [RBAC](#rbac).
 
-**Out of scope** — backups, RBAC scaffolding, security scanning.
-These will land in separate charts/stories.
+**Out of scope** — security scanning, and the authentication half of access
+control: this chart decides what a group may do, not how a person becomes a
+member of one. Wiring kube-apiserver to the identity provider is its own story.
 
 ## Versions
 
@@ -129,6 +134,103 @@ covered, `a.b.example.com` is not.
 CiliumNetworkPolicy objects when the `cilium.io/v2` API is present, otherwise
 nothing. On Talos pre-Cilium, set this to `none` if you'd rather not pre-stage
 the policies (they are inert without Cilium).
+
+## RBAC
+
+Five roles, bound to nobody until you say so. Installing or upgrading the chart
+with the defaults adds the role definitions and changes no one's access — every
+subject list under `rbac` ships empty.
+
+| Role | Kind | Grants |
+| --- | --- | --- |
+| `cluster-admin` (built-in) | ClusterRoleBinding | everything. Bound only from `rbac.cluster.admin`, which is empty by default |
+| `base-cluster:cluster-reader` | ClusterRoleBinding | read-only cluster-wide, **no Secrets** |
+| `base-cluster:cluster-operator` | ClusterRoleBinding | the reader rules, plus restart/scale workloads, evict pods, cordon nodes, `flux reconcile`/`suspend`. **Equivalent to cluster-admin**, see below |
+| `base-cluster:tenant-admin` | RoleBinding per namespace | the namespace, including its Secrets, ServiceAccounts and RoleBindings |
+| `base-cluster:tenant-developer` | RoleBinding per namespace | the namespace's workloads, exec and port-forward — **no Secrets** |
+| `base-cluster:tenant-viewer` | RoleBinding per namespace | read-only in the namespace, **no Secrets** |
+
+The tenant roles are ClusterRoles bound with a RoleBinding, the same way the
+built-in `admin`/`edit`/`view` work: one definition, confined to a namespace by
+the binding. A Role per tenant would be N copies drifting apart.
+
+### What the tiers deliberately cannot do
+
+RBAC has no deny rule, so a permission is excluded by never being granted. The
+exclusions below are the ones that would otherwise turn a tier into
+cluster-admin by a side door — for every tier except `cluster-operator`, which
+is one already (see the next section). They are why the core (`""`) API group is
+enumerated resource by resource in the templates while every other group is
+covered by `rbac.readableApiGroups`:
+
+- **Secrets** are absent from every tier but `tenant-admin`. Adding `""` to
+  `rbac.readableApiGroups` would hand out every Secret in the cluster; extend
+  the enumerated core rule instead.
+
+  For `cluster-reader` and `tenant-viewer` that exclusion is absolute.
+  For `tenant-developer` it is not, and no RBAC rule can make it so: anyone who
+  can create a workload in a namespace can mount that namespace's Secrets into
+  a pod and read them from there. What the tier does buy is that `kubectl get
+  secret` fails, a Secret cannot be read or modified by accident, and the
+  roundabout route leaves a Pod spec behind in the audit log. Where a
+  credential must be unreachable, put it in a namespace whose developers are
+  not bound — the namespace is the boundary, the tier is not.
+- **`escalate`, `bind` and `impersonate`** appear nowhere. `tenant-admin` can
+  create RoleBindings, but the RBAC authorizer refuses a binding that grants
+  more than the binder already holds — so it can delegate its own permissions
+  and no more.
+- **NetworkPolicies and CiliumNetworkPolicies** are read-only in all five
+  tiers. A tenant that can widen its own ingress rules is not isolated, and the
+  cluster's default-deny posture depends on those objects.
+- **`pods/exec` and `pods/portforward` are off cluster-wide**
+  (`rbac.cluster.operator.allowExec`, `.allowPortForward`, both `false`). A
+  shell in any pod reads every Secret mounted anywhere. Inside a tenant
+  namespace both are on, where the blast radius is the tenant's own.
+- **CRDs, admission webhooks, ResourceQuotas and LimitRanges** stay with the
+  platform team in every tier.
+- **Flux objects are read-only in every tenant tier.** Without the Flux
+  multi-tenancy lockdown the controllers apply them as cluster-admin, so a
+  tenant that could write one could grant itself anything.
+
+### `cluster-operator` is cluster-admin in practice
+
+RBAC cannot narrow a `patch` to one field. Patching a workload rewrites its pod
+template, a Job can run under any ServiceAccount and mount any Secret, and a
+patched Flux object can point at any source. The tier guards against accidents,
+not abuse — bind it only to people you would trust with `cluster-admin`.
+
+### Binding groups
+
+```yaml
+rbac:
+  cluster:
+    operator:
+      groups: ["8f1c1d2e-...-...."]      # platform on-call
+    reader:
+      groups: ["2b90ffac-...-...."]      # everyone else
+  tenants:
+    team-a:
+      admin:
+        groups: ["c07a41b9-...-...."]
+      developer:
+        users: ["j.doe@example.com"]
+```
+
+Entra ID puts group *object IDs* in the token, not display names, so on
+Entra-backed clusters these values are GUIDs. Until kube-apiserver is wired to
+the identity provider there are no group claims to match: list `users` (the
+`username` claim, or a client-certificate CN) or `serviceAccounts` instead —
+the shape is identical, so switching over later is an edit to one list.
+
+The tenant namespaces must already exist; the chart binds into them, it does
+not create them. A RoleBinding naming a missing namespace fails the release,
+which beats rendering a binding that silently protects nothing.
+
+Leaving `rbac.cluster.admin` empty locks nobody out. The Talos admin
+kubeconfig (`talosctl kubeconfig`) and kubeadm's `super-admin.conf` authenticate
+as `system:masters`, which the authorizer honours ahead of RBAC — that stays the
+break-glass path. kubeadm's `admin.conf` does not: since v1.29 it authenticates
+as `kubeadm:cluster-admins`, which depends on RBAC.
 
 ## Successor to `base-cluster`
 
@@ -345,6 +447,64 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.uptimeRobot.reconciler.resources.requests.cpu | string | `"50m"` |  |
 | monitoring.uptimeRobot.reconciler.resources.requests.memory | string | `"64Mi"` |  |
 | monitoring.uptimeRobot.reconciler.schedule | string | `"*/15 * * * *"` |  |
+| rbac.cluster.admin.groups | list | `[]` |  |
+| rbac.cluster.admin.serviceAccounts | list | `[]` |  |
+| rbac.cluster.admin.users | list | `[]` |  |
+| rbac.cluster.operator.allowExec | bool | `false` |  |
+| rbac.cluster.operator.allowPortForward | bool | `false` |  |
+| rbac.cluster.operator.groups | list | `[]` |  |
+| rbac.cluster.operator.serviceAccounts | list | `[]` |  |
+| rbac.cluster.operator.users | list | `[]` |  |
+| rbac.cluster.reader.groups | list | `[]` |  |
+| rbac.cluster.reader.serviceAccounts | list | `[]` |  |
+| rbac.cluster.reader.users | list | `[]` |  |
+| rbac.createRoles | bool | `true` |  |
+| rbac.enabled | bool | `true` |  |
+| rbac.extraRules.clusterOperator | list | `[]` |  |
+| rbac.extraRules.clusterReader | list | `[]` |  |
+| rbac.extraRules.tenantAdmin | list | `[]` |  |
+| rbac.extraRules.tenantDeveloper | list | `[]` |  |
+| rbac.extraRules.tenantViewer | list | `[]` |  |
+| rbac.readableApiGroups[0] | string | `"admissionregistration.k8s.io"` |  |
+| rbac.readableApiGroups[10] | string | `"certificates.k8s.io"` |  |
+| rbac.readableApiGroups[11] | string | `"cilium.io"` |  |
+| rbac.readableApiGroups[12] | string | `"coordination.k8s.io"` |  |
+| rbac.readableApiGroups[13] | string | `"discovery.k8s.io"` |  |
+| rbac.readableApiGroups[14] | string | `"events.k8s.io"` |  |
+| rbac.readableApiGroups[15] | string | `"helm.toolkit.fluxcd.io"` |  |
+| rbac.readableApiGroups[16] | string | `"image.toolkit.fluxcd.io"` |  |
+| rbac.readableApiGroups[17] | string | `"kubevirt.io"` |  |
+| rbac.readableApiGroups[18] | string | `"kustomize.toolkit.fluxcd.io"` |  |
+| rbac.readableApiGroups[19] | string | `"metrics.k8s.io"` |  |
+| rbac.readableApiGroups[1] | string | `"apiextensions.k8s.io"` |  |
+| rbac.readableApiGroups[20] | string | `"monitoring.coreos.com"` |  |
+| rbac.readableApiGroups[21] | string | `"mysql.oracle.com"` |  |
+| rbac.readableApiGroups[22] | string | `"networking.k8s.io"` |  |
+| rbac.readableApiGroups[23] | string | `"node.k8s.io"` |  |
+| rbac.readableApiGroups[24] | string | `"notification.toolkit.fluxcd.io"` |  |
+| rbac.readableApiGroups[25] | string | `"objectbucket.io"` |  |
+| rbac.readableApiGroups[26] | string | `"policy"` |  |
+| rbac.readableApiGroups[27] | string | `"rbac.authorization.k8s.io"` |  |
+| rbac.readableApiGroups[28] | string | `"scheduling.k8s.io"` |  |
+| rbac.readableApiGroups[29] | string | `"snapshot.storage.k8s.io"` |  |
+| rbac.readableApiGroups[2] | string | `"apiregistration.k8s.io"` |  |
+| rbac.readableApiGroups[30] | string | `"source.toolkit.fluxcd.io"` |  |
+| rbac.readableApiGroups[31] | string | `"stash.appscode.com"` |  |
+| rbac.readableApiGroups[32] | string | `"storage.k8s.io"` |  |
+| rbac.readableApiGroups[3] | string | `"apps"` |  |
+| rbac.readableApiGroups[4] | string | `"autoscaling"` |  |
+| rbac.readableApiGroups[5] | string | `"batch"` |  |
+| rbac.readableApiGroups[6] | string | `"bitnami.com"` |  |
+| rbac.readableApiGroups[7] | string | `"cdi.kubevirt.io"` |  |
+| rbac.readableApiGroups[8] | string | `"ceph.rook.io"` |  |
+| rbac.readableApiGroups[9] | string | `"cert-manager.io"` |  |
+| rbac.serviceAccounts | list | `[]` |  |
+| rbac.tenant.admin.allowExec | bool | `true` |  |
+| rbac.tenant.admin.allowPortForward | bool | `true` |  |
+| rbac.tenant.developer.allowExec | bool | `true` |  |
+| rbac.tenant.developer.allowIngress | bool | `true` |  |
+| rbac.tenant.developer.allowPortForward | bool | `true` |  |
+| rbac.tenants | object | `{}` |  |
 | reflector.enabled | bool | `true` |  |
 | reflector.resources.limits.cpu | string | `"200m"` |  |
 | reflector.resources.limits.memory | string | `"128Mi"` |  |
