@@ -71,7 +71,7 @@ descheduler (kubernetes-sigs repo) and stash (appscode repo).
 {{- define "base-cluster.versions.tempo.chart" -}}2.1.0{{- end -}}
 
 {{- /* renovate: datasource=docker depName=grafana-chart packageName=dhi.io/grafana-chart */ -}}
-{{- define "base-cluster.versions.grafana.chart" -}}12.3.2{{- end -}}
+{{- define "base-cluster.versions.grafana.chart" -}}13.2.5{{- end -}}
 
 {{/* k8s-monitoring bundles the Alloy Operator (alloy-metrics/alloy-singleton/
      alloy-logs) plus kube-state-metrics and node-exporter as its own
