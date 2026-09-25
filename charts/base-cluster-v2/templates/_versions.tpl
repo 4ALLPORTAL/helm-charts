@@ -30,7 +30,7 @@ descheduler (kubernetes-sigs repo) and stash (appscode repo).
 {{- define "base-cluster.versions.certManager.chart" -}}1.20.2{{- end -}}
 
 {{- /* renovate: datasource=docker depName=external-dns-chart packageName=dhi.io/external-dns-chart */ -}}
-{{- define "base-cluster.versions.externalDns.chart" -}}1.20.0{{- end -}}
+{{- define "base-cluster.versions.externalDns.chart" -}}1.22.0{{- end -}}
 
 {{- /* renovate: datasource=docker depName=sealed-secrets-chart packageName=dhi.io/sealed-secrets-chart */ -}}
 {{- define "base-cluster.versions.sealedSecrets.chart" -}}0.36.6{{- end -}}
