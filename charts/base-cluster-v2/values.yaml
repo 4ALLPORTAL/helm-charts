@@ -430,6 +430,15 @@ monitoring:
     ## via `kubectl patch pvc kafka-data-mimir-kafka-0 ...` then delete the
     ## pod to trigger filesystem resize.
     kafkaSize: 20Gi
+    ## Object storage for blocks and Alertmanager state. Empty keeps the bundled
+    ## MinIO, whose images upstream no longer publishes — a MinIO pod that
+    ## lands on a node without a cached copy stays in ImagePullBackOff.
+    ## Set to an ObjectBucketClaim StorageClass (Rook: ceph-bucket) to
+    ## provision the bucket `mimir-blocks` instead and drop MinIO. Switching
+    ## an existing cluster deletes the MinIO PVC with the release: copy
+    ## mimir-tsdb into the bucket under the `blocks/` prefix first.
+    bucketClaim:
+      storageClassName: ""
     resources:
       requests:
         cpu: 500m
