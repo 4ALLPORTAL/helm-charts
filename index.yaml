@@ -9656,6 +9656,51 @@ entries:
   base-cluster-v2:
   - apiVersion: v2
     appVersion: 1.36.4
+    created: "2026-09-28T04:55:52.37957347Z"
+    description: 'Foundational base cluster setup — FluxCD, Traefik ingress, cert-manager,
+      ExternalDNS, an internal Librespeed speedtest endpoint, and a full LGTM observability
+      stack (Grafana, Loki, Mimir, Tempo, and Alloy-based metrics/log/trace collection).
+      Successor to the base-cluster chart. '
+    digest: 4d34ff88334f5a4b7becd888b6e2adc25860f580be2cea89a3a9dd172eb66da5
+    home: https://4allportal.com
+    keywords:
+    - flux
+    - fluxcd
+    - traefik
+    - cert-manager
+    - external-dns
+    - ingress
+    - base-cluster
+    - monitoring
+    - observability
+    - grafana
+    - loki
+    - mimir
+    - tempo
+    - prometheus
+    - alloy
+    - alloy-operator
+    - k8s-monitoring
+    - janitor
+    - k8s-cleaner
+    - descheduler
+    - reflector
+    - stash
+    - backup
+    maintainers:
+    - email: j.kraemer@4allportal.com
+      name: jpkraemer-mg
+    - email: d.beer@4allportal.com
+      name: Dominic-Beer
+    - email: c.schwarz@4allportal.com
+      name: C-schwarz-4ap
+    name: base-cluster-v2
+    type: application
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/base-cluster-v2-2.3.16/base-cluster-v2-2.3.16.tgz
+    version: 2.3.16
+  - apiVersion: v2
+    appVersion: 1.36.4
     created: "2026-09-23T10:51:05.892413953Z"
     description: 'Foundational base cluster setup — FluxCD, Traefik ingress, cert-manager,
       ExternalDNS, an internal Librespeed speedtest endpoint, and a full LGTM observability
@@ -12670,4 +12715,4 @@ entries:
     urls:
     - https://github.com/4ALLPORTAL/helm-charts/releases/download/simple-website-1.0.0/simple-website-1.0.0.tgz
     version: 1.0.0
-generated: "2026-09-28T04:34:36.511935019Z"
+generated: "2026-09-28T04:55:52.380400804Z"
