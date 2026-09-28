@@ -39,7 +39,7 @@ descheduler (kubernetes-sigs repo) and stash (appscode repo).
 {{- define "base-cluster.versions.reflector.chart" -}}10.0.65{{- end -}}
 
 {{- /* renovate: datasource=docker depName=metrics-server-chart packageName=dhi.io/metrics-server-chart */ -}}
-{{- define "base-cluster.versions.metricsServer.chart" -}}3.13.0{{- end -}}
+{{- define "base-cluster.versions.metricsServer.chart" -}}3.14.0{{- end -}}
 
 {{/* Housekeeping. k8s-cleaner (janitor) from its ghcr.io OCI repo; descheduler
      from the kubernetes-sigs HTTPS repo. Neither is DHI-hardened — mirror via
