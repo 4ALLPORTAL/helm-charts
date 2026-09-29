@@ -3,6 +3,28 @@ entries:
   4allportal:
   - apiVersion: v2
     appVersion: 3.10.62
+    created: "2026-09-29T16:31:36.206957429Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.41.0
+    description: A Helm chart for 4ALLPORTAL version 3.10.0 and up
+    digest: 1d11b0f5123162b1500f7dc8e1e4d55f51204ff24d4dd99b50c2089e273e7df4
+    home: https://4allportal.com
+    icon: https://4allportal.com/wp-content/uploads/2022/07/cropped-4ap_logo.png
+    keywords:
+    - 4ALLPORTAL
+    - DAM
+    - MAM
+    maintainers:
+    - email: j.kraemer@4allportal.com
+      name: jpkraemer-mg
+    name: 4allportal
+    urls:
+    - https://github.com/4ALLPORTAL/helm-charts/releases/download/4allportal-22.1.4/4allportal-22.1.4.tgz
+    version: 22.1.4
+  - apiVersion: v2
+    appVersion: 3.10.62
     created: "2026-09-29T15:27:43.934452229Z"
     dependencies:
     - name: common
@@ -13340,4 +13362,4 @@ entries:
     urls:
     - https://github.com/4ALLPORTAL/helm-charts/releases/download/simple-website-1.0.0/simple-website-1.0.0.tgz
     version: 1.0.0
-generated: "2026-09-29T15:58:38.526333078Z"
+generated: "2026-09-29T16:31:36.207818207Z"
