@@ -68,7 +68,7 @@ descheduler (kubernetes-sigs repo) and stash (appscode repo).
 {{- define "base-cluster.versions.loki.chart" -}}18.13.7{{- end -}}
 
 {{- /* renovate: datasource=docker depName=tempo-chart packageName=dhi.io/tempo-chart */ -}}
-{{- define "base-cluster.versions.tempo.chart" -}}2.4.0{{- end -}}
+{{- define "base-cluster.versions.tempo.chart" -}}3.0.0{{- end -}}
 
 {{- /* renovate: datasource=docker depName=grafana-chart packageName=dhi.io/grafana-chart */ -}}
 {{- define "base-cluster.versions.grafana.chart" -}}13.2.7{{- end -}}
