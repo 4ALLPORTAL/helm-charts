@@ -4,8 +4,10 @@ Mimir — pulled from upstream `grafana` HelmRepository because DHI does not
 mirror mimir-distributed.
 
 This is a "smallest viable" deployment: every microservice runs replicas=1
-with built-in MinIO for blocks storage. The chart has no first-class
-monolithic mode; the closest reliable shape is "scale-everything-down".
+with built-in MinIO for blocks storage, or a Rook bucket when
+monitoring.mimir.bucketClaim.storageClassName is set (see mimir-bucket.yaml).
+The chart has no first-class monolithic mode; the closest reliable shape is
+"scale-everything-down".
 
 For multi-cluster aggregation, swap MinIO for shared S3 by overriding
 mimir.structuredConfig.blocks_storage.{backend,s3} via Flux postRenderers or
@@ -18,6 +20,7 @@ watchdog-rule.yaml) to UptimeRobot via webhook.
 {{- $res := .Values.monitoring.mimir.resources -}}
 {{- $size := .Values.monitoring.mimir.size -}}
 {{- $clusterDomain := include "base-cluster.clusterDomain" . -}}
+{{- $bucketClaim := .Values.monitoring.mimir.bucketClaim.storageClassName -}}
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -50,8 +53,33 @@ spec:
     remediation:
       retries: -1
   values:
+    {{- if $bucketClaim }}
+    global:
+      extraEnvFrom:
+        - configMapRef:
+            name: mimir-blocks
+        - secretRef:
+            name: mimir-blocks
+    {{- end }}
     mimir:
       structuredConfig:
+        {{- if $bucketClaim }}
+        ## One bucket from mimir-bucket.yaml; the prefixes keep blocks and
+        ## Alertmanager state apart, which Mimir requires when they share it.
+        common:
+          storage:
+            backend: s3
+            s3:
+              endpoint: "${BUCKET_HOST}:${BUCKET_PORT}"
+              bucket_name: "${BUCKET_NAME}"
+              access_key_id: "${AWS_ACCESS_KEY_ID}"
+              secret_access_key: "${AWS_SECRET_ACCESS_KEY}"
+              insecure: true
+        blocks_storage:
+          storage_prefix: blocks
+        alertmanager_storage:
+          storage_prefix: alertmanager
+        {{- end }}
         ## Single-tenant base-cluster install — disable multitenancy so writes
         ## don't require the X-Scope-OrgID header. Mimir routes everything to
         ## the synthetic `anonymous` tenant (matches our watchdog rule path).
@@ -72,6 +100,9 @@ spec:
           local:
             directory: /etc/mimir/rules
     minio:
+      {{- if $bucketClaim }}
+      enabled: false
+      {{- else }}
       enabled: true
       mode: standalone
       persistence:
@@ -79,6 +110,7 @@ spec:
         {{- with $sc }}
         storageClass: {{ . | quote }}
         {{- end }}
+      {{- end }}
     ## Stateless components — replicas=1, no persistence.
     distributor:     { replicas: 1, resources: {{ toJson $res }}, zoneAwareReplication: { enabled: false } }
     querier:         { replicas: 1, resources: {{ toJson $res }}, zoneAwareReplication: { enabled: false } }
