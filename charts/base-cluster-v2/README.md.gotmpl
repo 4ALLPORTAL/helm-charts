@@ -135,7 +135,7 @@ the policies (they are inert without Cilium).
 
 ## RBAC
 
-Five roles, bound to nobody until you say so. Installing or upgrading the chart
+Four roles, bound to nobody until you say so. Installing or upgrading the chart
 with the defaults adds the role definitions and changes no one's access — every
 subject list under `rbac` ships empty.
 
@@ -143,7 +143,6 @@ subject list under `rbac` ships empty.
 | --- | --- | --- |
 | `cluster-admin` (built-in) | ClusterRoleBinding | everything. Bound only from `rbac.cluster.admin`, which is empty by default |
 | `base-cluster:cluster-reader` | ClusterRoleBinding | read-only cluster-wide, **no Secrets** |
-| `base-cluster:cluster-operator` | ClusterRoleBinding | the reader rules, plus restart/scale workloads, evict pods, cordon nodes, `flux reconcile`/`suspend`. **Equivalent to cluster-admin**, see below |
 | `base-cluster:tenant-admin` | RoleBinding per namespace | the namespace, including its Secrets, ServiceAccounts and RoleBindings |
 | `base-cluster:tenant-developer` | RoleBinding per namespace | the namespace's workloads, exec and port-forward — **no Secrets** |
 | `base-cluster:tenant-viewer` | RoleBinding per namespace | read-only in the namespace, **no Secrets** |
@@ -156,8 +155,7 @@ the binding. A Role per tenant would be N copies drifting apart.
 
 RBAC has no deny rule, so a permission is excluded by never being granted. The
 exclusions below are the ones that would otherwise turn a tier into
-cluster-admin by a side door — for every tier except `cluster-operator`, which
-is one already (see the next section). They are why the core (`""`) API group is
+cluster-admin by a side door. They are why the core (`""`) API group is
 enumerated resource by resource in the templates while every other group is
 covered by `rbac.readableApiGroups`:
 
@@ -177,11 +175,10 @@ covered by `rbac.readableApiGroups`:
   create RoleBindings, but the RBAC authorizer refuses a binding that grants
   more than the binder already holds — so it can delegate its own permissions
   and no more.
-- **NetworkPolicies and CiliumNetworkPolicies** are read-only in all five
+- **NetworkPolicies and CiliumNetworkPolicies** are read-only in all four
   tiers. A tenant that can widen its own ingress rules is not isolated, and the
   cluster's default-deny posture depends on those objects.
-- **`pods/exec` and `pods/portforward` are off cluster-wide**
-  (`rbac.cluster.operator.allowExec`, `.allowPortForward`, both `false`). A
+- **`pods/exec` and `pods/portforward` are not granted cluster-wide.** A
   shell in any pod reads every Secret mounted anywhere. Inside a tenant
   namespace both are on, where the blast radius is the tenant's own.
 - **CRDs, admission webhooks, ResourceQuotas and LimitRanges** stay with the
@@ -190,20 +187,13 @@ covered by `rbac.readableApiGroups`:
   multi-tenancy lockdown the controllers apply them as cluster-admin, so a
   tenant that could write one could grant itself anything.
 
-### `cluster-operator` is cluster-admin in practice
-
-RBAC cannot narrow a `patch` to one field. Patching a workload rewrites its pod
-template, a Job can run under any ServiceAccount and mount any Secret, and a
-patched Flux object can point at any source. The tier guards against accidents,
-not abuse — bind it only to people you would trust with `cluster-admin`.
-
 ### Binding groups
 
 ```yaml
 rbac:
   cluster:
-    operator:
-      groups: ["8f1c1d2e-...-...."]      # platform on-call
+    admin:
+      groups: ["8f1c1d2e-...-...."]      # platform team
     reader:
       groups: ["2b90ffac-...-...."]      # everyone else
   tenants:

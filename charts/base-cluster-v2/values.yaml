@@ -697,24 +697,13 @@ rbac:
   ## Cluster-wide tiers. All subject lists ship empty — installing the chart
   ## changes nobody's access. `system:masters` stays the break-glass path.
   cluster:
-    ## Binds the built-in `cluster-admin`. Prefer `operator`.
+    ## Binds the built-in `cluster-admin`.
     admin:
       groups: []
       users: []
       ## ServiceAccounts as "<namespace>/<name>", or a bare name for one in the
       ## release namespace.
       serviceAccounts: []
-    ## Day-2 operations: read everything except Secrets, restart and scale
-    ## workloads, evict pods, cordon nodes, reconcile and suspend Flux.
-    operator:
-      groups: []
-      users: []
-      serviceAccounts: []
-      ## -- pods/exec and pods/attach cluster-wide. Off: a shell in any pod
-      ##    reads every Secret mounted anywhere.
-      allowExec: false
-      ## -- pods/portforward cluster-wide. Off: it reaches every service.
-      allowPortForward: false
     ## Read-only across the cluster. Secrets excluded.
     reader:
       groups: []
@@ -797,7 +786,6 @@ rbac:
   ##    cluster-specific resources the baseline does not know about.
   extraRules:
     clusterReader: []
-    clusterOperator: []
     tenantAdmin: []
     tenantDeveloper: []
     tenantViewer: []
