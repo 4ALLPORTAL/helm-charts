@@ -10,14 +10,57 @@ spec:
   groups:
     - name: high-storage-usage
       rules:
+        # Signals to CSM that a customer may need to book more storage.
+        # CephFS PVC capacity == the subvolume quota == what the customer booked.
+        #
+        # Required free space grows sublinearly with the booked quota:
+        #   free_GiB = quota_GiB ^ 0.75 / 3
+        # so the effective threshold slides from ~84% used on a 20 GiB quota to
+        # ~97% on 15 TiB. A customer who sized 15 TiB correctly and rides 94%
+        # is not a sales lead; the same 94% on 200 GiB is.
+        #
+        #   quota    free required   fires at
+        #   100 GiB   10.5 GiB        89.5%
+        #     1 TiB   60.3 GiB        94.1%
+        #     4 TiB  170.7 GiB        95.8%
+        #    15 TiB  459.9 GiB        97.0%
+        #    25 TiB  674.6 GiB        97.4%
+        #
+        # Tunables: the exponent (0.75) sets how fast headroom flattens with size;
+        # the divisor (3) shifts the whole curve up or down. Raise the divisor to
+        # notify later across the board.
+        #
+        # Scoped to PVCs the 4allportal chart provisions. Those are the only
+        # volumes whose capacity is a quota the customer actually booked; the
+        # name pattern matches them exactly (chart PVCs are always
+        # <release>-4allportal-{assets,config,storage}) and pulls in nothing
+        # else — no operator sidecars, MariaDB data dirs or debug volumes,
+        # which would otherwise turn into bogus sales leads.
         - alert: HighStorageUsage
           annotations:
-            description: The storage usage on node {{ "{{ $labels.node }}" }} is currently {{ "{{ $value }}" }}%, which is above the threshold of 90%.
-            summary: Over 90 % of storage usage on {{ "{{ $labels.node }}" }}
+            description: PVC {{ "{{ $labels.namespace }}" }}/{{ "{{ $labels.persistentvolumeclaim }}" }} has only {{ "{{ $value | humanize1024 }}" }}B left of its booked quota. The customer may need to book additional storage.
+            summary: Customer storage nearing booked quota on {{ "{{ $labels.namespace }}" }}/{{ "{{ $labels.persistentvolumeclaim }}" }}
           expr: |-
-            max by (persistentvolumeclaim,namespace) (ceil((kubelet_volume_stats_used_bytes{job="kubelet",metrics_path="/metrics",namespace!~"kube-system|monitoring"}/ kubelet_volume_stats_capacity_bytes{job="kubelet",metrics_path="/metrics",namespace=~".*"}) * 100) >= 90)
+            min by (namespace,persistentvolumeclaim) (kubelet_volume_stats_available_bytes{job="kubelet",metrics_path="/metrics",persistentvolumeclaim=~".+-4allportal-(assets|config|storage)"})
+            <
+            max by (namespace,persistentvolumeclaim) (((kubelet_volume_stats_capacity_bytes{job="kubelet",metrics_path="/metrics",persistentvolumeclaim=~".+-4allportal-(assets|config|storage)"} / 1024^3) ^ 0.75 / 3) * 1024^3)
           for: 24h
           labels:
-            severity: critical
+            severity: warning
             frequency: weekly
+        # Operational backstop: the volume is about to wedge the workload,
+        # regardless of how it was sized. Deliberately flat and deliberately
+        # short-fused — this one is for on-call, not for CSM.
+        - alert: StorageAlmostFull
+          annotations:
+            description: PVC {{ "{{ $labels.namespace }}" }}/{{ "{{ $labels.persistentvolumeclaim }}" }} is {{ "{{ $value | humanizePercentage }}" }} full and will stop accepting writes shortly.
+            summary: PVC almost full on {{ "{{ $labels.namespace }}" }}/{{ "{{ $labels.persistentvolumeclaim }}" }}
+          expr: |-
+            max by (namespace,persistentvolumeclaim) (kubelet_volume_stats_used_bytes{job="kubelet",metrics_path="/metrics",namespace!~"kube-system|monitoring"})
+            /
+            max by (namespace,persistentvolumeclaim) (kubelet_volume_stats_capacity_bytes{job="kubelet",metrics_path="/metrics",namespace!~"kube-system|monitoring"})
+            > 0.98
+          for: 30m
+          labels:
+            severity: critical
   {{- end }}

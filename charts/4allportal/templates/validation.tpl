@@ -33,3 +33,18 @@
 {{- end -}}
 {{- end -}}
 {{- end -}}
+
+{{- $kafka := (.Values.fourAllPortal).kafka | default dict -}}
+{{- $kafkaEnv := .Values.fourAllPortal.env | default dict -}}
+
+{{- if and $kafka.brokers (hasKey $kafkaEnv "SPRING_KAFKA_BOOTSTRAP_SERVERS") -}}
+{{- fail "Configure the broker either in fourAllPortal.kafka.brokers or in fourAllPortal.env.SPRING_KAFKA_BOOTSTRAP_SERVERS, not both." -}}
+{{- end -}}
+
+{{- if and ($kafka.consumer | default dict).groupId (hasKey $kafkaEnv "SPRING_KAFKA_CONSUMER_GROUP_ID") -}}
+{{- fail "Configure the consumer group either in fourAllPortal.kafka.consumer.groupId or in fourAllPortal.env.SPRING_KAFKA_CONSUMER_GROUP_ID, not both." -}}
+{{- end -}}
+
+{{- if and $kafka.brokers (eq (include "common.networkPolicy.type" .) "cilium") (not ($kafka.networkPolicy | default dict).matchLabels) -}}
+{{- fail "fourAllPortal.kafka.networkPolicy.matchLabels must select the broker pods when fourAllPortal.kafka.brokers is set, including io.kubernetes.pod.namespace. Without it a Cilium cluster renders no egress rule and drops the connection." -}}
+{{- end -}}

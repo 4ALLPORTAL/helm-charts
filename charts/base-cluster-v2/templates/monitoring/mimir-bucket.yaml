@@ -1,0 +1,22 @@
+{{- if and .Values.monitoring.enabled .Values.monitoring.mimir.enabled .Values.monitoring.mimir.bucketClaim.storageClassName }}
+{{/*
+Bucket for Mimir's blocks and Alertmanager state, replacing the bundled MinIO.
+Rook creates a ConfigMap and a Secret named like the claim; mimir.yaml injects
+both into every Mimir pod and expands them in the S3 config.
+
+Kept on uninstall: with a Delete StorageClass, removing the claim removes the
+bucket and every block in it.
+*/}}
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: mimir-blocks
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+  annotations:
+    helm.sh/resource-policy: keep
+spec:
+  bucketName: mimir-blocks
+  storageClassName: {{ .Values.monitoring.mimir.bucketClaim.storageClassName | quote }}
+{{- end }}
