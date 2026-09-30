@@ -553,11 +553,11 @@ monitoring:
       roleAttributePath: ""
     resources:
       requests:
-        cpu: 100m
-        memory: 256Mi
+        cpu: 250m
+        memory: 768Mi
       limits:
-        cpu: 500m
-        memory: 512Mi
+        cpu: "2"
+        memory: 1536Mi
 
   ## k8s-monitoring (Alloy Operator) — `alloy-metrics` (clustered —
   ## annotation/ServiceMonitor/PodMonitor/Probe scraping) and `alloy-logs`
