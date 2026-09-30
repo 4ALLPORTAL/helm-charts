@@ -405,6 +405,7 @@ monitoring:
     ## via `kubectl patch pvc kafka-data-mimir-kafka-0 ...` then delete the
     ## pod to trigger filesystem resize.
     kafkaSize: 20Gi
+    maxGlobalSeriesPerUser: 500000
     resources:
       requests:
         cpu: 500m

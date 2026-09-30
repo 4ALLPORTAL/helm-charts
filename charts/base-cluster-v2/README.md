@@ -306,6 +306,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.loki.size | string | `"50Gi"` |  |
 | monitoring.mimir.enabled | bool | `true` |  |
 | monitoring.mimir.kafkaSize | string | `"20Gi"` |  |
+| monitoring.mimir.maxGlobalSeriesPerUser | int | `500000` |  |
 | monitoring.mimir.resources.limits.cpu | string | `"2"` |  |
 | monitoring.mimir.resources.limits.memory | string | `"4Gi"` |  |
 | monitoring.mimir.resources.requests.cpu | string | `"500m"` |  |

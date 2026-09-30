@@ -58,6 +58,7 @@ spec:
         multitenancy_enabled: false
         limits:
           compactor_blocks_retention_period: {{ .Values.monitoring.mimir.retention | quote }}
+          max_global_series_per_user: {{ .Values.monitoring.mimir.maxGlobalSeriesPerUser | int }}
         ruler:
           ## Send firing alerts to the in-cluster Alertmanager.
           alertmanager_url: http://mimir-alertmanager.monitoring.svc.{{ $clusterDomain }}:8080/alertmanager
