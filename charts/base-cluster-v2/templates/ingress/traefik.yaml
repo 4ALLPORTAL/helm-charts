@@ -102,11 +102,14 @@ spec:
       enabled: true
 
     {{- /*
-    The Traefik chart takes Service addressing from `service.spec` only -- it has
-    no top-level `loadBalancerIP` key and drops one without error. Both the
-    shorthand `traefik.service.loadBalancerIP` and the `traefik.service.spec`
+    The Traefik chart (v40+) takes everything but annotations and labels from
+    `service.spec` only -- top-level `type`, `externalIPs` or `loadBalancerIP`
+    keys are dropped without error. The shorthands `traefik.service.externalIPs`
+    and `traefik.service.loadBalancerIP` and the `traefik.service.spec`
     passthrough are folded into a single spec map here, passthrough last so a
-    cluster can override any default, `externalTrafficPolicy` included.
+    cluster can override any default, `externalTrafficPolicy` included. `type`
+    is set after the passthrough: the `externalTrafficPolicy` default depends
+    on it, so `traefik.service.type` stays authoritative.
     */}}
     {{- $spec := dict }}
     {{- if ne .Values.traefik.service.type "ClusterIP" }}
@@ -115,26 +118,23 @@ spec:
     {{- with .Values.traefik.service.loadBalancerIP }}
     {{- $spec = merge (dict "loadBalancerIP" .) $spec }}
     {{- end }}
+    {{- with .Values.traefik.service.externalIPs }}
+    {{- $spec = merge (dict "externalIPs" .) $spec }}
+    {{- end }}
     {{- with .Values.traefik.service.spec }}
     {{- $spec = merge (deepCopy .) $spec }}
     {{- end }}
+    {{- $_ := set $spec "type" .Values.traefik.service.type }}
 
     service:
       enabled: true
-      type: {{ .Values.traefik.service.type | quote }}
       {{- with .Values.traefik.service.annotations }}
       annotations: {{- . | toYaml | nindent 8 }}
       {{- end }}
-      {{- with .Values.traefik.service.externalIPs }}
-      externalIPs: {{- . | toYaml | nindent 8 }}
-      {{- end }}
-      {{- with $spec }}
-      spec: {{- toYaml . | nindent 8 }}
-      {{- end }}
+      spec: {{- toYaml $spec | nindent 8 }}
 
-    logs:
-      general:
-        level: {{ .Values.traefik.log.level | quote }}
+    log:
+      level: {{ .Values.traefik.log.level | quote }}
 
     additionalArguments:
       {{- with .Values.traefik.ingressIP }}
