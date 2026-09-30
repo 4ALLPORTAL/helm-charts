@@ -24,7 +24,7 @@ descheduler (kubernetes-sigs repo) and stash (appscode repo).
 {{- define "base-cluster.versions.flux2.chart" -}}2.19.1{{- end -}}
 
 {{- /* renovate: datasource=docker depName=traefik-chart packageName=dhi.io/traefik-chart */ -}}
-{{- define "base-cluster.versions.traefik.chart" -}}39.0.8{{- end -}}
+{{- define "base-cluster.versions.traefik.chart" -}}41.6.0{{- end -}}
 
 {{- /* renovate: datasource=docker depName=cert-manager-chart packageName=dhi.io/cert-manager-chart */ -}}
 {{- define "base-cluster.versions.certManager.chart" -}}1.21.2{{- end -}}
