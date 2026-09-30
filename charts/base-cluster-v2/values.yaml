@@ -114,12 +114,14 @@ traefik:
     annotations: {}
     ## Merged into the Service's `spec` -- the only place the Traefik chart reads
     ## addressing from. `externalTrafficPolicy: Local` is the chart's default and
-    ## anything set here wins over it. Cannot carry `type`, `selector` or `ports`.
+    ## anything set here wins over it. Cannot carry `selector` or `ports`; a
+    ## `type` here is overridden by `service.type` above.
     ##   spec:
     ##     loadBalancerIP: 203.0.113.1
     spec: {}
     ## Shorthand for `service.spec.loadBalancerIP`; `spec` wins if both are set.
     loadBalancerIP: ""
+    ## Shorthand for `service.spec.externalIPs`; `spec` wins if both are set.
     externalIPs: []
   ## When set, --providers.kubernetesIngress.ingressEndpoint.ip is forced to
   ## this value (used when Service has no externally-routable VIP yet).
