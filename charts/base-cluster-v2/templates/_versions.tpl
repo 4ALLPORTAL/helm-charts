@@ -68,7 +68,7 @@ descheduler (kubernetes-sigs repo) and stash (appscode repo).
 {{- define "base-cluster.versions.loki.chart" -}}18.13.7{{- end -}}
 
 {{- /* renovate: datasource=docker depName=tempo-chart packageName=dhi.io/tempo-chart */ -}}
-{{- define "base-cluster.versions.tempo.chart" -}}3.0.0{{- end -}}
+{{- define "base-cluster.versions.tempo.chart" -}}3.1.0{{- end -}}
 
 {{- /* renovate: datasource=docker depName=grafana-chart packageName=dhi.io/grafana-chart */ -}}
 {{- define "base-cluster.versions.grafana.chart" -}}13.2.7{{- end -}}
@@ -81,7 +81,7 @@ descheduler (kubernetes-sigs repo) and stash (appscode repo).
 {{- define "base-cluster.versions.k8sMonitoring.chart" -}}4.5.2{{- end -}}
 
 {{- /* renovate: datasource=docker depName=opentelemetry-collector-chart packageName=dhi.io/opentelemetry-collector-chart */ -}}
-{{- define "base-cluster.versions.otelCollector.chart" -}}0.173.1{{- end -}}
+{{- define "base-cluster.versions.otelCollector.chart" -}}0.174.0{{- end -}}
 
 {{/* IngressMonitorController (Stakater) — reconciles EndpointMonitor CRs into
      UptimeRobot monitors. Chart from the `stakater` HTTPS repo; image from
