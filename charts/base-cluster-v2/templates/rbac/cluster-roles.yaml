@@ -1,0 +1,42 @@
+{{/*
+Cluster-scoped baseline roles. RBAC has no deny rule, so `secrets` is excluded
+by never being granted — which is why the core ("") group is enumerated instead
+of wildcarded. See the RBAC section of the README.
+*/}}
+{{- if and .Values.rbac.enabled .Values.rbac.createRoles }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: base-cluster:cluster-reader
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: rbac
+rules:
+  - apiGroups: [""]
+    resources:
+      - configmaps
+      - endpoints
+      - events
+      - limitranges
+      - namespaces
+      - nodes
+      - persistentvolumeclaims
+      - persistentvolumes
+      - pods
+      - pods/log
+      - pods/status
+      - podtemplates
+      - replicationcontrollers
+      - resourcequotas
+      - serviceaccounts
+      - services
+    verbs: ["get", "list", "watch"]
+  ## Adding "" here would defeat the Secret exclusion — extend the core rule.
+  {{- with .Values.rbac.readableApiGroups }}
+  - apiGroups: {{ toYaml . | nindent 6 }}
+    resources: ["*"]
+    verbs: ["get", "list", "watch"]
+  {{- end }}
+  {{- with .Values.rbac.extraRules.clusterReader }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
+{{- end }}
