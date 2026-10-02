@@ -309,6 +309,9 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.mimir.alertmanagerConfigSecret | string | `""` |  |
 | monitoring.mimir.alertmanagerEgressFQDNs | list | `[]` |  |
 | monitoring.mimir.bucketClaim.storageClassName | string | `""` |  |
+| monitoring.mimir.bucketClaim.tls.caConfigMap | string | `""` |  |
+| monitoring.mimir.bucketClaim.tls.enabled | bool | `false` |  |
+| monitoring.mimir.bucketClaim.tls.port | int | `443` |  |
 | monitoring.mimir.enabled | bool | `true` |  |
 | monitoring.mimir.extraRuleGroups | object | `{}` |  |
 | monitoring.mimir.kafkaSize | string | `"20Gi"` |  |
