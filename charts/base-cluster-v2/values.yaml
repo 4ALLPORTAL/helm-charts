@@ -432,6 +432,7 @@ monitoring:
     ## via `kubectl patch pvc kafka-data-mimir-kafka-0 ...` then delete the
     ## pod to trigger filesystem resize.
     kafkaSize: 20Gi
+    maxGlobalSeriesPerUser: 500000
     ## Object storage for blocks and Alertmanager state. Empty keeps the bundled
     ## MinIO, whose images upstream no longer publishes — a MinIO pod that
     ## lands on a node without a cached copy stays in ImagePullBackOff.
@@ -441,6 +442,16 @@ monitoring:
     ## mimir-tsdb into the bucket under the `blocks/` prefix first.
     bucketClaim:
       storageClassName: ""
+      ## HTTPS to the bucket. Off: plain HTTP to the host and port in the
+      ## claim's ConfigMap. On: HTTPS to that host on `port`, set here because
+      ## a store can serve TLS on a port its claims do not advertise. Ignored
+      ## unless storageClassName is set.
+      tls:
+        enabled: false
+        port: 443
+        ## ConfigMap in `monitoring` with key `ca.crt`, the CA that signed the
+        ## endpoint's certificate. Empty: the image's system trust store.
+        caConfigMap: ""
     resources:
       requests:
         cpu: 500m
@@ -553,11 +564,11 @@ monitoring:
       roleAttributePath: ""
     resources:
       requests:
-        cpu: 100m
-        memory: 256Mi
+        cpu: 250m
+        memory: 768Mi
       limits:
-        cpu: 500m
-        memory: 512Mi
+        cpu: "2"
+        memory: 1536Mi
 
   ## k8s-monitoring (Alloy Operator) — `alloy-metrics` (clustered —
   ## annotation/ServiceMonitor/PodMonitor/Probe scraping) and `alloy-logs`

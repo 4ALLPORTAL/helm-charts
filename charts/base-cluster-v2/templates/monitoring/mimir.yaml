@@ -21,6 +21,7 @@ watchdog-rule.yaml) to UptimeRobot via webhook.
 {{- $size := .Values.monitoring.mimir.size -}}
 {{- $clusterDomain := include "base-cluster.clusterDomain" . -}}
 {{- $bucketClaim := .Values.monitoring.mimir.bucketClaim.storageClassName -}}
+{{- $bucketTLS := .Values.monitoring.mimir.bucketClaim.tls -}}
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -60,6 +61,16 @@ spec:
             name: mimir-blocks
         - secretRef:
             name: mimir-blocks
+      {{- if and $bucketTLS.enabled $bucketTLS.caConfigMap }}
+      extraVolumes:
+        - name: bucket-ca
+          configMap:
+            name: {{ $bucketTLS.caConfigMap | quote }}
+      extraVolumeMounts:
+        - name: bucket-ca
+          mountPath: /etc/mimir-bucket-ca
+          readOnly: true
+      {{- end }}
     {{- end }}
     mimir:
       structuredConfig:
@@ -70,11 +81,23 @@ spec:
           storage:
             backend: s3
             s3:
+              {{- if $bucketTLS.enabled }}
+              endpoint: "${BUCKET_HOST}:{{ $bucketTLS.port }}"
+              {{- else }}
               endpoint: "${BUCKET_HOST}:${BUCKET_PORT}"
+              {{- end }}
               bucket_name: "${BUCKET_NAME}"
               access_key_id: "${AWS_ACCESS_KEY_ID}"
               secret_access_key: "${AWS_SECRET_ACCESS_KEY}"
+              {{- if $bucketTLS.enabled }}
+              insecure: false
+              {{- with $bucketTLS.caConfigMap }}
+              http:
+                tls_ca_path: /etc/mimir-bucket-ca/ca.crt
+              {{- end }}
+              {{- else }}
               insecure: true
+              {{- end }}
         blocks_storage:
           storage_prefix: blocks
         alertmanager_storage:
@@ -86,6 +109,7 @@ spec:
         multitenancy_enabled: false
         limits:
           compactor_blocks_retention_period: {{ .Values.monitoring.mimir.retention | quote }}
+          max_global_series_per_user: {{ .Values.monitoring.mimir.maxGlobalSeriesPerUser | int }}
         alertmanager:
           ## Upstream sets this only when it renders its own fallback ConfigMap
           ## (mimir-distributed values.yaml gates it on alertmanager.fallbackConfig),

@@ -375,10 +375,10 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.grafana.oidc.roleAttributePath | string | `""` |  |
 | monitoring.grafana.oidc.scopes | string | `"openid profile email"` |  |
 | monitoring.grafana.oidc.tokenUrl | string | `""` |  |
-| monitoring.grafana.resources.limits.cpu | string | `"500m"` |  |
-| monitoring.grafana.resources.limits.memory | string | `"512Mi"` |  |
-| monitoring.grafana.resources.requests.cpu | string | `"100m"` |  |
-| monitoring.grafana.resources.requests.memory | string | `"256Mi"` |  |
+| monitoring.grafana.resources.limits.cpu | string | `"2"` |  |
+| monitoring.grafana.resources.limits.memory | string | `"1536Mi"` |  |
+| monitoring.grafana.resources.requests.cpu | string | `"250m"` |  |
+| monitoring.grafana.resources.requests.memory | string | `"768Mi"` |  |
 | monitoring.ingressMonitor.enabled | bool | `false` |  |
 | monitoring.ingressMonitor.existingConfigSecret | string | `""` |  |
 | monitoring.ingressMonitor.image.registry | string | `""` |  |
@@ -401,9 +401,13 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.mimir.alertmanagerConfigSecret | string | `""` |  |
 | monitoring.mimir.alertmanagerEgressFQDNs | list | `[]` |  |
 | monitoring.mimir.bucketClaim.storageClassName | string | `""` |  |
+| monitoring.mimir.bucketClaim.tls.caConfigMap | string | `""` |  |
+| monitoring.mimir.bucketClaim.tls.enabled | bool | `false` |  |
+| monitoring.mimir.bucketClaim.tls.port | int | `443` |  |
 | monitoring.mimir.enabled | bool | `true` |  |
 | monitoring.mimir.extraRuleGroups | object | `{}` |  |
 | monitoring.mimir.kafkaSize | string | `"20Gi"` |  |
+| monitoring.mimir.maxGlobalSeriesPerUser | int | `500000` |  |
 | monitoring.mimir.resources.limits.cpu | string | `"2"` |  |
 | monitoring.mimir.resources.limits.memory | string | `"4Gi"` |  |
 | monitoring.mimir.resources.requests.cpu | string | `"500m"` |  |

@@ -1,0 +1,178 @@
+{
+  "id": null,
+  "uid": "node-clock-skew",
+  "title": "Node Clock Skew / NTP",
+  "description": "NTP sync status and clock offset per node, from node-exporter's timex collector. Catches the class of incident where an unsynced clock (e.g. etcd/Ceph member) causes hangs before anything else notices.",
+  "tags": ["node-exporter", "ntp", "clock-skew"],
+  "timezone": "utc",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "1m",
+  "time": { "from": "now-6h", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Nodes not NTP-synced",
+      "type": "stat",
+      "datasource": "Mimir",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "count(node_timex_sync_status == 0) or vector(0)",
+          "legendFormat": "unsynced"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 1 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 2,
+      "title": "Nodes with |offset| > 500ms",
+      "type": "stat",
+      "datasource": "Mimir",
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "count(abs(node_timex_offset_seconds) > 0.5) or vector(0)",
+          "legendFormat": "skewed"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 1 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 3,
+      "title": "Max |offset| across all nodes",
+      "type": "stat",
+      "datasource": "Mimir",
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "max(abs(node_timex_offset_seconds))",
+          "legendFormat": "max offset"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 0.1 },
+              { "color": "red", "value": 0.5 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 4,
+      "title": "NTP offset per node",
+      "type": "timeseries",
+      "datasource": "Mimir",
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 4 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "max by (instance) (node_timex_offset_seconds)",
+          "legendFormat": "{{instance}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "custom": { "drawStyle": "line", "fillOpacity": 5 },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 0.1 },
+              { "color": "red", "value": 0.5 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 5,
+      "title": "Estimated clock error per node",
+      "type": "timeseries",
+      "datasource": "Mimir",
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 13 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "max by (instance) (node_timex_estimated_error_seconds)",
+          "legendFormat": "{{instance}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "custom": { "drawStyle": "line", "fillOpacity": 5 }
+        }
+      }
+    },
+    {
+      "id": 6,
+      "title": "Current status per node",
+      "type": "table",
+      "datasource": "Mimir",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 22 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "node_timex_sync_status",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "datasource": "Mimir",
+          "expr": "node_timex_offset_seconds",
+          "format": "table",
+          "instant": true
+        }
+      ],
+      "transformations": [
+        { "id": "merge", "options": {} },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true, "job": true, "__name__": true, "app": true,
+              "cluster": true, "component": true, "container": true,
+              "k8s_cluster_name": true, "namespace": true, "pod": true,
+              "source": true, "workload": true
+            },
+            "renameByName": {
+              "Value #A": "synced (1=yes)",
+              "Value #B": "offset (s)"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

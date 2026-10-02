@@ -24,13 +24,13 @@ descheduler (kubernetes-sigs repo) and stash (appscode repo).
 {{- define "base-cluster.versions.flux2.chart" -}}2.19.1{{- end -}}
 
 {{- /* renovate: datasource=docker depName=traefik-chart packageName=dhi.io/traefik-chart */ -}}
-{{- define "base-cluster.versions.traefik.chart" -}}41.6.0{{- end -}}
+{{- define "base-cluster.versions.traefik.chart" -}}41.6.1{{- end -}}
 
 {{- /* renovate: datasource=docker depName=cert-manager-chart packageName=dhi.io/cert-manager-chart */ -}}
 {{- define "base-cluster.versions.certManager.chart" -}}1.21.2{{- end -}}
 
 {{- /* renovate: datasource=docker depName=external-dns-chart packageName=dhi.io/external-dns-chart */ -}}
-{{- define "base-cluster.versions.externalDns.chart" -}}1.22.0{{- end -}}
+{{- define "base-cluster.versions.externalDns.chart" -}}1.23.0{{- end -}}
 
 {{- /* renovate: datasource=docker depName=sealed-secrets-chart packageName=dhi.io/sealed-secrets-chart */ -}}
 {{- define "base-cluster.versions.sealedSecrets.chart" -}}2.20.0{{- end -}}
@@ -68,7 +68,7 @@ descheduler (kubernetes-sigs repo) and stash (appscode repo).
 {{- define "base-cluster.versions.loki.chart" -}}18.13.7{{- end -}}
 
 {{- /* renovate: datasource=docker depName=tempo-chart packageName=dhi.io/tempo-chart */ -}}
-{{- define "base-cluster.versions.tempo.chart" -}}3.0.0{{- end -}}
+{{- define "base-cluster.versions.tempo.chart" -}}3.1.0{{- end -}}
 
 {{- /* renovate: datasource=docker depName=grafana-chart packageName=dhi.io/grafana-chart */ -}}
 {{- define "base-cluster.versions.grafana.chart" -}}13.2.7{{- end -}}
@@ -81,7 +81,7 @@ descheduler (kubernetes-sigs repo) and stash (appscode repo).
 {{- define "base-cluster.versions.k8sMonitoring.chart" -}}4.5.2{{- end -}}
 
 {{- /* renovate: datasource=docker depName=opentelemetry-collector-chart packageName=dhi.io/opentelemetry-collector-chart */ -}}
-{{- define "base-cluster.versions.otelCollector.chart" -}}0.173.1{{- end -}}
+{{- define "base-cluster.versions.otelCollector.chart" -}}0.174.0{{- end -}}
 
 {{/* IngressMonitorController (Stakater) — reconciles EndpointMonitor CRs into
      UptimeRobot monitors. Chart from the `stakater` HTTPS repo; image from
