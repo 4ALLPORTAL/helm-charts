@@ -443,7 +443,8 @@ monitoring:
       storageClassName: ""
       ## HTTPS to the bucket. Off: plain HTTP to the host and port in the
       ## claim's ConfigMap. On: HTTPS to that host on `port`, set here because
-      ## a store can serve TLS on a port its claims do not advertise.
+      ## a store can serve TLS on a port its claims do not advertise. Ignored
+      ## unless storageClassName is set.
       tls:
         enabled: false
         port: 443
