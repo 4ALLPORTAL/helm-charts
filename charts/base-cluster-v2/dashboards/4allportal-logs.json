@@ -153,7 +153,7 @@
           "datasource": "Loki",
           "queryType": "range",
           "legendFormat": "{{level}}",
-          "expr": "sum by (level) (rate({namespace=\"$namespace\", container=\"4allportal\"} |~ \"(?i)$search\" | pod=~\"${pod:regex}\" | json | __error__ != \"JSONParserErr\" [$__interval]))"
+          "expr": "sum by (level) (rate({namespace=\"$namespace\", container=\"4allportal\"} |~ `(?i)${search:regex}` | pod=~\"${pod:regex}\" | json | __error__ != \"JSONParserErr\" [$__interval]))"
         }
       ]
     },
@@ -183,7 +183,7 @@
           "refId": "A",
           "datasource": "Loki",
           "queryType": "range",
-          "expr": "{namespace=\"$namespace\", container=\"4allportal\"} |~ \"(?i)$search\" | pod=~\"${pod:regex}\" | json | __error__ != \"JSONParserErr\" | level=\"ERROR\" | line_format \"{{ if .msg }}{{.ts}} [{{.level}}] {{.thread}} {{.logger}} - {{.msg}}{{ else }}{{ __line__ }}{{ end }}\""
+          "expr": "{namespace=\"$namespace\", container=\"4allportal\"} |~ `(?i)${search:regex}` | pod=~\"${pod:regex}\" | json | __error__ != \"JSONParserErr\" | level=\"ERROR\" | line_format \"{{ if .msg }}{{.ts}} [{{.level}}] {{.thread}} {{.logger}} - {{.msg}}{{ else }}{{ __line__ }}{{ end }}\""
         }
       ]
     },
@@ -213,7 +213,7 @@
           "refId": "A",
           "datasource": "Loki",
           "queryType": "range",
-          "expr": "{namespace=\"$namespace\", container=\"4allportal\"} |~ \"(?i)$search\" | pod=~\"${pod:regex}\" | json | __error__ != \"JSONParserErr\" | line_format \"{{ if .msg }}{{.ts}} [{{.level}}] {{.thread}} {{.logger}} - {{.msg}}{{ else }}{{ __line__ }}{{ end }}\""
+          "expr": "{namespace=\"$namespace\", container=\"4allportal\"} |~ `(?i)${search:regex}` | pod=~\"${pod:regex}\" | json | __error__ != \"JSONParserErr\" | line_format \"{{ if .msg }}{{.ts}} [{{.level}}] {{.thread}} {{.logger}} - {{.msg}}{{ else }}{{ __line__ }}{{ end }}\""
         }
       ]
     }

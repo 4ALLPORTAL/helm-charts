@@ -66,6 +66,7 @@
         "sort": 1,
         "includeAll": true,
         "multi": true,
+        "allValue": ".+",
         "current": {},
         "options": [],
         "definition": "label_values(jvm_threads_states_threads{namespace=\"$namespace\", service=\"$service\"}, pod)"
