@@ -432,6 +432,7 @@ monitoring:
     ## via `kubectl patch pvc kafka-data-mimir-kafka-0 ...` then delete the
     ## pod to trigger filesystem resize.
     kafkaSize: 20Gi
+    maxGlobalSeriesPerUser: 500000
     ## Object storage for blocks and Alertmanager state. Empty keeps the bundled
     ## MinIO, whose images upstream no longer publishes — a MinIO pod that
     ## lands on a node without a cached copy stays in ImagePullBackOff.

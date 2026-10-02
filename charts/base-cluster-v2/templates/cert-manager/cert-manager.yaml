@@ -49,6 +49,13 @@ spec:
     {{- end }}
     replicaCount: 1
     resources: {{- .Values.certManager.resources | toYaml | nindent 6 }}
+    # Only the legacy prometheus.io/* annotations ship by default here; Alloy's
+    # k8s-monitoring annotation autodiscovery only looks for k8s.grafana.com/*
+    # (see the same fix already applied to Traefik and the Flux controllers).
+    podAnnotations:
+      k8s.grafana.com/scrape: "true"
+      k8s.grafana.com/job: "cert-manager"
+      k8s.grafana.com/metrics.portNumber: "9402"
     securityContext: &securityContext
       runAsNonRoot: true
       runAsUser: 1001

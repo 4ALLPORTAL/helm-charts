@@ -1,0 +1,170 @@
+{
+  "id": null,
+  "uid": "backup-job-health",
+  "title": "Backup Job Health",
+  "description": "Generic CronJob/Job success tracking from kube-state-metrics. Catches multi-night failure streaks (e.g. the InnoDB backups failing against an unreachable S3 target) as a trend instead of only on manual spot-check.",
+  "tags": ["backup", "cronjob", "kube-state-metrics"],
+  "timezone": "utc",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "5m",
+  "time": { "from": "now-7d", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "title": "CronJobs with no successful run in > 26h",
+      "type": "stat",
+      "datasource": "Mimir",
+      "gridPos": { "h": 4, "w": 8, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "count((time() - max by (exported_namespace, cronjob) (kube_cronjob_status_last_successful_time)) > 26*3600) or vector(0)",
+          "legendFormat": "stale"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 1 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 2,
+      "title": "Job failures (last 24h)",
+      "type": "stat",
+      "datasource": "Mimir",
+      "gridPos": { "h": 4, "w": 8, "x": 8, "y": 0 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "sum(max_over_time(kube_job_failed{condition=\"true\"}[24h])) or vector(0)",
+          "legendFormat": "failed jobs"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 1 },
+              { "color": "red", "value": 3 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 3,
+      "title": "Currently active backup/maintenance Jobs",
+      "type": "stat",
+      "datasource": "Mimir",
+      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 0 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "sum(kube_job_status_active) or vector(0)",
+          "legendFormat": "active"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Hours since last successful run, by CronJob",
+      "description": "Note: 'stale' here is a fixed 26h heuristic and doesn't account for each CronJob's actual schedule (some run more/less often than daily) — read this alongside the schedule column, not as an absolute verdict.",
+      "type": "table",
+      "datasource": "Mimir",
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 4 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "(time() - max by (exported_namespace, cronjob) (kube_cronjob_status_last_successful_time)) / 3600",
+          "format": "table",
+          "instant": true,
+          "refId": "A"
+        },
+        {
+          "datasource": "Mimir",
+          "expr": "max by (exported_namespace, cronjob, schedule) (kube_cronjob_info)",
+          "format": "table",
+          "instant": true,
+          "refId": "B"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "joinByField",
+          "options": { "byField": "cronjob", "mode": "outer" }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time 1": true, "Time 2": true, "job 1": true, "job 2": true,
+              "namespace 1": true, "namespace 2": true, "instance 1": true,
+              "instance 2": true, "service 1": true, "service 2": true,
+              "concurrency_policy": true, "timezone": true, "Value #B": true
+            },
+            "renameByName": {
+              "exported_namespace 1": "namespace",
+              "exported_namespace 2": "namespace ",
+              "Value #A": "hours since last success",
+              "schedule": "schedule (cron)"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "sort": [{ "field": "hours since last success", "desc": true }]
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "cellOptions": { "type": "color-background" } },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 26 },
+              { "color": "red", "value": 48 }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "hours since last success" },
+            "properties": [{ "id": "custom.cellOptions", "value": { "type": "color-background" } }]
+          }
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "title": "Job failures over time, by namespace",
+      "type": "timeseries",
+      "datasource": "Mimir",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 14 },
+      "targets": [
+        {
+          "datasource": "Mimir",
+          "expr": "sum by (exported_namespace) (kube_job_failed{condition=\"true\"})",
+          "legendFormat": "{{exported_namespace}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "bars", "fillOpacity": 40 }
+        }
+      }
+    }
+  ]
+}

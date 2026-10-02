@@ -1,6 +1,6 @@
 # base-cluster-v2
 
-![Version: 2.5.0](https://img.shields.io/badge/Version-2.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
+![Version: 2.6.0](https://img.shields.io/badge/Version-2.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
 
 Foundational base cluster setup — FluxCD, Traefik ingress,
 cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
@@ -315,6 +315,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.mimir.enabled | bool | `true` |  |
 | monitoring.mimir.extraRuleGroups | object | `{}` |  |
 | monitoring.mimir.kafkaSize | string | `"20Gi"` |  |
+| monitoring.mimir.maxGlobalSeriesPerUser | int | `500000` |  |
 | monitoring.mimir.resources.limits.cpu | string | `"2"` |  |
 | monitoring.mimir.resources.limits.memory | string | `"4Gi"` |  |
 | monitoring.mimir.resources.requests.cpu | string | `"500m"` |  |

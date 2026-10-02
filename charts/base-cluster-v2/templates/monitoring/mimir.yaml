@@ -109,6 +109,7 @@ spec:
         multitenancy_enabled: false
         limits:
           compactor_blocks_retention_period: {{ .Values.monitoring.mimir.retention | quote }}
+          max_global_series_per_user: {{ .Values.monitoring.mimir.maxGlobalSeriesPerUser | int }}
         alertmanager:
           ## Upstream sets this only when it renders its own fallback ConfigMap
           ## (mimir-distributed values.yaml gates it on alertmanager.fallbackConfig),
