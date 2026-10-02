@@ -1,6 +1,6 @@
 # base-cluster-v2
 
-![Version: 2.4.11](https://img.shields.io/badge/Version-2.4.11-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
+![Version: 2.4.12](https://img.shields.io/badge/Version-2.4.12-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
 
 Foundational base cluster setup — FluxCD, Traefik ingress,
 cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
@@ -309,6 +309,9 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.mimir.alertmanagerConfigSecret | string | `""` |  |
 | monitoring.mimir.alertmanagerEgressFQDNs | list | `[]` |  |
 | monitoring.mimir.bucketClaim.storageClassName | string | `""` |  |
+| monitoring.mimir.bucketClaim.tls.caConfigMap | string | `""` |  |
+| monitoring.mimir.bucketClaim.tls.enabled | bool | `false` |  |
+| monitoring.mimir.bucketClaim.tls.port | int | `443` |  |
 | monitoring.mimir.enabled | bool | `true` |  |
 | monitoring.mimir.extraRuleGroups | object | `{}` |  |
 | monitoring.mimir.kafkaSize | string | `"20Gi"` |  |
