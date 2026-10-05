@@ -7,7 +7,7 @@ description: |
   metrics/log/trace collection), and a least-privilege RBAC baseline.
   Successor to the base-cluster chart.
 type: application
-version: 2.7.0
+version: 2.8.0
 appVersion: "1.36.4"
 home: https://4allportal.com
 maintainers:

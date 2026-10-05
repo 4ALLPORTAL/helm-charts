@@ -37,6 +37,46 @@ rules:
   {{- end }}
 ---
 {{/*
+tenant-connector — tenant-viewer plus port-forward, for reaching a service such
+as a database with one's own client and credentials. No exec, no pod creation,
+so the namespace's Secrets stay out of reach.
+*/}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: base-cluster:tenant-connector
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: rbac
+rules:
+  - apiGroups: [""]
+    resources:
+      - configmaps
+      - endpoints
+      - events
+      - limitranges
+      - persistentvolumeclaims
+      - pods
+      - pods/log
+      - pods/status
+      - podtemplates
+      - replicationcontrollers
+      - resourcequotas
+      - serviceaccounts
+      - services
+    verbs: ["get", "list", "watch"]
+  {{- with .Values.rbac.readableApiGroups }}
+  - apiGroups: {{ toYaml . | nindent 6 }}
+    resources: ["*"]
+    verbs: ["get", "list", "watch"]
+  {{- end }}
+  - apiGroups: [""]
+    resources: ["pods/portforward"]
+    verbs: ["create", "get"]
+  {{- with .Values.rbac.extraRules.tenantConnector }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
+---
+{{/*
 tenant-developer — owns the application inside its namespace. No secrets, no
 network policies, no roles/rolebindings/serviceaccounts/quotas.
 */}}
