@@ -1,6 +1,6 @@
 # base-cluster-v2
 
-![Version: 2.9.1](https://img.shields.io/badge/Version-2.9.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
+![Version: 2.10.0](https://img.shields.io/badge/Version-2.10.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
 
 Foundational base cluster setup — FluxCD, Traefik ingress,
 cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
@@ -256,6 +256,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 |-----|------|---------|-------------|
 | backup.enabled | bool | `false` |  |
 | backup.licenseSecretName | string | `""` |  |
+| backup.retryBackup.enabled | bool | `false` |  |
 | backup.retryBackup.image.registry | string | `""` |  |
 | backup.retryBackup.image.repository | string | `"alpine/k8s"` |  |
 | backup.retryBackup.image.tag | string | `"1.37.1"` |  |
