@@ -1,12 +1,9 @@
 {{- if eq (include "base-cluster.networkPolicy.type" .) "cilium" }}
 {{/*
-CiliumNetworkPolicies for MetalLB. The controller needs apiserver access and
-webhook ingress. Speakers need apiserver access, memberlist between peers
-(7946 TCP+UDP), and host entity access for L2/ARP announcements.
-
-Both also have to admit a metrics scrape, and the collector is an ordinary pod
-that matches none of the entities used above -- so it is named by namespace,
-on the ports in global.networkPolicy.metallbMetricsPorts.
+CiliumNetworkPolicy for the MetalLB controller: apiserver access, webhook
+ingress, and a metrics scrape from the monitoring namespace. The speakers are
+hostNetwork, so Cilium has no endpoint for them and a policy would select
+nothing.
 */}}
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
@@ -34,60 +31,6 @@ spec:
         - ports:
             - port: "9443"
               protocol: TCP
-    ## The controller is not hostNetwork, so this policy is what gates its
-    ## scrape -- unlike the speakers below, where the host identity bypasses it.
-    - fromEndpoints:
-        - matchLabels:
-            io.kubernetes.pod.namespace: monitoring
-      toPorts:
-        - ports:
-            {{- range .Values.global.networkPolicy.metallbMetricsPorts }}
-            - port: {{ . | quote }}
-              protocol: TCP
-            {{- end }}
----
-apiVersion: cilium.io/v2
-kind: CiliumNetworkPolicy
-metadata:
-  name: metallb-speaker
-  namespace: metallb-system
-  labels: {{- include "base-cluster.labels" . | nindent 4 }}
-spec:
-  endpointSelector:
-    matchLabels:
-      app.kubernetes.io/name: metallb
-      app.kubernetes.io/component: speaker
-  egress:
-    - toEntities: [kube-apiserver, host]
-    - toEndpoints:
-        - matchLabels:
-            app.kubernetes.io/name: metallb
-            app.kubernetes.io/component: speaker
-      toPorts:
-        - ports:
-            - port: "7946"
-              protocol: TCP
-            - port: "7946"
-              protocol: UDP
-    - toPorts:
-        - ports:
-            - port: "53"
-              protocol: UDP
-          rules:
-            dns:
-              - matchPattern: "*"
-  ingress:
-    - fromEntities: [host]
-    - fromEndpoints:
-        - matchLabels:
-            app.kubernetes.io/name: metallb
-            app.kubernetes.io/component: speaker
-      toPorts:
-        - ports:
-            - port: "7946"
-              protocol: TCP
-            - port: "7946"
-              protocol: UDP
     - fromEndpoints:
         - matchLabels:
             io.kubernetes.pod.namespace: monitoring
