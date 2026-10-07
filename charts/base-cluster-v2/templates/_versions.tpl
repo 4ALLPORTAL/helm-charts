@@ -62,7 +62,7 @@ descheduler (kubernetes-sigs repo) and stash (appscode repo).
      are pinned DHI charts. */}}
 
 {{- /* renovate: datasource=helm depName=mimir-distributed registryUrl=https://grafana.github.io/helm-charts */ -}}
-{{- define "base-cluster.versions.mimir.chart" -}}6.2.0{{- end -}}
+{{- define "base-cluster.versions.mimir.chart" -}}6.2.1{{- end -}}
 
 {{- /* renovate: datasource=docker depName=loki-chart packageName=dhi.io/loki-chart */ -}}
 {{- define "base-cluster.versions.loki.chart" -}}18.13.7{{- end -}}
