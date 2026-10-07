@@ -582,6 +582,11 @@ monitoring:
       limits:
         cpu: "1"
         memory: 1Gi
+    ## Alloy configuration appended to the `alloy-logs` collector, for host
+    ## log files that no k8s-monitoring feature covers. `/var/log` is mounted;
+    ## send to `loki.write.loki.receiver`.
+    logs:
+      extraConfig: ""
 
   ## Prometheus Node Exporter — host CPU/memory/disk/network metrics.
   ## Deployed as a k8s-monitoring telemetryService.
