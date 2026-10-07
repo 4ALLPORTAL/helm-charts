@@ -1,6 +1,6 @@
 # base-cluster-v2
 
-![Version: 2.8.0](https://img.shields.io/badge/Version-2.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
+![Version: 2.9.0](https://img.shields.io/badge/Version-2.9.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
 
 Foundational base cluster setup — FluxCD, Traefik ingress,
 cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
@@ -401,6 +401,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.ingressMonitor.resources.limits.memory | string | `"128Mi"` |  |
 | monitoring.ingressMonitor.resources.requests.cpu | string | `"25m"` |  |
 | monitoring.ingressMonitor.resources.requests.memory | string | `"64Mi"` |  |
+| monitoring.k8sMonitoring.logs.extraConfig | string | `""` |  |
 | monitoring.k8sMonitoring.resources.limits.cpu | string | `"1"` |  |
 | monitoring.k8sMonitoring.resources.limits.memory | string | `"1Gi"` |  |
 | monitoring.k8sMonitoring.resources.requests.cpu | string | `"100m"` |  |

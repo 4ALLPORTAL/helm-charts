@@ -4,9 +4,9 @@ grafana/k8s-monitoring, via the Alloy Operator, split into role-specific
 collectors: `alloy-metrics` (clustered — annotationAutodiscovery,
 clusterMetrics, hostMetrics, prometheusOperatorObjects; CRDs in
 crds/prometheus-operator-objects.yaml) and `alloy-logs` (DaemonSet —
-podLogsViaLoki). `extraConfig` on a collector is a no-op with the Alloy
-Operator (stripped by `collector.alloy.extraFields`); use a
-ServiceMonitor/PodMonitor instead (see rook-ceph-servicemonitor.yaml).
+podLogsViaLoki). To scrape something new, add a ServiceMonitor/PodMonitor
+(see rook-ceph-servicemonitor.yaml). `monitoring.k8sMonitoring.logs.extraConfig`
+is appended to the `alloy-logs` config, for logs no feature covers.
 
 kube-state-metrics and node-exporter are deployed as this chart's
 `telemetryServices`, feeding `clusterMetrics`/`hostMetrics`.
@@ -57,6 +57,9 @@ spec:
           resources: {{- toYaml .Values.monitoring.k8sMonitoring.resources | nindent 12 }}
       alloy-logs:
         presets: [daemonset, filesystem-log-reader]
+        {{- with .Values.monitoring.k8sMonitoring.logs.extraConfig }}
+        extraConfig: {{- toYaml . | nindent 10 }}
+        {{- end }}
         alloy:
           resources: {{- toYaml .Values.monitoring.k8sMonitoring.resources | nindent 12 }}
 
