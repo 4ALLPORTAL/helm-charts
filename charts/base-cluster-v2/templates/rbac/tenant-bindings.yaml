@@ -8,11 +8,11 @@ a typo'd namespace would otherwise protect nothing.
 {{- range $namespace, $tiers := .Values.rbac.tenants }}
 {{- $tiers = $tiers | default dict }}
 {{- range $key, $_ := $tiers }}
-{{- if not (has $key (list "admin" "developer" "viewer")) }}
-{{- fail (printf "rbac.tenants.%s.%s: unknown tier, expected admin, developer or viewer" $namespace $key) }}
+{{- if not (has $key (list "admin" "developer" "connector" "viewer")) }}
+{{- fail (printf "rbac.tenants.%s.%s: unknown tier, expected admin, developer, connector or viewer" $namespace $key) }}
 {{- end }}
 {{- end }}
-{{- range $tier := list "admin" "developer" "viewer" }}
+{{- range $tier := list "admin" "developer" "connector" "viewer" }}
 {{- $subjects := index $tiers $tier }}
 {{- if include "base-cluster.rbac.hasSubjects" $subjects }}
 ---

@@ -135,7 +135,7 @@ the policies (they are inert without Cilium).
 
 ## RBAC
 
-Four roles, bound to nobody until you say so. Installing or upgrading the chart
+Six roles, bound to nobody until you say so. Installing or upgrading the chart
 with the defaults adds the role definitions and changes no one's access — every
 subject list under `rbac` ships empty.
 
@@ -145,11 +145,19 @@ subject list under `rbac` ships empty.
 | `base-cluster:cluster-reader` | ClusterRoleBinding | read-only cluster-wide, **no Secrets** |
 | `base-cluster:tenant-admin` | RoleBinding per namespace | the namespace, including its Secrets, ServiceAccounts and RoleBindings |
 | `base-cluster:tenant-developer` | RoleBinding per namespace | the namespace's workloads, exec and port-forward — **no Secrets** |
+| `base-cluster:tenant-connector` | RoleBinding per namespace | `tenant-viewer` plus port-forward — reach a database with your own client and credentials. **No Secrets, no exec** |
 | `base-cluster:tenant-viewer` | RoleBinding per namespace | read-only in the namespace, **no Secrets** |
+| `base-cluster:namespace-lister` | ClusterRoleBinding | list namespace names. Bound automatically to every subject under `rbac.tenants` (`rbac.tenant.listNamespaces`) |
 
 The tenant roles are ClusterRoles bound with a RoleBinding, the same way the
 built-in `admin`/`edit`/`view` work: one definition, confined to a namespace by
 the binding. A Role per tenant would be N copies drifting apart.
+
+RBAC cannot filter a list down to the namespaces a user is bound in: `kubectl
+get namespaces` either returns every namespace or fails. Without
+`namespace-lister` the namespace pickers in k9s, Lens or Headlamp stay empty for
+tenant users. With it they see every namespace *name*, and only the contents of
+the ones they are bound in.
 
 ### What the tiers deliberately cannot do
 
@@ -163,7 +171,8 @@ covered by `rbac.readableApiGroups`:
   `rbac.readableApiGroups` would hand out every Secret in the cluster; extend
   the enumerated core rule instead.
 
-  For `cluster-reader` and `tenant-viewer` that exclusion is absolute.
+  For `cluster-reader`, `tenant-connector` and `tenant-viewer` that exclusion
+  is absolute.
   For `tenant-developer` it is not, and no RBAC rule can make it so: anyone who
   can create a workload in a namespace can mount that namespace's Secrets into
   a pod and read them from there. What the tier does buy is that `kubectl get
@@ -175,12 +184,15 @@ covered by `rbac.readableApiGroups`:
   create RoleBindings, but the RBAC authorizer refuses a binding that grants
   more than the binder already holds — so it can delegate its own permissions
   and no more.
-- **NetworkPolicies and CiliumNetworkPolicies** are read-only in all four
-  tiers. A tenant that can widen its own ingress rules is not isolated, and the
+- **NetworkPolicies and CiliumNetworkPolicies** are read-only in every
+  tier. A tenant that can widen its own ingress rules is not isolated, and the
   cluster's default-deny posture depends on those objects.
 - **`pods/exec` and `pods/portforward` are not granted cluster-wide.** A
   shell in any pod reads every Secret mounted anywhere. Inside a tenant
   namespace both are on, where the blast radius is the tenant's own.
+  `tenant-connector` gets port-forward without exec: a forwarded connection
+  enters the pod's network namespace on loopback, past any NetworkPolicy, but
+  still has to authenticate to the service behind it.
 - **CRDs, admission webhooks, ResourceQuotas and LimitRanges** stay with the
   platform team in every tier.
 - **Flux objects are read-only in every tenant tier.** Without the Flux
@@ -202,6 +214,9 @@ rbac:
         groups: ["c07a41b9-...-...."]
       developer:
         users: ["j.doe@example.com"]
+    mysql-prod:
+      connector:
+        groups: ["c07a41b9-...-...."]
 ```
 
 Entra ID puts group *object IDs* in the token, not display names, so on

@@ -39,4 +39,18 @@ rules:
   {{- with .Values.rbac.extraRules.clusterReader }}
   {{- toYaml . | nindent 2 }}
   {{- end }}
+{{- if .Values.rbac.tenant.listNamespaces }}
+---
+{{/* Lets tenant subjects list namespace names — RBAC cannot filter a list to the bound ones. */}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: base-cluster:namespace-lister
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: rbac
+rules:
+  - apiGroups: [""]
+    resources: ["namespaces"]
+    verbs: ["get", "list", "watch"]
+{{- end }}
 {{- end }}

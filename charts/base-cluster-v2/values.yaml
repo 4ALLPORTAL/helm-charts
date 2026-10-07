@@ -578,6 +578,11 @@ monitoring:
       limits:
         cpu: "1"
         memory: 1Gi
+    ## Alloy configuration appended to the `alloy-logs` collector, for host
+    ## log files that no k8s-monitoring feature covers. `/var/log` is mounted;
+    ## send to `loki.write.loki.receiver`.
+    logs:
+      extraConfig: ""
 
   ## Prometheus Node Exporter — host CPU/memory/disk/network metrics.
   ## Deployed as a k8s-monitoring telemetryService.
@@ -742,6 +747,10 @@ rbac:
       ## -- Manage Ingress objects. An Ingress claims a cluster-global
       ##    hostname; false where the platform team allocates those.
       allowIngress: true
+    ## -- Bind `base-cluster:namespace-lister` to every subject named under
+    ##    `tenants`, so namespace pickers work. Exposes all namespace names,
+    ##    not their contents.
+    listNamespaces: true
 
   ## -- Group → role mapping, per namespace. The namespaces must already
   ##    exist. Entra ID delivers group *object IDs*, so these are GUIDs there.
@@ -754,6 +763,9 @@ rbac:
   ##          developer:
   ##            users: ["j.doe@example.com"]
   ##          viewer:
+  ##            groups: ["2b90...-....-....-....-............"]
+  ##        mysql-prod:
+  ##          connector:
   ##            groups: ["2b90...-....-....-....-............"]
   tenants: {}
 
@@ -805,5 +817,6 @@ rbac:
   extraRules:
     clusterReader: []
     tenantAdmin: []
+    tenantConnector: []
     tenantDeveloper: []
     tenantViewer: []

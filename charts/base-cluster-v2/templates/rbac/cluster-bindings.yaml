@@ -33,4 +33,35 @@ roleRef:
 subjects:
   {{- include "base-cluster.rbac.subjects" (dict "subjects" .Values.rbac.cluster.reader "namespace" .Release.Namespace) | trim | nindent 2 }}
 {{- end }}
+{{- if .Values.rbac.tenant.listNamespaces }}
+{{- $tenantSubjects := dict "groups" (list) "users" (list) "serviceAccounts" (list) }}
+{{- range $namespace, $tiers := .Values.rbac.tenants }}
+{{- range $_, $subjects := $tiers | default dict }}
+{{- $subjects = $subjects | default dict }}
+{{- $_ := set $tenantSubjects "groups" (concat $tenantSubjects.groups ($subjects.groups | default list)) }}
+{{- $_ := set $tenantSubjects "users" (concat $tenantSubjects.users ($subjects.users | default list)) }}
+{{- range $sa := $subjects.serviceAccounts | default list }}
+{{- $_ := set $tenantSubjects "serviceAccounts" (append $tenantSubjects.serviceAccounts (ternary $sa (printf "%s/%s" $namespace $sa) (contains "/" $sa))) }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- range $kind := list "groups" "users" "serviceAccounts" }}
+{{- $_ := set $tenantSubjects $kind (index $tenantSubjects $kind | uniq | sortAlpha) }}
+{{- end }}
+{{- if include "base-cluster.rbac.hasSubjects" $tenantSubjects }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: base-cluster:namespace-lister
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: rbac
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: base-cluster:namespace-lister
+subjects:
+  {{- include "base-cluster.rbac.subjects" (dict "subjects" $tenantSubjects "namespace" .Release.Namespace) | trim | nindent 2 }}
+{{- end }}
+{{- end }}
 {{- end }}
