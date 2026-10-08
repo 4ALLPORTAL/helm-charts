@@ -384,7 +384,10 @@ backup:
   ## Retry CronJob — Stash BackupSessions that failed overnight (e.g. due to a
   ## transient network blip) are recreated once the next morning so they get
   ## another attempt instead of waiting for the next scheduled window.
+  ## Default OFF: the original Failed session is never removed, so it is
+  ## recreated every run until deleted, even after a later backup succeeded.
   retryBackup:
+    enabled: false
     schedule: "30 0-8 * * *"
     image:
       registry: ""
