@@ -30,7 +30,7 @@ fourAllPortal:
   image:
     registry: registry.4allportal.net
     repository: 4allportal
-    tag: 6.6.0
+    tag: 6.6.3
 
   replicas: 2
 
