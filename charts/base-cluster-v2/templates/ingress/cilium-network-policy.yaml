@@ -1,7 +1,8 @@
 {{- if eq (include "base-cluster.networkPolicy.type" .) "cilium" }}
 {{/*
 NetworkPolicies for the ingress namespace.
-  - traefik:      ingress from anywhere on web ports; egress to cluster + DNS
+  - traefik:      ingress from anywhere on web ports (UDP 8443 too with
+                  http3); egress to cluster + DNS
   - external-dns: egress to kube-apiserver and Cloudflare API (world)
   - speedtest:    ingress only from traefik on the http port
 */}}
@@ -24,6 +25,10 @@ spec:
               protocol: TCP
             - port: "8443"
               protocol: TCP
+            {{- if .Values.traefik.http3.enabled }}
+            - port: "8443"
+              protocol: UDP
+            {{- end }}
             - port: "9000"
               protocol: TCP
             - port: "9100"
