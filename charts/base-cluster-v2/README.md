@@ -256,6 +256,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 |-----|------|---------|-------------|
 | backup.enabled | bool | `false` |  |
 | backup.licenseSecretName | string | `""` |  |
+| backup.retryBackup.enabled | bool | `false` |  |
 | backup.retryBackup.image.registry | string | `""` |  |
 | backup.retryBackup.image.repository | string | `"alpine/k8s"` |  |
 | backup.retryBackup.image.tag | string | `"1.37.1"` |  |
