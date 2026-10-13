@@ -1,6 +1,6 @@
 # base-cluster-v2
 
-![Version: 2.10.5](https://img.shields.io/badge/Version-2.10.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
+![Version: 2.10.6](https://img.shields.io/badge/Version-2.10.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
 
 Foundational base cluster setup — FluxCD, Traefik ingress,
 cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
@@ -451,7 +451,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.uptimeRobot.monitors | list | `[]` |  |
 | monitoring.uptimeRobot.reconciler.image.digest | string | `""` |  |
 | monitoring.uptimeRobot.reconciler.image.repository | string | `"python"` |  |
-| monitoring.uptimeRobot.reconciler.image.tag | string | `"3.14"` |  |
+| monitoring.uptimeRobot.reconciler.image.tag | string | `"3.15"` |  |
 | monitoring.uptimeRobot.reconciler.resources.limits.cpu | string | `"200m"` |  |
 | monitoring.uptimeRobot.reconciler.resources.limits.memory | string | `"128Mi"` |  |
 | monitoring.uptimeRobot.reconciler.resources.requests.cpu | string | `"50m"` |  |
