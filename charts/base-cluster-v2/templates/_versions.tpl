@@ -49,7 +49,7 @@ descheduler (kubernetes-sigs repo) and stash (appscode repo).
 {{- define "base-cluster.versions.janitor.chart" -}}0.24.0{{- end -}}
 
 {{- /* renovate: datasource=helm depName=descheduler registryUrl=https://kubernetes-sigs.github.io/descheduler/ */ -}}
-{{- define "base-cluster.versions.descheduler.chart" -}}0.36.0{{- end -}}
+{{- define "base-cluster.versions.descheduler.chart" -}}0.37.0{{- end -}}
 
 {{/* Stash (AppsCode) backup operator, from the `appscode` HTTPS repo. Not
      DHI-hardened. */}}
