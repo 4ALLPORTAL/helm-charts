@@ -588,6 +588,10 @@ monitoring:
     ## send to `loki.write.loki.receiver`.
     logs:
       extraConfig: ""
+      ## Alloy `loki.process` stage blocks appended to the pod log pipeline
+      ## (`podLogsViaLoki.extraLogProcessingStages`), e.g. a `stage.drop` to
+      ## keep lines out of Loki. The k8s-monitoring chart runs it through `tpl`.
+      extraLogProcessingStages: ""
 
   ## Prometheus Node Exporter — host CPU/memory/disk/network metrics.
   ## Deployed as a k8s-monitoring telemetryService.
