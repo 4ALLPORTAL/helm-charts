@@ -1,6 +1,6 @@
 # base-cluster-v2
 
-![Version: 2.11.0](https://img.shields.io/badge/Version-2.11.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
+![Version: 2.11.1](https://img.shields.io/badge/Version-2.11.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
 
 Foundational base cluster setup — FluxCD, Traefik ingress,
 cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
@@ -528,7 +528,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | speedtest.image.digest | string | `"sha256:871ec7a1c908e7c9288e51e074b321088a297c37fc672a4c882b0309f61ddef7"` |  |
 | speedtest.image.registry | string | `"ghcr.io"` |  |
 | speedtest.image.repository | string | `"librespeed/speedtest"` |  |
-| speedtest.image.tag | string | `"6.3.0"` |  |
+| speedtest.image.tag | string | `"6.3.1"` |  |
 | speedtest.replicas | int | `2` |  |
 | speedtest.resources.limits.cpu | string | `"200m"` |  |
 | speedtest.resources.limits.memory | string | `"128Mi"` |  |
