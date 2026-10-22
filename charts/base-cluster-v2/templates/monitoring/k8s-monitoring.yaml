@@ -7,6 +7,8 @@ crds/prometheus-operator-objects.yaml) and `alloy-logs` (DaemonSet —
 podLogsViaLoki). To scrape something new, add a ServiceMonitor/PodMonitor
 (see rook-ceph-servicemonitor.yaml). `monitoring.k8sMonitoring.logs.extraConfig`
 is appended to the `alloy-logs` config, for logs no feature covers.
+`monitoring.k8sMonitoring.logs.extraLogProcessingStages` is added to the pod
+log pipeline itself, e.g. to drop lines before they reach Loki.
 
 kube-state-metrics and node-exporter are deployed as this chart's
 `telemetryServices`, feeding `clusterMetrics`/`hostMetrics`.
@@ -144,5 +146,8 @@ spec:
     podLogsViaLoki:
       enabled: true
       collector: alloy-logs
+      {{- with .Values.monitoring.k8sMonitoring.logs.extraLogProcessingStages }}
+      extraLogProcessingStages: {{- toYaml . | nindent 8 }}
+      {{- end }}
     {{- end }}
 {{- end }}
