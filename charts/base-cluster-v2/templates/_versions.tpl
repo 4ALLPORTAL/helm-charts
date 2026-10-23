@@ -64,6 +64,9 @@ descheduler (kubernetes-sigs repo) and stash (appscode repo).
 {{- /* renovate: datasource=helm depName=mimir-distributed registryUrl=https://grafana.github.io/helm-charts */ -}}
 {{- define "base-cluster.versions.mimir.chart" -}}6.2.1{{- end -}}
 
+{{- /* renovate: datasource=docker depName=nginx-unprivileged packageName=docker.io/nginxinc/nginx-unprivileged */ -}}
+{{- define "base-cluster.versions.mimir.gatewayImage" -}}1.30.6-alpine{{- end -}}
+
 {{- /* renovate: datasource=docker depName=loki-chart packageName=dhi.io/loki-chart */ -}}
 {{- define "base-cluster.versions.loki.chart" -}}18.15.1{{- end -}}
 

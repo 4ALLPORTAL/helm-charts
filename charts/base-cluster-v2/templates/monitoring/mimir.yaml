@@ -252,6 +252,11 @@ spec:
     gateway:
       enabled: true
       replicas: 1
+      ## The upstream chart pins a floating nginx minor (1.29-alpine) that
+      ## lags security releases; pinned here so Renovate tracks it.
+      nginx:
+        image:
+          tag: {{ include "base-cluster.versions.mimir.gatewayImage" . | quote }}
       resources:
         requests: { cpu: 10m, memory: 32Mi }
         limits:   { cpu: 200m, memory: 128Mi }
