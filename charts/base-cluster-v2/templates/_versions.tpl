@@ -65,7 +65,7 @@ descheduler (kubernetes-sigs repo) and stash (appscode repo).
 {{- define "base-cluster.versions.mimir.chart" -}}6.2.1{{- end -}}
 
 {{- /* renovate: datasource=docker depName=nginx-unprivileged packageName=docker.io/nginxinc/nginx-unprivileged */ -}}
-{{- define "base-cluster.versions.mimir.gatewayImage" -}}1.30.6-alpine{{- end -}}
+{{- define "base-cluster.versions.mimir.gatewayImage" -}}1.31.7-alpine{{- end -}}
 
 {{- /* renovate: datasource=docker depName=loki-chart packageName=dhi.io/loki-chart */ -}}
 {{- define "base-cluster.versions.loki.chart" -}}18.17.1{{- end -}}
