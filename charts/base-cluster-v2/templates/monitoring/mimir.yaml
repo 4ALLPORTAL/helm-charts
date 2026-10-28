@@ -110,11 +110,15 @@ spec:
         limits:
           compactor_blocks_retention_period: {{ .Values.monitoring.mimir.retention | quote }}
           max_global_series_per_user: {{ .Values.monitoring.mimir.maxGlobalSeriesPerUser | int }}
-          {{- with .Values.monitoring.mimir.ingestionRate }}
-          ingestion_rate: {{ . | int }}
+          {{- /* Unset renders nothing (Mimir's default). Zero is not "unlimited":
+          the token bucket never refills and every push is rejected. */}}
+          {{- range $key, $value := dict "ingestion_rate" .Values.monitoring.mimir.ingestionRate "ingestion_burst_size" .Values.monitoring.mimir.ingestionBurstSize }}
+          {{- if not (kindIs "invalid" $value) }}
+          {{- if le (int $value) 0 }}
+          {{- fail (printf "monitoring.mimir: %s must be > 0, or unset for Mimir's default" $key) }}
           {{- end }}
-          {{- with .Values.monitoring.mimir.ingestionBurstSize }}
-          ingestion_burst_size: {{ . | int }}
+          {{ $key }}: {{ int $value }}
+          {{- end }}
           {{- end }}
         alertmanager:
           ## Upstream sets this only when it renders its own fallback ConfigMap
