@@ -383,9 +383,18 @@ descheduler:
 ## pre-created (see backup.licenseSecretName) before enabling.
 backup:
   enabled: false
-  ## -- Name of a pre-existing license Secret for Stash Community, in the
-  ##    `stash` namespace. Get one at https://appscode.com/issues/new (free).
+  ## -- Stash edition, `community` or `enterprise`. Enterprise needs a paid
+  ##    license and is required for taskQueue.
+  edition: community
+  ## -- Name of a pre-existing license Secret for the chosen edition, in the
+  ##    `stash` namespace. Community licenses are free:
+  ##    https://appscode.com/issues/new
   licenseSecretName: ""
+  ## Limit how many BackupSessions run at once (enterprise only). Sessions
+  ## over the limit wait in a queue and start oldest first.
+  taskQueue:
+    enabled: false
+    maxConcurrentSessions: 10
   ## Retry CronJob — Stash BackupSessions that failed overnight (e.g. due to a
   ## transient network blip) are recreated once the next morning so they get
   ## another attempt instead of waiting for the next scheduled window.
@@ -402,7 +411,7 @@ backup:
       limits:
         cpu: 100m
         memory: 64Mi
-  ## Extra values passed through to the stash-community chart.
+  ## Extra values merged into the upstream stash chart's values.
   values: {}
 
 ## Observability stack — grafana/k8s-monitoring (Alloy Operator) → Mimir +

@@ -1,6 +1,6 @@
 # base-cluster-v2
 
-![Version: 2.12.1](https://img.shields.io/badge/Version-2.12.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
+![Version: 2.13.0](https://img.shields.io/badge/Version-2.13.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
 
 Foundational base cluster setup — FluxCD, Traefik ingress,
 cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
@@ -255,7 +255,8 @@ The older chart remains in this repo for clusters that haven't migrated.
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | backup.enabled | bool | `false` |  |
-| backup.licenseSecretName | string | `""` |  |
+| backup.edition | string | `"community"` | Stash edition, `community` or `enterprise`. Enterprise needs a paid license and is required for taskQueue. |
+| backup.licenseSecretName | string | `""` | Name of a pre-existing license Secret for the chosen edition, in the `stash` namespace. Community licenses are free: https://appscode.com/issues/new |
 | backup.retryBackup.image.registry | string | `""` |  |
 | backup.retryBackup.image.repository | string | `"alpine/k8s"` |  |
 | backup.retryBackup.image.tag | string | `"1.37.1"` |  |
@@ -264,6 +265,8 @@ The older chart remains in this repo for clusters that haven't migrated.
 | backup.retryBackup.resources.requests.cpu | string | `"10m"` |  |
 | backup.retryBackup.resources.requests.memory | string | `"32Mi"` |  |
 | backup.retryBackup.schedule | string | `"30 0-8 * * *"` |  |
+| backup.taskQueue.enabled | bool | `false` |  |
+| backup.taskQueue.maxConcurrentSessions | int | `10` |  |
 | backup.values | object | `{}` |  |
 | certManager.caInjector.resources.limits.cpu | string | `"500m"` |  |
 | certManager.caInjector.resources.limits.memory | string | `"512Mi"` |  |
