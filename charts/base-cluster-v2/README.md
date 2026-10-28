@@ -254,9 +254,9 @@ The older chart remains in this repo for clusters that haven't migrated.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| backup.edition | string | `"community"` |  |
 | backup.enabled | bool | `false` |  |
-| backup.edition | string | `"community"` | Stash edition, `community` or `enterprise`. Enterprise needs a paid license and is required for taskQueue. |
-| backup.licenseSecretName | string | `""` | Name of a pre-existing license Secret for the chosen edition, in the `stash` namespace. Community licenses are free: https://appscode.com/issues/new |
+| backup.licenseSecretName | string | `""` |  |
 | backup.retryBackup.image.registry | string | `""` |  |
 | backup.retryBackup.image.repository | string | `"alpine/k8s"` |  |
 | backup.retryBackup.image.tag | string | `"1.37.1"` |  |
