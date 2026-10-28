@@ -91,4 +91,4 @@ descheduler (kubernetes-sigs repo) and stash (appscode repo).
      ghcr.io/stakater (not DHI-hardened). */}}
 
 {{- /* renovate: datasource=helm depName=ingressmonitorcontroller registryUrl=https://stakater.github.io/stakater-charts */ -}}
-{{- define "base-cluster.versions.ingressMonitor.chart" -}}2.2.13{{- end -}}
+{{- define "base-cluster.versions.ingressMonitor.chart" -}}2.2.14{{- end -}}
