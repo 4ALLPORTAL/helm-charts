@@ -18,25 +18,25 @@ descheduler (kubernetes-sigs repo) and stash (appscode repo).
 */}}
 
 {{- /* renovate: datasource=helm depName=cilium registryUrl=https://helm.cilium.io/ */ -}}
-{{- define "base-cluster.versions.cilium.chart" -}}1.20.2{{- end -}}
+{{- define "base-cluster.versions.cilium.chart" -}}1.20.4{{- end -}}
 
 {{- /* renovate: datasource=docker depName=flux2 packageName=ghcr.io/fluxcd-community/charts/flux2 */ -}}
 {{- define "base-cluster.versions.flux2.chart" -}}2.19.1{{- end -}}
 
 {{- /* renovate: datasource=docker depName=traefik-chart packageName=dhi.io/traefik-chart */ -}}
-{{- define "base-cluster.versions.traefik.chart" -}}41.6.1{{- end -}}
+{{- define "base-cluster.versions.traefik.chart" -}}42.1.3{{- end -}}
 
 {{- /* renovate: datasource=docker depName=cert-manager-chart packageName=dhi.io/cert-manager-chart */ -}}
-{{- define "base-cluster.versions.certManager.chart" -}}1.21.2{{- end -}}
+{{- define "base-cluster.versions.certManager.chart" -}}1.21.3{{- end -}}
 
 {{- /* renovate: datasource=docker depName=external-dns-chart packageName=dhi.io/external-dns-chart */ -}}
 {{- define "base-cluster.versions.externalDns.chart" -}}1.23.0{{- end -}}
 
 {{- /* renovate: datasource=docker depName=sealed-secrets-chart packageName=dhi.io/sealed-secrets-chart */ -}}
-{{- define "base-cluster.versions.sealedSecrets.chart" -}}2.20.0{{- end -}}
+{{- define "base-cluster.versions.sealedSecrets.chart" -}}2.22.0{{- end -}}
 
 {{- /* renovate: datasource=helm depName=reflector registryUrl=https://emberstack.github.io/helm-charts */ -}}
-{{- define "base-cluster.versions.reflector.chart" -}}10.0.65{{- end -}}
+{{- define "base-cluster.versions.reflector.chart" -}}10.0.69{{- end -}}
 
 {{- /* renovate: datasource=docker depName=metrics-server-chart packageName=dhi.io/metrics-server-chart */ -}}
 {{- define "base-cluster.versions.metricsServer.chart" -}}3.14.0{{- end -}}
@@ -49,7 +49,7 @@ descheduler (kubernetes-sigs repo) and stash (appscode repo).
 {{- define "base-cluster.versions.janitor.chart" -}}0.24.0{{- end -}}
 
 {{- /* renovate: datasource=helm depName=descheduler registryUrl=https://kubernetes-sigs.github.io/descheduler/ */ -}}
-{{- define "base-cluster.versions.descheduler.chart" -}}0.36.0{{- end -}}
+{{- define "base-cluster.versions.descheduler.chart" -}}0.37.0{{- end -}}
 
 {{/* Stash (AppsCode) backup operator, from the `appscode` HTTPS repo. Not
      DHI-hardened. */}}
@@ -62,30 +62,33 @@ descheduler (kubernetes-sigs repo) and stash (appscode repo).
      are pinned DHI charts. */}}
 
 {{- /* renovate: datasource=helm depName=mimir-distributed registryUrl=https://grafana.github.io/helm-charts */ -}}
-{{- define "base-cluster.versions.mimir.chart" -}}6.2.0{{- end -}}
+{{- define "base-cluster.versions.mimir.chart" -}}6.2.2{{- end -}}
+
+{{- /* renovate: datasource=docker depName=nginx-unprivileged packageName=docker.io/nginxinc/nginx-unprivileged */ -}}
+{{- define "base-cluster.versions.mimir.gatewayImage" -}}1.31.7-alpine{{- end -}}
 
 {{- /* renovate: datasource=docker depName=loki-chart packageName=dhi.io/loki-chart */ -}}
-{{- define "base-cluster.versions.loki.chart" -}}18.13.7{{- end -}}
+{{- define "base-cluster.versions.loki.chart" -}}18.17.1{{- end -}}
 
 {{- /* renovate: datasource=docker depName=tempo-chart packageName=dhi.io/tempo-chart */ -}}
-{{- define "base-cluster.versions.tempo.chart" -}}3.1.0{{- end -}}
+{{- define "base-cluster.versions.tempo.chart" -}}3.2.1{{- end -}}
 
 {{- /* renovate: datasource=docker depName=grafana-chart packageName=dhi.io/grafana-chart */ -}}
-{{- define "base-cluster.versions.grafana.chart" -}}13.2.7{{- end -}}
+{{- define "base-cluster.versions.grafana.chart" -}}14.1.0{{- end -}}
 
 {{/* k8s-monitoring bundles the Alloy Operator (alloy-metrics/alloy-singleton/
      alloy-logs) plus kube-state-metrics and node-exporter as its own
      telemetryServices toggles. */}}
 
 {{- /* renovate: datasource=helm depName=k8s-monitoring registryUrl=https://grafana.github.io/helm-charts */ -}}
-{{- define "base-cluster.versions.k8sMonitoring.chart" -}}4.5.2{{- end -}}
+{{- define "base-cluster.versions.k8sMonitoring.chart" -}}4.5.5{{- end -}}
 
 {{- /* renovate: datasource=docker depName=opentelemetry-collector-chart packageName=dhi.io/opentelemetry-collector-chart */ -}}
-{{- define "base-cluster.versions.otelCollector.chart" -}}0.174.0{{- end -}}
+{{- define "base-cluster.versions.otelCollector.chart" -}}0.178.0{{- end -}}
 
 {{/* IngressMonitorController (Stakater) — reconciles EndpointMonitor CRs into
      UptimeRobot monitors. Chart from the `stakater` HTTPS repo; image from
      ghcr.io/stakater (not DHI-hardened). */}}
 
 {{- /* renovate: datasource=helm depName=ingressmonitorcontroller registryUrl=https://stakater.github.io/stakater-charts */ -}}
-{{- define "base-cluster.versions.ingressMonitor.chart" -}}2.2.13{{- end -}}
+{{- define "base-cluster.versions.ingressMonitor.chart" -}}2.2.14{{- end -}}
