@@ -176,6 +176,13 @@ spec:
         http:
           tls:
             enabled: true
+        {{- if .Values.traefik.http3.enabled }}
+        # The entrypoint listens on 8443 behind Service port 443. Without
+        # advertisedPort, Traefik advertises its own port: Alt-Svc h3=":8443".
+        http3:
+          enabled: true
+          advertisedPort: 443
+        {{- end }}
 
     ingressClass:
       enabled: true

@@ -122,6 +122,11 @@ traefik:
   ## When set, --providers.kubernetesIngress.ingressEndpoint.ip is forced to
   ## this value (used when Service has no externally-routable VIP yet).
   ingressIP: ""
+  ## HTTP/3 (QUIC) on the websecure entrypoint. Adds UDP 443 to the same
+  ## Service and `Alt-Svc: h3=":443"` to HTTPS responses. Anything in front of
+  ## the Service must pass UDP 443 to it.
+  http3:
+    enabled: false
   minReplicas: 2
   maxReplicas: 8
   resources:
@@ -432,6 +437,12 @@ monitoring:
     ## pod to trigger filesystem resize.
     kafkaSize: 20Gi
     maxGlobalSeriesPerUser: 500000
+    ## Samples/s the distributor accepts, and the burst above it. Past the
+    ## rate, remote write gets 429 and samples arrive late or not at all.
+    ## Unset keeps Mimir's defaults (10000 / 200000) and the rendered config,
+    ## so upgrading does not restart Mimir.
+    ingestionRate: null
+    ingestionBurstSize: null
     ## Object storage for blocks and Alertmanager state. Empty keeps the bundled
     ## MinIO, whose images upstream no longer publishes — a MinIO pod that
     ## lands on a node without a cached copy stays in ImagePullBackOff.
@@ -586,6 +597,10 @@ monitoring:
     ## send to `loki.write.loki.receiver`.
     logs:
       extraConfig: ""
+      ## Alloy `loki.process` stage blocks appended to the pod log pipeline
+      ## (`podLogsViaLoki.extraLogProcessingStages`), e.g. a `stage.drop` to
+      ## keep lines out of Loki. The k8s-monitoring chart runs it through `tpl`.
+      extraLogProcessingStages: ""
 
   ## Prometheus Node Exporter — host CPU/memory/disk/network metrics.
   ## Deployed as a k8s-monitoring telemetryService.
@@ -633,7 +648,7 @@ monitoring:
       ## to dhi.io). Override `tag` or set `digest` to pin against drift.
       image:
         repository: python
-        tag: "3.14"
+        tag: "3.15"
         digest: ""
       resources:
         requests:
@@ -695,7 +710,7 @@ speedtest:
   image:
     registry: ghcr.io
     repository: librespeed/speedtest
-    tag: "6.3.0"
+    tag: "6.3.1"
     digest: "sha256:871ec7a1c908e7c9288e51e074b321088a297c37fc672a4c882b0309f61ddef7"
   resources:
     requests:

@@ -1,6 +1,6 @@
 # base-cluster-v2
 
-![Version: 2.10.0](https://img.shields.io/badge/Version-2.10.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
+![Version: 2.13.0](https://img.shields.io/badge/Version-2.13.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
 
 Foundational base cluster setup — FluxCD, Traefik ingress,
 cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
@@ -256,7 +256,6 @@ The older chart remains in this repo for clusters that haven't migrated.
 |-----|------|---------|-------------|
 | backup.enabled | bool | `false` |  |
 | backup.licenseSecretName | string | `""` |  |
-| backup.retryBackup.enabled | bool | `false` |  |
 | backup.retryBackup.image.registry | string | `""` |  |
 | backup.retryBackup.image.repository | string | `"alpine/k8s"` |  |
 | backup.retryBackup.image.tag | string | `"1.37.1"` |  |
@@ -402,6 +401,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.ingressMonitor.resources.requests.cpu | string | `"25m"` |  |
 | monitoring.ingressMonitor.resources.requests.memory | string | `"64Mi"` |  |
 | monitoring.k8sMonitoring.logs.extraConfig | string | `""` |  |
+| monitoring.k8sMonitoring.logs.extraLogProcessingStages | string | `""` |  |
 | monitoring.k8sMonitoring.resources.limits.cpu | string | `"1"` |  |
 | monitoring.k8sMonitoring.resources.limits.memory | string | `"1Gi"` |  |
 | monitoring.k8sMonitoring.resources.requests.cpu | string | `"100m"` |  |
@@ -422,6 +422,8 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.mimir.bucketClaim.tls.port | int | `443` |  |
 | monitoring.mimir.enabled | bool | `true` |  |
 | monitoring.mimir.extraRuleGroups | object | `{}` |  |
+| monitoring.mimir.ingestionBurstSize | string | `nil` |  |
+| monitoring.mimir.ingestionRate | string | `nil` |  |
 | monitoring.mimir.kafkaSize | string | `"20Gi"` |  |
 | monitoring.mimir.maxGlobalSeriesPerUser | int | `500000` |  |
 | monitoring.mimir.resources.limits.cpu | string | `"2"` |  |
@@ -452,7 +454,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.uptimeRobot.monitors | list | `[]` |  |
 | monitoring.uptimeRobot.reconciler.image.digest | string | `""` |  |
 | monitoring.uptimeRobot.reconciler.image.repository | string | `"python"` |  |
-| monitoring.uptimeRobot.reconciler.image.tag | string | `"3.14"` |  |
+| monitoring.uptimeRobot.reconciler.image.tag | string | `"3.15"` |  |
 | monitoring.uptimeRobot.reconciler.resources.limits.cpu | string | `"200m"` |  |
 | monitoring.uptimeRobot.reconciler.resources.limits.memory | string | `"128Mi"` |  |
 | monitoring.uptimeRobot.reconciler.resources.requests.cpu | string | `"50m"` |  |
@@ -528,7 +530,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | speedtest.image.digest | string | `"sha256:871ec7a1c908e7c9288e51e074b321088a297c37fc672a4c882b0309f61ddef7"` |  |
 | speedtest.image.registry | string | `"ghcr.io"` |  |
 | speedtest.image.repository | string | `"librespeed/speedtest"` |  |
-| speedtest.image.tag | string | `"6.3.0"` |  |
+| speedtest.image.tag | string | `"6.3.1"` |  |
 | speedtest.replicas | int | `2` |  |
 | speedtest.resources.limits.cpu | string | `"200m"` |  |
 | speedtest.resources.limits.memory | string | `"128Mi"` |  |
@@ -536,6 +538,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | speedtest.resources.requests.memory | string | `"64Mi"` |  |
 | traefik.additionalArguments | list | `[]` |  |
 | traefik.cipherSuites | list | `[]` |  |
+| traefik.http3.enabled | bool | `false` |  |
 | traefik.ingressIP | string | `""` |  |
 | traefik.log.level | string | `"WARN"` |  |
 | traefik.maxReplicas | int | `8` |  |
