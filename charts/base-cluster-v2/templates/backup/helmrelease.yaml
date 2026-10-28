@@ -30,6 +30,9 @@ none of those keys exist in the chart anymore as of this version.
 {{- if and .Values.backup.taskQueue.enabled (ne $edition "enterprise") }}
 {{- fail "backup.taskQueue requires backup.edition: enterprise" }}
 {{- end }}
+{{- if and .Values.backup.taskQueue.enabled (not (regexMatch "^[1-9][0-9]*$" (toString .Values.backup.taskQueue.maxConcurrentSessions))) }}
+{{- fail "backup.taskQueue.maxConcurrentSessions must be a positive integer" }}
+{{- end }}
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -55,37 +58,6 @@ spec:
     crds: Create
     remediation:
       retries: -1
-  values:
-    global:
-      {{- with .Values.global.imageRegistry }}
-      registry: {{ printf "%s/stashed" . | quote }}
-      {{- end }}
-      licenseSecretName: {{ required "backup.licenseSecretName is required when backup.enabled is true" .Values.backup.licenseSecretName | quote }}
-      {{- if eq $edition "enterprise" }}
-      taskQueue:
-        enabled: {{ .Values.backup.taskQueue.enabled }}
-        maxConcurrentSessions: {{ .Values.backup.taskQueue.maxConcurrentSessions }}
-      {{- end }}
-    features:
-      {{ $edition }}: true
-    {{- if eq $edition "enterprise" }}
-    stash-catalog:
-      {{- range list "elasticsearch" "etcd" "kubedump" "mariadb" "mongodb" "mysql" "nats" "perconaxtradb" "postgres" "redis" "vault" }}
-      {{ . }}:
-        enabled: false
-      {{- end }}
-    {{- end }}
-    stash-{{ $edition }}:
-      criticalAddon: true
-      monitoring:
-        agent: {{ .Values.monitoring.enabled | ternary "prometheus.io/operator" "none" | quote }}
-        backup: true
-        operator: true
-      apiserver:
-        enableValidatingWebhook: false
-        servingCerts:
-          generate: true
-    {{- with .Values.backup.values }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
+  {{- $values := include "base-cluster.backup.stashValues" . | fromYaml }}
+  values: {{- mergeOverwrite $values (deepCopy .Values.backup.values) | toYaml | nindent 4 }}
 {{- end -}}
