@@ -513,7 +513,8 @@ monitoring:
     retention: 336h          ## 14d
     size: 50Gi
     ## MiB/s the tenant may push, and the burst above it. Past the rate, pushes
-    ## get 429 and clients retry, so logs arrive late. Unset keeps Loki's
+    ## get 429 and clients retry, so logs arrive late. A burst below one push
+    ## (Alloy: 1 MiB) never succeeds. Unset keeps Loki's
     ## defaults (4 / 6) and the rendered config, so upgrading does not restart
     ## Loki.
     ingestionRateMB: null
