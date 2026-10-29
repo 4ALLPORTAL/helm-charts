@@ -51,6 +51,16 @@ spec:
         type: filesystem
       limits_config:
         retention_period: {{ .Values.monitoring.loki.retention | quote }}
+        {{- /* Unset renders nothing (Loki's default). Zero is not "unlimited":
+        the token bucket never refills and pushes are rejected. */}}
+        {{- range $key, $value := dict "ingestion_rate_mb" .Values.monitoring.loki.ingestionRateMB "ingestion_burst_size_mb" .Values.monitoring.loki.ingestionBurstSizeMB }}
+        {{- if not (kindIs "invalid" $value) }}
+        {{- if le (float64 $value) 0.0 }}
+        {{- fail (printf "monitoring.loki: %s must be > 0, or unset for Loki's default" $key) }}
+        {{- end }}
+        {{ $key }}: {{ float64 $value }}
+        {{- end }}
+        {{- end }}
       compactor:
         retention_enabled: true
         delete_request_store: filesystem

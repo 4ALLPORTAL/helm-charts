@@ -500,12 +500,31 @@ monitoring:
     ##     - name: mail.example.com
     ##       port: "587"
     alertmanagerEgressFQDNs: []
+    ## Scrape Mimir's own metrics (k8s-monitoring `integrations.mimir`, job
+    ## `monitoring/<component>`): ingest rate, discarded samples, series and
+    ## the configured limits. Without them, a limit being hit only shows up
+    ## as late or missing samples.
+    selfMonitoring:
+      enabled: false
 
   ## Loki — SingleBinary deployment, filesystem chunk store on PVC.
   loki:
     enabled: true
     retention: 336h          ## 14d
     size: 50Gi
+    ## MiB/s the tenant may push, and the burst above it. Past the rate, pushes
+    ## get 429 and clients retry, so logs arrive late. A burst below one push
+    ## (Alloy: 1 MiB) never succeeds. Unset keeps Loki's
+    ## defaults (4 / 6) and the rendered config, so upgrading does not restart
+    ## Loki.
+    ingestionRateMB: null
+    ingestionBurstSizeMB: null
+    ## Scrape Loki's own metrics and the canary's (k8s-monitoring
+    ## `integrations.loki`, jobs `monitoring/single-binary` and
+    ## `monitoring/canary`): ingest rate, discarded lines by reason, chunk
+    ## compression, and lines the canary wrote but could not read back.
+    selfMonitoring:
+      enabled: false
     resources:
       requests:
         cpu: 250m
