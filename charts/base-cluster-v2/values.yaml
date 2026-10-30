@@ -478,6 +478,10 @@ monitoring:
       limits:
         cpu: "2"
         memory: 4Gi
+    ## Resources for the ingester alone; empty uses `resources` above. The
+    ## ingester holds every series in memory, so it needs far more than the
+    ## other components and grows with maxGlobalSeriesPerUser.
+    ingesterResources: {}
     ## Extra ruler rule groups, as filename -> rule group YAML. There is no
     ## PrometheusRule CRD on a base-cluster install: the ruler runs with
     ## `ruler_storage.backend: local` and reads one file per group out of
