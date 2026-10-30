@@ -18,6 +18,7 @@ watchdog-rule.yaml) to UptimeRobot via webhook.
 */}}
 {{- $sc := .Values.monitoring.storageClass -}}
 {{- $res := .Values.monitoring.mimir.resources -}}
+{{- $ingesterRes := .Values.monitoring.mimir.ingesterResources | default $res -}}
 {{- $size := .Values.monitoring.mimir.size -}}
 {{- $clusterDomain := include "base-cluster.clusterDomain" . -}}
 {{- $bucketClaim := .Values.monitoring.mimir.bucketClaim.storageClassName -}}
@@ -169,7 +170,7 @@ spec:
     ## Stateful components — replicas=1 with PVC.
     ingester:
       replicas: 1
-      resources: {{ toJson $res }}
+      resources: {{ toJson $ingesterRes }}
       zoneAwareReplication:
         enabled: false
       persistentVolume:
