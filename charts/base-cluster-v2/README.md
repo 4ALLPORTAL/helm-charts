@@ -1,6 +1,6 @@
 # base-cluster-v2
 
-![Version: 2.13.0](https://img.shields.io/badge/Version-2.13.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
+![Version: 2.15.0](https://img.shields.io/badge/Version-2.15.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
 
 Foundational base cluster setup — FluxCD, Traefik ingress,
 cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
@@ -257,6 +257,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | backup.edition | string | `"community"` |  |
 | backup.enabled | bool | `false` |  |
 | backup.licenseSecretName | string | `""` |  |
+| backup.retryBackup.enabled | bool | `false` |  |
 | backup.retryBackup.image.registry | string | `""` |  |
 | backup.retryBackup.image.repository | string | `"alpine/k8s"` |  |
 | backup.retryBackup.image.tag | string | `"1.37.1"` |  |
@@ -411,11 +412,14 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.k8sMonitoring.resources.requests.memory | string | `"256Mi"` |  |
 | monitoring.kubeStateMetrics.enabled | bool | `true` |  |
 | monitoring.loki.enabled | bool | `true` |  |
+| monitoring.loki.ingestionBurstSizeMB | string | `nil` |  |
+| monitoring.loki.ingestionRateMB | string | `nil` |  |
 | monitoring.loki.resources.limits.cpu | string | `"1"` |  |
 | monitoring.loki.resources.limits.memory | string | `"2Gi"` |  |
 | monitoring.loki.resources.requests.cpu | string | `"250m"` |  |
 | monitoring.loki.resources.requests.memory | string | `"512Mi"` |  |
 | monitoring.loki.retention | string | `"336h"` |  |
+| monitoring.loki.selfMonitoring.enabled | bool | `false` |  |
 | monitoring.loki.size | string | `"50Gi"` |  |
 | monitoring.mimir.alertmanagerConfigSecret | string | `""` |  |
 | monitoring.mimir.alertmanagerEgressFQDNs | list | `[]` |  |
@@ -434,6 +438,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.mimir.resources.requests.cpu | string | `"500m"` |  |
 | monitoring.mimir.resources.requests.memory | string | `"1Gi"` |  |
 | monitoring.mimir.retention | string | `"720h"` |  |
+| monitoring.mimir.selfMonitoring.enabled | bool | `false` |  |
 | monitoring.mimir.size | string | `"50Gi"` |  |
 | monitoring.nodeExporter.enabled | bool | `true` |  |
 | monitoring.otelCollector.enabled | bool | `true` |  |

@@ -9,6 +9,8 @@ podLogsViaLoki). To scrape something new, add a ServiceMonitor/PodMonitor
 is appended to the `alloy-logs` config, for logs no feature covers.
 `monitoring.k8sMonitoring.logs.extraLogProcessingStages` is added to the pod
 log pipeline itself, e.g. to drop lines before they reach Loki.
+`monitoring.{mimir,loki}.selfMonitoring` adds the `integrations` feature, which
+scrapes Mimir and Loki themselves.
 
 kube-state-metrics and node-exporter are deployed as this chart's
 `telemetryServices`, feeding `clusterMetrics`/`hostMetrics`.
@@ -127,6 +129,54 @@ spec:
           useIntegrationAllowList: true
           includeMetrics:
             - node_time_seconds
+    {{- end }}
+
+    {{- $mimirSelf := .Values.monitoring.mimir.selfMonitoring.enabled }}
+    {{- $lokiSelf := and .Values.monitoring.loki.enabled .Values.monitoring.loki.selfMonitoring.enabled }}
+    {{- if or $mimirSelf $lokiSelf }}
+    ## Metrics only: the integrations' log stages would also relabel and
+    ## rewrite these pods' log lines in podLogsViaLoki.
+    integrations:
+      collector: alloy-metrics
+      {{- if $mimirSelf }}
+      mimir:
+        instances:
+          - name: mimir
+            namespaces: [monitoring]
+            labelSelectors:
+              app.kubernetes.io/name: mimir
+              app.kubernetes.io/instance: mimir
+            ## The nginx gateway names its port http-metrics but has no /metrics.
+            extraDiscoveryRules: |
+              rule {
+                source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_component"]
+                regex         = "gateway"
+                action        = "drop"
+              }
+            logs:
+              enabled: false
+      {{- end }}
+      {{- if $lokiSelf }}
+      loki:
+        instances:
+          - name: loki
+            namespaces: [monitoring]
+            ## The DHI chart labels its pods loki-chart, not the upstream loki.
+            labelSelectors:
+              app.kubernetes.io/name: loki-chart
+              app.kubernetes.io/component: [single-binary, canary]
+            ## The default allow-list lacks the compression metrics, needed to
+            ## turn ingested bytes into stored bytes.
+            metrics:
+              tuning:
+                includeMetrics:
+                  - loki_ingester_chunk_compression_ratio_bucket
+                  - loki_ingester_chunk_compression_ratio_count
+                  - loki_ingester_chunk_compression_ratio_sum
+                  - loki_ingester_chunk_stored_bytes_total
+            logs:
+              enabled: false
+      {{- end }}
     {{- end }}
     {{- end }}
 
