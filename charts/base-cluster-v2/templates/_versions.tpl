@@ -81,7 +81,7 @@ descheduler (kubernetes-sigs repo) and stash (appscode repo).
      telemetryServices toggles. */}}
 
 {{- /* renovate: datasource=helm depName=k8s-monitoring registryUrl=https://grafana.github.io/helm-charts */ -}}
-{{- define "base-cluster.versions.k8sMonitoring.chart" -}}4.5.5{{- end -}}
+{{- define "base-cluster.versions.k8sMonitoring.chart" -}}4.6.0{{- end -}}
 
 {{- /* renovate: datasource=docker depName=opentelemetry-collector-chart packageName=dhi.io/opentelemetry-collector-chart */ -}}
 {{- define "base-cluster.versions.otelCollector.chart" -}}0.178.0{{- end -}}
