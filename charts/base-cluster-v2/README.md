@@ -1,6 +1,6 @@
 # base-cluster-v2
 
-![Version: 2.14.0](https://img.shields.io/badge/Version-2.14.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
+![Version: 2.15.0](https://img.shields.io/badge/Version-2.15.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
 
 Foundational base cluster setup — FluxCD, Traefik ingress,
 cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
@@ -254,6 +254,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| backup.edition | string | `"community"` |  |
 | backup.enabled | bool | `false` |  |
 | backup.licenseSecretName | string | `""` |  |
 | backup.retryBackup.enabled | bool | `false` |  |
@@ -265,6 +266,8 @@ The older chart remains in this repo for clusters that haven't migrated.
 | backup.retryBackup.resources.requests.cpu | string | `"10m"` |  |
 | backup.retryBackup.resources.requests.memory | string | `"32Mi"` |  |
 | backup.retryBackup.schedule | string | `"30 0-8 * * *"` |  |
+| backup.taskQueue.enabled | bool | `false` |  |
+| backup.taskQueue.maxConcurrentSessions | int | `10` |  |
 | backup.values | object | `{}` |  |
 | certManager.caInjector.resources.limits.cpu | string | `"500m"` |  |
 | certManager.caInjector.resources.limits.memory | string | `"512Mi"` |  |

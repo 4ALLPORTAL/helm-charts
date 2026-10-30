@@ -9,7 +9,7 @@ metadata:
 spec:
   {{- /* Backup jobs that actually push data to off-cluster storage (S3, GCS, ...)
        run as Jobs in the target application's own namespace, not here — this
-       policy only covers the stash-community operator/webhook/pushgateway. */}}
+       policy only covers the operator/webhook/pushgateway (and taskqueue). */}}
   endpointSelector: {}
   ingress:
     - fromEntities: [cluster]

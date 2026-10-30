@@ -1,22 +1,45 @@
 {{- if .Values.backup.enabled -}}
 {{/*
 Stash (AppsCode) — CRD-driven backup operator for PVCs/DBs, ported from the
-v1 base-cluster chart. Requires a license Secret (community edition is free,
-see values.yaml for where to get one) pre-created in the `stash` namespace
-before this HelmRelease reconciles.
+v1 base-cluster chart. Requires a license Secret matching backup.edition
+(community is free, see values.yaml for where to get one) pre-created in the
+`stash` namespace before this HelmRelease reconciles.
 
 Unlike v1, this runs in its own `stash` namespace rather than kube-system,
 matching every other component in this chart.
 
-Metrics: monitoring.agent "prometheus.io/builtin" adds prometheus.io/scrape
-annotations (picked up by Alloy, see templates/monitoring/alloy.yaml) instead
-of ServiceMonitor CRs — this chart has no prometheus-operator installed.
+Metrics: the operator and the pushgateway (per-BackupConfiguration backup
+metrics) are scraped through a ServiceMonitor, picked up by
+prometheusOperatorObjects on alloy-metrics. The "prometheus.io/builtin"
+annotations use per-port keys Alloy does not read.
+
+Enterprise only installs the database addon catalog (stash-catalog) when
+asked; every addon is disabled here, PVC backup does not need them. Its
+stash-metrics and taskqueue subcharts ship CRDs in crds/, which Flux skips on
+upgrade by default, hence `upgrade.crds: Create`.
 
 Pinned to the current upstream release (v2025.10.17), not the v2024.02.13 the
 v1 chart used — that was ~2 years stale. `pushgateway`, `security.createPSPs`
 and `stash-community.enableAnalytics` from the v1 values were dropped here;
 none of those keys exist in the chart anymore as of this version.
 */}}
+{{- $edition := .Values.backup.edition }}
+{{- if not (has $edition (list "community" "enterprise")) }}
+{{- fail "backup.edition must be community or enterprise" }}
+{{- end }}
+{{- if and .Values.backup.taskQueue.enabled (ne $edition "enterprise") }}
+{{- fail "backup.taskQueue requires backup.edition: enterprise" }}
+{{- end }}
+{{- /* Checked after the merge too: backup.values can also set the queue. */}}
+{{- $values := mergeOverwrite (include "base-cluster.backup.stashValues" . | fromYaml) (deepCopy .Values.backup.values) }}
+{{- if dig "global" "taskQueue" "enabled" false $values }}
+{{- if not (dig "features" "enterprise" false $values) }}
+{{- fail "the Stash task queue requires the enterprise edition" }}
+{{- end }}
+{{- if not (regexMatch "^[1-9][0-9]*$" (toString (dig "global" "taskQueue" "maxConcurrentSessions" "" $values))) }}
+{{- fail "taskQueue maxConcurrentSessions must be a positive integer" }}
+{{- end }}
+{{- end }}
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -35,30 +58,12 @@ spec:
         name: appscode
         namespace: {{ .Release.Namespace }}
   install:
+    crds: Create
     remediation:
       retries: -1
   upgrade:
+    crds: Create
     remediation:
       retries: -1
-  values:
-    global:
-      {{- with .Values.global.imageRegistry }}
-      registry: {{ printf "%s/stashed" . | quote }}
-      {{- end }}
-      licenseSecretName: {{ required "backup.licenseSecretName is required when backup.enabled is true" .Values.backup.licenseSecretName | quote }}
-    features:
-      community: true
-    stash-community:
-      criticalAddon: true
-      monitoring:
-        agent: {{ .Values.monitoring.enabled | ternary "prometheus.io/builtin" "none" | quote }}
-        backup: true
-        operator: true
-      apiserver:
-        enableValidatingWebhook: false
-        servingCerts:
-          generate: true
-    {{- with .Values.backup.values }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
+  values: {{- toYaml $values | nindent 4 }}
 {{- end -}}
