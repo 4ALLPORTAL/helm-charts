@@ -13,7 +13,7 @@ global:
   {{- if eq $edition "enterprise" }}
   taskQueue:
     enabled: {{ .Values.backup.taskQueue.enabled }}
-    maxConcurrentSessions: {{ int .Values.backup.taskQueue.maxConcurrentSessions }}
+    maxConcurrentSessions: {{ .Values.backup.taskQueue.maxConcurrentSessions }}
   {{- end }}
 features:
   {{ $edition }}: true

@@ -30,8 +30,15 @@ none of those keys exist in the chart anymore as of this version.
 {{- if and .Values.backup.taskQueue.enabled (ne $edition "enterprise") }}
 {{- fail "backup.taskQueue requires backup.edition: enterprise" }}
 {{- end }}
-{{- if and .Values.backup.taskQueue.enabled (not (regexMatch "^[1-9][0-9]*$" (toString .Values.backup.taskQueue.maxConcurrentSessions))) }}
-{{- fail "backup.taskQueue.maxConcurrentSessions must be a positive integer" }}
+{{- /* Checked after the merge too: backup.values can also set the queue. */}}
+{{- $values := mergeOverwrite (include "base-cluster.backup.stashValues" . | fromYaml) (deepCopy .Values.backup.values) }}
+{{- if dig "global" "taskQueue" "enabled" false $values }}
+{{- if not (dig "features" "enterprise" false $values) }}
+{{- fail "the Stash task queue requires the enterprise edition" }}
+{{- end }}
+{{- if not (regexMatch "^[1-9][0-9]*$" (toString (dig "global" "taskQueue" "maxConcurrentSessions" "" $values))) }}
+{{- fail "taskQueue maxConcurrentSessions must be a positive integer" }}
+{{- end }}
 {{- end }}
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -58,6 +65,5 @@ spec:
     crds: Create
     remediation:
       retries: -1
-  {{- $values := include "base-cluster.backup.stashValues" . | fromYaml }}
-  values: {{- mergeOverwrite $values (deepCopy .Values.backup.values) | toYaml | nindent 4 }}
+  values: {{- toYaml $values | nindent 4 }}
 {{- end -}}
