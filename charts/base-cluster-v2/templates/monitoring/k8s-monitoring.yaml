@@ -108,6 +108,10 @@ spec:
           includeMetrics:
             - kube_pod_container_status_ready
             - kube_pod_status_ready
+            {{- if .Values.backup.enabled }}
+            ## Stash custom resources, see backup/_kube-state-metrics.tpl.
+            - kube_stash_.*
+            {{- end }}
       cadvisor:
         jobLabel: cadvisor
       kubelet:
@@ -185,6 +189,9 @@ spec:
       {{- if .Values.monitoring.kubeStateMetrics.enabled }}
       kube-state-metrics:
         deploy: true
+        {{- if .Values.backup.enabled }}
+        {{- include "base-cluster.backup.kubeStateMetricsValues" . | nindent 8 }}
+        {{- end }}
       {{- end }}
       {{- if .Values.monitoring.nodeExporter.enabled }}
       node-exporter:
