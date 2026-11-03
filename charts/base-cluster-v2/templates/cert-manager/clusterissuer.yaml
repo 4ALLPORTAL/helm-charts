@@ -1,7 +1,11 @@
 {{/*
-Let's Encrypt production ClusterIssuer with two solvers:
-  - DNS01 via Cloudflare for wildcards (used by the cluster wildcard cert)
-  - HTTP01 via the default ingress for everything else
+Let's Encrypt production ClusterIssuer.
+  - DNS01 via Cloudflare: scoped to `.Values.dns.domains` when set, otherwise a
+    catch-all that handles every order (required for the cluster wildcard cert).
+  - HTTP01 via the default ingress: only rendered when `.Values.dns.domains` is
+    set, where it is the catch-all fallback for zones outside the DNS01 scope.
+    When `dns.domains` is empty ("all" via DNS01) it is omitted so the two
+    solvers don't both become catch-alls (cert-manager picks ambiguously then).
 
 Requires a Secret named `.Values.dns.existingSecret` in the chart namespace
 with key `cloudflare_api_token`. The cert-manager chart's CRDs ship with this
@@ -29,5 +33,7 @@ spec:
         selector:
           dnsZones: {{- . | toYaml | nindent 12 }}
         {{- end }}
+      {{- if .Values.dns.domains }}
       - http01:
           ingress: {}
+      {{- end }}
