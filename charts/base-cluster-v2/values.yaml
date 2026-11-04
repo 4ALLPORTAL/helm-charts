@@ -406,7 +406,7 @@ backup:
     image:
       registry: ""
       repository: alpine/k8s
-      tag: "1.37.1"
+      tag: "1.37.2"
     resources:
       requests:
         cpu: 10m
