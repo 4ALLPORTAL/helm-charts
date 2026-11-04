@@ -21,7 +21,7 @@ descheduler (kubernetes-sigs repo) and stash (appscode repo).
 {{- define "base-cluster.versions.cilium.chart" -}}1.20.4{{- end -}}
 
 {{- /* renovate: datasource=docker depName=flux2 packageName=ghcr.io/fluxcd-community/charts/flux2 */ -}}
-{{- define "base-cluster.versions.flux2.chart" -}}2.19.1{{- end -}}
+{{- define "base-cluster.versions.flux2.chart" -}}2.20.0{{- end -}}
 
 {{- /* renovate: datasource=docker depName=traefik-chart packageName=dhi.io/traefik-chart */ -}}
 {{- define "base-cluster.versions.traefik.chart" -}}42.1.3{{- end -}}
