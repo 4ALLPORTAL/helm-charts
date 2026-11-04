@@ -1,6 +1,6 @@
 # base-cluster-v2
 
-![Version: 2.18.0](https://img.shields.io/badge/Version-2.18.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
+![Version: 2.18.1](https://img.shields.io/badge/Version-2.18.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
 
 Foundational base cluster setup — FluxCD, Traefik ingress,
 cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
@@ -536,10 +536,10 @@ The older chart remains in this repo for clusters that haven't migrated.
 | sealedSecrets.values | object | `{}` |  |
 | speedtest.enabled | bool | `true` |  |
 | speedtest.host | string | `"speedtest"` |  |
-| speedtest.image.digest | string | `"sha256:871ec7a1c908e7c9288e51e074b321088a297c37fc672a4c882b0309f61ddef7"` |  |
+| speedtest.image.digest | string | `""` |  |
 | speedtest.image.registry | string | `"ghcr.io"` |  |
 | speedtest.image.repository | string | `"librespeed/speedtest"` |  |
-| speedtest.image.tag | string | `"6.3.1"` |  |
+| speedtest.image.tag | string | `"6.3.1@sha256:bc34bf69b6c102b23ab81b6e77beb7cce321fb0d3be33ec6e80edef3e9dd8bab"` |  |
 | speedtest.replicas | int | `2` |  |
 | speedtest.resources.limits.cpu | string | `"200m"` |  |
 | speedtest.resources.limits.memory | string | `"128Mi"` |  |

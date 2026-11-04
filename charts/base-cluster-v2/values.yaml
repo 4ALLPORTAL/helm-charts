@@ -742,8 +742,12 @@ speedtest:
   image:
     registry: ghcr.io
     repository: librespeed/speedtest
-    tag: "6.3.1"
-    digest: "sha256:871ec7a1c908e7c9288e51e074b321088a297c37fc672a4c882b0309f61ddef7"
+    ## Keep the digest inside `tag` (`<version>@sha256:...`). Renovate's
+    ## helm-values manager bumps tag and digest together in this form; a
+    ## separate `digest` key is not tracked, so a pin there goes stale while
+    ## the tag moves. `digest` stays for per-cluster overrides only.
+    tag: "6.3.1@sha256:bc34bf69b6c102b23ab81b6e77beb7cce321fb0d3be33ec6e80edef3e9dd8bab"
+    digest: ""
   resources:
     requests:
       cpu: 50m
