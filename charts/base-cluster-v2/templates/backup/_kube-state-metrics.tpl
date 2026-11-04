@@ -8,7 +8,9 @@ With the task queue on, a queued run exists only as a PendingTask until a
 slot frees up, so its age shows a queue that is not draining.
 */}}
 {{- define "base-cluster.backup.kubeStateMetricsValues" -}}
-{{- $taskQueue := and (eq .Values.backup.edition "enterprise") .Values.backup.taskQueue.enabled -}}
+{{- /* Same merge as backup/helmrelease.yaml: backup.values can also set the queue. */ -}}
+{{- $stash := mergeOverwrite (include "base-cluster.backup.stashValues" . | fromYaml) (deepCopy .Values.backup.values) -}}
+{{- $taskQueue := dig "global" "taskQueue" "enabled" false $stash -}}
 rbac:
   extraRules:
     - apiGroups: [stash.appscode.com]
