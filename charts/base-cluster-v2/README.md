@@ -260,7 +260,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | backup.retryBackup.enabled | bool | `false` |  |
 | backup.retryBackup.image.registry | string | `""` |  |
 | backup.retryBackup.image.repository | string | `"alpine/k8s"` |  |
-| backup.retryBackup.image.tag | string | `"1.37.1"` |  |
+| backup.retryBackup.image.tag | string | `"1.37.2"` |  |
 | backup.retryBackup.resources.limits.cpu | string | `"100m"` |  |
 | backup.retryBackup.resources.limits.memory | string | `"64Mi"` |  |
 | backup.retryBackup.resources.requests.cpu | string | `"10m"` |  |
