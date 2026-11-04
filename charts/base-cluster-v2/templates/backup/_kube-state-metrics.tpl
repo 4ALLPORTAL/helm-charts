@@ -4,13 +4,21 @@ Backup alerts read these instead of the Stash Pushgateway, which only holds
 the last value a run pushed and loses everything on a Stash restart.
 Repository status.lastBackupTime only advances when a run completes all
 post-backup steps, so a stuck or half-failed run shows up as an old value.
+With the task queue on, a queued run exists only as a PendingTask until a
+slot frees up, so its age shows a queue that is not draining.
 */}}
 {{- define "base-cluster.backup.kubeStateMetricsValues" -}}
+{{- $taskQueue := and (eq .Values.backup.edition "enterprise") .Values.backup.taskQueue.enabled -}}
 rbac:
   extraRules:
     - apiGroups: [stash.appscode.com]
       resources: [repositories, backupsessions]
       verbs: [list, watch]
+    {{- if $taskQueue }}
+    - apiGroups: [batch.k8s.appscode.com]
+      resources: [pendingtasks]
+      verbs: [list, watch]
+    {{- end }}
 customResourceState:
   enabled: true
   config:
@@ -68,4 +76,23 @@ customResourceState:
                   labelName: phase
                   path: [status, phase]
                   list: [Pending, Running, Succeeded, Failed, Skipped]
+        {{- if $taskQueue }}
+        - groupVersionKind:
+            group: batch.k8s.appscode.com
+            version: v1alpha1
+            kind: PendingTask
+          metricNamePrefix: kube_stash_pendingtask
+          labelsFromPath:
+            pendingtask: [metadata, name]
+            namespace: [spec, resource, metadata, namespace]
+            backupsession: [spec, resource, metadata, name]
+            invoker: [spec, resource, spec, invoker, name]
+          metrics:
+            - name: created
+              help: Unix creation timestamp of the PendingTask, i.e. when the run was queued.
+              each:
+                type: Gauge
+                gauge:
+                  path: [metadata, creationTimestamp]
+        {{- end }}
 {{- end -}}
