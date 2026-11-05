@@ -85,7 +85,9 @@ speedtest:
   image:
     registry: "ghcr.io"
     repository: librespeed/speedtest
-    tag: latest
+    ## Pinned as `<version>@sha256:...` in one value so Renovate bumps tag
+    ## and digest together. `latest` is LibreSpeed's untested master build.
+    tag: "6.3.1@sha256:bc34bf69b6c102b23ab81b6e77beb7cce321fb0d3be33ec6e80edef3e9dd8bab"
 
 sealedsecrets:
   enabled: false
