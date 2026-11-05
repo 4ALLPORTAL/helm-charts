@@ -19,7 +19,7 @@ spec:
       kind: PersistentVolumeClaim
       name: "{{ include "common.names.fullname" $ }}-storage"
     exclude:
-      - /stash-data/.health*
+      - /stash-data/**/.health*.check
   schedule: "{{- $.Values.backups.volumes.schedule -}}"
   retentionPolicy:
     name: retention
@@ -52,7 +52,7 @@ spec:
       kind: PersistentVolumeClaim
       name: "{{ include "common.names.fullname" $ }}-{{ $volume }}"
     exclude:
-    - /stash-data/.health*
+    - /stash-data/**/.health*.check
   schedule: "{{- $.Values.backups.volumes.schedule -}}"
   retentionPolicy:
     name: retention
