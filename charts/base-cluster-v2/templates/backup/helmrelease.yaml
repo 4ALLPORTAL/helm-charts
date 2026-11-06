@@ -65,5 +65,25 @@ spec:
     crds: Create
     remediation:
       retries: -1
+  {{- if dig "global" "taskQueue" "enabled" false $values }}
+  {{- /* The upstream TaskQueue releases a slot only for Succeeded or Failed.
+       A Skipped BackupSession is final too, but would hold its slot forever,
+       so count it as done. Upstream: https://github.com/stashed/installer/blob/master/charts/stash-enterprise/templates/task-queue.yaml */}}
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              group: batch.k8s.appscode.com
+              version: v1alpha1
+              kind: TaskQueue
+              name: appscode-stash-task-queue
+            patch: |
+              - op: test
+                path: /spec/tasks/0/type/kind
+                value: BackupSession
+              - op: replace
+                path: /spec/tasks/0/rules/failed
+                value: "has(self.status.phase) && (self.status.phase == 'Failed' || self.status.phase == 'Skipped')"
+  {{- end }}
   values: {{- toYaml $values | nindent 4 }}
 {{- end -}}
