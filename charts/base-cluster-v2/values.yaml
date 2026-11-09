@@ -643,6 +643,16 @@ monitoring:
   ## Deployed as a k8s-monitoring telemetryService.
   kubeStateMetrics:
     enabled: true
+    ## The Talos OOM controller kills BestEffort pods first and skips pods
+    ## with a memory limit. Peak with the Stash metrics is about 520Mi.
+    ## https://docs.siderolabs.com/talos/v1.13/configure-your-talos-cluster/system-configuration/oom
+    resources:
+      requests:
+        cpu: 50m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 1Gi
 
   ## OTEL Collector — receives OTLP (gRPC :4317, HTTP :4318), exports to Tempo.
   otelCollector:

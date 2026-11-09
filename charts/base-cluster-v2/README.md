@@ -411,6 +411,10 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.k8sMonitoring.resources.requests.cpu | string | `"100m"` |  |
 | monitoring.k8sMonitoring.resources.requests.memory | string | `"256Mi"` |  |
 | monitoring.kubeStateMetrics.enabled | bool | `true` |  |
+| monitoring.kubeStateMetrics.resources.limits.cpu | string | `"500m"` |  |
+| monitoring.kubeStateMetrics.resources.limits.memory | string | `"1Gi"` |  |
+| monitoring.kubeStateMetrics.resources.requests.cpu | string | `"50m"` |  |
+| monitoring.kubeStateMetrics.resources.requests.memory | string | `"256Mi"` |  |
 | monitoring.loki.enabled | bool | `true` |  |
 | monitoring.loki.ingestionBurstSizeMB | string | `nil` |  |
 | monitoring.loki.ingestionRateMB | string | `nil` |  |
