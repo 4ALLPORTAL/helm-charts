@@ -1,6 +1,6 @@
 # base-cluster-v2
 
-![Version: 2.18.4](https://img.shields.io/badge/Version-2.18.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
+![Version: 2.18.5](https://img.shields.io/badge/Version-2.18.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
 
 Foundational base cluster setup — FluxCD, Traefik ingress,
 cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
@@ -411,6 +411,10 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.k8sMonitoring.resources.requests.cpu | string | `"100m"` |  |
 | monitoring.k8sMonitoring.resources.requests.memory | string | `"256Mi"` |  |
 | monitoring.kubeStateMetrics.enabled | bool | `true` |  |
+| monitoring.kubeStateMetrics.resources.limits.cpu | string | `"500m"` |  |
+| monitoring.kubeStateMetrics.resources.limits.memory | string | `"1Gi"` |  |
+| monitoring.kubeStateMetrics.resources.requests.cpu | string | `"50m"` |  |
+| monitoring.kubeStateMetrics.resources.requests.memory | string | `"256Mi"` |  |
 | monitoring.loki.enabled | bool | `true` |  |
 | monitoring.loki.ingestionBurstSizeMB | string | `nil` |  |
 | monitoring.loki.ingestionRateMB | string | `nil` |  |
