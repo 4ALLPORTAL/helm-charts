@@ -253,6 +253,15 @@ janitor:
     limits:
       cpu: 500m
       memory: 256Mi
+  livenessProbe:
+    httpGet:
+      path: /healthz
+      port: healthz
+      scheme: HTTP
+    initialDelaySeconds: 15
+    periodSeconds: 20
+    timeoutSeconds: 5
+    failureThreshold: 6
   ## Garbage collection for deletions. Background makes the API server delete
   ## dependents too — without it, deleting a completed Job *orphans* its Pod,
   ## which then lingers forever as a Completed pod nobody owns. Only honoured for
