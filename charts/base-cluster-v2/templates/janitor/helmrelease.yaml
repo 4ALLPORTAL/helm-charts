@@ -50,6 +50,9 @@ spec:
         repository: {{ .Values.janitor.image.repository | quote }}
         tag: {{ .Values.janitor.image.tag | quote }}
       resources: {{- toYaml .Values.janitor.resources | nindent 8 }}
+      livenessProbe:
+        enabled: true
+        {{- toYaml .Values.janitor.livenessProbe | nindent 8 }}
     {{- with .Values.global.imagePullSecretName }}
     imagePullSecrets:
       - name: {{ . }}

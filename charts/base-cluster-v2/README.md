@@ -1,6 +1,6 @@
 # base-cluster-v2
 
-![Version: 2.18.5](https://img.shields.io/badge/Version-2.18.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
+![Version: 2.18.6](https://img.shields.io/badge/Version-2.18.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
 
 Foundational base cluster setup — FluxCD, Traefik ingress,
 cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
@@ -363,6 +363,13 @@ The older chart remains in this repo for clusters that haven't migrated.
 | janitor.image.registry | string | `""` |  |
 | janitor.image.repository | string | `"projectsveltos/k8s-cleaner"` |  |
 | janitor.image.tag | string | `"v0.24.0"` |  |
+| janitor.livenessProbe.failureThreshold | int | `6` |  |
+| janitor.livenessProbe.httpGet.path | string | `"/healthz"` |  |
+| janitor.livenessProbe.httpGet.port | string | `"healthz"` |  |
+| janitor.livenessProbe.httpGet.scheme | string | `"HTTP"` |  |
+| janitor.livenessProbe.initialDelaySeconds | int | `15` |  |
+| janitor.livenessProbe.periodSeconds | int | `20` |  |
+| janitor.livenessProbe.timeoutSeconds | int | `5` |  |
 | janitor.report.enabled | bool | `true` |  |
 | janitor.resources.limits.cpu | string | `"500m"` |  |
 | janitor.resources.limits.memory | string | `"256Mi"` |  |
