@@ -34,7 +34,7 @@ spec:
     pod:
       securityContext: {{- $.Values.fourAllPortal.securityContext | toYaml | nindent 8 }}
       {{- with $.Values.backups.volumes.priorityClassName }}
-      priorityClassName: {{ . }}
+      priorityClassName: {{ . | quote }}
       {{- end }}
 ---
   {{ else -}}
@@ -73,7 +73,7 @@ spec:
     pod:
       securityContext: {{- $.Values.fourAllPortal.securityContext | toYaml | nindent 8 }}
       {{- with $.Values.backups.volumes.priorityClassName }}
-      priorityClassName: {{ . }}
+      priorityClassName: {{ . | quote }}
       {{- end }}
 ---
     {{ end -}}
