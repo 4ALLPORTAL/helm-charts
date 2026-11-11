@@ -28,8 +28,14 @@ spec:
   runtimeSettings:
     container:
       securityContext: {{- $.Values.fourAllPortal.containerSecurityContext | toYaml | nindent 8 }}
+      {{- with $.Values.backups.volumes.resources }}
+      resources: {{- toYaml . | nindent 8 }}
+      {{- end }}
     pod:
       securityContext: {{- $.Values.fourAllPortal.securityContext | toYaml | nindent 8 }}
+      {{- with $.Values.backups.volumes.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
 ---
   {{ else -}}
     {{- range $volume := list "config" "assets" -}}
@@ -61,8 +67,14 @@ spec:
   runtimeSettings:
     container:
       securityContext: {{- $.Values.fourAllPortal.containerSecurityContext | toYaml | nindent 8 }}
+      {{- with $.Values.backups.volumes.resources }}
+      resources: {{- toYaml . | nindent 8 }}
+      {{- end }}
     pod:
       securityContext: {{- $.Values.fourAllPortal.securityContext | toYaml | nindent 8 }}
+      {{- with $.Values.backups.volumes.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
 ---
     {{ end -}}
   {{ end -}}
