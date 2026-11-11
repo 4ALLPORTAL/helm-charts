@@ -60,7 +60,10 @@ spec:
         alloy:
           resources: {{- toYaml .Values.monitoring.k8sMonitoring.resources | nindent 12 }}
       alloy-logs:
-        presets: [daemonset, filesystem-log-reader]
+        ## host-storage keeps read positions in /var/lib/alloy on the node, so a
+        ## restart resumes where it stopped instead of skipping or re-reading lines.
+        ## https://github.com/grafana/k8s-monitoring-helm/tree/main/charts/k8s-monitoring/docs/examples/collector-storage
+        presets: [daemonset, filesystem-log-reader, host-storage]
         {{- with .Values.monitoring.k8sMonitoring.logs.extraConfig }}
         extraConfig: {{- toYaml . | nindent 10 }}
         {{- end }}
