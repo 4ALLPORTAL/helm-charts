@@ -7,9 +7,14 @@ any two pods in the namespace — Mimir's sub-chart MinIO uses legacy `app:`
 labels rather than `app.kubernetes.io/instance`, and similar sub-charts
 would otherwise need bespoke selectors.
 
+Loki is the exception: it trusts whatever X-Scope-OrgID a client sends, so
+anyone who reaches it can read any tenant. It is left out of both catch-alls
+and `loki` admits only Grafana, Alloy and its own pods (canary, memberlist).
+
 The per-role policies below add **external** allowances on top:
   collectors              — Alloy (metrics+logs), Node Exporter, KSM (scrape cluster pods)
-  storage                 — Mimir, Loki, Tempo (egress to UptimeRobot heartbeat)
+  storage                 — Mimir, Tempo (egress to UptimeRobot heartbeat)
+  loki                    — Loki + canary: ingress only from Grafana, Alloy and itself
   grafana                 — Traefik ingress + world:443 for plugins/OIDC
   otel-collector          — accepts OTLP from any cluster workload
   uptimerobot             — egress to api.uptimerobot.com only
@@ -25,8 +30,12 @@ metadata:
   labels: {{- include "base-cluster.labels" . | nindent 4 }}
     app.kubernetes.io/component: monitoring
 spec:
-  description: "Allow all intra-namespace traffic in monitoring (covers sub-chart pods with non-standard labels)"
-  endpointSelector: {}
+  description: "Allow all intra-namespace traffic in monitoring except into Loki (covers sub-chart pods with non-standard labels)"
+  endpointSelector:
+    matchExpressions:
+      - key: app.kubernetes.io/instance
+        operator: NotIn
+        values: [loki]
   ingress:
     - fromEndpoints:
         - matchLabels:
@@ -106,14 +115,14 @@ metadata:
   labels: {{- include "base-cluster.labels" . | nindent 4 }}
     app.kubernetes.io/component: monitoring
 spec:
-  description: "Mimir / Loki / Tempo — accept ingest from collectors + OTEL, queries from Grafana, egress for AM webhooks"
+  description: "Mimir / Tempo — accept ingest from collectors + OTEL, queries from Grafana, egress for AM webhooks"
   endpointSelector:
     matchExpressions:
       - key: app.kubernetes.io/instance
         operator: In
-        values: [mimir, loki, tempo]
+        values: [mimir, tempo]
   egress:
-    ## Inter-pod gossip / ring (Mimir+Loki use memberlist) and kube-apiserver
+    ## Inter-pod gossip / ring (Mimir uses memberlist) and kube-apiserver
     ## for service discovery.
     - toEntities: [cluster, kube-apiserver]
     ## Mimir-internal Alertmanager webhook → UptimeRobot heartbeat URL.
@@ -150,6 +159,60 @@ spec:
     - fromEndpoints:
         - matchLabels:
             io.kubernetes.pod.namespace: monitoring
+{{- if .Values.monitoring.loki.enabled }}
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: monitoring-loki
+  namespace: monitoring
+  labels: {{- include "base-cluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+spec:
+  description: "Loki + canary — ingress only from Grafana, Alloy and Loki's own pods"
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/instance: loki
+  egress:
+    - toEntities: [cluster, kube-apiserver]
+    - toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+            - port: "53"
+              protocol: TCP
+          rules:
+            dns:
+              - matchPattern: "*"
+  ingress:
+    ## Memberlist, gRPC and the canary's push and query.
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: monitoring
+            app.kubernetes.io/instance: loki
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: monitoring
+            app.kubernetes.io/instance: k8s-monitoring-alloy-logs
+        - matchLabels:
+            io.kubernetes.pod.namespace: monitoring
+            app.kubernetes.io/instance: grafana
+      toPorts:
+        - ports:
+            - port: "3100"
+              protocol: TCP
+    ## Self-monitoring scrape of Loki and the canary.
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: monitoring
+            app.kubernetes.io/instance: k8s-monitoring-alloy-metrics
+      toPorts:
+        - ports:
+            - port: "3100"
+              protocol: TCP
+            - port: "3500"
+              protocol: TCP
+{{- end }}
 ---
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
