@@ -306,7 +306,7 @@ webdav:
   image:
     registry: docker.io
     repository: httpd
-    tag: 2.4.69
+    tag: 2.4.71
 
   events:
     enabled: false
