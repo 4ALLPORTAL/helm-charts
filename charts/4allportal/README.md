@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 22.1.9](https://img.shields.io/badge/Version-22.1.9-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
+![Version: 22.1.10](https://img.shields.io/badge/Version-22.1.10-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -35,6 +35,9 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | backups.target.s3.secretKey | string | `""` |  |
 | backups.volumes.enabled | bool | `false` |  |
 | backups.volumes.password | string | `""` |  |
+| backups.volumes.priorityClassName | string | `""` |  |
+| backups.volumes.resources.limits.memory | string | `"16Gi"` |  |
+| backups.volumes.resources.requests.memory | string | `"1Gi"` |  |
 | backups.volumes.retention.policy | object | `{}` |  |
 | backups.volumes.retention.prune | bool | `true` |  |
 | backups.volumes.schedule | string | `""` |  |
@@ -501,3 +504,12 @@ sharing a broker do not end up in one group. Override it with
 No action required. An empty broker list leaves Kafka switched off, which is the previous
 behaviour, and `.Values.fourAllPortal.env` still works as an escape hatch. Configuring the same
 thing in both places is rejected at render time rather than silently resolved.
+
+## To 22.1.10
+
+Volume backup pods now request 1Gi of memory and are limited to 16Gi by default
+(`.Values.backups.volumes.resources`). A backup that exceeds the limit is killed and the backup
+session fails. If a backup needs more memory, raise or remove the limit before upgrading.
+
+`.Values.backups.volumes.priorityClassName` sets the backup pods' priority class. It does not fall
+back to `.Values.global.priorityClassName`.

@@ -382,3 +382,10 @@ backups:
       policy: {}
     password: ""
     schedule: ""
+    # Used as is; does not fall back to global.priorityClassName.
+    priorityClassName: ""
+    resources:
+      requests:
+        memory: 1Gi
+      limits:
+        memory: 16Gi
