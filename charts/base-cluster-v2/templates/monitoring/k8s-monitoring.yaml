@@ -81,6 +81,7 @@ spec:
       loki:
         type: loki
         url: http://loki-loki-chart.monitoring.svc.{{ $clusterDomain }}:3100/loki/api/v1/push
+        tenantId: {{ .Values.monitoring.loki.tenant | quote }}
       {{- end }}
 
     {{- if .Values.monitoring.mimir.enabled }}
