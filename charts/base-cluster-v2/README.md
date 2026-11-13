@@ -1,6 +1,6 @@
 # base-cluster-v2
 
-![Version: 2.18.8](https://img.shields.io/badge/Version-2.18.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
+![Version: 2.19.0](https://img.shields.io/badge/Version-2.19.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.4](https://img.shields.io/badge/AppVersion-1.36.4-informational?style=flat-square)
 
 Foundational base cluster setup — FluxCD, Traefik ingress,
 cert-manager, ExternalDNS, an internal Librespeed speedtest endpoint, and a
@@ -422,7 +422,9 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.kubeStateMetrics.resources.limits.memory | string | `"1Gi"` |  |
 | monitoring.kubeStateMetrics.resources.requests.cpu | string | `"50m"` |  |
 | monitoring.kubeStateMetrics.resources.requests.memory | string | `"256Mi"` |  |
+| monitoring.loki.authEnabled | bool | `false` |  |
 | monitoring.loki.enabled | bool | `true` |  |
+| monitoring.loki.extraDatasourceTenants | list | `[]` |  |
 | monitoring.loki.ingestionBurstSizeMB | string | `nil` |  |
 | monitoring.loki.ingestionRateMB | string | `nil` |  |
 | monitoring.loki.resources.limits.cpu | string | `"1"` |  |
@@ -432,6 +434,7 @@ The older chart remains in this repo for clusters that haven't migrated.
 | monitoring.loki.retention | string | `"336h"` |  |
 | monitoring.loki.selfMonitoring.enabled | bool | `false` |  |
 | monitoring.loki.size | string | `"50Gi"` |  |
+| monitoring.loki.tenant | string | `"default"` |  |
 | monitoring.mimir.alertmanagerConfigSecret | string | `""` |  |
 | monitoring.mimir.alertmanagerEgressFQDNs | list | `[]` |  |
 | monitoring.mimir.bucketClaim.storageClassName | string | `""` |  |
