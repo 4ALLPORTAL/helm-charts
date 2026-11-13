@@ -20,10 +20,6 @@ jobs:
         with:
           version: v4.3.1
 
-      - name: install yq
-        run: |
-          sudo snap install yq
-
       - name: Extract helm repos
         id: helm-repos
         run: |
