@@ -209,6 +209,10 @@ spec:
     podLogsViaLoki:
       enabled: true
       collector: alloy-logs
+      ## Read a newly found log file from its start, so the first lines of a new
+      ## pod are kept. Safe only because host-storage persists read positions:
+      ## files that already have a position resume from it.
+      onlyGatherNewLogLines: false
       {{- with .Values.monitoring.k8sMonitoring.logs.extraLogProcessingStages }}
       extraLogProcessingStages: {{- toYaml . | nindent 8 }}
       {{- end }}
