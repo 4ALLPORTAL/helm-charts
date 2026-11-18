@@ -534,6 +534,19 @@ monitoring:
     enabled: true
     retention: 336h          ## 14d
     size: 50Gi
+    ## Require an X-Scope-OrgID header on every request. Alloy, Grafana and the
+    ## canary always send `tenant`, so turn this on only once every other
+    ## client (anything pushing from outside the chart) sends it too.
+    authEnabled: false
+    ## Tenant that Alloy writes to, Grafana reads from and the canary uses.
+    ## While authEnabled is false Loki ignores it and stores everything under
+    ## `fake`. After the switch the `Loki` datasource shows only this tenant, so
+    ## older logs need an entry in extraDatasourceTenants until retention
+    ## removes them.
+    tenant: default
+    ## One extra read-only Grafana datasource per tenant, named `Loki (<tenant>)`,
+    ## e.g. `[fake]` to keep logs from before authEnabled readable.
+    extraDatasourceTenants: []
     ## MiB/s the tenant may push, and the burst above it. Past the rate, pushes
     ## get 429 and clients retry, so logs arrive late. A burst below one push
     ## (Alloy: 1 MiB) never succeeds. Unset keeps Loki's

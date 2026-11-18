@@ -253,6 +253,22 @@ data:
         access: proxy
         url: http://loki-loki-chart.monitoring.svc.{{ $clusterDomain }}:3100
         editable: false
+        jsonData:
+          httpHeaderName1: X-Scope-OrgID
+        secureJsonData:
+          httpHeaderValue1: {{ .Values.monitoring.loki.tenant | quote }}
+      {{- range .Values.monitoring.loki.extraDatasourceTenants }}
+      - name: {{ printf "Loki (%s)" . | quote }}
+        uid: {{ printf "loki-%s" . | quote }}
+        type: loki
+        access: proxy
+        url: http://loki-loki-chart.monitoring.svc.{{ $clusterDomain }}:3100
+        editable: false
+        jsonData:
+          httpHeaderName1: X-Scope-OrgID
+        secureJsonData:
+          httpHeaderValue1: {{ . | quote }}
+      {{- end }}
       {{- end }}
       {{- if .Values.monitoring.tempo.enabled }}
       - name: Tempo
