@@ -143,6 +143,12 @@ traefik:
   cipherSuites: []
   ## Extra Traefik CLI arguments.
   additionalArguments: []
+  ## Namespaced sysctls for the Traefik pods (pod `securityContext.sysctls`).
+  ## Only the Kubernetes "safe" set works without a kubelet allowlist. e.g.:
+  ##   sysctls:
+  ##     - name: net.ipv4.tcp_syncookies
+  ##       value: "0"
+  sysctls: []
 
 ## cert-manager (DHI chart).
 ##

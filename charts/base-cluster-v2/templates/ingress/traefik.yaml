@@ -214,6 +214,9 @@ spec:
       runAsNonRoot: true
       seccompProfile:
         type: RuntimeDefault
+      {{- with .Values.traefik.sysctls }}
+      sysctls: {{- toYaml . | nindent 8 }}
+      {{- end }}
     securityContext:
       readOnlyRootFilesystem: true
       allowPrivilegeEscalation: false
