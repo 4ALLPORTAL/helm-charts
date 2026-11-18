@@ -69,6 +69,12 @@ spec:
         {{- end }}
         alloy:
           resources: {{- toYaml .Values.monitoring.k8sMonitoring.resources | nindent 12 }}
+          ## k8s-monitoring 4.6 no longer adds back the runtime's default
+          ## capabilities, so root without DAC_READ_SEARCH cannot enter
+          ## owner-only host log directories such as Talos' /var/log/audit/kube.
+          securityContext:
+            capabilities:
+              add: [NET_BIND_SERVICE, DAC_READ_SEARCH]
 
     destinations:
       {{- if .Values.monitoring.mimir.enabled }}
