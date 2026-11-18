@@ -213,6 +213,14 @@ spec:
       ## the heartbeat receiver; route everything through one catch-all and the
       ## heartbeat stays green off the back of unrelated alerts.
       fallbackConfig: ""
+      ## Mimir reads fallback_config_file once, at startup, and re-syncs every
+      ## tenant from that in-memory copy (ComputeFallbackConfig in
+      ## pkg/alertmanager/multitenant.go). A changed Secret reaches the mounted
+      ## file but never the running config, so Reloader rolls the StatefulSet
+      ## instead. Inert unless Reloader watches this namespace -- then the
+      ## restart after a change is manual.
+      annotations:
+        secret.reloader.stakater.com/reload: {{ .Values.monitoring.mimir.alertmanagerConfigSecret | quote }}
       extraVolumes:
         - name: alertmanager-fallback-config
           secret:
