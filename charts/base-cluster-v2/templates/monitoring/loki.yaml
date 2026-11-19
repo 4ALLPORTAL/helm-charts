@@ -14,6 +14,11 @@ metadata:
     app.kubernetes.io/component: monitoring
 spec:
   interval: 5m
+  ## The canary DaemonSet restarts one pod at a time and takes ~8 minutes on
+  ## an 8-node cluster, longer than the 5-minute default. A timed-out upgrade
+  ## is rolled back and retried forever, which flips Loki's config back and
+  ## forth and blocks every Kustomization that depends on this chart.
+  timeout: 15m
   chart:
     spec:
       chart: loki-chart
