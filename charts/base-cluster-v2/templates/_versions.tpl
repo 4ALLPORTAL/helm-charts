@@ -84,7 +84,7 @@ descheduler (kubernetes-sigs repo) and stash (appscode repo).
 {{- define "base-cluster.versions.k8sMonitoring.chart" -}}4.6.2{{- end -}}
 
 {{- /* renovate: datasource=docker depName=opentelemetry-collector-chart packageName=dhi.io/opentelemetry-collector-chart */ -}}
-{{- define "base-cluster.versions.otelCollector.chart" -}}0.183.1{{- end -}}
+{{- define "base-cluster.versions.otelCollector.chart" -}}0.183.2{{- end -}}
 
 {{/* IngressMonitorController (Stakater) — reconciles EndpointMonitor CRs into
      UptimeRobot monitors. Chart from the `stakater` HTTPS repo; image from
