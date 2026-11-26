@@ -279,6 +279,12 @@ samba:
   bridge:
     prefix: ""
     namespace: ""
+  # -- smbd log level, written to the pod log. 0 logs almost nothing; 1 adds errors and
+  # failed operations; 3 logs every connect and file operation (noisy, for debugging only).
+  logLevel: 1
+  # -- Additional smb.conf [global] options, overriding the chart defaults. Example for
+  # Adobe files: `{"veto oplock files": "/*.indd/*.idlk/"}`.
+  globalOptions: {}
 
   livenessProbe:
     enabled: false
