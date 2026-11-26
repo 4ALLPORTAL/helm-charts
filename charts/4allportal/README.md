@@ -1,6 +1,6 @@
 # 4allportal
 
-![Version: 22.1.12](https://img.shields.io/badge/Version-22.1.12-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
+![Version: 22.1.13](https://img.shields.io/badge/Version-22.1.13-informational?style=flat-square) ![AppVersion: 3.10.62](https://img.shields.io/badge/AppVersion-3.10.62-informational?style=flat-square)
 
 A Helm chart for 4ALLPORTAL version 3.10.0 and up
 
@@ -227,10 +227,12 @@ A Helm chart for 4ALLPORTAL version 3.10.0 and up
 | samba.bridge.namespace | string | `""` |  |
 | samba.bridge.prefix | string | `""` |  |
 | samba.enabled | bool | `false` |  |
+| samba.globalOptions | object | `{}` | Additional smb.conf [global] options, overriding the chart defaults. Example for Adobe files: `{"veto oplock files": "/*.indd/*.idlk/"}`. |
 | samba.image.registry | string | `"quay.io"` |  |
 | samba.image.repository | string | `"samba.org/samba-server"` |  |
 | samba.image.tag | string | `"v0.9"` |  |
 | samba.livenessProbe.enabled | bool | `false` |  |
+| samba.logLevel | int | `1` | smbd log level, written to the pod log. 0 logs almost nothing; 1 adds errors and failed operations; 3 logs every connect and file operation (noisy, for debugging only). |
 | samba.mounts | object | `{}` |  |
 | samba.nodeSelector | object | `{}` |  |
 | samba.podDisruptionBudget | bool | `true` |  |
@@ -513,3 +515,16 @@ session fails. If a backup needs more memory, raise or remove the limit before u
 
 `.Values.backups.volumes.priorityClassName` sets the backup pods' priority class. It does not fall
 back to `.Values.global.priorityClassName`.
+
+## To 22.1.13
+
+Samba now logs at level 1 (`.Values.samba.logLevel`), so failed operations show up in the samba pod's
+log. Before, it ran at level 0 and wrote nothing. Raise it to 3 to see every connect and file
+operation while debugging; that is noisy and not meant to stay on.
+
+`.Values.samba.globalOptions` adds or overrides smb.conf `[global]` options. For Adobe files on a
+share, `veto oplock files: "/*.indd/*.idlk/"` stops Samba from granting leases on InDesign documents
+and their lock files.
+
+The generated samba configuration changes, so the upgrade recreates the samba pod, which briefly
+interrupts active SMB connections.

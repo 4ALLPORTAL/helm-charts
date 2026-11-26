@@ -236,3 +236,16 @@ session fails. If a backup needs more memory, raise or remove the limit before u
 
 `.Values.backups.volumes.priorityClassName` sets the backup pods' priority class. It does not fall
 back to `.Values.global.priorityClassName`.
+
+## To 22.1.13
+
+Samba now logs at level 1 (`.Values.samba.logLevel`), so failed operations show up in the samba pod's
+log. Before, it ran at level 0 and wrote nothing. Raise it to 3 to see every connect and file
+operation while debugging; that is noisy and not meant to stay on.
+
+`.Values.samba.globalOptions` adds or overrides smb.conf `[global]` options. For Adobe files on a
+share, `veto oplock files: "/*.indd/*.idlk/"` stops Samba from granting leases on InDesign documents
+and their lock files.
+
+The generated samba configuration changes, so the upgrade recreates the samba pod, which briefly
+interrupts active SMB connections.
